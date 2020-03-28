@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/selectableItemBackground"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:minHeight="@dimen/minimum_target"
+    android:orientation="horizontal">
+
+    <com.theost.wavenote.widgets.RobotoRegularTextView
+        android:id="@+id/tag_name"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_large"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:textColor="?attr/noteTitleColor"
+        tools:text="Test"
+        style="?android:attr/textAppearanceMedium">
+    </com.theost.wavenote.widgets.RobotoRegularTextView>
+
+    <com.theost.wavenote.widgets.RobotoRegularTextView
+        android:id="@+id/tag_count"
+        android:gravity="end"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_width="wrap_content"
+        android:textColor="?attr/notePreviewColor"
+        tools:text="24"
+        style="?android:attr/textAppearanceMedium">
+    </com.theost.wavenote.widgets.RobotoRegularTextView>
+
+    <ImageButton
+        android:id="@+id/tag_trash"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/delete_tag"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:minHeight="@dimen/minimum_target"
+        android:minWidth="@dimen/minimum_target"
+        android:padding="@dimen/padding_medium"
+        android:src="@drawable/ic_trash_24dp"
+        android:tint="?attr/iconTintColor">
+    </ImageButton>
+
+</LinearLayout>

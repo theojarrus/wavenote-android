@@ -1,0 +1,25 @@
+{
+  "project_name": "wavenote-android",
+  "branch": "master",
+  "pinned_hash": "efb23d84ed6b885dbe6da567baa1795d8612b4fc",
+  "files_to_copy": [
+    {
+      "file": "android/wavenote/Wavenote/gradle.properties",
+      "destination": "Wavenote/gradle.properties",
+      "encrypt": true
+    },
+    {
+      "file": "android/wavenote/sentry.properties",
+      "destination": "sentry.properties",
+      "encrypt": true
+    },
+    {
+      "file": "android/theost.jks",
+      "destination": "Wavenote/release.jks",
+      "encrypt": true
+    }
+  ],
+  "file_dependencies": [
+
+  ]
+}

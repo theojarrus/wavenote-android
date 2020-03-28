@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="Base.Theme.Simplestyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:navigationBarColor">@color/background_dark</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.Simplestyle</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem.Simplestyle</item>
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarTextColor">@color/text_title_dark</item>
+        <item name="actionModeBackgroundColor">@color/background_dark_4</item>
+        <item name="actionModeCloseButtonStyle">@style/CloseButtonStyle</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_arrow_left_24dp</item>
+        <item name="actionModeStyle">@style/ActionMode.Simplestyle</item>
+        <item name="actionModeTextColor">@color/item_blue_dark</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.MaterialComponents.BottomSheetDialog</item>
+        <item name="chipCheckedOnBackgroundColor">@color/gray_70</item>
+        <item name="chipCheckedOffBackgroundColor">@color/gray_60</item>
+        <item name="chipTextColor">@color/text_chip_dark</item>
+        <item name="colorAccent">@color/item_blue_dark</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/background_dark</item>
+        <item name="dividerColor">@color/divider_dark</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="drawerBackgroundColor">@color/background_dark_16</item>
+        <item name="drawerBackgroundSelector">@color/bg_drawer_selector_dark</item>
+        <item name="editorSearchHighlightBackgroundColor">@color/blue_60</item>
+        <item name="editorSearchHighlightForegroundColor">@color/blue_5</item>
+        <item name="emptyImageColor">@color/empty_dark</item>
+        <item name="fabColor">@color/item_blue_dark</item>
+        <item name="fabIconColor">@color/gray_100</item>
+        <item name="hintTextColor">@color/text_title_disabled</item>
+        <item name="iconTintColor">@color/item_blue_dark</item>
+        <item name="isLightTheme">false</item>
+        <item name="listBackgroundSelector">@drawable/bg_list_dark</item>
+        <item name="listDividerDrawable">@drawable/divider_dark</item>
+        <item name="listSearchHighlightBackgroundColor">@color/blue_60</item>
+        <item name="listSearchHighlightForegroundColor">@color/blue_5</item>
+        <item name="mainBackgroundColor">@color/background_dark</item>
+        <item name="noteEditorTextColor">@android:color/white</item>
+        <item name="notePinColor">@android:color/white</item>
+        <item name="notePreviewColor">@color/text_content_dark</item>
+        <item name="noteTitleColor">@android:color/white</item>
+        <item name="tagChipShadowColor">@color/background_dark</item>
+        <item name="pinIconSelector">@drawable/bg_pin_selector_dark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="settingsTextColor">@android:color/white</item>
+        <item name="toolbarColor">@color/background_dark_4</item>
+        <item name="toolbarIconColor">@color/gray_20</item>
+        <item name="toolbarPopupTheme">@style/ToolbarTheme.Popup</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="CloseButtonStyle" parent="Widget.AppCompat.ActionButton.CloseMode">
+        <item name="tint">@color/item_blue_dark</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">?attr/toolbarIconColor</item>
+        <item name="spinBars">true</item>
+    </style>
+
+    <style name="Theme.Simplestyle" parent="Base.Theme.Simplestyle">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    
+    <style name="Theme.Simplestyle.BottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="android:colorBackground">@color/background_dark_16</item>
+        <item name="android:navigationBarColor">@color/background_dark_16</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
+        <item name="colorAccent">@color/item_blue_dark</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/blue_dark</item>
+    </style>
+
+    <style name="Theme.Simplestyle.BottomSheetDialog.Label" parent="Theme.Simplestyle.BottomSheetDialog">
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:minHeight">@dimen/bottom_sheet_row_height</item>
+        <item name="android:padding">@dimen/padding_large</item>
+        <item name="android:textColor">@color/text_title_dark</item>
+        <item name="android:textSize">@dimen/text_bottom_sheet</item>
+    </style>
+
+    <style name="Theme.Simplestyle.BottomSheetDialog.Value" parent="Theme.Simplestyle.BottomSheetDialog">
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:minHeight">@dimen/bottom_sheet_row_height</item>
+        <item name="android:paddingBottom">@dimen/padding_large</item>
+        <item name="android:paddingEnd">@dimen/padding_large</item>
+        <item name="android:paddingTop">@dimen/padding_large</item>
+        <item name="android:textColor">@color/text_content_dark</item>
+        <item name="android:textSize">@dimen/text_bottom_sheet</item>
+    </style>
+
+    <style name="Theme.Simplestyle.BottomSheetDialogText" parent="Theme.Simplestyle.BottomSheetDialog">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ToolbarTheme.Popup" parent="ThemeOverlay.MaterialComponents">
+        <item name="android:backgroundTint">@color/background_dark_8</item>
+    </style>
+
+</resources>

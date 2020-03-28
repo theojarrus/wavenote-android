@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.viewpager2:viewpager2:1.0.0-beta04@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d85e4de6c15b01e87a35271dcefb1a3/jetified-viewpager2-1.0.0-beta04/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d85e4de6c15b01e87a35271dcefb1a3/jetified-viewpager2-1.0.0-beta04/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d85e4de6c15b01e87a35271dcefb1a3/jetified-viewpager2-1.0.0-beta04/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.viewpager2/viewpager2/1.0.0-beta04/ce5f10d682351c08d6b1ac50ef4f984938e79e4e/viewpager2-1.0.0-beta04-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

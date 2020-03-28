@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Wavenote/Wavenote.iml" filepath="$PROJECT_DIR$/Wavenote/Wavenote.iml" group="wavenote-android/Wavenote" />
+      <module fileurl="file://$PROJECT_DIR$/Wear/Wear.iml" filepath="$PROJECT_DIR$/Wear/Wear.iml" group="wavenote-android/Wear" />
+      <module fileurl="file://$PROJECT_DIR$/wavenote-android.iml" filepath="$PROJECT_DIR$/wavenote-android.iml" group="wavenote-android" />
+    </modules>
+  </component>
+</project>

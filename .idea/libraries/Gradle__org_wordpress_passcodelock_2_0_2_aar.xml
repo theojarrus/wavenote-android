@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: org.wordpress:passcodelock:2.0.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5bfa4827e28d0cee48c51fa5b9bb0f12/jetified-passcodelock-2.0.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5bfa4827e28d0cee48c51fa5b9bb0f12/jetified-passcodelock-2.0.2/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.wordpress/passcodelock/2.0.2/163b524770b0682e0c51e9f9d462005986b3ecd6/passcodelock-2.0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.wordpress/passcodelock/2.0.2/cc954defb15a02f9956120f5d0774e2a620850b/passcodelock-2.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

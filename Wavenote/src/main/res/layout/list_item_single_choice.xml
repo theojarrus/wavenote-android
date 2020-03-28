@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.AppCompatCheckedTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    android:checkMark="@null"
+    android:drawablePadding="@dimen/padding_medium"
+    android:drawableStart="?android:attr/listChoiceIndicatorSingle"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:lineSpacingExtra="@dimen/line_spacing"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingEnd="@dimen/padding_medium"
+    android:paddingStart="@dimen/padding_medium"
+    android:textColor="?attr/noteTitleColor"
+    android:textSize="18sp"
+    tools:text="Example Item" >
+</androidx.appcompat.widget.AppCompatCheckedTextView>

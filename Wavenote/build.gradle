@@ -1,0 +1,158 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.sentry.android.gradle'
+
+android {
+    buildToolsVersion '29.0.2'
+    compileSdkVersion 29
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.theost.wavenote"
+        // Allow versionName to be overridden with property. e.g. -PversionName=1234
+        if (project.hasProperty("versionName")) {
+            versionName project.property("versionName")
+        } else {
+            versionName "2.4"
+        }
+        versionCode 98
+        minSdkVersion 23
+        targetSdkVersion 29
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+buildscript {
+    dependencies {
+        classpath 'io.sentry:sentry-android-gradle-plugin:1.7.16'
+    }
+
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.8.47'
+    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
+    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
+        // Necessary to avoid version conflicts
+        exclude group: 'androidx', module: 'appcompat'
+        exclude group: 'androidx', module: 'support-v4'
+        exclude group: 'androidx', module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
+    // Automattic and WordPress dependencies
+    implementation 'com.simperium.android:simperium:0.9.6'
+    implementation 'com.automattic:tracks:1.2'
+    implementation 'org.wordpress:passcodelock:2.0.2'
+
+    // Google Support
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    // Google Play Services
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+    // Third Party
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.commonsware.cwac:anddown:0.4.0'
+    implementation 'net.openid:appauth:0.7.0'
+    wearApp project(':Wear')
+}
+
+repositories {
+    jcenter()
+    maven { url "https://maven.google.com" }
+    maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+}
+
+if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+    android {
+      signingConfigs {
+          release {
+              storeFile = rootProject.file(project.storeFile)
+              storePassword = project.storePassword
+              keyAlias = project.keyAlias
+              keyPassword = project.keyPassword
+          }
+          debug {
+              storeFile = rootProject.file(project.storeFile)
+              storePassword = project.storePassword
+              keyAlias = project.keyAlias
+              keyPassword = project.keyPassword
+          }
+      }
+    }
+    android.buildTypes.release.signingConfig = android.signingConfigs.release
+}
+
+task copyGradlePropertiesIfMissing(group: "generate", description: "Copy Gradle Properties") {
+    if (!file("${rootDir}/Wavenote/gradle.properties").exists()) {
+        copy {
+            from("${rootDir}/Wavenote")
+            into("${rootDir}/Wavenote")
+            include('gradle.properties-example')
+            rename('gradle.properties-example', 'gradle.properties')
+        }
+    }
+}
+
+static def loadPropertiesFromFile(inputFile) {
+    def properties = new Properties()
+    inputFile.withInputStream { stream ->
+        properties.load(stream)
+    }
+    return properties
+}
+
+static String toSnakeCase( String text ) {
+    text.replaceAll( /([A-Z])/, /_$1/ ).replaceAll( /^_/, '' )
+}
+
+android.applicationVariants.all { variant ->
+    variant.generateBuildConfigProvider.configure {
+        dependsOn(copyGradlePropertiesIfMissing)
+    }
+    def inputFile = file("${rootDir}/Wavenote/gradle.properties")
+    def properties = loadPropertiesFromFile(inputFile)
+    properties.any { property ->
+        def key = toSnakeCase(property.key).toUpperCase()
+        if (key == "SIMPERIUM_APP_ID" ||
+            key == "SIMPERIUM_APP_KEY" ||
+            key == "LOGIN_EMAIL" ||
+            key == "LOGIN_PASSWORD" ||
+            key == "SENTRY_DSN" ||
+            key == "WPCOM_CLIENT_ID") {
+            buildConfigField "String", key, "\"${property.value}\""
+        }
+    }
+    buildConfigField "String", "BUILD", "\"${gitDescribe()}\""
+    buildConfigField "String", "BUILD_HASH", "\"${gitHash()}\""
+}

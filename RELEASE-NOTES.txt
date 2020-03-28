@@ -1,0 +1,51 @@
+2.5
+-----
+* Added a dark version of the note widget to view and open a note in the app from the home screen
+* Added a note list widget to open any note in the app from the home screen
+* Added a toolbar to find matching search terms within notes
+* Added support for right-to-left languages and layouts
+* Added search to tags list
+* Fixed a bug that highlighted search terms incorrectly in notes with checklists
+* Fixed a bug with the note title that made the app lag while editing a note
+
+2.4
+-----
+* Updated note information with date modified, date created, word count, and character count
+* Moved note options from the action bar to the ellipsis menu
+* Fixed sync bug with deleting tags and emptying trash
+* Fixed networking bug causing interface slowness
+
+2.3
+-----
+* Added search sorting by date created, date modified, and alphabetically
+* Added search history and suggestions
+* Updated passcode lock design
+
+2.2
+-----
+
+2.1.0
+-----
+* Updated dark theme with darker colors for less eye fatigue and better battery life
+* Updated navigation drawer interface for better organization and compatibility
+* Updated note list interface for better performance and readability
+* Removed location permission for dark at night only theme
+
+2.0.0
+-----
+* Added an option to the Theme setting to follow the system day/night mode
+* Added resizing the note widget to display title and content
+* Added showing the last viewed tab when opening a note
+* Updated interface colors for better accessibility
+* Updated login and signup interface
+
+1.8.0
+-----
+* Added a widget to view a note and open it in the app from the home screen
+* Added hiding app content in the recent apps view when PIN lock is on
+* Added an adaptive app icon for Android 8.0 Oreo or later
+* Updated the navigation drawer to work for all status bar sizes
+* Updated app icons shown when sharing to be the same size
+* Updated checkboxes to not show the keyboard when tapped
+* Updated the new note shortcut icon
+* Fixed multiple cursor bugs for notes with checklists

@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+apply plugin: 'com.android.application'
+
+android {
+    buildToolsVersion '29.0.2'
+    compileSdkVersion 29
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.theost.wavenote"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 2
+        versionName "1.1.0"
+    }
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+dependencies {
+    compileOnly 'androidx.wear:wear:1.0.0'
+
+    implementation 'androidx.wear:wear:1.0.0'
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+}
+
+repositories {
+    jcenter()
+    maven {
+        url "https://maven.google.com"
+    }
+}
+
+if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+    android {
+        signingConfigs {
+            release {
+                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
+                storePassword = project.storePassword
+                keyAlias = project.keyAlias
+                keyPassword = project.keyPassword
+            }
+            debug {
+                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
+                storePassword = project.storePassword
+                keyAlias = project.keyAlias
+                keyPassword = project.keyPassword
+            }
+        }
+    }
+    android.buildTypes.release.signingConfig = android.signingConfigs.release
+}
