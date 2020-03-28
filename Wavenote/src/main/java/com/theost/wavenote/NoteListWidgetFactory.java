@@ -60,8 +60,7 @@ public class NoteListWidgetFactory implements RemoteViewsFactory {
             );
             views.setTextViewText(R.id.note_content, contentSpan);
             views.setViewVisibility(R.id.note_pinned, note.isPinned() ? View.VISIBLE : View.GONE);
-            views.setViewVisibility(R.id.note_published, note.isPublished() ? View.VISIBLE : View.GONE);
-            views.setViewVisibility(R.id.note_status, note.isPinned() || note.isPublished() ? View.VISIBLE : View.GONE);
+            views.setViewVisibility(R.id.note_status, note.isPinned() ? View.VISIBLE : View.GONE);
 
             // Create intent to navigate to note editor on note list item click
             Intent intent = new Intent(mContext, NoteEditorActivity.class);

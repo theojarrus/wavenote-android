@@ -9,7 +9,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_simplenote_24dp"
+        android:drawable="@drawable/ic_wavenote_24dp"
         android:gravity="center"
         android:height="@dimen/icon_empty"
         android:width="@dimen/icon_empty">

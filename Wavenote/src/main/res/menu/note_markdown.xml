@@ -7,6 +7,12 @@
     tools:ignore="AlwaysShowAction">
 
     <item
+        android:id="@+id/menu_color"
+        android:icon="@drawable/m_palette_white_24dp"
+        android:title="@string/text_color"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_sheet"
         android:icon="@drawable/m_audiotrack_white_24dp"
         android:title="@string/chord_mode"
@@ -31,12 +37,6 @@
         android:title="@string/toggle_checklist"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/menu_info"
-        android:enabled="false"
-        android:icon="@drawable/ic_info_24dp"
-        android:title="@string/information"
-        app:showAsAction="always"/>
 
     <group
         android:id="@+id/group_1">
@@ -57,11 +57,16 @@
             app:showAsAction="never">
         </item>
 
+    </group>
+
+    <group
+        android:id="@+id/group_2">
+
         <item
-            android:id="@+id/menu_share"
+            android:id="@+id/menu_info"
             android:enabled="false"
-            android:title="@string/share"
-            app:showAsAction="never">
+            android:icon="@drawable/ic_info_24dp"
+            android:title="@string/information">
         </item>
 
         <item
@@ -71,21 +76,41 @@
             app:showAsAction="never">
         </item>
 
+    </group>
+
+    <group
+        android:id="@+id/group_3">
+
         <item
-            android:id="@+id/menu_trash"
-            android:title="@string/trash"
+            android:id="@+id/menu_share"
+            android:enabled="false"
+            android:title="@string/share"
+            app:showAsAction="never">
+        </item>
+
+        <item
+            android:id="@+id/menu_import"
+            android:title="@string/import_note"
+            app:showAsAction="never">
+        </item>
+
+        <item
+            android:id="@+id/menu_export"
+            android:title="@string/menu_export"
             app:showAsAction="never">
         </item>
 
     </group>
 
+
     <group
-        android:id="@+id/group_2">
+        android:id="@+id/group_4">
 
         <item
             android:id="@+id/menu_publish"
             android:checkable="true"
             android:enabled="false"
+            android:visible="false"
             android:title="@string/publish"
             app:showAsAction="never">
         </item>
@@ -93,7 +118,19 @@
         <item
             android:id="@+id/menu_copy"
             android:enabled="false"
+            android:visible="false"
             android:title="@string/copy_link"
+            app:showAsAction="never">
+        </item>
+
+    </group>
+
+    <group
+        android:id="@+id/group_5">
+
+        <item
+            android:id="@+id/menu_trash"
+            android:title="@string/trash"
             app:showAsAction="never">
         </item>
 

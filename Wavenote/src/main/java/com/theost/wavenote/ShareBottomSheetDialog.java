@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,9 +37,6 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
     private List<ShareButtonAdapter.ShareButtonItem> mShareButtons;
     private RecyclerView mRecyclerView;
     private ShareSheetListener mListener;
-    private TextView mPublishButton;
-    private TextView mUnpublishButton;
-    private TextView mWordPressButton;
 
     public ShareBottomSheetDialog(@NonNull final Fragment fragment, @NonNull final ShareSheetListener shareSheetListener) {
         mFragment = fragment;
@@ -59,38 +55,6 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
             });
 
             getDialog().setContentView(R.layout.bottom_sheet_share);
-            TextView mCollaborateButton = getDialog().findViewById(R.id.share_collaborate_button);
-            mPublishButton = getDialog().findViewById(R.id.share_publish_button);
-            mUnpublishButton = getDialog().findViewById(R.id.share_unpublish_button);
-            mWordPressButton = getDialog().findViewById(R.id.share_wp_post);
-
-            mCollaborateButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onShareCollaborateClicked();
-                }
-            });
-
-            mPublishButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onSharePublishClicked();
-                }
-            });
-
-            mUnpublishButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onShareUnpublishClicked();
-                }
-            });
-
-            mWordPressButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onWordPressPostClicked();
-                }
-            });
 
             mRecyclerView = getDialog().findViewById(R.id.share_button_recycler_view);
             mRecyclerView.setHasFixedSize(true);
@@ -127,14 +91,6 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
         if (mFragment.isAdded()) {
             showNow(manager, TAG);
 
-            if (note.isPublished()) {
-                mPublishButton.setVisibility(View.GONE);
-                mUnpublishButton.setVisibility(View.VISIBLE);
-            } else {
-                mPublishButton.setVisibility(View.VISIBLE);
-                mUnpublishButton.setVisibility(View.GONE);
-            }
-
             mShareIntent.putExtra(Intent.EXTRA_TEXT, note.getContent());
 
             final ShareButtonAdapter.ItemListener shareListener = new ShareButtonAdapter.ItemListener() {
@@ -167,10 +123,6 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
     }
 
     public interface ShareSheetListener {
-        void onShareCollaborateClicked();
         void onShareDismissed();
-        void onSharePublishClicked();
-        void onShareUnpublishClicked();
-        void onWordPressPostClicked();
     }
 }

@@ -123,7 +123,7 @@
                 android:contentDescription="@string/logo"
                 android:layout_height="@dimen/logo_empty"
                 android:layout_width="@dimen/logo_empty"
-                android:src="@drawable/ic_simplenote_24dp"
+                android:src="@drawable/ic_wavenote_24dp"
                 android:tint="?attr/emptyImageColor">
             </ImageView>
 

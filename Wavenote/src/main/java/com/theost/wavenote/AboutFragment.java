@@ -48,7 +48,7 @@ public class AboutFragment extends Fragment {
         int thisYear = Calendar.getInstance().get(Calendar.YEAR);
         copyright.setText(String.format(Locale.getDefault(), "© %1d Automattic", thisYear));
 
-        logoImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_simplenote_24dp));
+        logoImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wavenote_24dp));
 
         blog.setOnClickListener(new View.OnClickListener() {
             @Override

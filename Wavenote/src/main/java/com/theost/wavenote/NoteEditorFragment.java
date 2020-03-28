@@ -540,7 +540,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 } else {
                     publishNote();
                 }
-
                 return true;
             case R.id.menu_share:
                 shareNote();
@@ -567,7 +566,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (mNote != null) {
-            menu.findItem(R.id.menu_info).setVisible(true);
+            MenuItem infoItem = menu.findItem(R.id.menu_info);
             MenuItem pinItem = menu.findItem(R.id.menu_pin);
             MenuItem shareItem = menu.findItem(R.id.menu_share);
             MenuItem historyItem = menu.findItem(R.id.menu_history);
@@ -576,6 +575,12 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
             MenuItem trashItem = menu.findItem(R.id.menu_trash);
             MenuItem checklistItem = menu.findItem(R.id.menu_checklist);
+            MenuItem colorItem = menu.findItem(R.id.menu_color);
+            MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
+            MenuItem photoItem = menu.findItem(R.id.menu_photos);
+            MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
+            MenuItem importItem = menu.findItem(R.id.menu_import);
+            MenuItem exportItem = menu.findItem(R.id.menu_export);
 
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
@@ -583,6 +588,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
             // Disable actions when note is in Trash or markdown view is shown on large device.
             if (mNote.isDeleted() || (mMarkdown != null && mMarkdown.getVisibility() == View.VISIBLE)) {
+                infoItem.setEnabled(false);
                 pinItem.setEnabled(false);
                 shareItem.setEnabled(false);
                 historyItem.setEnabled(false);
@@ -590,8 +596,19 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 copyLinkItem.setEnabled(false);
                 markdownItem.setEnabled(false);
                 checklistItem.setEnabled(false);
+                colorItem.setEnabled(false);
+                sheetItem.setEnabled(false);
+                photoItem.setEnabled(false);
+                audioItem.setEnabled(false);
+                importItem.setEnabled(false);
+                exportItem.setEnabled(false);
                 DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);  // 0.3 is 30% opacity.
+                DrawableUtils.setMenuItemAlpha(colorItem, 0.3);
+                DrawableUtils.setMenuItemAlpha(sheetItem, 0.3);
+                DrawableUtils.setMenuItemAlpha(photoItem, 0.3);
+                DrawableUtils.setMenuItemAlpha(audioItem, 0.3);
             } else {
+                infoItem.setEnabled(true);
                 pinItem.setEnabled(true);
                 shareItem.setEnabled(true);
                 historyItem.setEnabled(true);
@@ -599,6 +616,12 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 copyLinkItem.setEnabled(mNote.isPublished());
                 markdownItem.setEnabled(true);
                 checklistItem.setEnabled(true);
+                colorItem.setEnabled(true);
+                sheetItem.setEnabled(true);
+                photoItem.setEnabled(true);
+                audioItem.setEnabled(true);
+                importItem.setEnabled(true);
+                exportItem.setEnabled(true);
                 DrawableUtils.setMenuItemAlpha(checklistItem, 1.0);  // 1.0 is 100% opacity.
             }
 
@@ -968,52 +991,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
      */
 
     @Override
-    public void onSharePublishClicked() {
-        publishNote();
-        if (mShareBottomSheet != null) {
-            mShareBottomSheet.dismiss();
-        }
-    }
-
-    @Override
-    public void onShareUnpublishClicked() {
-        unpublishNote();
-        if (mShareBottomSheet != null) {
-            mShareBottomSheet.dismiss();
-        }
-    }
-
-    @Override
-    public void onWordPressPostClicked() {
-        if (mShareBottomSheet != null) {
-            mShareBottomSheet.dismiss();
-        }
-
-        if (getFragmentManager() == null) {
-            return;
-        }
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(WordPressDialogFragment.DIALOG_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        WordPressDialogFragment wpDialogFragment = new WordPressDialogFragment();
-        wpDialogFragment.setNote(mNote);
-        wpDialogFragment.show(ft, WordPressDialogFragment.DIALOG_TAG);
-    }
-
-    @Override
-    public void onShareCollaborateClicked() {
-        Toast.makeText(getActivity(), R.string.collaborate_message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onShareDismissed() {
-
     }
 
     /**

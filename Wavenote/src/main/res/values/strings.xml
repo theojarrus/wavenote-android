@@ -248,5 +248,8 @@
     <string name="chord_mode">Chord Mode</string>
     <string name="audio_tracks">Audio Tracks</string>
     <string name="photos">Photos</string>
+    <string name="text_color">Text Color</string>
+    <string name="menu_export">Export</string>
+    <string name="import_note">Import</string>
 
 </resources>

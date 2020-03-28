@@ -747,7 +747,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         } else {
             menu.findItem(R.id.menu_search).setVisible(true);
             menu.findItem(R.id.menu_share).setVisible(false);
-            menu.findItem(R.id.menu_info).setVisible(false);
             menu.findItem(R.id.menu_checklist).setVisible(false);
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
@@ -755,6 +754,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             menu.findItem(R.id.menu_empty_trash).setVisible(false);
             menu.setGroupVisible(R.id.group_1, false);
             menu.setGroupVisible(R.id.group_2, false);
+            menu.setGroupVisible(R.id.group_3, false);
+            menu.setGroupVisible(R.id.group_5, false);
         }
 
         if (mSelectedTag != null && mSelectedTag.id == TagsAdapter.TRASH_ID) {
@@ -849,6 +850,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem infoItem = menu.findItem(R.id.menu_info);
         MenuItem pinItem = menu.findItem(R.id.menu_pin);
         MenuItem shareItem = menu.findItem(R.id.menu_share);
         MenuItem historyItem = menu.findItem(R.id.menu_history);
@@ -871,6 +873,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             markdownItem.setChecked(mCurrentNote.isMarkdownEnabled());
 
             if (mCurrentNote.isDeleted()) {
+                infoItem.setEnabled(false);
                 pinItem.setEnabled(false);
                 shareItem.setEnabled(false);
                 historyItem.setEnabled(false);
@@ -878,6 +881,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 copyLinkItem.setEnabled(false);
                 markdownItem.setEnabled(false);
             } else {
+                infoItem.setEnabled(true);
                 pinItem.setEnabled(true);
                 shareItem.setEnabled(true);
                 historyItem.setEnabled(true);
@@ -925,16 +929,26 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             menu.findItem(R.id.menu_checklist).setVisible(true);
             menu.findItem(R.id.menu_markdown_preview).setVisible(mCurrentNote.isMarkdownEnabled());
             menu.findItem(R.id.menu_sidebar).setVisible(true);
-            menu.findItem(R.id.menu_info).setVisible(true);
+            menu.findItem(R.id.menu_color).setVisible(true);
+            menu.findItem(R.id.menu_sheet).setVisible(true);
+            menu.findItem(R.id.menu_photos).setVisible(true);
+            menu.findItem(R.id.menu_audiotracks).setVisible(true);
             menu.setGroupVisible(R.id.group_1, true);
             menu.setGroupVisible(R.id.group_2, true);
+            menu.setGroupVisible(R.id.group_3, true);
+            menu.setGroupVisible(R.id.group_5, true);
         } else {
             menu.findItem(R.id.menu_checklist).setVisible(false);
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
-            menu.findItem(R.id.menu_info).setVisible(false);
+            menu.findItem(R.id.menu_color).setVisible(false);
+            menu.findItem(R.id.menu_sheet).setVisible(false);
+            menu.findItem(R.id.menu_photos).setVisible(false);
+            menu.findItem(R.id.menu_audiotracks).setVisible(false);
             menu.setGroupVisible(R.id.group_1, false);
             menu.setGroupVisible(R.id.group_2, false);
+            menu.setGroupVisible(R.id.group_3, false);
+            menu.setGroupVisible(R.id.group_5, false);
         }
 
         menu.findItem(R.id.menu_empty_trash).setVisible(false);
