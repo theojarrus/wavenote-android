@@ -8,8 +8,8 @@ import java.util.Map;
 public class NoteFullTextIndexer implements FullTextIndex.Indexer<Note> {
 
     @SuppressWarnings("unused")
-    static private final String COMMA = ", ";
-    static private final String[] INDEXES = Note.FULL_TEXT_INDEXES;
+    static public final String COMMA = ", ";
+    static public final String[] INDEXES = Note.FULL_TEXT_INDEXES;
 
     @Override
     public Map<String, String> index(String[] keys, Note note) {

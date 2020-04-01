@@ -52,10 +52,10 @@ public class Note extends BucketObject {
     public static Integer SELECTED_COLOR = -6972445;
     public static boolean TEXT_STYLE_BOLD = true;
     public static boolean TEXT_STYLE_ITALIC = false;
-    public static boolean TEXT_STYLE_STROKE = false;
-    public static boolean TEXT_STYLE_CODE = false;
-    public static boolean TEXT_STYLE_UNDERLINE = false;
-    public static boolean TEXT_STYLE_STRIKETHROUGH = false;
+    public static boolean TEXT_STYLE_STROKE = true;
+    public static boolean TEXT_STYLE_CODE = true;
+    public static boolean TEXT_STYLE_UNDERLINE = true;
+    public static boolean TEXT_STYLE_STRIKETHROUGH = true;
     static public final String[] FULL_TEXT_INDEXES = new String[]{
             Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
     private static final Spannable BLANK_CONTENT = new SpannableString("");
