@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -240,9 +242,9 @@ public class WavenoteEditText extends AppCompatEditText {
     }
 
     // Replaces any CheckableSpans with their markdown counterpart (e.g. '- [ ]')
-    public String getPlainTextContent() {
+    public Spannable getPlainTextContent() {
         if (getText() == null) {
-            return "";
+            return new SpannableString( "");
         }
 
         SpannableStringBuilder content = new SpannableStringBuilder(getText());
@@ -257,7 +259,7 @@ public class WavenoteEditText extends AppCompatEditText {
                     span.isChecked() ? ChecklistUtils.CHECKED_MARKDOWN : ChecklistUtils.UNCHECKED_MARKDOWN);
         }
 
-        return content.toString();
+        return content;
     }
 
     public void processChecklists() {

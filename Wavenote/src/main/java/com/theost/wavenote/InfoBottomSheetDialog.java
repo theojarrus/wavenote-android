@@ -2,6 +2,7 @@ package com.theost.wavenote;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,12 +76,12 @@ public class InfoBottomSheetDialog extends BottomSheetDialogBase {
         }
     }
 
-    private String getWordCount(String content) {
-        int words = (content.trim().length() == 0) ? 0 : content.trim().split("([\\W]+)").length;
+    private String getWordCount(Spannable content) {
+        int words = (content.toString().trim().length() == 0) ? 0 : content.toString().trim().split("([\\W]+)").length;
         return NumberFormat.getInstance().format(words);
     }
 
-    private String getCharactersCount(String content) {
+    private String getCharactersCount(Spannable content) {
         return NumberFormat.getInstance().format(content.length());
     }
 }

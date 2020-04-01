@@ -50,4 +50,19 @@
         <item name="android:windowLightNavigationBar">false</item>
     </style>
 
+    <!-- Color Sheet -->
+    <style name="BaseTheme.ColorSheet.Light" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="dialogPrimary">@color/dialogPrimary</item>
+        <item name="dialogPrimaryVariant">@color/dialogPrimaryVariant</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarColor">@color/dialogPrimary</item>
+    </style>
+
 </resources>

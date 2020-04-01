@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,7 +55,6 @@ import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.BucketObjectNameInvalid;
 import com.simperium.client.Query;
 import com.simperium.client.User;
-import com.theost.wavenote.utils.WidgetUtils;
 
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -438,7 +438,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 Note welcomeNote = mNotesBucket.newObject("welcome-android");
                 welcomeNote.setCreationDate(Calendar.getInstance());
                 welcomeNote.setModificationDate(welcomeNote.getCreationDate());
-                welcomeNote.setContent(getString(R.string.welcome_note));
+                welcomeNote.setContent(new SpannableString(getString(R.string.welcome_note)));
                 welcomeNote.getTitle();
                 welcomeNote.save();
             } catch (BucketObjectNameInvalid e) {
@@ -470,7 +470,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 Note note = mNotesBucket.newObject();
                 note.setCreationDate(Calendar.getInstance());
                 note.setModificationDate(note.getCreationDate());
-                note.setContent(text);
+                note.setContent(new SpannableString(text));
                 note.save();
                 setCurrentNote(note);
                 mShouldSelectNewNote = true;

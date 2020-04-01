@@ -56,4 +56,7 @@
     <dimen name="text_suggestion">16sp</dimen>
     <dimen name="text_widget">12sp</dimen>
 
+    <!-- Color Sheet -->
+    <dimen name="default_dialog_radius">4dp</dimen>
+
 </resources>

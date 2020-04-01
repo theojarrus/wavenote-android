@@ -39,4 +39,15 @@
 
     <attr name="drawerBackgroundColor" format="reference|color"/>
 
+    <!-- Color Sheet -->
+
+    <attr name="lineHeightHint" format="dimension" />
+
+    <declare-styleable name="ColorSheetBaselineGridTextView">
+        <attr name="lineHeightMultiplierHint" format="float" />
+        <attr name="lineHeightHint" />
+        <attr name="maxLinesByHeight" format="boolean" />
+        <attr name="letterSpacing" format="float"/>
+    </declare-styleable>
+
 </resources>

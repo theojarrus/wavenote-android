@@ -1,6 +1,9 @@
 package com.theost.wavenote.models;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 
 import com.theost.wavenote.R;
@@ -9,6 +12,7 @@ import com.simperium.client.BucketObject;
 import com.simperium.client.BucketSchema;
 import com.simperium.client.Query;
 import com.simperium.client.Query.ComparisonType;
+import com.theost.wavenote.utils.HtmlCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,13 +49,21 @@ public class Note extends BucketObject {
     public static final String MATCHED_TITLE_INDEX_NAME = "matchedTitle";
     public static final String MATCHED_CONTENT_INDEX_NAME = "matchedContent";
     public static final String PUBLISH_URL = "http://simp.ly/publish/";
+    public static Integer SELECTED_COLOR = -6972445;
+    public static boolean TEXT_STYLE_BOLD = true;
+    public static boolean TEXT_STYLE_ITALIC = false;
+    public static boolean TEXT_STYLE_STROKE = false;
+    public static boolean TEXT_STYLE_CODE = false;
+    public static boolean TEXT_STYLE_UNDERLINE = false;
+    public static boolean TEXT_STYLE_STRIKETHROUGH = false;
     static public final String[] FULL_TEXT_INDEXES = new String[]{
             Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
-    private static final String BLANK_CONTENT = "";
+    private static final Spannable BLANK_CONTENT = new SpannableString("");
     private static final String SPACE = " ";
     private static final int MAX_PREVIEW_CHARS = 300;
     protected String mTitle = null;
     protected String mContentPreview = null;
+    protected String strContent;
 
 
     public Note(String key) {
@@ -146,7 +158,7 @@ public class Note extends BucketObject {
 
     protected void updateTitleAndPreview() {
         // try to build a title and preview property out of content
-        String content = getContent().trim();
+        String content = getContent().toString().trim();
         if (content.length() > MAX_PREVIEW_CHARS) {
             content = content.substring(0, MAX_PREVIEW_CHARS - 1);
         }
@@ -167,6 +179,62 @@ public class Note extends BucketObject {
         }
     }
 
+    public static boolean isTextStyleBold() {
+        return TEXT_STYLE_BOLD;
+    }
+
+    public static boolean isTextStyleItalic() {
+        return TEXT_STYLE_ITALIC;
+    }
+
+    public static boolean isTextStyleStroke() {
+        return TEXT_STYLE_STROKE;
+    }
+
+    public static boolean isTextStyleCode() {
+        return TEXT_STYLE_CODE;
+    }
+
+    public static boolean isTextStyleUnderline() {
+        return TEXT_STYLE_UNDERLINE;
+    }
+
+    public static boolean isTextStyleStrikethrough() {
+        return TEXT_STYLE_STRIKETHROUGH;
+    }
+
+    public static void setTextStyleBold(boolean checked) {
+        TEXT_STYLE_BOLD = checked;
+    }
+
+    public static void setTextStyleItalic(boolean checked) {
+        TEXT_STYLE_ITALIC = checked;
+    }
+
+    public static void setTextStyleStroke(boolean checked) {
+        TEXT_STYLE_STROKE = checked;
+    }
+
+    public static void setTextStyleCode(boolean checked) {
+        TEXT_STYLE_CODE = checked;
+    }
+
+    public static void setTextStyleUnderline(boolean checked) {
+        TEXT_STYLE_UNDERLINE = checked;
+    }
+
+    public static void setTextStyleStrikethrough(boolean checked) {
+        TEXT_STYLE_STRIKETHROUGH = checked;
+    }
+
+    public Integer getSelectedColor() {
+        return SELECTED_COLOR;
+    }
+
+    public static void setSelectedColor(Integer selectedColor) {
+        Note.SELECTED_COLOR = selectedColor;
+    }
+
     public String getTitle() {
         if (mTitle == null) {
             updateTitleAndPreview();
@@ -174,18 +242,20 @@ public class Note extends BucketObject {
         return mTitle;
     }
 
-    public String getContent() {
-        Object content = getProperty(CONTENT_PROPERTY);
-        if (content == null) {
+    public Spannable getContent() {
+        Object strContent = getProperty(CONTENT_PROPERTY);
+        if (strContent == null) {
             return BLANK_CONTENT;
         }
-        return (String) content;
+        Spannable content = (Spannable) HtmlCompat.fromHtml((String) strContent);
+        return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Spannable content) {
         mTitle = null;
         mContentPreview = null;
-        setProperty(CONTENT_PROPERTY, content);
+        strContent = Html.toHtml(content).replaceAll("<img .*?>","- [ ]");
+        setProperty(CONTENT_PROPERTY, strContent);
     }
 
     public String getContentPreview() {
@@ -449,7 +519,7 @@ public class Note extends BucketObject {
      * @param isPreviewEnabled  note has preview enabled
      * @return true if note has changes, false if it is unchanged.
      */
-    public boolean hasChanges(String content, String tagString, boolean isPinned, boolean isMarkdownEnabled, boolean isPreviewEnabled) {
+    public boolean hasChanges(Spannable content, String tagString, boolean isPinned, boolean isMarkdownEnabled, boolean isPreviewEnabled) {
         return !content.equals(this.getContent())
                 || !tagString.equals(this.getTagString().toString())
                 || this.isPinned() != isPinned

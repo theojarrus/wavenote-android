@@ -146,4 +146,28 @@
     <color name="yellow_90">#302800</color>
     <color name="yellow_100">#1c1700</color>
 
+    <!-- Color Sheet -->
+
+    <array name="colors">
+        <item>#959BE3</item>
+        <item>#E7C8DD</item>
+        <item>#67597A</item>
+        <item>#5D4E60</item>
+        <item>#0f1238</item>
+        <item>#E91E63</item>
+        <item>#3F51B5</item>
+        <item>#1E88E5</item>
+        <item>#F4511E</item>
+        <item>#546E7A</item>
+        <item>#43A047</item>
+    </array>
+
+    <color name="dialogPrimary">#FAFAFA</color>
+    <color name="dialogPrimaryVariant">#E0E0E0</color>
+
+    <color name="dialogDarkPrimary">@color/background_dark_4</color>
+    <color name="dialogDarkPrimaryVariant">#151515</color>
+
+    <color name="dividerColor">#1F000000</color>
+
 </resources>

@@ -13,4 +13,5 @@ public class HtmlCompat {
             return Html.fromHtml(source);
         }
     }
+
 }

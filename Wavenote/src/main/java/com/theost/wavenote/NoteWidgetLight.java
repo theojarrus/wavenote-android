@@ -121,7 +121,7 @@ public class NoteWidgetLight extends AppWidgetProvider {
 
                     // Remove title from content
                     String title = updatedNote.getTitle();
-                    String contentWithoutTitle = updatedNote.getContent().replace(title, "");
+                    String contentWithoutTitle = updatedNote.getContent().toString().replace(title, "");
                     int indexOfNewline = contentWithoutTitle.indexOf("\n") + 1;
                     String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
 

@@ -103,7 +103,7 @@
     </style>
 
     <style name="ToolbarTheme.Popup" parent="ThemeOverlay.MaterialComponents">
-        <item name="android:backgroundTint">@color/background_dark_8</item>
+        <item name="android:backgroundTint">@color/background_dark_12</item>
     </style>
 
 </resources>

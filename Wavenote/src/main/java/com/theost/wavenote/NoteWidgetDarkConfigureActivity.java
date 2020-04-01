@@ -189,7 +189,7 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
 
                     // Remove title from content
                     String title = note.getTitle();
-                    String contentWithoutTitle = note.getContent().replace(title, "");
+                    String contentWithoutTitle = note.getContent().toString().replace(title, "");
                     int indexOfNewline = contentWithoutTitle.indexOf("\n") + 1;
                     String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
 

@@ -2,6 +2,7 @@ package com.theost.wavenote;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -228,6 +229,6 @@ public class HistoryBottomSheetDialog extends BottomSheetDialogBase {
         void onHistoryCancelClicked();
         void onHistoryDismissed();
         void onHistoryRestoreClicked();
-        void onHistoryUpdateNote(String content);
+        void onHistoryUpdateNote(Spannable content);
     }
 }

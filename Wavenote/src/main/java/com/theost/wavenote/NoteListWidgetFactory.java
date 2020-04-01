@@ -15,8 +15,6 @@ import com.theost.wavenote.utils.PrefUtils;
 import com.simperium.client.Bucket;
 import com.simperium.client.Query;
 
-import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
-
 public class NoteListWidgetFactory implements RemoteViewsFactory {
     public static final String EXTRA_IS_LIGHT = "is_light";
 

@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ShareBottomSheetDialog extends BottomSheetDialogBase {
     private static final String TAG = ShareBottomSheetDialog.class.getSimpleName();
-    private static final int SHARE_SHEET_COLUMN_COUNT = 3;
+    private static final int SHARE_SHEET_COLUMN_COUNT = 4;
 
     private Fragment mFragment;
     private Intent mShareIntent;
@@ -64,6 +64,14 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
             mShareIntent.setType("text/plain");
 
             mShareButtons = getShareButtons(mFragment.requireActivity(), mShareIntent);
+
+            View colorSheetClose = getDialog().findViewById(R.id.colorSheetClose);
+            colorSheetClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
         }
 
         if (getDialog() != null) {

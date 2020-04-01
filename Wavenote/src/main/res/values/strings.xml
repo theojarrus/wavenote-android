@@ -244,12 +244,21 @@
     <string name="simperium_subtitle">The simplest way to keep notes.</string>
     <string name="simperium_title">@string/app_name</string>
 
-    <!-- MUSIC -->
+    <!-- 2.5 MODIFICATION -->
     <string name="chord_mode">Chord Mode</string>
     <string name="audio_tracks">Audio Tracks</string>
     <string name="photos">Photos</string>
     <string name="text_color">Text Color</string>
     <string name="menu_export">Export</string>
     <string name="import_note">Import</string>
+
+    <!-- Color Sheet -->
+    <string name="pick_a_color">Pick a color</string>
+    <string name="text_bold">Bold</string>
+    <string name="text_stroke">Stroke</string>
+    <string name="text_italic">Italic</string>
+    <string name="text_underline">Underline</string>
+    <string name="text_strikethrough">Strikethrough</string>
+    <string name="text_code">Code</string>
 
 </resources>

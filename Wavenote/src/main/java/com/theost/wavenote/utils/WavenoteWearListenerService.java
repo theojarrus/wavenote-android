@@ -1,5 +1,6 @@
 package com.theost.wavenote.utils;
 
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ public class WavenoteWearListenerService extends WearableListenerService {
                     Note note = application.getNotesBucket().newObject();
                     note.setCreationDate(Calendar.getInstance());
                     note.setModificationDate(note.getCreationDate());
-                    note.setContent(voiceNoteString);
+                    note.setContent(new SpannableString(voiceNoteString));
                     note.save();
 
                     Toast.makeText(application, getString(R.string.note_added), Toast.LENGTH_SHORT).show();
