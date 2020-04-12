@@ -233,7 +233,7 @@ public class WavenoteEditText extends AppCompatEditText {
         // https://issuetracker.google.com/issues/37009353
         float lineSpacingExtra = getLineSpacingExtra();
         float lineSpacingMultiplier = getLineSpacingMultiplier();
-        setLineSpacing(0.0f, 1.0f);
+        setLineSpacing(0.0f, 1.2f);
         setLineSpacing(lineSpacingExtra, lineSpacingMultiplier);
     }
 

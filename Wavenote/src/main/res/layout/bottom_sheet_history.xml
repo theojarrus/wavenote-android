@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:theme="@style/Theme.Simplestyle.BottomSheetDialog">
+    android:theme="@style/Theme.Wavestyle.BottomSheetDialog">
 
     <LinearLayout
         android:id="@+id/history_loading_view"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             tools:text="Jan 27, 2020, 13:37"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Label">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Label">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
         <SeekBar

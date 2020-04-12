@@ -48,6 +48,10 @@
             android:title="@string/font_size"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
+            android:key="pref_key_detect_syntax"
+            android:title="@string/pref_key_detect_syntax"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
             android:key="pref_key_detect_links"
             android:title="@string/detect_links"/>
     </PreferenceCategory>

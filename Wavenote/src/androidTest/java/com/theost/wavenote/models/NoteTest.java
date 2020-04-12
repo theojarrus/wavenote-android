@@ -1,5 +1,8 @@
 package com.theost.wavenote.models;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -58,20 +61,20 @@ public class NoteTest {
 
     @Test
     public void testParseTitleAndPreview() {
-        String title = "Lorem ipsum dolor sit amet,";
-        String preview = "consectetur adipisicing elit, "
+        Spannable title = new SpannableString( "Lorem ipsum dolor sit amet,");
+        Spannable preview = new SpannableString("consectetur adipisicing elit, "
                 + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                 + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
-                + "Duis aute irure dolor in reprehenderit in voluptate velit esse cil";
+                + "Duis aute irure dolor in reprehenderit in voluptate velit esse cil");
 
-        mNote.setContent("Lorem ipsum dolor sit amet,\n"
+        mNote.setContent(new SpannableString("Lorem ipsum dolor sit amet,\n"
                 + "consectetur adipisicing elit,\n"
                 + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
                 + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n"
-                + "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.");
+                + "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."));
 
-        assertThat(mNote.getTitle(), is(title));
-        assertThat(mNote.getContentPreview(), is(preview));
+        assertThat(new SpannableString(mNote.getTitle()), is(title));
+        assertThat(new SpannableString(mNote.getContentPreview()), is(preview));
     }
 
     @Test

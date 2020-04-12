@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class BottomSheetDialogBase extends BottomSheetDialogFragment {
     @Override
     public int getTheme() {
-        return R.style.Theme_Simplestyle_BottomSheetDialog;
+        return R.style.Theme_Wavestyle_BottomSheetDialog;
     }
 
     @NonNull

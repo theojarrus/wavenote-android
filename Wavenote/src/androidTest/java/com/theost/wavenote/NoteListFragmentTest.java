@@ -45,6 +45,7 @@ public class NoteListFragmentTest {
         NoteListFragment.NotesCursorAdapter adapter = noteListFragment.mNotesAdapter;
         noteListFragment.mSearchString = "welcome";
 
+        int count = adapter.getCount();
         assertThat(adapter.getCount(), is(1));
 
     }

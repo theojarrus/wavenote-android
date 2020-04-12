@@ -97,7 +97,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
-                style="@style/Theme.Simplestyle.BottomSheetDialog.Label" />
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
             <CheckBox
                 android:id="@+id/text_italic"
@@ -108,7 +108,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
-                style="@style/Theme.Simplestyle.BottomSheetDialog.Label" />
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
         </LinearLayout>
 
@@ -127,7 +127,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
-                style="@style/Theme.Simplestyle.BottomSheetDialog.Label" />
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
             <CheckBox
                 android:id="@+id/text_code"
@@ -138,7 +138,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
-                style="@style/Theme.Simplestyle.BottomSheetDialog.Label" />
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
         </LinearLayout>
 
@@ -157,7 +157,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
-                style="@style/Theme.Simplestyle.BottomSheetDialog.Label" />
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
             <CheckBox
                 android:id="@+id/text_strikethrough"
@@ -168,7 +168,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
-                style="@style/Theme.Simplestyle.BottomSheetDialog.Label" />
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
         </LinearLayout>
 

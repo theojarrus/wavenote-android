@@ -4,12 +4,14 @@
 
     <!-- APPLICATION -->
     <color name="blue">@color/blue_50</color>
+    <color name="purple">#e7c8dd</color>
     <color name="blue_dark">@color/blue_60</color>
     <color name="blue_light">@color/blue_0</color>
     <color name="gray">@color/gray_50</color>
     <color name="green">@color/green_50</color>
     <color name="red">@color/red_50</color>
     <color name="yellow">@color/yellow_20</color>
+    <color name="black">#36393e</color>
 
     <!-- ELEVATION -->
     <color name="background_dark_0">#121416</color>
@@ -24,9 +26,9 @@
     <color name="background_dark_24">#3d3f41</color>
 
     <!-- PASSCODE -->
-    <color name="passcodelock_background">@color/blue</color>
+    <color name="passcodelock_background">@color/background_dark</color>
     <color name="passcodelock_button_image_color">@color/blue_10</color>
-    <color name="passcodelock_button_text_color">#fafafa</color>
+    <color name="passcodelock_button_text_color_dark">@color/gray_20</color>
     <color name="passcodelock_divider">@color/blue_40</color>
     <color name="passcodelock_field_background_color">@android:color/transparent</color>
     <color name="passcodelock_field_hint_text_color">@android:color/transparent</color>
@@ -148,7 +150,7 @@
 
     <!-- Color Sheet -->
 
-    <array name="colors">
+    <array name="colorsheet_colors">
         <item>#959BE3</item>
         <item>#E7C8DD</item>
         <item>#67597A</item>

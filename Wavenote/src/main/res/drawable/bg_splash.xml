@@ -5,11 +5,11 @@
     android:opacity="opaque">
 
     <item
-        android:drawable="@color/blue">
+        android:drawable="@color/background_dark">
     </item>
 
     <item
-        android:drawable="@drawable/ic_wavenote_24dp"
+        android:drawable="@drawable/ic_wavenote_blue_24dp"
         android:gravity="center"
         android:height="@dimen/icon_empty"
         android:width="@dimen/icon_empty">

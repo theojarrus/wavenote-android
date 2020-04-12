@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.commonsware.cwac:anddown:0.4.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9aeac40c4f53539c6ac04320e72b7b95/jetified-anddown-0.4.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9aeac40c4f53539c6ac04320e72b7b95/jetified-anddown-0.4.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bc56e0a5e3c43a47e8f2d09eaf77ade5/jetified-anddown-0.4.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bc56e0a5e3c43a47e8f2d09eaf77ade5/jetified-anddown-0.4.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.commonsware.cwac/anddown/0.4.0/85cde9e95da5b553b44b778c3577e2028845cc2c/anddown-0.4.0-javadoc.jar!/" />

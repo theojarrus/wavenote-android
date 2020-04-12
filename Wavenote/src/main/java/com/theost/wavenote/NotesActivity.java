@@ -65,18 +65,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NotesActivity extends ThemedAppCompatActivity implements
-        NoteListFragment.Callbacks, User.StatusChangeListener, Simperium.OnUserCreatedListener, UndoBarController.UndoListener,
-        Bucket.Listener<Note> {
+import static com.theost.wavenote.NoteListFragment.TAG_PREFIX;
+import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
+import static com.theost.wavenote.utils.TagsAdapter.ALL_NOTES_ID;
+import static com.theost.wavenote.utils.TagsAdapter.DEFAULT_ITEM_POSITION;
+import static com.theost.wavenote.utils.TagsAdapter.SETTINGS_ID;
+import static com.theost.wavenote.utils.TagsAdapter.TAGS_ID;
+import static com.theost.wavenote.utils.TagsAdapter.TRASH_ID;
+import static com.theost.wavenote.utils.TagsAdapter.UNTAGGED_NOTES_ID;
 
+public class NotesActivity extends ThemedAppCompatActivity implements NoteListFragment.Callbacks,
+        User.StatusChangeListener, Simperium.OnUserCreatedListener, UndoBarController.UndoListener,
+        Bucket.Listener<Note> {
     public static String TAG_NOTE_LIST = "noteList";
     public static String TAG_NOTE_EDITOR = "noteEditor";
+
+    private static String STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED = "STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED";
+
     protected Bucket<Note> mNotesBucket;
     protected Bucket<Tag> mTagsBucket;
-    private boolean mIsShowingMarkdown;
-    private boolean mShouldSelectNewNote;
+    private boolean mHasTappedNoteListWidgetButton;
     private boolean mIsSettingsClicked;
+    private boolean mIsShowingMarkdown;
     private boolean mIsTabletFullscreen;
+    private boolean mShouldSelectNewNote;
 
     private String mTabletSearchQuery;
     private UndoBarController mUndoBarController;
@@ -163,8 +175,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             fragmentTransaction.add(R.id.note_fragment_container, mNoteListFragment, TAG_NOTE_LIST);
             fragmentTransaction.commit();
         } else {
+            mHasTappedNoteListWidgetButton = savedInstanceState.getBoolean(STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED);
             mNoteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(TAG_NOTE_LIST);
         }
+
         mIsTabletFullscreen = mNoteListFragment.isHidden();
 
         if (DisplayUtils.isLargeScreen(this)) {
@@ -209,7 +223,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             startLoginActivity();
         }
 
-        DisplayUtils.disableScreenshotsIfLocked(this);
+        disableScreenshotsIfLocked(this);
 
         mNotesBucket.start();
         mTagsBucket.start();
@@ -225,7 +239,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         if (userIsUnauthorized()) {
             if (mTagsAdapter.getPosition(mSelectedTag) == -1) {
                 mSelectedTag = null;
-                mNavigationMenu.getItem(TagsAdapter.DEFAULT_ITEM_POSITION).setChecked(true);
+                mNavigationMenu.getItem(DEFAULT_ITEM_POSITION).setChecked(true);
             }
         }
 
@@ -265,6 +279,12 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         mNotesBucket.removeOnSaveObjectListener(this);
         mNotesBucket.removeOnDeleteObjectListener(this);
         mNotesBucket.stop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED, mHasTappedNoteListWidgetButton);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -311,15 +331,15 @@ public class NotesActivity extends ThemedAppCompatActivity implements
 
     private ColorStateList getTextSelector() {
         int[][] states = new int[][] {
-            new int[] {-android.R.attr.state_enabled}, // disabled
-            new int[] { android.R.attr.state_checked}, // checked
-            new int[] {-android.R.attr.state_checked}  // unchecked
+                new int[] {-android.R.attr.state_enabled}, // disabled
+                new int[] { android.R.attr.state_checked}, // checked
+                new int[] {-android.R.attr.state_checked}  // unchecked
         };
 
         int[] colors = new int[] {
-            getResources().getColor(R.color.text_title_disabled, getTheme()),
-            ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
-            ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
+                getResources().getColor(R.color.text_title_disabled, getTheme()),
+                ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
+                ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
         };
 
         return new ColorStateList(states, colors);
@@ -334,27 +354,27 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         navigationView.setItemIconTintList(iconSelector);
         navigationView.setItemTextColor(textSelector);
         navigationView.setNavigationItemSelectedListener(
-            new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
 
-                    if (item.getItemId() == TagsAdapter.SETTINGS_ID) {
-                        mIsSettingsClicked = true;
-                        return false;
-                    } else {
-                        mSelectedTag = mTagsAdapter.getTagFromItem(item);
-                        filterListBySelectedTag();
-                        return true;
+                        if (item.getItemId() == SETTINGS_ID) {
+                            mIsSettingsClicked = true;
+                            return false;
+                        } else {
+                            mSelectedTag = mTagsAdapter.getTagFromItem(item);
+                            filterListBySelectedTag();
+                            return true;
+                        }
                     }
                 }
-            }
         );
 
         mNavigationMenu = navigationView.getMenu();
-        mNavigationMenu.add(GROUP_PRIMARY, TagsAdapter.ALL_NOTES_ID, Menu.NONE, getString(R.string.all_notes)).setIcon(R.drawable.ic_notes_24dp).setCheckable(true);
-        mNavigationMenu.add(GROUP_PRIMARY, TagsAdapter.TRASH_ID, Menu.NONE, getString(R.string.trash)).setIcon(R.drawable.ic_trash_24dp).setCheckable(true);
-        mNavigationMenu.add(GROUP_PRIMARY, TagsAdapter.SETTINGS_ID, Menu.NONE, getString(R.string.settings)).setIcon(R.drawable.ic_settings_24dp).setCheckable(false);
+        mNavigationMenu.add(GROUP_PRIMARY, ALL_NOTES_ID, Menu.NONE, getString(R.string.all_notes)).setIcon(R.drawable.ic_notes_24dp).setCheckable(true);
+        mNavigationMenu.add(GROUP_PRIMARY, TRASH_ID, Menu.NONE, getString(R.string.trash)).setIcon(R.drawable.ic_trash_24dp).setCheckable(true);
+        mNavigationMenu.add(GROUP_PRIMARY, SETTINGS_ID, Menu.NONE, getString(R.string.settings)).setIcon(R.drawable.ic_settings_24dp).setCheckable(false);
         mTagsAdapter = new TagsAdapter(this, mNotesBucket);
 
         if (mSelectedTag == null)
@@ -403,7 +423,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         }
 
         // Disable long press on notes when viewing Trash.
-        if (mSelectedTag.id == TagsAdapter.TRASH_ID) {
+        if (mSelectedTag.id == TRASH_ID) {
             getNoteListFragment().getListView().setLongClickable(false);
         } else {
             getNoteListFragment().getListView().setLongClickable(true);
@@ -414,20 +434,19 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         Map<String, String> properties = new HashMap<>(1);
 
         switch ((int) mSelectedTag.id) {
-            case TagsAdapter.ALL_NOTES_ID:
+            case ALL_NOTES_ID:
                 properties.put("tag", "all_notes");
                 break;
-            case TagsAdapter.TRASH_ID:
+            case TRASH_ID:
                 properties.put("tag", "trash");
                 break;
-            case TagsAdapter.UNTAGGED_NOTES_ID:
+            case UNTAGGED_NOTES_ID:
                 properties.put("tag", "untagged_notes");
                 break;
             default:
                 properties = null;
                 break;
         }
-
         setSelectedTagActive();
     }
 
@@ -474,7 +493,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 note.save();
                 setCurrentNote(note);
                 mShouldSelectNewNote = true;
-
                 if (!DisplayUtils.isLargeScreenLandscape(this)) {
                     // Disable the lock screen when sharing content and opening NoteEditorActivity
                     // Lock screen activities are enabled again in NoteEditorActivity.onPause()
@@ -503,7 +521,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         mNavigationMenu.removeGroup(GROUP_TERTIARY);
 
         if (mTagsAdapter.getCountCustom() > 0) {
-            mNavigationMenu.add(GROUP_SECONDARY, TagsAdapter.TAGS_ID, Menu.NONE, getString(R.string.tags)).setActionView(R.layout.drawer_action_edit).setEnabled(false);
+            mNavigationMenu.add(GROUP_SECONDARY, TAGS_ID, Menu.NONE, getString(R.string.tags)).setActionView(R.layout.drawer_action_edit).setEnabled(false);
 
             for (int i = 0; i < mTagsAdapter.getCount(); i++) {
                 String name = mTagsAdapter.getItem(i).name;
@@ -514,7 +532,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 }
             }
 
-            mNavigationMenu.add(GROUP_TERTIARY, TagsAdapter.UNTAGGED_NOTES_ID, Menu.NONE, getString(R.string.untagged_notes)).setIcon(R.drawable.ic_untagged_24dp).setCheckable(true);
+            mNavigationMenu.add(GROUP_TERTIARY, UNTAGGED_NOTES_ID, Menu.NONE, getString(R.string.untagged_notes)).setIcon(R.drawable.ic_untagged_24dp).setCheckable(true);
             setSelectedTagActive();
         }
     }
@@ -533,7 +551,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         if (selectedMenuItem != null) {
             selectedMenuItem.setChecked(true);
         } else {
-            mNavigationMenu.findItem(TagsAdapter.ALL_NOTES_ID).setChecked(true);
+            mNavigationMenu.findItem(ALL_NOTES_ID).setChecked(true);
         }
 
         setTitle(mSelectedTag.name);
@@ -568,13 +586,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements
     public void updateTrashMenuItem(boolean shouldWaitForAnimation) {
         if (shouldWaitForAnimation) {
             new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        updateTrashMenuItem();
-                    }
-                },
-                getResources().getInteger(R.integer.time_animation)
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            updateTrashMenuItem();
+                        }
+                    },
+                    getResources().getInteger(R.integer.time_animation)
             );
         } else {
             updateTrashMenuItem();
@@ -647,13 +665,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             @SuppressWarnings("ResourceType")
             String hintHexColor = getString(R.color.text_title_disabled).replace("ff", "");
             mSearchView.setQueryHint(
-                HtmlCompat.fromHtml(
-                    String.format(
-                        "<font color=\"%s\">%s</font>",
-                        hintHexColor,
-                        getString(R.string.search_hint)
+                    HtmlCompat.fromHtml(
+                            String.format(
+                                    "<font color=\"%s\">%s</font>",
+                                    hintHexColor,
+                                    getString(R.string.search_hint)
+                            )
                     )
-                )
             );
         }
 
@@ -747,6 +765,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         } else {
             menu.findItem(R.id.menu_search).setVisible(true);
             menu.findItem(R.id.menu_share).setVisible(false);
+            menu.findItem(R.id.menu_info).setVisible(false);
             menu.findItem(R.id.menu_checklist).setVisible(false);
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
@@ -755,10 +774,9 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             menu.setGroupVisible(R.id.group_1, false);
             menu.setGroupVisible(R.id.group_2, false);
             menu.setGroupVisible(R.id.group_3, false);
-            menu.setGroupVisible(R.id.group_5, false);
         }
 
-        if (mSelectedTag != null && mSelectedTag.id == TagsAdapter.TRASH_ID) {
+        if (mSelectedTag != null && mSelectedTag.id == TRASH_ID) {
             mEmptyTrashMenuItem = menu.findItem(R.id.menu_empty_trash);
             mEmptyTrashMenuItem.setVisible(true);
 
@@ -772,8 +790,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements
 
         if (mDrawerLayout != null && mSearchMenuItem != null) {
             mDrawerLayout.setDrawerLockMode(mSearchMenuItem.isActionViewExpanded() ?
-                DrawerLayout.LOCK_MODE_LOCKED_CLOSED :
-                DrawerLayout.LOCK_MODE_UNLOCKED
+                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED :
+                    DrawerLayout.LOCK_MODE_UNLOCKED
             );
         }
 
@@ -850,7 +868,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem infoItem = menu.findItem(R.id.menu_info);
         MenuItem pinItem = menu.findItem(R.id.menu_pin);
         MenuItem shareItem = menu.findItem(R.id.menu_share);
         MenuItem historyItem = menu.findItem(R.id.menu_history);
@@ -873,7 +890,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             markdownItem.setChecked(mCurrentNote.isMarkdownEnabled());
 
             if (mCurrentNote.isDeleted()) {
-                infoItem.setEnabled(false);
                 pinItem.setEnabled(false);
                 shareItem.setEnabled(false);
                 historyItem.setEnabled(false);
@@ -881,7 +897,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 copyLinkItem.setEnabled(false);
                 markdownItem.setEnabled(false);
             } else {
-                infoItem.setEnabled(true);
                 pinItem.setEnabled(true);
                 shareItem.setEnabled(true);
                 historyItem.setEnabled(true);
@@ -895,20 +910,20 @@ public class NotesActivity extends ThemedAppCompatActivity implements
     }
 
     private void setIconAfterAnimation(final MenuItem item, final @DrawableRes int drawable, final @StringRes int string) {
-        ((AnimatedVectorDrawable) item.getIcon()).start();
+        DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
         new Handler().postDelayed(
-            new Runnable() {
-                @Override
-                public void run() {
-                    item.setIcon(drawable);
-                    item.setTitle(string);
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        item.setIcon(drawable);
+                        item.setTitle(string);
 
-                    if (item == mEmptyTrashMenuItem) {
-                        invalidateOptionsMenu();
+                        if (item == mEmptyTrashMenuItem) {
+                            invalidateOptionsMenu();
+                        }
                     }
-                }
-            },
-            getResources().getInteger(R.integer.time_animation)
+                },
+                getResources().getInteger(R.integer.time_animation)
         );
     }
 
@@ -916,8 +931,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         if (mSearchView != null) {
             String query = mSearchView.getQuery().toString();
 
-            if (query.endsWith(NoteListFragment.TAG_PREFIX)) {
-                mSearchView.setQuery(query.substring(0, query.lastIndexOf(NoteListFragment.TAG_PREFIX)) + selection, true);
+            if (query.endsWith(TAG_PREFIX)) {
+                mSearchView.setQuery(query.substring(0, query.lastIndexOf(TAG_PREFIX)) + selection, true);
             } else {
                 mSearchView.setQuery(selection, true);
             }
@@ -929,26 +944,16 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             menu.findItem(R.id.menu_checklist).setVisible(true);
             menu.findItem(R.id.menu_markdown_preview).setVisible(mCurrentNote.isMarkdownEnabled());
             menu.findItem(R.id.menu_sidebar).setVisible(true);
-            menu.findItem(R.id.menu_color).setVisible(true);
-            menu.findItem(R.id.menu_sheet).setVisible(true);
-            menu.findItem(R.id.menu_photos).setVisible(true);
-            menu.findItem(R.id.menu_audiotracks).setVisible(true);
+            menu.findItem(R.id.menu_info).setVisible(true);
             menu.setGroupVisible(R.id.group_1, true);
             menu.setGroupVisible(R.id.group_2, true);
-            menu.setGroupVisible(R.id.group_3, true);
-            menu.setGroupVisible(R.id.group_5, true);
         } else {
             menu.findItem(R.id.menu_checklist).setVisible(false);
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
-            menu.findItem(R.id.menu_color).setVisible(false);
-            menu.findItem(R.id.menu_sheet).setVisible(false);
-            menu.findItem(R.id.menu_photos).setVisible(false);
-            menu.findItem(R.id.menu_audiotracks).setVisible(false);
+            menu.findItem(R.id.menu_info).setVisible(false);
             menu.setGroupVisible(R.id.group_1, false);
             menu.setGroupVisible(R.id.group_2, false);
-            menu.setGroupVisible(R.id.group_3, false);
-            menu.setGroupVisible(R.id.group_5, false);
         }
 
         menu.findItem(R.id.menu_empty_trash).setVisible(false);
@@ -980,8 +985,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         if (mInvalidateOptionsMenuHandler != null) {
             mInvalidateOptionsMenuHandler.removeCallbacks(mInvalidateOptionsMenuRunnable);
             mInvalidateOptionsMenuHandler.postDelayed(
-                mInvalidateOptionsMenuRunnable,
-                getResources().getInteger(android.R.integer.config_shortAnimTime)
+                    mInvalidateOptionsMenuRunnable,
+                    getResources().getInteger(android.R.integer.config_shortAnimTime)
             );
         }
     }
@@ -998,13 +1003,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements
         }
 
         new Handler().postDelayed(
-            new Runnable() {
-                @Override
-                public void run() {
-                    invalidateOptionsMenu();
-                }
-            },
-            getResources().getInteger(R.integer.time_animation)
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        invalidateOptionsMenu();
+                    }
+                },
+                getResources().getInteger(R.integer.time_animation)
         );
     }
 
@@ -1054,6 +1059,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
 
     @Override
     public void onUserCreated(User user) {
+        // New account created
     }
 
     public void onUserStatusChange(User.Status status) {
@@ -1229,7 +1235,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements
                 }
 
                 invalidateOptionsMenu();
-            // Go to NoteEditorActivity if note editing was fullscreen and orientation was switched to portrait
+                // Go to NoteEditorActivity if note editing was fullscreen and orientation was switched to portrait
             } else if (mNoteListFragment.isHidden() && mCurrentNote != null) {
                 onNoteSelected(mCurrentNote.getSimperiumKey(), null, mCurrentNote.isMarkdownEnabled(), mCurrentNote.isPreviewEnabled());
             }
@@ -1264,13 +1270,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements
 
             getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_search));
         } else if (mSelectedTag != null) {
-            if (mSelectedTag.id == TagsAdapter.ALL_NOTES_ID) {
+            if (mSelectedTag.id == ALL_NOTES_ID) {
                 getNoteListFragment().setEmptyListImage(R.drawable.ic_notes_24dp);
                 getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_all));
-            } else if (mSelectedTag.id == TagsAdapter.TRASH_ID) {
+            } else if (mSelectedTag.id == TRASH_ID) {
                 getNoteListFragment().setEmptyListImage(R.drawable.ic_trash_24dp);
                 getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_trash));
-            } else if (mSelectedTag.id == TagsAdapter.UNTAGGED_NOTES_ID) {
+            } else if (mSelectedTag.id == UNTAGGED_NOTES_ID) {
                 getNoteListFragment().setEmptyListImage(R.drawable.ic_untagged_24dp);
                 getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_untagged));
             } else {
@@ -1349,13 +1355,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements
             mCurrentNote = note;
 
             new Handler(Looper.getMainLooper()).postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        invalidateOptionsMenu();
-                    }
-                },
-                getResources().getInteger(R.integer.time_animation)
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            invalidateOptionsMenu();
+                        }
+                    },
+                    getResources().getInteger(R.integer.time_animation)
             );
         }
     }

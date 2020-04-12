@@ -50,12 +50,14 @@ public class Note extends BucketObject {
     public static final String MATCHED_CONTENT_INDEX_NAME = "matchedContent";
     public static final String PUBLISH_URL = "http://simp.ly/publish/";
     public static Integer SELECTED_COLOR = -6972445;
-    public static boolean TEXT_STYLE_BOLD = true;
+    public static boolean TEXT_STYLE_BOLD = false;
     public static boolean TEXT_STYLE_ITALIC = false;
-    public static boolean TEXT_STYLE_STROKE = true;
-    public static boolean TEXT_STYLE_CODE = true;
-    public static boolean TEXT_STYLE_UNDERLINE = true;
-    public static boolean TEXT_STYLE_STRIKETHROUGH = true;
+    public static boolean TEXT_STYLE_STROKE = false;
+    public static boolean TEXT_STYLE_CODE = false;
+    public static boolean TEXT_STYLE_UNDERLINE = false;
+    public static boolean TEXT_STYLE_STRIKETHROUGH = false;
+    public static String TEXT_COLOR_AC = "#36393e";
+    public static String TEXT_COLOR_DI = "#fafafa";
     static public final String[] FULL_TEXT_INDEXES = new String[]{
             Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
     private static final Spannable BLANK_CONTENT = new SpannableString("");
@@ -63,7 +65,6 @@ public class Note extends BucketObject {
     private static final int MAX_PREVIEW_CHARS = 300;
     protected String mTitle = null;
     protected String mContentPreview = null;
-    protected String strContent;
 
 
     public Note(String key) {
@@ -203,6 +204,11 @@ public class Note extends BucketObject {
         return TEXT_STYLE_STRIKETHROUGH;
     }
 
+    public static boolean[] getTextStyle() {
+        return new boolean[]{TEXT_STYLE_BOLD, TEXT_STYLE_ITALIC, TEXT_STYLE_CODE, TEXT_STYLE_UNDERLINE,
+        TEXT_STYLE_STRIKETHROUGH, TEXT_STYLE_STROKE};
+    }
+
     public static void setTextStyleBold(boolean checked) {
         TEXT_STYLE_BOLD = checked;
     }
@@ -235,6 +241,20 @@ public class Note extends BucketObject {
         Note.SELECTED_COLOR = selectedColor;
     }
 
+    public void setThemeText(String colorLight, String colorDark, boolean isLight) {
+        if (isLight) {
+            TEXT_COLOR_AC = colorLight;
+            TEXT_COLOR_DI = colorDark;
+        } else {
+            TEXT_COLOR_AC = colorDark;
+            TEXT_COLOR_DI = colorLight;
+        }
+    }
+
+    public String getActiveColor() {
+        return TEXT_COLOR_AC;
+    }
+
     public String getTitle() {
         if (mTitle == null) {
             updateTitleAndPreview();
@@ -243,18 +263,19 @@ public class Note extends BucketObject {
     }
 
     public Spannable getContent() {
-        Object strContent = getProperty(CONTENT_PROPERTY);
-        if (strContent == null) {
+        Object obj = getProperty(CONTENT_PROPERTY);
+        if (obj == null) {
             return BLANK_CONTENT;
         }
-        Spannable content = (Spannable) HtmlCompat.fromHtml((String) strContent);
+        String strContent = (String) obj;
+        Spannable content = (Spannable) HtmlCompat.fromHtml(strContent.replaceAll(TEXT_COLOR_DI, TEXT_COLOR_AC));
         return content;
     }
 
     public void setContent(Spannable content) {
         mTitle = null;
         mContentPreview = null;
-        strContent = Html.toHtml(content).replaceAll("<img .*?>","- [ ]");
+        String strContent = Html.toHtml(content).replaceAll("<img .*?>","- [ ]");
         setProperty(CONTENT_PROPERTY, strContent);
     }
 

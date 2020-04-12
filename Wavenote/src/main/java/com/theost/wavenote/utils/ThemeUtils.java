@@ -30,7 +30,7 @@ public class ThemeUtils {
     private static final String URI_SEGMENT_THEME = "theme";
 
     public static void setTheme(Activity activity) {
-            // if we have a data uri that sets the theme let's do it here
+        // if we have a data uri that sets the theme let's do it here
         Uri data = activity.getIntent().getData();
         if (data != null) {
             if (data.getAuthority().equals(PREFERENCES_URI_AUTHORITY)) {

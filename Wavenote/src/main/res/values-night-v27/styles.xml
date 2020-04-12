@@ -2,7 +2,7 @@
 
 <resources>
 
-    <style name="Theme.Simplestyle" parent="Base.Theme.Simplestyle">
+    <style name="Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -10,7 +10,7 @@
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="Theme.Simplestyle.BottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
+    <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="android:colorBackground">@color/background_dark_16</item>
         <item name="android:navigationBarColor">@color/background_dark_16</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

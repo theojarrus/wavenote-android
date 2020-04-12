@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:theme="@style/Theme.Simplestyle.BottomSheetDialog">
+    android:theme="@style/Theme.Wavestyle.BottomSheetDialog">
 
     <com.theost.wavenote.widgets.RobotoRegularTextView
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:padding="@dimen/padding_large"
         android:text="@string/information"
         android:textColor="?attr/notePreviewColor"
-        style="@style/Theme.Simplestyle.BottomSheetDialog.Label">
+        style="@style/Theme.Wavestyle.BottomSheetDialog.Label">
     </com.theost.wavenote.widgets.RobotoRegularTextView>
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="@string/modified"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Label">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Label">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
         <com.theost.wavenote.widgets.RobotoRegularTextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             tools:text="Jan 13, 2020, 22:21"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Value">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Value">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
     </LinearLayout>
@@ -50,7 +50,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="@string/created"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Label">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Label">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
         <com.theost.wavenote.widgets.RobotoRegularTextView
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             tools:text="Jan 13, 2020, 17:30"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Value">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Value">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
     </LinearLayout>
@@ -73,7 +73,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="@string/words"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Label">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Label">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
         <com.theost.wavenote.widgets.RobotoRegularTextView
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             tools:text="123"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Value">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Value">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
     </LinearLayout>
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="@string/characters"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Label">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Label">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
         <com.theost.wavenote.widgets.RobotoRegularTextView
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             tools:text="4,567"
-            style="@style/Theme.Simplestyle.BottomSheetDialog.Value">
+            style="@style/Theme.Wavestyle.BottomSheetDialog.Value">
         </com.theost.wavenote.widgets.RobotoRegularTextView>
 
     </LinearLayout>

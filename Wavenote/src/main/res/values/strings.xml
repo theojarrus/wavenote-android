@@ -260,5 +260,16 @@
     <string name="text_underline">Underline</string>
     <string name="text_strikethrough">Strikethrough</string>
     <string name="text_code">Code</string>
+    <string name="pref_key_detect_syntax">Detect syntax</string>
+
+    <!-- Musical -->
+    <string name="musical_intro">Intro</string>
+    <string name="musical_verse">Verse</string>
+    <string name="musical_chorus">Chorus</string>
+    <string name="musical_outro">Outro</string>
+
+    <string name="musical_chord_cm">Gm</string>
+    <string name="musical_chord_dm">Dm</string>
+    <string name="musical_chord_em">Em</string>
 
 </resources>

@@ -8,31 +8,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils.SimpleStringSplitter;
 import android.text.TextWatcher;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.MetricAffectingSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -54,11 +45,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import com.theost.wavenote.utils.HtmlCompat;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -72,6 +61,7 @@ import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.MatchOffsetHighlighter;
 import com.theost.wavenote.utils.NoteUtils;
 import com.theost.wavenote.utils.PrefUtils;
+import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.WavenoteLinkify;
 import com.theost.wavenote.utils.WavenoteMovementMethod;
 import com.theost.wavenote.utils.SpaceTokenizer;
@@ -114,6 +104,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private static final int MAX_REVISIONS = 30;
     private static final int PUBLISH_TIMEOUT = 20000;
     private static final int HISTORY_TIMEOUT = 10000;
+    private boolean isThemeLight = false;
     private static Note mNote;
     private final Runnable mAutoSaveRunnable = new Runnable() {
         @Override
@@ -158,10 +149,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private Function1 listener;
     private ColorSheet colorSheet;
     private int[] colors;
-    private int cursorPositionStart;
-    private int cursorPositionEnd;
-    private Spannable noteContent;
-    private String strContent;
+    private String lightColor;
+    private String darkColor;
 
     // Hides the history bottom sheet if no revisions are loaded
     private final Runnable mHistoryTimeoutRunnable = new Runnable() {
@@ -374,9 +363,15 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mHighlighter = new MatchOffsetHighlighter(mMatchHighlighter, mContentEditText);
         mPlaceholderView = mRootView.findViewById(R.id.placeholder);
 
-        colors = getResources().getIntArray(R.array.colors);
         colorSheet = new ColorSheet();
         colorSheet.cornerRadius(8);
+
+        colors = getResources().getIntArray(R.array.colorsheet_colors);
+        lightColor = "#" + Integer.toHexString(ContextCompat.getColor(getContext(), R.color.background_light)).substring(2).toUpperCase();
+        darkColor = "#" + Integer.toHexString(ContextCompat.getColor(getContext(), R.color.background_dark)).substring(2).toUpperCase();
+        if (ThemeUtils.isLightTheme(requireContext())) {
+            isThemeLight = true;
+        }
 
         listener = (new Function1() {
             public Object invoke(Object var1) {
@@ -385,7 +380,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             public final void invoke(int color) {
-                Toast.makeText(getContext(), "Color: " + color, Toast.LENGTH_SHORT).show();
                 mNote.setSelectedColor(color);
             }
         });
@@ -542,17 +536,30 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (!isAdded() || (!mIsFromWidget && DisplayUtils.isLargeScreenLandscape(getActivity()) && mNoteMarkdownFragment == null)) {
             return;
         }
-
         inflater.inflate(R.menu.note_editor, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
+
+        MenuItem colorItem = menu.findItem(R.id.menu_color);
+        colorItem.setIcon(R.drawable.m_palette_black_24dp);
+
+        colorItem.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeTextColor();
+            }
+        });
+        colorItem.getActionView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                pickTextColor();
+                return false;
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_color:
-                changeTextColor();
-                return true;
             case R.id.menu_checklist:
                 insertChecklist();
                 return true;
@@ -685,12 +692,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             return;
         }
     }
-    /*
-    public static void setTextStyle(String style, boolean checked) {
-        mNote.setTextStyle(style, checked);
-    }
-*/
-
 
     public static void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
@@ -872,8 +873,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void refreshContent(boolean isNoteUpdate) {
         if (mNote != null) {
-            // Restore the cursor position if possible.
 
+            mNote.setThemeText(lightColor, darkColor, isThemeLight);
+
+            // Restore the cursor position if possible.
             int cursorPosition = newCursorLocation(mNote.getContent().toString(), getNoteContentString(), mContentEditText.getSelectionEnd());
 
             mContentEditText.setText(mNote.getContent());
@@ -1317,47 +1320,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         setPublishedNote(false);
     }
 
-    private boolean changeTextColor() {
-
-        cursorPositionStart = mContentEditText.getSelectionStart();
-        cursorPositionEnd = mContentEditText.getSelectionEnd();
-
-        if (cursorPositionEnd - cursorPositionStart < 1) {
-            return false;
-        }
-
-        strContent = mContentEditText.getText().toString().substring(cursorPositionStart, cursorPositionEnd);
-        mContentEditText.getText().delete(cursorPositionStart, cursorPositionEnd);
-        mContentEditText.getText().insert(cursorPositionStart, strContent);
-        noteContent = mContentEditText.getText();
-
-        if (mNote.isTextStyleBold()) {
-            noteContent.setSpan(new StyleSpan(Typeface.BOLD), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        if (mNote.isTextStyleItalic()) {
-            noteContent.setSpan(new StyleSpan(Typeface.ITALIC), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        if (mNote.isTextStyleCode()) {
-            noteContent.setSpan(new TypefaceSpan("monospace"), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        if (mNote.isTextStyleUnderline()) {
-            noteContent.setSpan(new UnderlineSpan(), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        if (mNote.isTextStyleStrikethrough()) {
-            noteContent.setSpan(new StrikethroughSpan(), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        if (mNote.isTextStyleStroke()) {
-            noteContent.setSpan(new ForegroundColorSpan(Color.parseColor("#fafafa")), cursorPositionStart, cursorPositionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            noteContent.setSpan(new BackgroundColorSpan(mNote.getSelectedColor()), cursorPositionStart, cursorPositionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else {
-            noteContent.setSpan(new ForegroundColorSpan(mNote.getSelectedColor()), cursorPositionStart, cursorPositionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-
-        mNote.setContent(noteContent);
-        mContentEditText.setText(noteContent);
-        mContentEditText.setSelection(cursorPositionEnd);
-
-        return true;
+    private void changeTextColor() {
+        SyntaxHighlighter.changeTextStyle(mContentEditText, mNote.getTextStyle(), mNote.getSelectedColor(), mNote.getActiveColor());
     }
 
     private void pickTextColor() {
@@ -1470,6 +1434,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
         @Override
         protected Void doInBackground(String... args) {
+
             NoteEditorFragment fragment = mNoteEditorFragmentReference.get();
 
             if (fragment == null || fragment.getActivity() == null) {
@@ -1553,6 +1518,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             fragment.updateMarkdownView();
             fragment.requireActivity().invalidateOptionsMenu();
             fragment.linkifyEditorContent();
+            //todo fragment.syntaxHighlightEditorContent();
             fragment.mIsLoadingNote = false;
         }
     }
@@ -1582,8 +1548,19 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             if (fragment != null && fragment.getActivity() != null && !fragment.getActivity().isFinishing()) {
                 // Update links
                 fragment.linkifyEditorContent();
+                //todo fragment.syntaxHighlightEditorContent();
                 fragment.updateMarkdownView();
             }
+        }
+    }
+
+    private void syntaxHighlightEditorContent() {
+        if (getActivity() == null || getActivity().isFinishing()) {
+            return;
+        }
+
+        if (PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX)) {
+            SyntaxHighlighter.addSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor());
         }
     }
 

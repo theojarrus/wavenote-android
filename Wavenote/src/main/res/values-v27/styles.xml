@@ -2,7 +2,7 @@
 
 <resources>
 
-    <style name="Theme.Simplestyle" parent="Base.Theme.Simplestyle">
+    <style name="Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:navigationBarColor">@color/background_light</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -10,15 +10,15 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
     
-    <style name="Theme.Simplestyle.Splash">
-        <item name="android:navigationBarColor">@color/blue</item>
-        <item name="android:statusBarColor">@color/blue</item>
+    <style name="Theme.Wavestyle.Splash">
+        <item name="android:navigationBarColor">@color/background_dark</item>
+        <item name="android:statusBarColor">@color/background_dark</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
     
-    <style name="Theme.Simplestyle.About" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.Wavestyle.About" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:navigationBarColor">@color/blue</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:textColor">@android:color/white</item>
@@ -31,7 +31,7 @@
         <item name="toolbarColor">@color/blue</item>
     </style>
 
-    <style name="Theme.Simplestyle.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="android:colorBackground">?attr/mainBackgroundColor</item>
         <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -43,7 +43,7 @@
         <item name="colorPrimaryDark">@color/blue_dark</item>
     </style>
 
-    <style name="Theme.Simplestyle.Passcode" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Wavestyle.Passcode" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:navigationBarColor">@color/passcodelock_background</item>
         <item name="android:statusBarColor">@color/passcodelock_background</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

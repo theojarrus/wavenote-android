@@ -4,7 +4,6 @@ import com.simperium.client.BucketObject;
 import com.simperium.client.BucketSchema;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ public class Preferences extends BucketObject {
     public static final String BUCKET_NAME = "preferences";
     public static final String PREFERENCES_OBJECT_KEY = "preferences-key";
     public static final int MAX_RECENT_SEARCHES = 5;
-
     private static final String RECENT_SEARCHES_KEY = "recent_searches";
 
     private Preferences(String key, JSONObject properties) {

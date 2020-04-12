@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class WavenoteLinkify {
 
-    static public final String SIMPLENOTE_SCHEME = "wavenote";
-    static public final Pattern SIMPLENOTE_LINK_PATTERN = Pattern.compile("wavenote://preferences/[^\\s]*");
+    static public final String WAVENOTE_SCHEME = "wavenote";
+    static public final Pattern WAVENOTE_LINK_PATTERN = Pattern.compile("wavenote://preferences/[^\\s]*");
 
     // Works the same as Linkify.addLinks, but doesn't set movement method
     public static boolean addLinks(TextView text, int mask) {
@@ -22,7 +22,7 @@ public class WavenoteLinkify {
 
         if (t instanceof Spannable) {
             boolean linked = Linkify.addLinks((Spannable) t, mask);
-            Linkify.addLinks((Spannable) t, SIMPLENOTE_LINK_PATTERN, SIMPLENOTE_SCHEME);
+            Linkify.addLinks((Spannable) t, WAVENOTE_LINK_PATTERN, WAVENOTE_SCHEME);
 
             return linked;
         } else {

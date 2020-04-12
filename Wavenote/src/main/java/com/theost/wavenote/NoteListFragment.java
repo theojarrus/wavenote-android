@@ -79,6 +79,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.theost.wavenote.models.Note.TAGS_PROPERTY;
+import static com.theost.wavenote.models.Preferences.MAX_RECENT_SEARCHES;
+import static com.theost.wavenote.models.Preferences.PREFERENCES_OBJECT_KEY;
+import static com.theost.wavenote.models.Suggestion.Type.HISTORY;
+import static com.theost.wavenote.models.Suggestion.Type.QUERY;
+import static com.theost.wavenote.models.Suggestion.Type.TAG;
+import static com.theost.wavenote.models.Tag.NAME_PROPERTY;
+import static com.theost.wavenote.utils.PrefUtils.ALPHABETICAL_ASCENDING;
+import static com.theost.wavenote.utils.PrefUtils.ALPHABETICAL_DESCENDING;
+import static com.theost.wavenote.utils.PrefUtils.DATE_CREATED_ASCENDING;
+import static com.theost.wavenote.utils.PrefUtils.DATE_CREATED_DESCENDING;
+import static com.theost.wavenote.utils.PrefUtils.DATE_MODIFIED_ASCENDING;
+import static com.theost.wavenote.utils.PrefUtils.DATE_MODIFIED_DESCENDING;
 /**
  * A list fragment representing a list of Notes. This fragment also supports
  * tablet devices by allowing list items to be given an 'activated' state upon
@@ -208,19 +221,19 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         mCallbacks.onActionModeDestroyed();
         mActionMode = null;
         new Handler().postDelayed(
-            new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() != null) {
-                        NotesActivity notesActivity = (NotesActivity) getActivity();
-                        setActivateOnItemClick(DisplayUtils.isLargeScreenLandscape(notesActivity));
-                        notesActivity.showDetailPlaceholder();
-                    }
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getActivity() != null) {
+                            NotesActivity notesActivity = (NotesActivity) getActivity();
+                            setActivateOnItemClick(DisplayUtils.isLargeScreenLandscape(notesActivity));
+                            notesActivity.showDetailPlaceholder();
+                        }
 
-                    requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
-                }
-            },
-            requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                        requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
+                    }
+                },
+                requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
         );
     }
 
@@ -328,7 +341,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                         switch (item.getItemId()) {
                             case R.id.search_alphabetically:
                                 mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER,
-                                    String.valueOf(PrefUtils.ALPHABETICAL_ASCENDING)
+                                        String.valueOf(ALPHABETICAL_ASCENDING)
                                 ).apply();
 
                                 // If arrow is down, rotate it up for ascending direction.
@@ -344,7 +357,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                                 return true;
                             case R.id.search_created:
                                 mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER,
-                                    String.valueOf(PrefUtils.DATE_CREATED_DESCENDING)
+                                        String.valueOf(DATE_CREATED_DESCENDING)
                                 ).apply();
 
                                 // If arrow is up, rotate it down for descending direction.
@@ -360,7 +373,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                                 return true;
                             case R.id.search_modified:
                                 mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER,
-                                    String.valueOf(PrefUtils.DATE_MODIFIED_DESCENDING)
+                                        String.valueOf(DATE_MODIFIED_DESCENDING)
                                 ).apply();
 
                                 // If arrow is up, rotate it down for descending direction.
@@ -423,23 +436,23 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
     public void showListPadding(boolean show) {
         mList.setPadding(
-            mList.getPaddingLeft(),
-            mList.getPaddingTop(),
-            mList.getPaddingRight(),
-            show ? (int) getResources().getDimension(R.dimen.note_list_item_padding_bottom_button) : 0
+                mList.getPaddingLeft(),
+                mList.getPaddingTop(),
+                mList.getPaddingRight(),
+                show ? (int) getResources().getDimension(R.dimen.note_list_item_padding_bottom_button) : 0
         );
     }
 
     private @StringRes int getSortOrderText() {
         switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
-            case PrefUtils.ALPHABETICAL_ASCENDING:
-            case PrefUtils.ALPHABETICAL_DESCENDING:
+            case ALPHABETICAL_ASCENDING:
+            case ALPHABETICAL_DESCENDING:
                 return R.string.sort_search_alphabetically;
-            case PrefUtils.DATE_CREATED_ASCENDING:
-            case PrefUtils.DATE_CREATED_DESCENDING:
+            case DATE_CREATED_ASCENDING:
+            case DATE_CREATED_DESCENDING:
                 return R.string.sort_search_created;
-            case PrefUtils.DATE_MODIFIED_ASCENDING:
-            case PrefUtils.DATE_MODIFIED_DESCENDING:
+            case DATE_MODIFIED_ASCENDING:
+            case DATE_MODIFIED_DESCENDING:
             default:
                 return R.string.sort_search_modified;
         }
@@ -452,16 +465,16 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
 
         switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
-            case PrefUtils.ALPHABETICAL_ASCENDING:
-            case PrefUtils.DATE_CREATED_ASCENDING:
-            case PrefUtils.DATE_MODIFIED_ASCENDING:
+            case ALPHABETICAL_ASCENDING:
+            case DATE_CREATED_ASCENDING:
+            case DATE_MODIFIED_ASCENDING:
                 mSortDirection.setContentDescription(getString(R.string.description_up));
                 mSortDirection.setImageResource(R.drawable.ic_arrow_up_16dp);
                 mIsSortDown = false;
                 break;
-            case PrefUtils.ALPHABETICAL_DESCENDING:
-            case PrefUtils.DATE_CREATED_DESCENDING:
-            case PrefUtils.DATE_MODIFIED_DESCENDING:
+            case ALPHABETICAL_DESCENDING:
+            case DATE_CREATED_DESCENDING:
+            case DATE_MODIFIED_DESCENDING:
             default:
                 mSortDirection.setContentDescription(getString(R.string.description_down));
                 mSortDirection.setImageResource(R.drawable.ic_arrow_down_16dp);
@@ -470,39 +483,38 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
 
         mSortDirectionAnimation = ObjectAnimator.ofFloat(
-            mSortDirection,
-            View.ROTATION,
-            0f,
-            mIsSortDown ? -180f : 180f
+                mSortDirection,
+                View.ROTATION,
+                0f,
+                mIsSortDown ? -180f : 180f
         ).setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
     }
 
     private void switchSortDirection() {
         switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
-            case PrefUtils.DATE_MODIFIED_DESCENDING:
-                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(PrefUtils.DATE_MODIFIED_ASCENDING)).apply();
+            case DATE_MODIFIED_DESCENDING:
+                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(DATE_MODIFIED_ASCENDING)).apply();
                 break;
-            case PrefUtils.DATE_MODIFIED_ASCENDING:
-                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(PrefUtils.DATE_MODIFIED_DESCENDING)).apply();
+            case DATE_MODIFIED_ASCENDING:
+                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(DATE_MODIFIED_DESCENDING)).apply();
                 break;
-            case PrefUtils.DATE_CREATED_DESCENDING:
-                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(PrefUtils.DATE_CREATED_ASCENDING)).apply();
+            case DATE_CREATED_DESCENDING:
+                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(DATE_CREATED_ASCENDING)).apply();
                 break;
-            case PrefUtils.DATE_CREATED_ASCENDING:
-                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(PrefUtils.DATE_CREATED_DESCENDING)).apply();
+            case DATE_CREATED_ASCENDING:
+                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(DATE_CREATED_DESCENDING)).apply();
                 break;
-            case PrefUtils.ALPHABETICAL_ASCENDING:
-                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(PrefUtils.ALPHABETICAL_DESCENDING)).apply();
+            case ALPHABETICAL_ASCENDING:
+                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(ALPHABETICAL_DESCENDING)).apply();
                 break;
-            case PrefUtils.ALPHABETICAL_DESCENDING:
-                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(PrefUtils.ALPHABETICAL_ASCENDING)).apply();
+            case ALPHABETICAL_DESCENDING:
+                mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(ALPHABETICAL_ASCENDING)).apply();
                 break;
         }
     }
 
     private void createNewNote(String label){
         if (!isAdded()) return;
-
         addNote();
     }
 
@@ -729,7 +741,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         Pattern pattern = Pattern.compile(TAG_PREFIX + "(.*?)( |$)");
         Matcher matcher = pattern.matcher(searchString);
         while (matcher.find()) {
-            query.where(Note.TAGS_PROPERTY, Query.ComparisonType.LIKE, matcher.group(1));
+            query.where(TAGS_PROPERTY, Query.ComparisonType.LIKE, matcher.group(1));
         }
         return matcher.replaceAll("");
     }
@@ -849,7 +861,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             recents.remove(item);
             recents.add(index, item);
             // Trim recent searches to MAX_RECENT_SEARCHES (currently 5) if size is greater than MAX_RECENT_SEARCHES.
-            preferences.setRecentSearches(recents.subList(0, recents.size() > Preferences.MAX_RECENT_SEARCHES ? Preferences.MAX_RECENT_SEARCHES : recents.size()));
+            preferences.setRecentSearches(recents.subList(0, recents.size() > MAX_RECENT_SEARCHES ? MAX_RECENT_SEARCHES : recents.size()));
             preferences.save();
         } else {
             Log.e("addSearchItem", "Could not get preferences entity");
@@ -872,10 +884,10 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
     private Preferences getPreferences() {
         try {
-            return mBucketPreferences.get(Preferences.PREFERENCES_OBJECT_KEY);
+            return mBucketPreferences.get(PREFERENCES_OBJECT_KEY);
         } catch (BucketObjectMissingException exception) {
             try {
-                Preferences preferences = mBucketPreferences.newObject(Preferences.PREFERENCES_OBJECT_KEY);
+                Preferences preferences = mBucketPreferences.newObject(PREFERENCES_OBJECT_KEY);
                 preferences.save();
                 return preferences;
             } catch (BucketObjectNameInvalid invalid) {
@@ -892,7 +904,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             ArrayList<Suggestion> suggestions = new ArrayList<>();
 
             for (String recent : preferences.getRecentSearches()) {
-                suggestions.add(new Suggestion(recent, Suggestion.Type.HISTORY));
+                suggestions.add(new Suggestion(recent, HISTORY));
             }
 
             mSuggestionAdapter.updateItems(suggestions);
@@ -903,16 +915,16 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
     private void getTagSuggestions(String query) {
         ArrayList<Suggestion> suggestions = new ArrayList<>();
-        suggestions.add(new Suggestion(query, Suggestion.Type.QUERY));
+        suggestions.add(new Suggestion(query, QUERY));
         Query<Tag> tags = Tag.all(mBucketTag).reorder().order(Tag.NOTE_COUNT_INDEX_NAME, Query.SortType.DESCENDING);
 
         if (!query.endsWith(TAG_PREFIX)) {
-            tags.where(Tag.NAME_PROPERTY, Query.ComparisonType.LIKE, "%" + query + "%");
+            tags.where(NAME_PROPERTY, Query.ComparisonType.LIKE, "%" + query + "%");
         }
 
         try (ObjectCursor<Tag> cursor = tags.execute()) {
             while (cursor.moveToNext()) {
-                suggestions.add(new Suggestion(cursor.getObject().getName(), Suggestion.Type.TAG));
+                suggestions.add(new Suggestion(cursor.getObject().getName(), TAG));
             }
         }
 
@@ -1183,17 +1195,17 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
             switch (holder.mViewType) {
-                case Suggestion.Type.HISTORY:
+                case HISTORY:
                     holder.mSuggestionText.setText(mSuggestions.get(position).getName());
                     holder.mSuggestionIcon.setImageResource(R.drawable.ic_history_24dp);
                     holder.mButtonDelete.setVisibility(View.VISIBLE);
                     break;
-                case Suggestion.Type.QUERY:
+                case QUERY:
                     holder.mSuggestionText.setText(mSuggestions.get(position).getName());
                     holder.mSuggestionIcon.setImageResource(R.drawable.ic_search_24dp);
                     holder.mButtonDelete.setVisibility(View.GONE);
                     break;
-                case Suggestion.Type.TAG:
+                case TAG:
                     holder.mSuggestionText.setText(TAG_PREFIX + mSuggestions.get(position).getName());
                     holder.mSuggestionIcon.setImageResource(R.drawable.ic_tag_24dp);
                     holder.mButtonDelete.setVisibility(View.GONE);
@@ -1210,17 +1222,17 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                     final String item = holder.mSuggestionText.getText().toString();
                     deleteSearchItem(item);
                     Snackbar
-                        .make(getRootView(), R.string.snackbar_deleted_recent_search, Snackbar.LENGTH_LONG)
-                        .setAction(
-                            getString(R.string.undo),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    addSearchItem(item, mDeletedItemIndex);
-                                }
-                            }
-                        )
-                        .show();
+                            .make(getRootView(), R.string.snackbar_deleted_recent_search, Snackbar.LENGTH_LONG)
+                            .setAction(
+                                    getString(R.string.undo),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            addSearchItem(item, mDeletedItemIndex);
+                                        }
+                                    }
+                            )
+                            .show();
                 }
             });
             holder.mButtonDelete.setOnLongClickListener(new View.OnLongClickListener() {
@@ -1310,14 +1322,14 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
     private Calendar getDateByPreference(Note note) {
         switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
-            case PrefUtils.DATE_CREATED_ASCENDING:
-            case PrefUtils.DATE_CREATED_DESCENDING:
+            case DATE_CREATED_ASCENDING:
+            case DATE_CREATED_DESCENDING:
                 return note.getCreationDate();
-            case PrefUtils.DATE_MODIFIED_ASCENDING:
-            case PrefUtils.DATE_MODIFIED_DESCENDING:
+            case DATE_MODIFIED_ASCENDING:
+            case DATE_MODIFIED_DESCENDING:
                 return note.getModificationDate();
-            case PrefUtils.ALPHABETICAL_ASCENDING:
-            case PrefUtils.ALPHABETICAL_DESCENDING:
+            case ALPHABETICAL_ASCENDING:
+            case ALPHABETICAL_DESCENDING:
             default:
                 return null;
         }
@@ -1405,6 +1417,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             try {
                 fragment.mNotesAdapter.changeCursor(cursor);
                 count = fragment.mNotesAdapter.getCount();
+                System.out.println();
             } catch (SQLiteException e) {
                 count = 0;
                 Log.e(Wavenote.TAG, "Invalid SQL statement", e);

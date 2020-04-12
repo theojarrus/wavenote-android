@@ -8,11 +8,11 @@
 
     <item
         android:id="@+id/menu_color"
-        android:icon="@drawable/m_palette_black_24dp"
         android:title="@string/text_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:showAsAction="always" />
+        android:background="@drawable/m_palette_black_24dp"
+        app:actionViewClass="android.widget.ImageButton"
+        app:showAsAction="always"
+        app:srcCompat="@drawable/m_palette_black_24dp" />
 
     <item
         android:id="@+id/menu_sheet"
