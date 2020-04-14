@@ -46,6 +46,11 @@
             android:key="pref_key_font_size"
             android:summary="%s"
             android:title="@string/font_size"/>
+        <Preference
+            android:key="pref_key_dictionary"
+            android:persistent="false"
+            android:title="@string/dictionary"
+            android:summary="@string/dictionary_summary"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_key_detect_syntax"

@@ -87,6 +87,14 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             }
         });
 
+        findPreference("pref_key_dictionary").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(getActivity(), DictionaryActivity.class));
+                return true;
+            }
+        });
+
         findPreference("pref_key_website").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

@@ -46,42 +46,4 @@
 
     </aapt:attr>
 
-    <target
-        android:name="circle">
-
-        <aapt:attr
-            name="android:animation">
-
-            <objectAnimator
-                android:duration="@integer/time_animation"
-                android:interpolator="@android:interpolator/fast_out_slow_in"
-                android:propertyName="trimPathStart"
-                android:valueFrom="1"
-                android:valueTo="0"
-                android:valueType="floatType">
-            </objectAnimator>
-
-        </aapt:attr>
-
-    </target>
-
-    <target
-        android:name="mask">
-
-        <aapt:attr
-            name="android:animation">
-
-            <objectAnimator
-                android:duration="@integer/time_animation"
-                android:interpolator="@android:interpolator/fast_out_slow_in"
-                android:propertyName="pathData"
-                android:valueFrom="M 11 17 L 13 17 L 13 17 L 11 17 L 11 17 Z"
-                android:valueTo="M 11 7 L 13 7 L 13 17 L 11 17 L 11 7 Z"
-                android:valueType="pathType">
-            </objectAnimator>
-
-        </aapt:attr>
-
-    </target>
-
 </animated-vector>

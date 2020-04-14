@@ -253,23 +253,34 @@
     <string name="import_note">Import</string>
 
     <!-- Color Sheet -->
-    <string name="pick_a_color">Pick a color</string>
+    <string name="text_style">Style</string>
     <string name="text_bold">Bold</string>
     <string name="text_stroke">Stroke</string>
     <string name="text_italic">Italic</string>
     <string name="text_underline">Underline</string>
     <string name="text_strikethrough">Strikethrough</string>
     <string name="text_code">Code</string>
-    <string name="pref_key_detect_syntax">Detect syntax</string>
+    <string name="pref_key_detect_syntax">Detect keywords</string>
 
-    <!-- Musical -->
-    <string name="musical_intro">Intro</string>
-    <string name="musical_verse">Verse</string>
-    <string name="musical_chorus">Chorus</string>
-    <string name="musical_outro">Outro</string>
+    <!-- Syntax dictionary -->
+    <string name="dictionary">Dictionary</string>
+    <string name="dictionary_summary">Edit keywords list</string>
+    <string name="add_keyword">Add Keyword</string>
+    <string name="keyword">Keyword</string>
+    <string name="reset">Reset</string>
+    <string name="type">Type</string>
 
-    <string name="musical_chord_cm">Gm</string>
-    <string name="musical_chord_dm">Dm</string>
-    <string name="musical_chord_em">Em</string>
+    <string-array name="array_musical_titles">
+        <item name="musical_intro">Intro</item>
+        <item name="musical_verse">Verse</item>
+        <item name="musical_chorus">Chorus</item>
+        <item name="musical_outro">Outro</item>
+    </string-array>
+
+    <string-array name="array_musical_words">
+        <item name="musical_chord_cm">Gm</item>
+        <item name="musical_chord_dm">Dm</item>
+        <item name="musical_chord_em">Em</item>
+    </string-array>
 
 </resources>

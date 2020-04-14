@@ -1,22 +1,3 @@
-/*
- *   ColorSheet
- *
- *   Copyright (c) 2019. Sasikanth Miriyampalli
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- *
- */
-
 package com.theost.wavenote
 
 import android.graphics.drawable.GradientDrawable
@@ -100,12 +81,12 @@ class ColorSheet : BottomSheetDialogFragment() {
             sheetCorners = resources.getDimension(R.dimen.default_dialog_radius)
         }
 
-        text_bold.setChecked(NoteEditorFragment.isCheckboxActive(text_bold))
-        text_italic.setChecked(NoteEditorFragment.isCheckboxActive(text_italic))
-        text_code.setChecked(NoteEditorFragment.isCheckboxActive(text_code))
-        text_stroke.setChecked(NoteEditorFragment.isCheckboxActive(text_stroke))
-        text_underline.setChecked(NoteEditorFragment.isCheckboxActive(text_underline))
-        text_strikethrough.setChecked(NoteEditorFragment.isCheckboxActive(text_strikethrough))
+        text_bold.isChecked = NoteEditorFragment.isCheckboxActive(text_bold)
+        text_italic.isChecked = NoteEditorFragment.isCheckboxActive(text_italic)
+        text_code.isChecked = NoteEditorFragment.isCheckboxActive(text_code)
+        text_stroke.isChecked = NoteEditorFragment.isCheckboxActive(text_stroke)
+        text_underline.isChecked = NoteEditorFragment.isCheckboxActive(text_underline)
+        text_strikethrough.isChecked = NoteEditorFragment.isCheckboxActive(text_strikethrough)
 
         text_bold.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_bold) }
         text_italic.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_italic) }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- APPLICATION -->
     <color name="blue">@color/blue_50</color>
@@ -171,5 +171,8 @@
     <color name="dialogDarkPrimaryVariant">#151515</color>
 
     <color name="dividerColor">#1F000000</color>
+
+    <!-- Dictionary -->
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/primary</color>
 
 </resources>

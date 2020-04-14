@@ -229,7 +229,7 @@
         <item name="android:layout_marginRight">@dimen/padding_extra_extra_large</item>
         <item name="android:layout_marginTop">@dimen/padding_large</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
-        <item name="android:textColor">@color/passcodelock_button_text_color</item>
+        <item name="android:textColor">@color/gray_20</item>
         <item name="android:textSize">@dimen/passcodelock_button_text_size</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
@@ -262,6 +262,18 @@
         <item name="dialogPrimary">@color/dialogDarkPrimary</item>
         <item name="dialogPrimaryVariant">@color/dialogDarkPrimaryVariant</item>
         <item name="android:navigationBarColor">@color/dialogDarkPrimary</item>
+    </style>
+
+    <!-- Dictionary -->
+    <style name="KeywordTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/blue</item>
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="TypeKeywordInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/blue</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="boxBackgroundColor">@null</item>
     </style>
 
 </resources>

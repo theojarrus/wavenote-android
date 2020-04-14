@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- MARGIN/PADDING -->
     <dimen name="padding_extra_extra_small">2dp</dimen>
@@ -58,5 +58,10 @@
 
     <!-- Color Sheet -->
     <dimen name="default_dialog_radius">4dp</dimen>
+
+    <!-- Dictionary -->
+    <dimen name="mtrl_textinput_box_stroke_width_default" tools:override="true">2dp</dimen>
+    <dimen name="dictionary_topbar_margin">72dp</dimen>
+    <dimen name="dictionary_default_space">15dp</dimen>
 
 </resources>

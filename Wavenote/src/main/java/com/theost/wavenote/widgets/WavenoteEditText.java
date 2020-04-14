@@ -28,7 +28,7 @@ import java.util.List;
 public class WavenoteEditText extends AppCompatEditText {
     private List<OnSelectionChangedListener> listeners;
     private OnCheckboxToggledListener mOnCheckboxToggledListener;
-    private final int CHECKBOX_LENGTH = 2; // One CheckableSpan + a space character
+    private final int CHECKBOX_LENGTH = 3; // One CheckableSpan + a space character
 
     public interface OnCheckboxToggledListener {
         void onCheckboxToggled();
@@ -144,7 +144,7 @@ public class WavenoteEditText extends AppCompatEditText {
     public void insertChecklist() {
         int start, end;
         int lineNumber = getCurrentCursorLine();
-        start = getLayout().getLineStart(lineNumber);
+        start = getLayout().getLineStart(lineNumber) - 1;
 
         if (getSelectionEnd() > getSelectionStart() && !selectionIsOnSameLine()) {
             end = getSelectionEnd();
@@ -164,7 +164,7 @@ public class WavenoteEditText extends AppCompatEditText {
             // Remove any CheckableSpans found
             for (CheckableSpan span: checkableSpans) {
                 workingString.replace(
-                        workingString.getSpanStart(span),
+                        workingString.getSpanStart(span) - 1,
                         workingString.getSpanEnd(span) + 1,
                         ""
                 );
@@ -180,38 +180,7 @@ public class WavenoteEditText extends AppCompatEditText {
                 }
             }
         } else {
-            // Insert a checklist for each line
-            String[] lines = workingString.toString().split("(?<=\n)");
-            StringBuilder resultString = new StringBuilder();
-
-            for (String lineString: lines) {
-                // Preserve the spaces before the text
-                int leadingSpaceCount;
-                if (lineString.trim().length() == 0) {
-                    // Only whitespace content, get count of spaces
-                    leadingSpaceCount = lineString.length() - lineString.replaceAll(" ", "").length();
-                } else {
-                    // Get count of spaces up to first non-whitespace character
-                    leadingSpaceCount = lineString.indexOf(lineString.trim());
-                }
-
-                if (leadingSpaceCount > 0) {
-                    resultString.append(new String(new char[leadingSpaceCount]).replace('\0', ' '));
-                    lineString = lineString.substring(leadingSpaceCount);
-                }
-
-                resultString
-                        .append(ChecklistUtils.UNCHECKED_MARKDOWN)
-                        .append(" ")
-                        .append(lineString);
-            }
-
-            editable.replace(start, end, resultString);
-
-            int newSelection = Math.max(previousSelection, 0) + (lines.length * CHECKBOX_LENGTH);
-            if (editable.length() >= newSelection) {
-                setSelection(newSelection);
-            }
+            editable.insert(getSelectionStart(), "\n- [ ] ");
         }
     }
 

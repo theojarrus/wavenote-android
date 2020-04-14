@@ -49,17 +49,4 @@
         <item>22</item>
     </string-array>
 
-    <string-array name="array_musical_titles">
-        <item>@string/musical_intro</item>
-        <item>@string/musical_verse</item>
-        <item>@string/musical_chorus</item>
-        <item>@string/musical_outro</item>=
-    </string-array>
-
-    <string-array name="array_musical_words">
-        <item>@string/musical_chord_cm</item>
-        <item>@string/musical_chord_dm</item>
-        <item>@string/musical_chord_em</item>
-    </string-array>
-
 </resources>

@@ -561,6 +561,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_checklist:
+                DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
                 insertChecklist();
                 return true;
             case R.id.menu_copy:

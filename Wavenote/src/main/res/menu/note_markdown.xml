@@ -37,7 +37,6 @@
         android:title="@string/toggle_checklist"
         app:showAsAction="always" />
 
-
     <group
         android:id="@+id/group_1">
 
