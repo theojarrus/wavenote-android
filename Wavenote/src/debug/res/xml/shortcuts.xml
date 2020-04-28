@@ -8,8 +8,8 @@
         android:icon="@drawable/ic_shortcut_create_48dp"
         android:shortcutShortLabel="@string/new_note">
         <intent
-            android:action="com.theost.wavenote.NEW_NOTE"
-            android:targetPackage="com.theost.wavenote.debug"
-            android:targetClass="com.theost.wavenote.NotesActivity" />
+            android:action="com.automattic.simplenote.NEW_NOTE"
+            android:targetPackage="com.automattic.simplenote.debug"
+            android:targetClass="com.automattic.simplenote.NotesActivity" />
     </shortcut>
 </shortcuts>

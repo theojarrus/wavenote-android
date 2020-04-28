@@ -55,7 +55,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.key_dictionary, menu);
+        inflater.inflate(R.menu.items_list, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
 
         return true;
@@ -70,7 +70,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             case R.id.menu_sort:
                 sortKeywords();
                 return true;
-            case R.id.menu_reset:
+            case R.id.menu_remove:
                 return true;
             default:
                 return false;
@@ -101,7 +101,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     public void animateTrash(View view) {
-        ImageButton btn = findViewById(R.id.remove_keyword);
+        ImageButton btn = findViewById(R.id.remove_item);
         Drawable drawable = btn.getDrawable();
         DrawableUtils.startAnimatedVectorDrawable(drawable);
     }

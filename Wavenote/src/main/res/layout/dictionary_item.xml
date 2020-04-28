@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/keyword_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/dictionary_default_space"
+    android:paddingLeft="@dimen/dictionary_horizontal_space"
     android:paddingTop="0dp"
-    android:paddingRight="@dimen/dictionary_default_space"
-    android:paddingBottom="@dimen/dictionary_default_space"
+    android:paddingRight="@dimen/dictionary_horizontal_space"
+    android:paddingBottom="@dimen/dictionary_vertical_space"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:focusable="true"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_text_layout"
         style="@style/KeywordTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginEnd="@dimen/dictionary_default_space"
+        android:layout_marginEnd="@dimen/dictionary_horizontal_space"
         android:layout_weight="1.5"
         android:hint="@string/keyword">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/keyword_text_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLength="15" />
@@ -34,7 +35,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/keyword_type_layout"
         style="@style/TypeKeywordInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -45,7 +45,6 @@
         android:text="@string/type">
 
         <AutoCompleteTextView
-            android:id="@+id/keyword_type_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="0dp"
@@ -54,16 +53,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageButton
-        android:id="@+id/remove_keyword"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
-        android:background="@null"
         android:contentDescription="@string/description_delete_item"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="animateTrash"
-        android:src="@drawable/av_trash_empty_blue_24dp" />
+        android:background="@null"
+        android:src="@drawable/av_trash_empty_blue_24dp"/>
 
 </LinearLayout>

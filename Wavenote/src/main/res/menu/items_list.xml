@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AlwaysShowAction">
+
+    <item
+        android:id="@+id/menu_add"
+        android:enabled="true"
+        android:icon="@drawable/av_add_24dp"
+        android:title="@string/add_keyword"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_sort"
+        android:enabled="true"
+        android:icon="@drawable/av_sort_24dp"
+        android:title="@string/sort_order"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_remove"
+        android:enabled="true"
+        android:title="@string/remove_all"
+        app:showAsAction="never" />
+
+    <item
+        android:enabled="true"
+        android:title="@string/cancel"
+        app:showAsAction="never" />
+
+</menu>

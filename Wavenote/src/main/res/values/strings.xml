@@ -269,6 +269,8 @@
     <string name="keyword">Keyword</string>
     <string name="reset">Reset</string>
     <string name="type">Type</string>
+    <string name="remove_all">Remove all</string>
+    <string name="name">Name</string>
 
     <string-array name="array_musical_titles">
         <item name="musical_intro">Intro</item>

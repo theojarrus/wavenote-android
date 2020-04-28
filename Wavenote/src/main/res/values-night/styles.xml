@@ -39,13 +39,13 @@
         <item name="listSearchHighlightForegroundColor">@color/blue_5</item>
         <item name="mainBackgroundColor">@color/background_dark</item>
         <item name="noteEditorTextColor">@color/gray_20</item>
-        <item name="notePinColor">@android:color/white</item>
+        <item name="notePinColor">@color/white</item>
         <item name="notePreviewColor">@color/text_content_dark</item>
-        <item name="noteTitleColor">@android:color/white</item>
+        <item name="noteTitleColor">@color/white</item>
         <item name="tagChipShadowColor">@color/background_dark</item>
         <item name="pinIconSelector">@drawable/bg_pin_selector_dark</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="settingsTextColor">@android:color/white</item>
+        <item name="settingsTextColor">@color/white</item>
         <item name="toolbarColor">@color/background_dark_4</item>
         <item name="toolbarIconColor">@color/gray_20</item>
         <item name="toolbarPopupTheme">@style/ToolbarTheme.Popup</item>
@@ -99,7 +99,7 @@
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialogText" parent="Theme.Wavestyle.BottomSheetDialog">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="ToolbarTheme.Popup" parent="ThemeOverlay.MaterialComponents">

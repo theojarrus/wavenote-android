@@ -9,10 +9,9 @@
     <item
         android:id="@+id/menu_color"
         android:title="@string/text_color"
-        android:background="@drawable/m_palette_black_24dp"
-        app:actionViewClass="android.widget.ImageButton"
-        app:showAsAction="always"
-        app:srcCompat="@drawable/m_palette_black_24dp" />
+        android:icon="@drawable/m_palette_black_24dp"
+        app:actionViewClass="android.widget.ImageView"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_sheet"

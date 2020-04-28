@@ -38,7 +38,7 @@
         <item name="editorSearchHighlightForegroundColor">@color/blue_60</item>
         <item name="emptyImageColor">@color/empty_light</item>
         <item name="fabColor">@color/item_blue_light</item>
-        <item name="fabIconColor">@android:color/white</item>
+        <item name="fabIconColor">@color/white</item>
         <item name="hintTextColor">@color/text_title_disabled</item>
         <item name="iconTintColor">@color/item_blue_light</item>
         <item name="listBackgroundSelector">@drawable/bg_list_light</item>
@@ -184,7 +184,7 @@
     <style name="Theme.Wavestyle.About" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:navigationBarColor">@color/blue</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:windowBackground">@color/blue</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">false</item>

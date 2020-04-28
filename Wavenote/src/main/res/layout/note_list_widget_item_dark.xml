@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:lines="1"
         android:singleLine="true"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_content_title"
         tools:text="Welcome to Wavenote Android!">
     </TextView>

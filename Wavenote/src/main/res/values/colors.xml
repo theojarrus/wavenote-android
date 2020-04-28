@@ -12,6 +12,7 @@
     <color name="red">@color/red_50</color>
     <color name="yellow">@color/yellow_20</color>
     <color name="black">#36393e</color>
+    <color name="white">#fafafa</color>
 
     <!-- ELEVATION -->
     <color name="background_dark_0">#121416</color>
@@ -67,8 +68,8 @@
     <color name="background_button_primary">@color/blue_50</color>
     <color name="background_button_secondary">@color/wordpress_blue_50</color>
     <color name="text_button_disabled">@color/gray_20</color>
-    <color name="text_button_primary">@android:color/white</color>
-    <color name="text_button_secondary">@android:color/white</color>
+    <color name="text_button_primary">@color/white</color>
+    <color name="text_button_secondary">@color/white</color>
     <color name="text_button_tertiary">@color/blue_60</color>
     <color name="text_link">@color/blue_50</color>
     <color name="text_subtitle">@color/gray_100</color>

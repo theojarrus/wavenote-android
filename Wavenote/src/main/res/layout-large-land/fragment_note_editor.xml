@@ -34,7 +34,7 @@
                     android:id="@+id/note_content"
                     android:background="@null"
                     android:gravity="top"
-                    android:inputType="textMultiLine|textCapSentences|textAutoCorrect|textNoSuggestions"
+                    android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:lineSpacingExtra="@dimen/line_spacing"

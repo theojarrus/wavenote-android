@@ -38,6 +38,7 @@ import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -530,36 +531,53 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull MenuInflater inflater) {
 
         if (!isAdded() || (!mIsFromWidget && DisplayUtils.isLargeScreenLandscape(getActivity()) && mNoteMarkdownFragment == null)) {
             return;
         }
+
         inflater.inflate(R.menu.note_editor, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
 
-        MenuItem colorItem = menu.findItem(R.id.menu_color);
-        colorItem.setIcon(R.drawable.m_palette_black_24dp);
+        final MenuItem colorItem = menu.findItem(R.id.menu_color);
+        final ImageView colorItemView = (ImageView) colorItem.getActionView();
+        colorItemView.setImageDrawable(colorItem.getIcon());
+        TypedValue outValue = new TypedValue();
+        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+        colorItemView.setBackgroundResource(outValue.resourceId);
 
-        colorItem.getActionView().setOnClickListener(new View.OnClickListener() {
+        int viewSize  = (int) (48 * getResources().getDisplayMetrics().density);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewSize, viewSize);
+        colorItemView.setLayoutParams(params);
+        colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        colorItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeTextColor();
+                onOptionsItemSelected(colorItem);
             }
         });
-        colorItem.getActionView().setOnLongClickListener(new View.OnLongClickListener() {
+        colorItemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 pickTextColor();
-                return false;
+                return true;
             }
         });
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_photos:
+                startPhotosActivity();
+                return true;
+            case R.id.menu_color:
+                changeTextColor();
+                return true;
             case R.id.menu_checklist:
                 DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
                 insertChecklist();
@@ -620,12 +638,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
             MenuItem trashItem = menu.findItem(R.id.menu_trash);
             MenuItem checklistItem = menu.findItem(R.id.menu_checklist);
-            MenuItem colorItem = menu.findItem(R.id.menu_color);
             MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
             MenuItem photoItem = menu.findItem(R.id.menu_photos);
             MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
             MenuItem importItem = menu.findItem(R.id.menu_import);
             MenuItem exportItem = menu.findItem(R.id.menu_export);
+            MenuItem colorItem = menu.findItem(R.id.menu_color);
+            ImageView colorItemView = (ImageView) colorItem.getActionView();
 
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
@@ -639,12 +658,16 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 publishItem.setEnabled(false);
                 copyLinkItem.setEnabled(false);
                 checklistItem.setEnabled(false);
-                colorItem.setEnabled(false);
+                colorItemView.setEnabled(false);
                 sheetItem.setEnabled(false);
                 photoItem.setEnabled(false);
                 audioItem.setEnabled(false);
                 importItem.setEnabled(false);
                 exportItem.setEnabled(false);
+                colorItemView.setEnabled(false);
+                sheetItem.setEnabled(false);
+                photoItem.setEnabled(false);
+                audioItem.setEnabled(false);
                 DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);  // 0.3 is 30% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 0.3);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 0.3);
@@ -660,12 +683,16 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 copyLinkItem.setEnabled(mNote.isPublished());
                 markdownItem.setEnabled(true);
                 checklistItem.setEnabled(true);
-                colorItem.setEnabled(true);
+                colorItemView.setEnabled(true);
                 sheetItem.setEnabled(true);
                 photoItem.setEnabled(true);
                 audioItem.setEnabled(true);
                 importItem.setEnabled(true);
                 exportItem.setEnabled(true);
+                colorItemView.setEnabled(true);
+                sheetItem.setEnabled(true);
+                photoItem.setEnabled(true);
+                audioItem.setEnabled(true);
                 DrawableUtils.setMenuItemAlpha(checklistItem, 1.0);  // 1.0 is 100% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 1.0);
@@ -779,6 +806,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             mContentEditText.clearFocus();
             showShareSheet();
         }
+    }
+
+    private void startPhotosActivity() {
+        startActivity(new Intent(getActivity(), NotePhotosActivity.class));
     }
 
     private void showHistory() {

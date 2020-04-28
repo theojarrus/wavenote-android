@@ -2,6 +2,7 @@ package com.theost.wavenote;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuCompat;
@@ -45,6 +48,18 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
             menu,
             R.attr.toolbarIconColor
         );
+
+        final MenuItem colorItem = menu.findItem(R.id.menu_color);
+        final ImageView colorItemView = (ImageView) colorItem.getActionView();
+        colorItemView.setImageDrawable(colorItem.getIcon());
+        TypedValue outValue = new TypedValue();
+        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+        colorItemView.setBackgroundResource(outValue.resourceId);
+
+        int viewSize  = (int) (48 * getResources().getDisplayMetrics().density);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewSize, viewSize);
+        colorItemView.setLayoutParams(params);
+        colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
@@ -131,6 +146,10 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
         MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
         MenuItem importItem = menu.findItem(R.id.menu_import);
         MenuItem exportItem = menu.findItem(R.id.menu_export);
+        MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
+        MenuItem photoItem = menu.findItem(R.id.menu_photos);
+        MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
+        MenuItem colorItem = menu.findItem(R.id.menu_color);
 
         if (mNote != null) {
             pinItem.setChecked(mNote.isPinned());
@@ -144,6 +163,10 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
         markdownItem.setEnabled(false);
         importItem.setEnabled(false);
         exportItem.setEnabled(false);
+        sheetItem.setEnabled(false);
+        photoItem.setEnabled(false);
+        audioItem.setEnabled(false);
+        colorItem.setEnabled(false);
 
         super.onPrepareOptionsMenu(menu);
     }

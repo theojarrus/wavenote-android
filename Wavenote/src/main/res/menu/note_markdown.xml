@@ -8,8 +8,9 @@
 
     <item
         android:id="@+id/menu_color"
-        android:icon="@drawable/m_palette_white_24dp"
         android:title="@string/text_color"
+        android:icon="@drawable/m_palette_white_24dp"
+        app:actionViewClass="android.widget.ImageView"
         app:showAsAction="always" />
 
     <item

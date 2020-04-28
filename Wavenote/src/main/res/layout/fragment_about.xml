@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
@@ -71,7 +71,7 @@
         </LinearLayout>
 
         <View
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:layout_height="1px"
             android:layout_width="match_parent">
         </View>
@@ -108,7 +108,7 @@
         </LinearLayout>
 
         <View
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:layout_height="1px"
             android:layout_width="match_parent">
         </View>
@@ -145,7 +145,7 @@
         </LinearLayout>
 
         <View
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:layout_height="1px"
             android:layout_width="match_parent">
         </View>
@@ -174,7 +174,7 @@
         </LinearLayout>
 
         <View
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:layout_height="1px"
             android:layout_marginBottom="@dimen/padding_extra_large"
             android:layout_width="match_parent">
@@ -196,4 +196,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

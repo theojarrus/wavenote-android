@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="7"
-    android:layout_width="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/toolbar">
-    </include>
+    <include layout="@layout/toolbar" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusableInTouchMode="true"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_marginTop="@dimen/notephotos_topbar_margin"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dictionary_topbar_padding"
+        android:scrollbars="vertical">
 
-    <!--
+        <!--
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/keywords_list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/toolbar_title_keyline"
-        tools:listitem="@layout/dictionary_item"
-        tools:ignore="MissingConstraints">
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/keywords_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/toolbar_title_keyline"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:focusable="true"
+            tools:listitem="@layout/dictionary_item"
+            tools:ignore="MissingConstraints">
+        </androidx.recyclerview.widget.RecyclerView>
 
-    -->
+        -->
 
         <LinearLayout
             android:id="@+id/keyword_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dictionary_topbar_margin"
             android:layout_marginBottom="2dp"
+            android:clickable="true"
             android:clipChildren="false"
             android:clipToPadding="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/dictionary_default_space"
+            android:paddingLeft="@dimen/dictionary_horizontal_space"
             android:paddingTop="0dp"
-            android:paddingRight="@dimen/dictionary_default_space"
-            android:paddingBottom="@dimen/dictionary_default_space"
+            android:paddingRight="@dimen/dictionary_horizontal_space"
+            android:paddingBottom="@dimen/dictionary_vertical_space"
             tools:ignore="MissingConstraints">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -52,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginEnd="@dimen/dictionary_default_space"
+                android:layout_marginEnd="@dimen/dictionary_horizontal_space"
                 android:layout_weight="1.5"
                 android:hint="@string/keyword">
 
@@ -60,6 +66,7 @@
                     android:id="@+id/keyword_text_input"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:inputType="textCapSentences|textAutoCorrect"
                     android:maxLength="15" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -85,20 +92,18 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/remove_keyword"
+                android:id="@+id/remove_item"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="5dp"
                 android:background="@null"
-                android:clickable="true"
                 android:contentDescription="@string/description_delete_item"
-                android:focusable="true"
                 android:onClick="animateTrash"
                 android:src="@drawable/av_trash_empty_blue_24dp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

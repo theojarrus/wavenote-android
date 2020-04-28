@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.theost.wavenote.photoview.PhotoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="-1dp"
+        android:background="@color/dividerColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dictionary_vertical_space"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/name"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:maxLength="20"
+            android:paddingTop="@dimen/dictionary_vertical_space"
+            android:paddingBottom="@dimen/dictionary_vertical_space"
+            android:textColorHint="?attr/noteEditorTextColor" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@null"
+            android:contentDescription="@string/description_delete_item"
+            android:src="@drawable/av_trash_empty_blue_24dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="-1dp"
+        android:background="@color/dividerColor" />
+
+</LinearLayout>
