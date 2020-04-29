@@ -33,12 +33,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         setTitle(R.string.dictionary);
 
@@ -46,10 +41,12 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        /* todo
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, keywordTypes);
         AutoCompleteTextView mKeywordTypeTextView = findViewById(R.id.keyword_type_input);
         disableInputTextView(mKeywordTypeTextView);
         mKeywordTypeTextView.setAdapter(adapter);
+         */
     }
 
     @Override
@@ -100,10 +97,12 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         view.setKeyListener(null);
     }
 
+    /* todo
     public void animateTrash(View view) {
         ImageButton btn = findViewById(R.id.remove_item);
         Drawable drawable = btn.getDrawable();
         DrawableUtils.startAnimatedVectorDrawable(drawable);
     }
+     */
 
 }

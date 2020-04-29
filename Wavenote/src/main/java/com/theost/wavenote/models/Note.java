@@ -169,7 +169,7 @@ public class Note extends BucketObject {
             mTitle = content.substring(0, firstNewLinePosition).trim();
 
             if (firstNewLinePosition < content.length()) {
-                mContentPreview = content.substring(firstNewLinePosition, content.length());
+                mContentPreview = content.substring(firstNewLinePosition);
                 mContentPreview = mContentPreview.replace(NEW_LINE, SPACE).replace(SPACE + SPACE, SPACE).trim();
             } else {
                 mContentPreview = content;
@@ -180,9 +180,7 @@ public class Note extends BucketObject {
         }
     }
 
-    public static boolean isTextStyleBold() {
-        return TEXT_STYLE_BOLD;
-    }
+    public static boolean isTextStyleBold() { return TEXT_STYLE_BOLD;}
 
     public static boolean isTextStyleItalic() {
         return TEXT_STYLE_ITALIC;
@@ -204,7 +202,7 @@ public class Note extends BucketObject {
         return TEXT_STYLE_STRIKETHROUGH;
     }
 
-    public static boolean[] getTextStyle() {
+    public boolean[] getTextStyle() {
         return new boolean[]{TEXT_STYLE_BOLD, TEXT_STYLE_ITALIC, TEXT_STYLE_CODE, TEXT_STYLE_UNDERLINE,
         TEXT_STYLE_STRIKETHROUGH, TEXT_STYLE_STROKE};
     }
@@ -237,7 +235,7 @@ public class Note extends BucketObject {
         return SELECTED_COLOR;
     }
 
-    public static void setSelectedColor(Integer selectedColor) {
+    public void setSelectedColor(Integer selectedColor) {
         Note.SELECTED_COLOR = selectedColor;
     }
 
@@ -268,8 +266,7 @@ public class Note extends BucketObject {
             return BLANK_CONTENT;
         }
         String strContent = (String) obj;
-        Spannable content = (Spannable) HtmlCompat.fromHtml(strContent.replaceAll(TEXT_COLOR_DI, TEXT_COLOR_AC));
-        return content;
+        return (Spannable) HtmlCompat.fromHtml(strContent.replaceAll(TEXT_COLOR_DI, TEXT_COLOR_AC));
     }
 
     public void setContent(Spannable content) {

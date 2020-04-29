@@ -99,7 +99,6 @@
     <string name="view_in_browser">View in Browser</string>
     <string name="link">Link</string>
     <string name="link_copied">Link copied!</string>
-    <string name="copy">Copy</string>
 
     <!-- account setup -->
     <string name="wpcom_log_in_error_generic">Couldn\'t log in with WordPress.com. Please try again.</string>
@@ -227,7 +226,8 @@
     <string name="simperium_button_signup">Sign Up</string>
     <string name="simperium_dialog_message_login">Could not log in with the provided email address and password.</string>
     <string name="simperium_dialog_message_network">There is no network available.  Please, connect to a network and try again.</string>
-    <string name="simperium_dialog_message_password">Passwords must be a minimum of %1$d characters excluding new lines, spaces, and tabs.</string>
+    <string name="simperium_dialog_message_password">The password requirements are:\n\n- Password cannot match email\n- Minimum of %1$d characters\n- No new lines\n- No tabs</string>
+    <string name="simperium_dialog_message_password_login">Passwords must be a minimum of %1$d characters excluding new lines, spaces, and tabs.</string>
     <string name="simperium_dialog_message_signup">Could not sign up with the provided email address and password.</string>
     <string name="simperium_dialog_message_signup_existing">The email address you entered is already associated with a Wavenote account.</string>
     <string name="simperium_dialog_progress_logging_in">Logging in&#8230;</string>
@@ -236,7 +236,7 @@
     <string name="simperium_error_email">Invalid email</string>
     <string name="simperium_error_password">Invalid password</string>
     <string name="simperium_footer_login">%1$s%2$s%3$sForgot password?%4$s</string>
-    <string name="simperium_footer_login_url">https://app.simplenote.com/forgot?email=%1$s</string>
+    <string name="simperium_footer_login_url">https://app.simplenote.com/forgot/?email=%1$s</string>
     <string name="simperium_footer_signup">By creating an account, you agree to our %1$s%2$s%3$sTerms and Conditions%4$s</string>
     <string name="simperium_footer_signup_url">https://simplenote.com/terms/</string>
     <string name="simperium_hint_email">Email</string>

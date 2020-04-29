@@ -48,7 +48,7 @@ open class ColorSheetBaselineGridTextView @JvmOverloads constructor(
         lineHeightHint =
             a.getDimensionPixelSize(R.styleable.ColorSheetBaselineGridTextView_lineHeightHint, 0).toFloat()
         maxLinesByHeight = a.getBoolean(R.styleable.ColorSheetBaselineGridTextView_maxLinesByHeight, false)
-        a?.recycle()
+        a.recycle()
 
         fourDip = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics

@@ -17,7 +17,6 @@ import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.User;
-import com.theost.wavenote.utils.WidgetUtils;
 
 public class NoteWidgetLight extends AppWidgetProvider {
     public static final String KEY_WIDGET_IDS_LIGHT = "key_widget_ids_light";
@@ -26,6 +25,7 @@ public class NoteWidgetLight extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null && intent.hasExtra(KEY_WIDGET_IDS_LIGHT)) {
             int[] ids = intent.getExtras().getIntArray(KEY_WIDGET_IDS_LIGHT);
+            assert ids != null;
             this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
         } else {
             super.onReceive(context, intent);
@@ -45,18 +45,6 @@ public class NoteWidgetLight extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.note_widget_light);
         resizeWidget(newOptions, views);
         appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-    }
-
-    @Override
-    public void onDisabled(Context context) {
     }
 
     private void resizeWidget(Bundle appWidgetOptions, RemoteViews views) {

@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -81,6 +82,7 @@ import com.simperium.client.Query;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
+import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -94,25 +96,20 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         HistoryBottomSheetDialog.HistorySheetListener,
         WavenoteEditText.OnCheckboxToggledListener {
 
-    public static final String ARG_IS_FROM_WIDGET = "is_from_widget";
-    public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_NEW_NOTE = "new_note";
-    public static final String ARG_MATCH_OFFSETS = "match_offsets";
     public static final String ARG_MARKDOWN_ENABLED = "markdown_enabled";
     public static final String ARG_PREVIEW_ENABLED = "preview_enabled";
-    private static final String STATE_NOTE_ID = "state_note_id";
+    public static final String ARG_IS_FROM_WIDGET = "is_from_widget";
+    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_MATCH_OFFSETS = "match_offsets";
+    public static final String STATE_NOTE_ID = "state_note_id";
     private static final int AUTOSAVE_DELAY_MILLIS = 2000;
     private static final int MAX_REVISIONS = 30;
     private static final int PUBLISH_TIMEOUT = 20000;
     private static final int HISTORY_TIMEOUT = 10000;
     private boolean isThemeLight = false;
-    private static Note mNote;
-    private final Runnable mAutoSaveRunnable = new Runnable() {
-        @Override
-        public void run() {
-            saveAndSyncNote();
-        }
-    };
+    private Note mNote;
+    private final Runnable mAutoSaveRunnable = this::saveAndSyncNote;
     private Bucket<Note> mNotesBucket;
     private View mRootView;
     private View mTagPadding;
@@ -161,13 +158,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 return;
             }
 
-            requireActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mHistoryBottomSheet.getDialog() != null && mHistoryBottomSheet.getDialog().isShowing() && !mHistoryBottomSheet.isHistoryLoaded()) {
-                        mHistoryBottomSheet.dismiss();
-                        Toast.makeText(getActivity(), R.string.error_history, Toast.LENGTH_LONG).show();
-                    }
+            requireActivity().runOnUiThread(() -> {
+                if (mHistoryBottomSheet.getDialog() != null && mHistoryBottomSheet.getDialog().isShowing() && !mHistoryBottomSheet.isHistoryLoaded()) {
+                    mHistoryBottomSheet.dismiss();
+                    Toast.makeText(getActivity(), R.string.error_history, Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -245,12 +239,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
             new Handler().postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
-                        }
-                    },
+                    () -> requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme())),
                     requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
             );
         }
@@ -263,15 +252,12 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         public void run() {
             if (!isAdded()) return;
 
-            requireActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+            requireActivity().runOnUiThread(() -> {
 
-                    mNote.setPublished(!mNote.isPublished());
-                    mNote.save();
+                mNote.setPublished(!mNote.isPublished());
+                mNote.save();
 
-                    updatePublishedState(false);
-                }
+                updatePublishedState(false);
             });
         }
     };
@@ -310,6 +296,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mMatchHighlighter = new TextHighlighter(requireActivity(),
                 R.attr.editorSearchHighlightForegroundColor, R.attr.editorSearchHighlightBackgroundColor);
         mAutocompleteAdapter = new CursorAdapter(getActivity(), null, 0x0) {
+            @SuppressLint("InflateParams")
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
                 Activity activity = (Activity) context;
@@ -368,8 +355,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         colorSheet.cornerRadius(8);
 
         colors = getResources().getIntArray(R.array.colorsheet_colors);
-        lightColor = "#" + Integer.toHexString(ContextCompat.getColor(getContext(), R.color.background_light)).substring(2).toUpperCase();
-        darkColor = "#" + Integer.toHexString(ContextCompat.getColor(getContext(), R.color.background_dark)).substring(2).toUpperCase();
+        lightColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_light)).substring(2).toUpperCase();
+        darkColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_dark)).substring(2).toUpperCase();
         if (ThemeUtils.isLightTheme(requireContext())) {
             isThemeLight = true;
         }
@@ -380,7 +367,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 return Unit.INSTANCE;
             }
 
-            public final void invoke(int color) {
+            final void invoke(int color) {
                 mNote.setSelectedColor(color);
             }
         });
@@ -417,30 +404,27 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         ViewTreeObserver viewTreeObserver = mContentEditText.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // If a note was loaded with search matches, scroll to the first match in the editor
-                if (mShouldScrollToSearchMatch && mMatchOffsets != null) {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    // Get the character location of the first search match
-                    int matchLocation = MatchOffsetHighlighter.getFirstMatchLocation(
-                            mContentEditText.getText(),
-                            mMatchOffsets
-                    );
-                    if (matchLocation == 0) {
-                        return;
-                    }
-
-                    // Calculate how far to scroll to bring the match into view
-                    Layout layout = mContentEditText.getLayout();
-                    int lineTop = layout.getLineTop(layout.getLineForOffset(matchLocation));
-                    ((NestedScrollView) mRootView).smoothScrollTo(0, lineTop);
-                    mShouldScrollToSearchMatch = false;
+        viewTreeObserver.addOnGlobalLayoutListener(() -> {
+            // If a note was loaded with search matches, scroll to the first match in the editor
+            if (mShouldScrollToSearchMatch && mMatchOffsets != null) {
+                if (!isAdded()) {
+                    return;
                 }
+
+                // Get the character location of the first search match
+                int matchLocation = MatchOffsetHighlighter.getFirstMatchLocation(
+                        mContentEditText.getText(),
+                        mMatchOffsets
+                );
+                if (matchLocation == 0) {
+                    return;
+                }
+
+                // Calculate how far to scroll to bring the match into view
+                Layout layout = mContentEditText.getLayout();
+                int lineTop = layout.getLineTop(layout.getLineForOffset(matchLocation));
+                ((NestedScrollView) mRootView).smoothScrollTo(0, lineTop);
+                mShouldScrollToSearchMatch = false;
             }
         });
         setHasOptionsMenu(true);
@@ -473,17 +457,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void showSoftKeyboard() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (getActivity() == null) {
-                    return;
-                }
+        new Handler().postDelayed(() -> {
+            if (getActivity() == null) {
+                return;
+            }
 
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (inputMethodManager != null) {
-                    inputMethodManager.showSoftInput(mContentEditText, 0);
-                }
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(mContentEditText, 0);
             }
         }, 100);
     }
@@ -544,7 +525,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         final ImageView colorItemView = (ImageView) colorItem.getActionView();
         colorItemView.setImageDrawable(colorItem.getIcon());
         TypedValue outValue = new TypedValue();
-        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+        requireContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
         colorItemView.setBackgroundResource(outValue.resourceId);
 
         int viewSize  = (int) (48 * getResources().getDisplayMetrics().density);
@@ -552,18 +533,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         colorItemView.setLayoutParams(params);
         colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
-        colorItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOptionsItemSelected(colorItem);
-            }
-        });
-        colorItemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                pickTextColor();
-                return true;
-            }
+        colorItemView.setOnClickListener(v -> onOptionsItemSelected(colorItem));
+        colorItemView.setOnLongClickListener(v -> {
+            pickTextColor();
+            return true;
         });
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -717,7 +690,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             mContentEditText.insertChecklist();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
     }
 
@@ -725,22 +697,22 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         boolean checked = ((CheckBox) view).isChecked();
         switch(view.getId()) {
             case R.id.text_bold:
-                mNote.setTextStyleBold(checked);
+                Note.setTextStyleBold(checked);
                 break;
             case R.id.text_italic:
-                mNote.setTextStyleItalic(checked);
+                Note.setTextStyleItalic(checked);
                 break;
             case R.id.text_stroke:
-                mNote.setTextStyleStroke(checked);
+                Note.setTextStyleStroke(checked);
                 break;
             case R.id.text_code:
-                mNote.setTextStyleCode(checked);
+                Note.setTextStyleCode(checked);
                 break;
             case R.id.text_underline:
-                mNote.setTextStyleUnderline(checked);
+                Note.setTextStyleUnderline(checked);
                 break;
             case R.id.text_strikethrough:
-                mNote.setTextStyleStrikethrough(checked);
+                Note.setTextStyleStrikethrough(checked);
                 break;
         }
     }
@@ -748,17 +720,17 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     public static boolean isCheckboxActive(View view){
         switch(view.getId()) {
             case R.id.text_bold:
-                return mNote.isTextStyleBold();
+                return Note.isTextStyleBold();
             case R.id.text_italic:
-                return mNote.isTextStyleItalic();
+                return Note.isTextStyleItalic();
             case R.id.text_stroke:
-                return mNote.isTextStyleStroke();
+                return Note.isTextStyleStroke();
             case R.id.text_code:
-                return mNote.isTextStyleCode();
+                return Note.isTextStyleCode();
             case R.id.text_underline:
-                return mNote.isTextStyleUnderline();
+                return Note.isTextStyleUnderline();
             case R.id.text_strikethrough:
-                return mNote.isTextStyleStrikethrough();
+                return Note.isTextStyleStrikethrough();
             default:
                 return false;
         }
@@ -791,12 +763,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mMarkdown.setVisibility(View.VISIBLE);
 
         new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        requireActivity().invalidateOptionsMenu();
-                    }
-                },
+                () -> requireActivity().invalidateOptionsMenu(),
                 getResources().getInteger(R.integer.time_animation)
         );
     }
@@ -862,7 +829,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         editor.apply();
     }
 
-    protected void setMarkdownEnabled(boolean enabled) {
+    private void setMarkdownEnabled(boolean enabled) {
         mIsMarkdownEnabled = enabled;
 
         if (mIsMarkdownEnabled) {
@@ -885,11 +852,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
         mPlaceholderView.setVisibility(View.GONE);
 
-        if (matchOffsets != null) {
-            mMatchOffsets = matchOffsets;
-        } else {
-            mMatchOffsets = null;
-        }
+        mMatchOffsets = matchOffsets;
 
 
         saveNote();
@@ -919,7 +882,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
                 if (mContentEditText.hasFocus()
                         && cursorPosition != mContentEditText.getSelectionEnd()
-                        && cursorPosition < mContentEditText.getText().length()) {
+                        && cursorPosition < Objects.requireNonNull(mContentEditText.getText()).length()) {
                     mContentEditText.setSelection(cursorPosition);
                 }
             }
@@ -1155,7 +1118,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mContentEditText.setText(content);
     }
 
-    protected void saveNote() {
+    private void saveNote() {
         try {
             if (mNote == null || mContentEditText == null || mIsLoadingNote ||
                     (mHistoryBottomSheet != null && mHistoryBottomSheet.getDialog() != null && mHistoryBottomSheet.getDialog().isShowing())) {
@@ -1271,12 +1234,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     Snackbar.make(mRootView, R.string.publish_successful, Snackbar.LENGTH_LONG)
                             .setAction(
                                     R.string.undo,
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            mHideActionOnSuccess = true;
-                                            unpublishNote();
-                                        }
+                                    v -> {
+                                        mHideActionOnSuccess = true;
+                                        unpublishNote();
                                     }
                             )
                             .show();
@@ -1291,12 +1251,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     Snackbar.make(mRootView, R.string.unpublish_successful, Snackbar.LENGTH_LONG)
                             .setAction(
                                     R.string.undo,
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            mHideActionOnSuccess = true;
-                                            publishNote();
-                                        }
+                                    v -> {
+                                        mHideActionOnSuccess = true;
+                                        publishNote();
                                     }
                             )
                             .show();
@@ -1307,24 +1264,18 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 Snackbar.make(mRootView, R.string.unpublish_error, Snackbar.LENGTH_LONG)
                         .setAction(
                                 R.string.retry,
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mHideActionOnSuccess = true;
-                                        unpublishNote();
-                                    }
+                                v -> {
+                                    mHideActionOnSuccess = true;
+                                    unpublishNote();
                                 }
                         ).show();
             } else {
                 Snackbar.make(mRootView, R.string.publish_error, Snackbar.LENGTH_LONG)
                         .setAction(
                                 R.string.retry,
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mHideActionOnSuccess = true;
-                                        publishNote();
-                                    }
+                                v -> {
+                                    mHideActionOnSuccess = true;
+                                    publishNote();
                                 }
                         ).show();
             }
@@ -1357,7 +1308,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void pickTextColor() {
-        colorSheet.colorPicker(colors, mNote.getSelectedColor(), true, listener).show(getFragmentManager());
+        colorSheet.colorPicker(colors, mNote.getSelectedColor(), true, listener);
+        this.colorSheet.show(getParentFragmentManager());
     }
 
     private void copyToClipboard(String text) {
@@ -1371,13 +1323,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void showShareSheet() {
         if (isAdded() && mShareBottomSheet != null && !mShareBottomSheet.isAdded()) {
-            mShareBottomSheet.show(requireFragmentManager(), mNote);
+            mShareBottomSheet.show(getParentFragmentManager(), mNote);
         }
     }
 
     private void showInfoSheet() {
         if (isAdded() && mInfoBottomSheet != null && !mInfoBottomSheet.isAdded()) {
-            mInfoBottomSheet.show(requireFragmentManager(), mNote);
+            mInfoBottomSheet.show(getParentFragmentManager(), mNote);
         }
     }
 
@@ -1387,7 +1339,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             mNotesBucket.getRevisions(mNote, MAX_REVISIONS, mHistoryBottomSheet.getRevisionsRequestCallbacks());
             saveNote();
 
-            mHistoryBottomSheet.show(requireFragmentManager(), mNote);
+            mHistoryBottomSheet.show(getParentFragmentManager(), mNote);
         }
     }
 
@@ -1407,16 +1359,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 try {
                     final Note updatedNote = mNotesBucket.get(key);
                     if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mPublishTimeoutHandler != null) {
-                                    mPublishTimeoutHandler.removeCallbacks(mPublishTimeoutRunnable);
-                                }
-
-                                updateNote(updatedNote);
-                                updatePublishedState(true);
+                        getActivity().runOnUiThread(() -> {
+                            if (mPublishTimeoutHandler != null) {
+                                mPublishTimeoutHandler.removeCallbacks(mPublishTimeoutRunnable);
                             }
+
+                            updateNote(updatedNote);
+                            updatePublishedState(true);
                         });
                     }
                 } catch (BucketObjectMissingException e) {
@@ -1528,18 +1477,15 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 // Show soft keyboard
                 fragment.mContentEditText.requestFocus();
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (fragment.getActivity() == null) {
-                            return;
-                        }
+                new Handler().postDelayed(() -> {
+                    if (fragment.getActivity() == null) {
+                        return;
+                    }
 
-                        InputMethodManager inputMethodManager = (InputMethodManager) fragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager inputMethodManager = (InputMethodManager) fragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                        if (inputMethodManager != null) {
-                            inputMethodManager.showSoftInput(fragment.mContentEditText, 0);
-                        }
+                    if (inputMethodManager != null) {
+                        inputMethodManager.showSoftInput(fragment.mContentEditText, 0);
                     }
                 }, 100);
             } else if (fragment.mNote != null) {
@@ -1658,18 +1604,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             chip.setChipBackgroundColor(getChipBackgroundColor());
             chip.setTextColor(ThemeUtils.getColorFromAttribute(requireContext(), R.attr.chipTextColor));
             chip.setStateListAnimator(null);
-            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    chip.setCloseIconVisible(isChecked);
-                }
-            });
-            chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mTagChips.removeView(view);
-                    updateTags();
-                }
+            chip.setOnCheckedChangeListener((buttonView, isChecked) -> chip.setCloseIconVisible(isChecked));
+            chip.setOnCloseIconClickListener(view -> {
+                mTagChips.removeView(view);
+                updateTags();
             });
             mTagChips.addView(chip);
         }

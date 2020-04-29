@@ -24,12 +24,7 @@ public class NotePhotosActivity extends ThemedAppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         setTitle(R.string.photos);
 
@@ -47,10 +42,12 @@ public class NotePhotosActivity extends ThemedAppCompatActivity {
         return true;
     }
 
+    /* todo
     public void animateTrash(View view) {
         ImageButton btn = findViewById(R.id.remove_item);
         Drawable drawable = btn.getDrawable();
         DrawableUtils.startAnimatedVectorDrawable(drawable);
     }
+     */
 
 }

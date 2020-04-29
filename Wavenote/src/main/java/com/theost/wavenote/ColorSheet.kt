@@ -59,8 +59,7 @@ class ColorSheet : BottomSheetDialogFragment() {
             override fun onGlobalLayout() {
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val dialog = dialog as BottomSheetDialog?
-                val bottomSheet =
-                    dialog?.findViewById<FrameLayout>(materialR.id.design_bottom_sheet)
+                val bottomSheet = dialog?.findViewById<FrameLayout>(materialR.id.design_bottom_sheet)
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.peekHeight = 0

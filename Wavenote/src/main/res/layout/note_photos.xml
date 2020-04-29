@@ -2,7 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_weight="7"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
@@ -14,8 +18,6 @@
         android:orientation="vertical"
         android:scrollbars="vertical">
 
-        <!--
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/photos_list"
             android:layout_width="match_parent"
@@ -23,74 +25,27 @@
             android:orientation="vertical"
             android:focusableInTouchMode="true"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            tools:listitem="@layout/photo_item"
+            tools:ignore="MissingConstraints">
         </androidx.recyclerview.widget.RecyclerView>
 
-        -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.theost.wavenote.photoview.PhotoView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/screenshot1" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="-1dp"
-                android:background="@color/dividerColor" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dictionary_vertical_space"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:hint="@string/name"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences|textAutoCorrect"
-                    android:maxLength="20"
-                    android:paddingTop="@dimen/dictionary_vertical_space"
-                    android:paddingBottom="@dimen/dictionary_vertical_space"
-                    android:textColorHint="?attr/noteEditorTextColor" />
-
-                <ImageButton
-                    android:id="@+id/remove_item"
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:background="@null"
-                    android:contentDescription="@string/description_delete_item"
-                    android:onClick="animateTrash"
-                    android:src="@drawable/av_trash_empty_blue_24dp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="-1dp"
-                android:background="@color/dividerColor" />
-
-        </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@android:id/empty"
+        android:visibility="gone"
+        layout="@layout/empty_view">
+    </include>
+
+    <View
+        android:id="@+id/divider_line"
+        android:background="?attr/dividerColor"
+        android:layout_gravity="end"
+        android:layout_height="fill_parent"
+        android:layout_width="@dimen/divider_height"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints">
+    </View>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
