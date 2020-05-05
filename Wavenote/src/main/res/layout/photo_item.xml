@@ -4,18 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.theost.wavenote.photoview.PhotoView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="-1dp"
-        android:background="@color/dividerColor" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,15 +19,17 @@
             android:id="@+id/photo_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dictionary_vertical_space"
+            android:layout_marginEnd="@dimen/custom_vertical_space"
             android:layout_weight="1"
             android:background="@null"
             android:hint="@string/name"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
             android:maxLength="20"
-            android:paddingTop="@dimen/dictionary_vertical_space"
-            android:paddingBottom="@dimen/dictionary_vertical_space"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:paddingTop="@dimen/custom_vertical_space"
+            android:paddingBottom="@dimen/custom_vertical_space"
             android:textColorHint="?attr/noteEditorTextColor" />
 
         <ImageButton
@@ -52,6 +42,13 @@
             android:src="@drawable/av_trash_empty_blue_24dp" />
 
     </LinearLayout>
+
+    <com.theost.wavenote.photoview.PhotoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/mu_a7_guitar"/>
 
     <View
         android:layout_width="match_parent"

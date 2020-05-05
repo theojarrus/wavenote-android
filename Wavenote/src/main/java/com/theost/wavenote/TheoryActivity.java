@@ -1,34 +1,40 @@
 package com.theost.wavenote;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuCompat;
 
+import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
-public class NotePhotosActivity extends ThemedAppCompatActivity {
+public class TheoryActivity extends ThemedAppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemeUtils.setTheme(this);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_photos);
+        setContentView(R.layout.activity_theory);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        setTitle(R.string.photos);
+        setTitle(R.string.theory);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+
     }
 
     @Override
@@ -44,28 +50,28 @@ public class NotePhotosActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                addPhoto();
+                addItem();
                 return true;
             case R.id.menu_sort:
-                sortPhotos();
+                sortItems();
                 return true;
             case R.id.menu_remove:
-                removePhoto(-1);
+                removeItem(-1);
                 return true;
             default:
                 return false;
         }
     }
 
-    private void addPhoto() {
+    private void addItem() {
         // todo
     }
 
-    private  void editPhoto() {
+    private  void editItem() {
         // todo
     }
 
-    private void removePhoto(int position) {
+    private void removeItem(int position) {
         /*
         if (position == -1) {
             todo: remove all
@@ -76,7 +82,7 @@ public class NotePhotosActivity extends ThemedAppCompatActivity {
          */
     }
 
-    private void sortPhotos() {
+    private void sortItems() {
         // todo
     }
 
@@ -87,5 +93,13 @@ public class NotePhotosActivity extends ThemedAppCompatActivity {
         DrawableUtils.startAnimatedVectorDrawable(drawable);
     }
      */
+
+    public void startChordsActivity(View view) {
+        Intent intent = new Intent(this, ChordsActivity.class);
+        intent.putExtra("isAllChords", true);
+        intent.putExtra("chords", SyntaxHighlighter.getAllChords(this));
+        intent.putExtra("activeInstrument", ((Button) view).getText().toString());
+        startActivity(intent);
+    }
 
 }

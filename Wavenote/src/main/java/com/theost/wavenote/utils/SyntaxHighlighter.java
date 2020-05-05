@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
@@ -15,64 +17,111 @@ import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.widget.EditText;
 
+import androidx.core.content.ContextCompat;
+
 import com.theost.wavenote.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SyntaxHighlighter {
 
     private static final int TITLE_MAX_LENGTH = 20;
+    private static boolean isHighlightChanged = false;
+    private static ArrayList<String> noteChords;
+    private static int backTextColor;
+    private static int frontTextColor;
 
     @SuppressLint("ResourceAsColor")
-    public static void addSyntaxHighlight(Context context, EditText mContentEditText, String backgroundColor) {
-        /* .SH CODE ATTENTION
-
-        // Getting resources
-        int backTitleColor = context.getResources().getColor(R.color.blue);
-        int backWordColor = context.getResources().getColor(R.color.purple);
-        int textColor = Color.parseColor(backgroundColor);
-
+    public static void updateSyntaxHighlight(Context context, EditText mContentEditText, String foregroundColor) {
         String[] keyTitles = context.getResources().getStringArray(R.array.array_musical_titles);
         String[] keyWords = context.getResources().getStringArray(R.array.array_musical_words);
-
         Spannable noteContent = mContentEditText.getText();
-        String strContent = noteContent.toString();
+        frontTextColor = Color.parseColor(foregroundColor);
 
-        // Loop for KeyTitles (finding all word occurences in text > formatting > next word)
-        for (int i = 0; i < keyTitles.length; i++) {
+        backTextColor = ContextCompat.getColor(context, R.color.blue);
+        noteContent = addSyntaxHighlight(keyTitles, noteContent, true);
+
+        backTextColor = ContextCompat.getColor(context, R.color.purple);
+        noteContent = addSyntaxHighlight(keyWords, noteContent, false);
+
+        if (isHighlightChanged) {
+            int cursorPoistion = mContentEditText.getSelectionEnd();
+            mContentEditText.setText(noteContent);
+            mContentEditText.setSelection(cursorPoistion);
+        }
+    }
+
+    public static Spannable addSyntaxHighlight(String[] words, Spannable contentSpan, boolean isTitle) {
+        isHighlightChanged = false;
+
+        String contentStr = contentSpan.toString().toLowerCase().replaceAll("[\\u202F\\u00A0]+", " ");
+        String splitterStart = " ";
+        String splitterEnd = " ";
+        if (isTitle) {
+            splitterStart = "\n[";
+            splitterEnd = "]";
+            if ((!contentStr.contains(splitterStart)) || (!contentStr.contains(splitterEnd))) return contentSpan;
+        }
+        for (String i : words) {
             int index = 0;
             while (index != -1) {
-                index = strContent.indexOf("\n" + keyTitles[i] + "\n", index);
+                index = contentStr.indexOf(splitterStart + i.toLowerCase() + splitterEnd, index);
                 if (index != -1) {
-                    String spacestart = StrUtils.repeat(" ", (TITLE_MAX_LENGTH - keyTitles[i].length() / 2));
-                    String spaceend = StrUtils.repeat(" ", (TITLE_MAX_LENGTH - keyTitles[i].length() / 2 + keyTitles[i].length() % 2));
-                    int lastindex = index + spacestart.length() + keyTitles[i].length() + spaceend.length();
-                    ((Editable) noteContent).insert(lastindex, spaceend);
-                    ((Editable) noteContent).insert(index, spacestart);
-                    noteContent.setSpan(new ForegroundColorSpan(backTitleColor), index, lastindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    noteContent.setSpan(new BackgroundColorSpan(textColor), index, lastindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    BackgroundColorSpan[] markedSpans = contentSpan.getSpans(index + splitterStart.length(), index + splitterStart.length() + 5, BackgroundColorSpan.class);
+                    if (markedSpans.length > 0) {
+                        index++;
+                        continue;
+                    }
+                    isHighlightChanged = true;
+                    int lastindex = index + i.length();
+                    if (isTitle) {
+                        String spaceStart = StrUtils.repeat(" ", (TITLE_MAX_LENGTH - i.length() - 1) / 2);
+                        String spaceEnd = StrUtils.repeat(" ", (TITLE_MAX_LENGTH - i.length() - 1) / 2 + i.length() % 2);
+                        lastindex += splitterStart.length() + splitterEnd.length();
+                        ((Editable) contentSpan).insert(lastindex, spaceEnd);
+                        ((Editable) contentSpan).insert(index + splitterStart.length() / 2, spaceStart);
+                        lastindex += spaceStart.length() + spaceEnd.length();
+
+                    } else {
+                        lastindex += 2;
+                    }
+                    contentSpan.setSpan(new BackgroundColorSpan(backTextColor), index, lastindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    contentSpan.setSpan(new ForegroundColorSpan(frontTextColor), index, lastindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     index++;
                 }
             }
         }
+        return contentSpan;
+    }
 
-        // Loop for KeyWords (same as previous, but other other words and formatting)
-        for (int i = 0; i < keyWords.length; i++) {
+    public static ArrayList<String> getNoteChords(Context context, String content) {
+        String[] resourceChords = context.getResources().getStringArray(R.array.array_musical_chords);
+        Map<Integer, String> sortedNoteChords = new TreeMap<>();
+        content = content.replaceAll("[\\t\\n\\r\\u202F\\u00A0]+", " ");
+        for (String i : resourceChords) {
             int index = 0;
             while (index != -1) {
-                index = strContent.indexOf(keyWords[i] + " ", index);
+                index = content.indexOf(" " + i + " ", index);
                 if (index != -1) {
-                    noteContent.setSpan(new ForegroundColorSpan(backWordColor), index, index + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    noteContent.setSpan(new BackgroundColorSpan(textColor), index, index + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if (!(sortedNoteChords.containsValue(i))) {
+                        sortedNoteChords.put(index, i);
+                    }
                     index++;
                 }
             }
         }
+        noteChords = new ArrayList<>(sortedNoteChords.values());
+        return noteChords;
+    }
 
-        // Setting text and placing cursor at right position
-        int cursorPoistion = mContentEditText.getSelectionEnd();
-        mContentEditText.setText(noteContent);
-        mContentEditText.setSelection(cursorPoistion);
-
-        */
+    public static ArrayList<String> getAllChords(Context context) {
+        String[] resourceChords = context.getResources().getStringArray(R.array.array_musical_chords);
+        noteChords = new ArrayList<>(Arrays.asList(resourceChords));
+        return noteChords;
     }
 
     public static boolean changeTextStyle(EditText mContentEditText, boolean[] textStyle, int selectedColor, String backgroundColor) {
@@ -119,7 +168,6 @@ public class SyntaxHighlighter {
         mContentEditText.setText(noteContent);
         mContentEditText.setSelection(cursorPositionEnd);
         return true;
-
     }
 
 }

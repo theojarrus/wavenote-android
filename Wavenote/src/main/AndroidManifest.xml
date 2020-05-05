@@ -10,6 +10,7 @@
     <application
         android:name=".Wavenote"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,7 +21,8 @@
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
             android:label="@string/app_launcher_name"
             android:resizeableActivity="true"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,8 +45,22 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".DictionaryActivity"></activity>
-        <activity android:name=".NotePhotosActivity"></activity>
+        <activity android:name=".DictionaryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Dictionary"
+            android:parentActivityName=".PreferencesActivity"/>
+        <activity android:name=".NotePhotosActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Photos"
+            android:parentActivityName=".NoteEditorActivity"/>
+        <activity android:name=".ChordsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Chords"
+            android:parentActivityName=".NoteEditorActivity"/>
+        <activity android:name=".TheoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Theory"
+            android:parentActivityName=".NotesActivity"/>
         <activity
             android:name=".NoteEditorActivity"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
@@ -67,7 +83,7 @@
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/Theme.Wavestyle.Passcode"
-            android:windowSoftInputMode="stateHidden"></activity> <!-- suppress AndroidDomInspection -->
+            android:windowSoftInputMode="stateHidden" /> <!-- suppress AndroidDomInspection -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/Theme.Wavestyle.Passcode"
@@ -112,7 +128,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_list_widget_info_dark"></meta-data>
+                android:resource="@xml/note_list_widget_info_dark" />
         </receiver>
         <receiver
             android:name=".NoteListWidgetLight"
@@ -123,7 +139,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_list_widget_info_light"></meta-data>
+                android:resource="@xml/note_list_widget_info_light" />
         </receiver>
         <receiver
             android:name=".NoteWidgetDark"
@@ -134,7 +150,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_widget_info_dark"></meta-data>
+                android:resource="@xml/note_widget_info_dark" />
         </receiver>
         <receiver
             android:name=".NoteWidgetLight"
@@ -145,15 +161,15 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_widget_info_light"></meta-data>
+                android:resource="@xml/note_widget_info_light" />
         </receiver>
 
         <service
             android:name=".NoteListWidgetDarkService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
             android:name=".NoteListWidgetLightService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".NoteWidgetDarkConfigureActivity"

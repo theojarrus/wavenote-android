@@ -37,7 +37,6 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -551,6 +550,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             case R.id.menu_color:
                 changeTextColor();
                 return true;
+            case R.id.menu_sheet:
+                startChordsActivity();
+                return true;
             case R.id.menu_checklist:
                 DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
                 insertChecklist();
@@ -777,6 +779,12 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void startPhotosActivity() {
         startActivity(new Intent(getActivity(), NotePhotosActivity.class));
+    }
+
+    private void startChordsActivity() {
+        Intent intent = new Intent(getActivity(), ChordsActivity.class);
+        intent.putExtra("chords", SyntaxHighlighter.getNoteChords(getContext(), mContentEditText.getText().toString()));
+        startActivity(intent);
     }
 
     private void showHistory() {
@@ -1496,7 +1504,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             fragment.updateMarkdownView();
             fragment.requireActivity().invalidateOptionsMenu();
             fragment.linkifyEditorContent();
-            //todo fragment.syntaxHighlightEditorContent();
+            fragment.syntaxHighlightEditorContent();
             fragment.mIsLoadingNote = false;
         }
     }
@@ -1526,7 +1534,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             if (fragment != null && fragment.getActivity() != null && !fragment.getActivity().isFinishing()) {
                 // Update links
                 fragment.linkifyEditorContent();
-                //todo fragment.syntaxHighlightEditorContent();
+                fragment.syntaxHighlightEditorContent();
                 fragment.updateMarkdownView();
             }
         }
@@ -1538,7 +1546,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         if (PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX)) {
-            SyntaxHighlighter.addSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor());
+            SyntaxHighlighter.updateSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor());
         }
     }
 

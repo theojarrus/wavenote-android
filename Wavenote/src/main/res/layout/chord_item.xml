@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:orientation="horizontal"
+    android:paddingTop="10dp">
+
+    <ImageView
+        android:id="@+id/chord_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:paddingLeft="@dimen/custom_horizontal_space"
+        android:paddingRight="@dimen/custom_horizontal_space"
+        android:src="@drawable/mu_a7_guitar"
+        android:contentDescription="@string/chords" />
+
+</LinearLayout>

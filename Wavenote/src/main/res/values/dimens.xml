@@ -61,9 +61,9 @@
 
     <!-- Dictionary -->
     <dimen name="mtrl_textinput_box_stroke_width_default" tools:override="true">2dp</dimen>
-    <dimen name="dictionary_topbar_padding">12dp</dimen>
-    <dimen name="dictionary_vertical_space">10dp</dimen>
-    <dimen name="dictionary_horizontal_space">15dp</dimen>
-    <dimen name="notephotos_topbar_margin">56dp</dimen>
+    <dimen name="mtrl_button_box_stroke_width_default" tools:override="true">2dp</dimen>
+    <dimen name="custom_topbar_padding">12dp</dimen>
+    <dimen name="custom_vertical_space">15dp</dimen>
+    <dimen name="custom_horizontal_space">15dp</dimen>
 
 </resources>

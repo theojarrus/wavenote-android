@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -130,9 +131,7 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
         );
 
         searchView.setOnCloseListener(
-            new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
+                () -> {
                     mIsSearching = false;
                     mSearchQuery = "";
                     refreshTags();
@@ -140,7 +139,6 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                     checkEmptyList();
                     return false;
                 }
-            }
         );
     }
 
@@ -259,14 +257,11 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
     @Override
     public void onDeleteObject(Bucket<Tag> bucket, Tag object) {
         if (isAdded()) {
-            requireActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mIsSearching) {
-                        refreshTagsSearch();
-                    } else {
-                        refreshTags();
-                    }
+            requireActivity().runOnUiThread(() -> {
+                if (mIsSearching) {
+                    refreshTagsSearch();
+                } else {
+                    refreshTags();
                 }
             });
         }
@@ -275,14 +270,11 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
     @Override
     public void onNetworkChange(Bucket<Tag> bucket, Bucket.ChangeType type, String key) {
         if (isAdded()) {
-            requireActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mIsSearching) {
-                        refreshTagsSearch();
-                    } else {
-                        refreshTags();
-                    }
+            requireActivity().runOnUiThread(() -> {
+                if (mIsSearching) {
+                    refreshTagsSearch();
+                } else {
+                    refreshTags();
                 }
             });
         }
@@ -291,14 +283,11 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
     @Override
     public void onSaveObject(Bucket<Tag> bucket, Tag object) {
         if (isAdded()) {
-            requireActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mIsSearching) {
-                        refreshTagsSearch();
-                    } else {
-                        refreshTags();
-                    }
+            requireActivity().runOnUiThread(() -> {
+                if (mIsSearching) {
+                    refreshTagsSearch();
+                } else {
+                    refreshTags();
                 }
             });
         }
@@ -352,45 +341,33 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                 tagCountTextView = itemView.findViewById(R.id.tag_count);
                 deleteButton = itemView.findViewById(R.id.tag_trash);
 
-                deleteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!isAdded() || !hasItem(getAdapterPosition())) {
-                            return;
-                        }
+                deleteButton.setOnClickListener(view -> {
+                    if (!isAdded() || !hasItem(getAdapterPosition())) {
+                        return;
+                    }
 
-                        final Tag tag = ((Bucket.ObjectCursor<Tag>) getItem(getAdapterPosition())).getObject();
-                        final int tagCount = mNotesBucket.query().where("tags", Query.ComparisonType.EQUAL_TO, tag.getName()).count();
-                        if (tagCount == 0) {
-                            deleteTag(tag);
-                        } else if (tagCount > 0) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.Dialog));
-                            alert.setTitle(R.string.delete_tag);
-                            alert.setMessage(getString(R.string.confirm_delete_tag));
-                            alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    deleteTag(tag);
-                                }
-                            });
-                            alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    // Do nothing, just closing the dialog
-                                }
-                            });
-                            alert.show();
-                        }
+                    final Tag tag = ((Bucket.ObjectCursor<Tag>) getItem(getAdapterPosition())).getObject();
+                    final int tagCount = mNotesBucket.query().where("tags", Query.ComparisonType.EQUAL_TO, tag.getName()).count();
+                    if (tagCount == 0) {
+                        deleteTag(tag);
+                    } else if (tagCount > 0) {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.Dialog));
+                        alert.setTitle(R.string.delete_tag);
+                        alert.setMessage(getString(R.string.confirm_delete_tag));
+                        alert.setPositiveButton(R.string.yes, (dialog, whichButton) -> deleteTag(tag));
+                        alert.setNegativeButton(R.string.no, (dialog, whichButton) -> {
+                            // Do nothing, just closing the dialog
+                        });
+                        alert.show();
                     }
                 });
-                deleteButton.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (v.isHapticFeedbackEnabled()) {
-                            v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                        }
-
-                        Toast.makeText(getContext(), requireContext().getString(R.string.delete_tag), Toast.LENGTH_SHORT).show();
-                        return true;
+                deleteButton.setOnLongClickListener(v -> {
+                    if (v.isHapticFeedbackEnabled()) {
+                        v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     }
+
+                    Toast.makeText(getContext(), requireContext().getString(R.string.delete_tag), Toast.LENGTH_SHORT).show();
+                    return true;
                 });
 
                 itemView.setOnClickListener(this);
@@ -403,7 +380,7 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                 }
 
                 final AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.Dialog));
-                LinearLayout alertView = (LinearLayout) requireActivity().getLayoutInflater().inflate(R.layout.edit_tag, null);
+                @SuppressLint("InflateParams") LinearLayout alertView = (LinearLayout) requireActivity().getLayoutInflater().inflate(R.layout.edit_tag, null);
 
                 final Tag tag = ((Bucket.ObjectCursor<Tag>) getItem(getAdapterPosition())).getObject();
 
@@ -412,21 +389,16 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                 tagNameEditText.setSelection(tagNameEditText.length());
                 alert.setView(alertView);
                 alert.setTitle(R.string.rename_tag);
-                alert.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = tagNameEditText.getText().toString().trim();
-                        try {
-                            tag.renameTo(value, mNotesBucket);
-                        } catch (BucketObjectNameInvalid e) {
-                            android.util.Log.e(Wavenote.TAG, "Unable to rename tag", e);
-                            // TODO: show user a message that new tag name is not ok
-                        }
+                alert.setPositiveButton(R.string.save, (dialog, whichButton) -> {
+                    String value = tagNameEditText.getText().toString().trim();
+                    try {
+                        tag.renameTo(value, mNotesBucket);
+                    } catch (BucketObjectNameInvalid e) {
+                        android.util.Log.e(Wavenote.TAG, "Unable to rename tag", e);
                     }
                 });
-                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing
-                    }
+                alert.setNegativeButton(R.string.cancel, (dialog, whichButton) -> {
+                    // Do nothing
                 });
                 alert.show();
             }

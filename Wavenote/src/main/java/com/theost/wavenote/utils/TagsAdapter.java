@@ -20,6 +20,7 @@ public class TagsAdapter extends BaseAdapter {
     public static final int SETTINGS_ID = -3;
     public static final int TAGS_ID = -4;
     public static final int UNTAGGED_NOTES_ID = -5;
+    public static final int THEORY_ID = -6;
 
     private static final String ID_COLUMN = "_id";
     private static final int mMinimumItemsPrimary = new int[] {R.string.all_notes, R.string.trash}.length;

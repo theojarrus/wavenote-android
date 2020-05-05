@@ -71,6 +71,7 @@ import static com.theost.wavenote.utils.TagsAdapter.ALL_NOTES_ID;
 import static com.theost.wavenote.utils.TagsAdapter.DEFAULT_ITEM_POSITION;
 import static com.theost.wavenote.utils.TagsAdapter.SETTINGS_ID;
 import static com.theost.wavenote.utils.TagsAdapter.TAGS_ID;
+import static com.theost.wavenote.utils.TagsAdapter.THEORY_ID;
 import static com.theost.wavenote.utils.TagsAdapter.TRASH_ID;
 import static com.theost.wavenote.utils.TagsAdapter.UNTAGGED_NOTES_ID;
 import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
@@ -86,6 +87,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     protected Bucket<Note> mNotesBucket;
     protected Bucket<Tag> mTagsBucket;
     private boolean mHasTappedNoteListWidgetButton;
+    private boolean mIsTheoryClicked;
     private boolean mIsSettingsClicked;
     private boolean mIsShowingMarkdown;
     private boolean mIsTabletFullscreen;
@@ -358,7 +360,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 item -> {
                     mDrawerLayout.closeDrawer(GravityCompat.START);
 
-                    if (item.getItemId() == SETTINGS_ID) {
+                    if (item.getItemId() == THEORY_ID) {
+                        mIsTheoryClicked = true;
+                        return false;
+                    } else if (item.getItemId() == SETTINGS_ID) {
                         mIsSettingsClicked = true;
                         return false;
                     } else {
@@ -371,6 +376,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         mNavigationMenu = navigationView.getMenu();
         mNavigationMenu.add(GROUP_PRIMARY, ALL_NOTES_ID, Menu.NONE, getString(R.string.all_notes)).setIcon(R.drawable.ic_notes_24dp).setCheckable(true);
+        mNavigationMenu.add(GROUP_PRIMARY, THEORY_ID, Menu.NONE, getString(R.string.theory)).setIcon(R.drawable.ic_theory_24dp).setCheckable(true);
         mNavigationMenu.add(GROUP_PRIMARY, TRASH_ID, Menu.NONE, getString(R.string.trash)).setIcon(R.drawable.ic_trash_24dp).setCheckable(true);
         mNavigationMenu.add(GROUP_PRIMARY, SETTINGS_ID, Menu.NONE, getString(R.string.settings)).setIcon(R.drawable.ic_settings_24dp).setCheckable(false);
         mTagsAdapter = new TagsAdapter(this, mNotesBucket);
@@ -382,8 +388,11 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 R.string.close_drawer) {
             public void onDrawerClosed(View view) {
                 supportInvalidateOptionsMenu();
-
-                if (mIsSettingsClicked) {
+                if (mIsTheoryClicked) {
+                    Intent intent = new Intent(NotesActivity.this, TheoryActivity.class);
+                    startActivityForResult(intent, Wavenote.INTENT_THEORY);
+                    mIsTheoryClicked = false;
+                } else if (mIsSettingsClicked) {
                     Intent intent = new Intent(NotesActivity.this, PreferencesActivity.class);
                     startActivityForResult(intent, Wavenote.INTENT_PREFERENCES);
                     mIsSettingsClicked = false;

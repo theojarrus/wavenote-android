@@ -18,10 +18,11 @@ import androidx.core.view.MenuCompat;
 
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.ThemeUtils;
+import com.theost.wavenote.utils.ViewUtils;
 
 public class DictionaryActivity extends ThemedAppCompatActivity {
 
-    public static final String DEFAULT_KEYWORD_TYPE = "Word";
+    private final String DEFAULT_KEYWORD_TYPE = "Word";
     String[] keywordTypes = {"Word", "Title"};
 
     @Override
@@ -44,8 +45,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         /* todo
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, keywordTypes);
         AutoCompleteTextView mKeywordTypeTextView = findViewById(R.id.keyword_type_input);
-        disableInputTextView(mKeywordTypeTextView);
-        mKeywordTypeTextView.setAdapter(adapter);
+        ViewUtils.disableAutoCompleteTextView(this, mKeywordTypeTextView, DEFAULT_KEYWORD_TYPE, keywordTypes);
          */
     }
 
@@ -68,6 +68,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
                 sortKeywords();
                 return true;
             case R.id.menu_remove:
+                removeKeyword(-1);
                 return true;
             default:
                 return false;
@@ -82,22 +83,22 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         // todo
     }
 
-    private void removeKeyword() {
-        // todo
+    private void removeKeyword(int position) {
+        /*
+        if (position == -1) {
+            todo: remove all
+            return;
+        }
+        todo
+        return;
+         */
     }
 
     private void sortKeywords() {
         // todo
     }
 
-    public void disableInputTextView(TextView view) {
-        view.setInputType(InputType.TYPE_NULL);
-        view.setText(DEFAULT_KEYWORD_TYPE);
-        view.setCursorVisible(false);
-        view.setKeyListener(null);
-    }
-
-    /* todo
+    /* Animation
     public void animateTrash(View view) {
         ImageButton btn = findViewById(R.id.remove_item);
         Drawable drawable = btn.getDrawable();

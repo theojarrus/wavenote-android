@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.theost.wavenote.models.Note;
@@ -19,7 +20,6 @@ import com.theost.wavenote.utils.PrefUtils;
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
-import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -33,6 +33,7 @@ public class Wavenote extends Application {
     // intent IDs
     public static final int INTENT_PREFERENCES = 1;
     public static final int INTENT_EDIT_NOTE = 2;
+    public static final int INTENT_THEORY = 3;
     public static final String DELETED_NOTE_ID = "deletedNoteId";
     public static final String SELECTED_NOTE_ID = "selectedNoteId";
     private static final String AUTH_PROVIDER = "simplenote.com";
@@ -110,24 +111,21 @@ public class Wavenote extends Application {
                 mIsInBackground = true;
 
                 // Give the buckets some time to finish sync, then stop them
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!mIsInBackground) {
-                            return;
-                        }
+                new Handler().postDelayed(() -> {
+                    if (!mIsInBackground) {
+                        return;
+                    }
 
-                        if (mNotesBucket != null) {
-                            mNotesBucket.stop();
-                        }
+                    if (mNotesBucket != null) {
+                        mNotesBucket.stop();
+                    }
 
-                        if (mTagsBucket != null) {
-                            mTagsBucket.stop();
-                        }
+                    if (mTagsBucket != null) {
+                        mTagsBucket.stop();
+                    }
 
-                        if (mPreferencesBucket != null) {
-                            mPreferencesBucket.stop();
-                        }
+                    if (mPreferencesBucket != null) {
+                        mPreferencesBucket.stop();
                     }
                 }, TEN_SECONDS_MILLIS);
             } else {
@@ -136,7 +134,7 @@ public class Wavenote extends Application {
         }
 
         @Override
-        public void onConfigurationChanged(Configuration newConfig) {
+        public void onConfigurationChanged(@NonNull Configuration newConfig) {
         }
 
         @Override
@@ -145,34 +143,34 @@ public class Wavenote extends Application {
 
         // ActivityLifeCycle callbacks
         @Override
-        public void onActivityResumed(Activity activity) {
+        public void onActivityResumed(@NonNull Activity activity) {
             if (mIsInBackground) {
                 mIsInBackground = false;
             }
         }
 
         @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
         }
 
         @Override
-        public void onActivityStarted(Activity activity) {
+        public void onActivityStarted(@NonNull  Activity activity) {
         }
 
         @Override
-        public void onActivityPaused(Activity activity) {
+        public void onActivityPaused(@NonNull Activity activity) {
         }
 
         @Override
-        public void onActivityStopped(Activity activity) {
+        public void onActivityStopped(@NonNull Activity activity) {
         }
 
         @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
         }
 
         @Override
-        public void onActivityDestroyed(Activity activity) {
+        public void onActivityDestroyed(@NonNull Activity activity) {
         }
     }
 }
