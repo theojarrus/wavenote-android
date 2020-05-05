@@ -21,11 +21,10 @@ import java.util.Locale;
 
 public class AboutFragment extends Fragment {
 
-    private static final String SIMPLENOTE_BLOG_URL = "https://simplenote.com/blog";
-    private static final String SIMPLENOTE_TWITTER_HANDLE = "simplenoteapp";
-    private static final String SIMPLENOTE_HIRING_HANDLE = "https://automattic.com/work-with-us/";
-    private static final String TWITTER_PROFILE_URL = "https://twitter.com/#!/";
-    private static final String TWITTER_APP_URI = "twitter://user?screen_name=";
+    private static final String DEVELOPER_TELEGRAM_URL = "https://t.me/fedorjedi";
+    private static final String DEVELOPER_INSTAGRAM_URL = "https://instagram.com/fedor.jedi";
+    private static final String DEVELOPER_PATREON_URL = "https://patreon.com/theojedi";
+    private static final String WAVENOTE_GITHUB_URL = "https://github.com/fedor-jedi/wavenote-android";
     private static final String PLAY_STORE_URL = "http://play.google.com/store/apps/details?id=";
     private static final String PLAY_STORE_URI = "market://details?id=";
 
@@ -38,10 +37,11 @@ public class AboutFragment extends Fragment {
         TextView version = view.findViewById(R.id.about_version);
         TextView copyright = view.findViewById(R.id.about_copyright);
         ImageView logoImageView = view.findViewById(R.id.about_logo);
-        View blog = view.findViewById(R.id.about_blog);
-        View twitter = view.findViewById(R.id.about_twitter);
+        View telegram = view.findViewById(R.id.about_telegram);
+        View instagram = view.findViewById(R.id.about_instagram);
         View playStore = view.findViewById(R.id.about_play_store);
-        View hiring = view.findViewById(R.id.about_hiring);
+        View patreon = view.findViewById(R.id.about_donate);
+        View github = view.findViewById(R.id.about_github);
 
         version.setText(String.format("%s %s", getString(R.string.version), BuildConfig.VERSION_NAME));
 
@@ -50,53 +50,49 @@ public class AboutFragment extends Fragment {
 
         logoImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wavenote_24dp));
 
-        blog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SIMPLENOTE_BLOG_URL)));
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-                }
+        telegram.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_TELEGRAM_URL)));
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
             }
         });
 
-        twitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(TWITTER_APP_URI + SIMPLENOTE_TWITTER_HANDLE)));
-                } catch (Exception e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(TWITTER_PROFILE_URL + SIMPLENOTE_TWITTER_HANDLE)));
-                }
+        instagram.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_INSTAGRAM_URL)));
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
             }
         });
 
-        playStore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse(PLAY_STORE_URI + requireActivity().getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                try {
-                    startActivity(goToMarket);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse(PLAY_STORE_URL + requireActivity().getPackageName())));
-                }
+        playStore.setOnClickListener(v -> {
+            Uri uri = Uri.parse(PLAY_STORE_URI + requireActivity().getPackageName());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(PLAY_STORE_URL + requireActivity().getPackageName())));
             }
         });
 
-        hiring.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SIMPLENOTE_HIRING_HANDLE)));
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-                }
+        patreon.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_PATREON_URL)));
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        github.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WAVENOTE_GITHUB_URL)));
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
             }
         });
 

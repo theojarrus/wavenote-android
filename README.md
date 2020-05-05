@@ -1,5 +1,5 @@
 # Wavenote for Android
-[![Version](https://img.shields.io/badge/version-2.4-blue.svg)](https://github.com/fedor-jedi/wavenote-android/releases/tag/2.4)
+[![Version](https://img.shields.io/badge/version-2.5-orange.svg)](https://github.com/fedor-jedi/wavenote-android/releases/tag/2.5)
 
 Wavenote - notepad for musicians. Based on [Simplenote](https://simplenote.com).
 

@@ -36,11 +36,11 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:textSize="13sp"
-            tools:text="Version 1.2.3">
+            tools:text="Version 2.5">
         </com.theost.wavenote.widgets.RobotoLightTextView>
 
         <LinearLayout
-            android:id="@+id/about_blog"
+            android:id="@+id/about_telegram"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/blog"
+                android:text="@string/telegram"
                 android:textSize="22sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 
@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/simplenote_blog_url"
+                android:text="@string/about_telegram_handle"
                 android:textSize="15sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 
@@ -77,7 +77,7 @@
         </View>
 
         <LinearLayout
-            android:id="@+id/about_twitter"
+            android:id="@+id/about_instagram"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/twitter"
+                android:text="@string/instagram"
                 android:textSize="22sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_twitter_handle"
+                android:text="@string/about_instagram_handle"
                 android:textSize="15sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 
@@ -151,7 +151,44 @@
         </View>
 
         <LinearLayout
-            android:id="@+id/about_hiring"
+            android:id="@+id/about_donate"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_medium">
+
+            <com.theost.wavenote.widgets.RobotoLightTextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/padding_large"
+                android:paddingStart="@dimen/padding_large"
+                android:text="@string/support_on_patreon"
+                android:textSize="22sp">
+            </com.theost.wavenote.widgets.RobotoLightTextView>
+
+            <com.theost.wavenote.widgets.RobotoLightTextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/padding_large"
+                android:paddingStart="@dimen/padding_large"
+                android:text="@string/about_patreon_handle"
+                android:textSize="15sp">
+            </com.theost.wavenote.widgets.RobotoLightTextView>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/white"
+            android:layout_height="1px"
+            android:layout_width="match_parent">
+        </View>
+
+        <LinearLayout
+            android:id="@+id/about_github"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
@@ -167,7 +204,7 @@
                 android:lineSpacingExtra="@dimen/line_spacing"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_hiring"
+                android:text="@string/about_somewords"
                 android:textSize="15sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 

@@ -23,7 +23,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="word">Word</string>
-    <string name="website">Visit simplenote.com</string>
     <string name="more_info">More Information</string>
     <string name="note_selected">%d note selected</string>
     <string name="notes_selected">%d notes selected</string>
@@ -74,7 +73,7 @@
     <string name="notes_trashed">Notes trashed.</string>
 
     <!-- welcome note for new users -->
-    <string name="welcome_note">Welcome to Wavenote Android!\nOpen this note for instructions.\n\nTo create a new note, tap the blue \"New Note\" button with the plus icon.\n\nTo search your notes, tap the \"Search\" button with the magnifying glass icon and enter any text. Wavenote will show you recent searches initially and suggested searches while entering text. Notes matching the entered text will be shown once the search is submitted.\n\nGot a really important note? Pin it to the top of the note list. You can pin a note in two ways. Long-press the note in the list and tap the \"Pin to top\" button with the pin icon. Tap the \"Info\" button with the \"i\" icon while viewing a note and turn the \"Pin to top\" switch on.\n\nUse tags to help organize your notes. Create a tag in the \"Add tag&#8230;\" field at the bottom of a note. You can also add an email address as a tag to share a note with someone.\n\nEasily share notes with other Android apps by tapping the \"Share\" button with the share icon while viewing a note.\n\nDeleted notes go in the trash. You can restore them if you want, or empty the trash to get rid of them forever.\n\nYou can access your notes on the web and your other devices. Go to http://simplenote.com to get started.\n\nWe hope you enjoy using Wavenote!</string>
+    <string name="welcome_note">Welcome to Wavenote Android!\nOpen this note for instructions.\n\nTo create a new note, tap the blue \"New Note\" button with the plus icon.\n\nTo search your notes, tap the \"Search\" button with the magnifying glass icon and enter any text. Wavenote will show you recent searches initially and suggested searches while entering text. Notes matching the entered text will be shown once the search is submitted.\n\nGot a really important note? Pin it to the top of the note list. You can pin a note in two ways. Long-press the note in the list and tap the \"Pin to top\" button with the pin icon. Tap the \"Info\" button with the \"i\" icon while viewing a note and turn the \"Pin to top\" switch on.\n\nUse tags to help organize your notes. Create a tag in the \"Add tag&#8230;\" field at the bottom of a note. You can also add an email address as a tag to share a note with someone.\n\nEasily share notes with other Android apps by tapping the \"Share\" button with the share icon while viewing a note.\n\nDeleted notes go in the trash. You can restore them if you want, or empty the trash to get rid of them forever.\n\nYou can access your notes on the web and your other devices.\n\nWe hope you enjoy using Wavenote!</string>
     <string name="confirm_delete_tag">Are you sure you want to delete this tag?</string>
     <string name="new_note_list">New note&#8230;</string>
     <string name="open_drawer">Open drawer</string>
@@ -114,18 +113,20 @@
 
     <!-- About screen -->
     <string name="about">About Wavenote</string>
-    <string name="about_hiring">Wavenote is made with love by the folks at Automattic. Are you a developer? We\'re hiring.</string>
+    <string name="about_somewords">Wavenote is made with love by Theo and the folks at Automattic. Source code available on GitHub.</string>
     <string name="about_play_store">Google Play Store</string>
-    <string name="about_twitter_handle" translatable="false">\@simplenoteapp</string>
-    <string name="twitter">Twitter</string>
     <string name="rate_us">Rate Us</string>
-    <string name="blog">Blog</string>
     <string name="no_browser_available">\"Unable to open website. No browser available.\"</string>
-    <string name="simplenote_blog_url" translatable="false">simplenote.com/blog</string>
+    <string name="support_on_patreon">Support on Patreon</string>
+    <string name="telegram">Telegram</string>
+    <string name="about_telegram_handle">\@fedorjedi</string>
+    <string name="instagram">Instagram</string>
+    <string name="about_instagram_handle">\@fedor.jedi</string>
+    <string name="about_patreon_handle">\@theojedi</string>
 
     <!-- Unsynced note warnings -->
     <string name="unsynced_notes">Unsynced notes detected</string>
-    <string name="unsynced_notes_message">Logging out will delete any unsynced notes. You can verify your synced notes by logging in to app.simplenote.com in a web browser.</string>
+    <string name="unsynced_notes_message">Logging out will delete any unsynced notes.</string>
     <string name="visit_web_app">Visit web app</string>
     <string name="delete_notes">Delete notes</string>
 

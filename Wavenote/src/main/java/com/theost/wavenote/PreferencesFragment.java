@@ -69,53 +69,32 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             authenticatePreference.setTitle(R.string.log_out);
         }
 
-        authenticatePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (!isAdded()) {
-                    return false;
-                }
-
-                Wavenote currentApp = (Wavenote) getActivity().getApplication();
-                if (currentApp.getSimperium().needsAuthorization()) {
-                    Intent loginIntent = new Intent(getActivity(), WavenoteAuthenticationActivity.class);
-                    startActivityForResult(loginIntent, Simperium.SIGNUP_SIGNIN_REQUEST);
-                } else {
-                    new LogOutTask(PreferencesFragment.this).execute();
-                }
-                return true;
+        authenticatePreference.setOnPreferenceClickListener(preference -> {
+            if (!isAdded()) {
+                return false;
             }
+
+            Wavenote currentApp1 = (Wavenote) getActivity().getApplication();
+            if (currentApp1.getSimperium().needsAuthorization()) {
+                Intent loginIntent = new Intent(getActivity(), WavenoteAuthenticationActivity.class);
+                startActivityForResult(loginIntent, Simperium.SIGNUP_SIGNIN_REQUEST);
+            } else {
+                new LogOutTask(PreferencesFragment.this).execute();
+            }
+            return true;
         });
 
-        findPreference("pref_key_dictionary").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), DictionaryActivity.class));
-                return true;
-            }
+        findPreference("pref_key_dictionary").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), DictionaryActivity.class));
+            return true;
         });
 
-        findPreference("pref_key_website").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://simplenote.com")));
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            }
+        findPreference("pref_key_about").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), AboutActivity.class));
+            return true;
         });
 
-        findPreference("pref_key_about").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), AboutActivity.class));
-                return true;
-            }
-        });
-
-        final ListPreference themePreference = (ListPreference) findPreference(PrefUtils.PREF_THEME);
+        final ListPreference themePreference = findPreference(PrefUtils.PREF_THEME);
         themePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -132,28 +111,20 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             }
         });
 
-        final ListPreference sortPreference = (ListPreference) findPreference(PrefUtils.PREF_SORT_ORDER);
-        sortPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int index = Integer.parseInt(newValue.toString());
-                CharSequence[] entries = sortPreference.getEntries();
-                sortPreference.setSummary(entries[index]);
+        final ListPreference sortPreference = findPreference(PrefUtils.PREF_SORT_ORDER);
+        sortPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            int index = Integer.parseInt(newValue.toString());
+            CharSequence[] entries = sortPreference.getEntries();
+            sortPreference.setSummary(entries[index]);
 
-                return true;
-            }
+            return true;
         });
 
         Preference versionPref = findPreference("pref_key_build");
         versionPref.setSummary(PrefUtils.versionInfo());
 
-        SwitchPreferenceCompat switchPreference = (SwitchPreferenceCompat) findPreference("pref_key_condensed_note_list");
-        switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                return true;
-            }
-        });
+        SwitchPreferenceCompat switchPreference = findPreference("pref_key_condensed_note_list");
+        switchPreference.setOnPreferenceChangeListener((preference, o) -> true);
 
     }
 
@@ -163,19 +134,9 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         mPreferencesBucket.stop();
     }
 
-    private DialogInterface.OnClickListener logOutClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            logOut();
-        }
-    };
+    private DialogInterface.OnClickListener logOutClickListener = (dialogInterface, i) -> logOut();
 
-    private DialogInterface.OnClickListener loadWebAppClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WEB_APP_URL)));
-        }
-    };
+    private DialogInterface.OnClickListener loadWebAppClickListener = (dialogInterface, i) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WEB_APP_URL)));
 
     private boolean hasUnsyncedNotes() {
         Wavenote application = (Wavenote) getActivity().getApplication();
@@ -226,11 +187,9 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
     public void onUserStatusChange(User.Status status) {
         if (isAdded() && status == User.Status.AUTHORIZED) {
             // User signed in
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    Preference authenticatePreference = findPreference("pref_key_authenticate");
-                    authenticatePreference.setTitle(R.string.log_out);
-                }
+            getActivity().runOnUiThread(() -> {
+                Preference authenticatePreference = findPreference("pref_key_authenticate");
+                authenticatePreference.setTitle(R.string.log_out);
             });
 
             Wavenote app = (Wavenote) getActivity().getApplication();

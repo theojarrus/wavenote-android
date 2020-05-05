@@ -91,10 +91,6 @@
             android:persistent="false"
             android:title="@string/about"/>
         <Preference
-            android:key="pref_key_website"
-            android:persistent="false"
-            android:title="@string/website"/>
-        <Preference
             android:key="pref_key_build"
             android:persistent="false"
             android:selectable="false"
