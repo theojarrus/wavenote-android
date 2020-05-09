@@ -50,22 +50,20 @@ public class Note extends BucketObject {
     public static final String MATCHED_CONTENT_INDEX_NAME = "matchedContent";
     public static final String PUBLISH_URL = "http://simp.ly/publish/";
     public static Integer SELECTED_COLOR = -6972445;
-    public static boolean TEXT_STYLE_BOLD = false;
+    public static String TEXT_COLOR_AC = "#36393e";
+    public static String TEXT_COLOR_DI = "#fafafa";
+    public static boolean TEXT_STYLE_BOLD = true;
     public static boolean TEXT_STYLE_ITALIC = false;
     public static boolean TEXT_STYLE_STROKE = false;
     public static boolean TEXT_STYLE_CODE = false;
     public static boolean TEXT_STYLE_UNDERLINE = false;
     public static boolean TEXT_STYLE_STRIKETHROUGH = false;
-    public static String TEXT_COLOR_AC = "#36393e";
-    public static String TEXT_COLOR_DI = "#fafafa";
-    static public final String[] FULL_TEXT_INDEXES = new String[]{
-            Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
+    private static final int MAX_PREVIEW_CHARS = 300;
+    public static final String[] FULL_TEXT_INDEXES = new String[]{Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
     private static final Spannable BLANK_CONTENT = new SpannableString("");
     private static final String SPACE = " ";
-    private static final int MAX_PREVIEW_CHARS = 300;
-    protected String mTitle = null;
     protected String mContentPreview = null;
-
+    protected String mTitle = null;
 
     public Note(String key) {
         super(key, new JSONObject());

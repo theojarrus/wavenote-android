@@ -1,6 +1,7 @@
 package com.theost.wavenote;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -82,19 +85,19 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         if (activeInstrument == null) {
             activeInstrument = INSTRUMENTS[0];
         }
+
         mChordsReplace = Arrays.asList(CHORDS_REPLACEMENT);
         mNotesOrder = Arrays.asList(NOTES_ORDER);
 
         mChordsRecyclerView = findViewById(R.id.chord_view);
-        updateLayout();
+        mChordsRecyclerView.setHasFixedSize(false);
+        mChordsRecyclerView.setNestedScrollingEnabled(false);
+        ViewCompat.setNestedScrollingEnabled(mChordsRecyclerView, false);
 
         if (mChordsList.size() == 0) {
             mChordsRecyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
             return;
-        } else {
-            mChordsRecyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
         }
 
         mInstrumentInputView = findViewById(R.id.instrument);
@@ -104,6 +107,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             TextInputLayout mInstrumentLayout = findViewById(R.id.instrument_layout);
             mInstrumentLayout.setEnabled(false);
         }
+
+        if (mChordsList.size() < itemsInline) itemsInline = mChordsList.size();
 
         mColumnsInputView = findViewById(R.id.columns);
         ViewUtils.disableAutoCompleteTextView(this, mColumnsInputView, Integer.toString(itemsInline), COLUMNS);
@@ -119,10 +124,12 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                itemsInline = Integer.parseInt(s.toString());
                 mColumnsInputView.clearFocus();
-                updateItemSize();
-                adapter.updateItemSize(itemWidth);
+                int tmpItemsInline = Integer.parseInt(s.toString());
+                if (tmpItemsInline != itemsInline) {
+                    itemsInline = tmpItemsInline;
+                    updateItemSize();
+                }
             }
         });
 
@@ -137,25 +144,24 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                activeInstrument = s.toString();
                 mInstrumentInputView.clearFocus();
-                updateDrawables();
-                adapter.updateItemDrawable(mChordsDrawable);
+                String tmpInstrument = s.toString();
+                if (!(tmpInstrument.equals(activeInstrument))) {
+                    activeInstrument = tmpInstrument;
+                    updateDrawables();
+                }
             }
         });
 
-        updateDrawables();
         updateItemSize();
+        updateDrawables();
         adapter = new ChordsAdapter(this, mChordsDrawable, itemWidth);
         mChordsRecyclerView.setAdapter(adapter);
-        mChordsRecyclerView.setHasFixedSize(false);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (isAllChords) {
-            return false;
-        }
+        if ((isAllChords) || (mChordsList.size() == 0)) return false;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.chords_list, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
@@ -176,8 +182,10 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private void updateLayout() {
-        mChordsRecyclerView.setLayoutManager(new GridLayoutManager(this, itemsInline));
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateItemSize();
     }
 
     private void updateDrawables() {
@@ -195,13 +203,15 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             int id = getResources().getIdentifier(("mu_" + i.replace("#", "s") + "_" + activeInstrument).toLowerCase(), "drawable", this.getPackageName());
             mChordsDrawable.add(ContextCompat.getDrawable(this, id));
         }
+        if (adapter != null) adapter.updateItemDrawable(mChordsDrawable);
     }
 
     private void updateItemSize() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         itemWidth = displayMetrics.widthPixels / itemsInline;
-        updateLayout();
+        mChordsRecyclerView.setLayoutManager(new GridLayoutManager(this, itemsInline));
+        if (adapter != null) adapter.updateItemSize(itemWidth);
     }
 
     private void transposeChords(int direction) {
@@ -226,7 +236,6 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             mChordsList.set(i, mNotesOrder.get(index) + end);
         }
         updateDrawables();
-        adapter.updateItemDrawable(mChordsDrawable);
     }
 
 }

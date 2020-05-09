@@ -286,6 +286,7 @@
     <string name="columns">Columns</string>
     <string name="transpose_up">Transpose Up</string>
     <string name="transpose_down">Transpose Down</string>
+    <string name="materials">Materials</string>
 
     <string-array name="array_musical_chords">
         <item>Cb</item>

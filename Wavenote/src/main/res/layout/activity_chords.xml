@@ -13,7 +13,7 @@
         layout="@layout/empty_view"
         android:visibility="gone" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -35,21 +35,8 @@
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/custom_horizontal_space"
-                android:paddingRight="@dimen/custom_horizontal_space">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginEnd="@dimen/custom_horizontal_space"
-                    android:background="@null"
-                    android:hint="@string/instrument"
-                    android:paddingTop="@dimen/custom_vertical_space"
-                    android:paddingBottom="@dimen/custom_vertical_space"
-                    android:textAlignment="center"
-                    android:textColorHint="?attr/noteEditorTextColor"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                android:paddingRight="@dimen/custom_horizontal_space"
+                android:baselineAligned="false">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/instrument_layout"
@@ -59,30 +46,22 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="@dimen/custom_horizontal_space"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <AutoCompleteTextView
                         android:id="@+id/instrument"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:padding="0dp"
                         tools:ignore="LabelFor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginEnd="@dimen/custom_horizontal_space"
-                    android:background="@null"
-                    android:hint="@string/columns"
-                    android:paddingTop="@dimen/custom_vertical_space"
-                    android:paddingBottom="@dimen/custom_vertical_space"
-                    android:textAlignment="center"
-                    android:textColorHint="?attr/noteEditorTextColor"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TypeKeywordInputLayoutStyle"
@@ -91,12 +70,18 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="@dimen/custom_horizontal_space"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <AutoCompleteTextView
                         android:id="@+id/columns"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:padding="0dp"
                         tools:ignore="LabelFor" />
 
@@ -110,26 +95,24 @@
                 android:layout_marginTop="-1dp"
                 android:background="@color/dividerColor" />
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/chord_view"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:orientation="horizontal"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="@dimen/custom_horizontal_space"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    tools:listitem="@layout/chord_item" />
+                    android:orientation="vertical">
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/chord_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        tools:listitem="@layout/chord_item" />
 
-            </androidx.core.widget.NestedScrollView>
+                </LinearLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

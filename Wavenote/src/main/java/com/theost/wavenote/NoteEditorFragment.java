@@ -1000,13 +1000,15 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
      * spans are removed when {@link MetricAffectingSpan} is removed.
      */
     private void setTitleSpan(Editable editable) {
-        for (MetricAffectingSpan span : editable.getSpans(0, editable.length(), MetricAffectingSpan.class)) {
+        int newLinePosition = getNoteContentString().indexOf("\n");
+        int titleEnd = newLinePosition;
+        if (titleEnd == -1) titleEnd = editable.length();
+
+        for (MetricAffectingSpan span : editable.getSpans(0, titleEnd, MetricAffectingSpan.class)) {
             if (span instanceof RelativeSizeSpan || span instanceof StyleSpan) {
                 editable.removeSpan(span);
             }
         }
-
-        int newLinePosition = getNoteContentString().indexOf("\n");
 
         if (newLinePosition == 0) {
             return;

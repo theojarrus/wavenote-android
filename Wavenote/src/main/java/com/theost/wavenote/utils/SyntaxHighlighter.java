@@ -5,9 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
@@ -23,7 +21,6 @@ import com.theost.wavenote.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -58,7 +55,7 @@ public class SyntaxHighlighter {
     public static Spannable addSyntaxHighlight(String[] words, Spannable contentSpan, boolean isTitle) {
         isHighlightChanged = false;
 
-        String contentStr = contentSpan.toString().toLowerCase().replaceAll("[\\u202F\\u00A0]+", " ");
+        String contentStr = contentSpan.toString().toLowerCase().replaceAll("[\\t\\n\\r\\u202F\\u00A0]", " ");
         String splitterStart = " ";
         String splitterEnd = " ";
         if (isTitle) {
@@ -68,10 +65,11 @@ public class SyntaxHighlighter {
         }
         for (String i : words) {
             int index = 0;
+
             while (index != -1) {
                 index = contentStr.indexOf(splitterStart + i.toLowerCase() + splitterEnd, index);
                 if (index != -1) {
-                    BackgroundColorSpan[] markedSpans = contentSpan.getSpans(index + splitterStart.length(), index + splitterStart.length() + 5, BackgroundColorSpan.class);
+                    BackgroundColorSpan[] markedSpans = contentSpan.getSpans(index + splitterStart.length(), index + splitterStart.length() + 1, BackgroundColorSpan.class);
                     if (markedSpans.length > 0) {
                         index++;
                         continue;
@@ -87,7 +85,8 @@ public class SyntaxHighlighter {
                         lastindex += spaceStart.length() + spaceEnd.length();
 
                     } else {
-                        lastindex += 2;
+                        index += 1;
+                        lastindex += 1;
                     }
                     contentSpan.setSpan(new BackgroundColorSpan(backTextColor), index, lastindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     contentSpan.setSpan(new ForegroundColorSpan(frontTextColor), index, lastindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -101,7 +100,7 @@ public class SyntaxHighlighter {
     public static ArrayList<String> getNoteChords(Context context, String content) {
         String[] resourceChords = context.getResources().getStringArray(R.array.array_musical_chords);
         Map<Integer, String> sortedNoteChords = new TreeMap<>();
-        content = content.replaceAll("[\\t\\n\\r\\u202F\\u00A0]+", " ");
+        content = content.replaceAll("[\\t\\n\\r\\u202F\\u00A0]", " ");
         for (String i : resourceChords) {
             int index = 0;
             while (index != -1) {
@@ -124,20 +123,18 @@ public class SyntaxHighlighter {
         return noteChords;
     }
 
-    public static boolean changeTextStyle(EditText mContentEditText, boolean[] textStyle, int selectedColor, String backgroundColor) {
+    public static void changeTextStyle(EditText mContentEditText, boolean[] textStyle, int selectedColor, String backgroundColor) {
 
         // Getting resources and checking selection
         int cursorPositionStart = mContentEditText.getSelectionStart();
         int cursorPositionEnd = mContentEditText.getSelectionEnd();
-        if (cursorPositionStart == cursorPositionEnd) {
-            return false;
-        }
+        if (cursorPositionStart == cursorPositionEnd) { return; }
 
         // Clear selected text style
         String strContent = mContentEditText.getText().toString().substring(cursorPositionStart, cursorPositionEnd);
         mContentEditText.getText().delete(cursorPositionStart, cursorPositionEnd);
         mContentEditText.getText().insert(cursorPositionStart, strContent);
-        Spannable noteContent = mContentEditText.getText();
+        Editable noteContent = mContentEditText.getText();
 
         // Setting new style
         if (textStyle[0]) {
@@ -167,7 +164,6 @@ public class SyntaxHighlighter {
         // Setting text and placing cursor at right position
         mContentEditText.setText(noteContent);
         mContentEditText.setSelection(cursorPositionEnd);
-        return true;
     }
 
 }

@@ -216,7 +216,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         // Ensure user has valid authorization
         if (userAuthenticationIsInvalid()) {
-            startLoginActivity();
+            //startLoginActivity();
         }
 
         if ((!(intent.hasExtra(KEY_LIST_WIDGET_CLICK) && intent.getExtras() != null)) && !mHasTappedNoteListWidgetButton) {
