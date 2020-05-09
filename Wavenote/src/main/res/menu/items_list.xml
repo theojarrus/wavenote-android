@@ -10,7 +10,7 @@
         android:id="@+id/menu_add"
         android:enabled="true"
         android:icon="@drawable/av_add_24dp"
-        android:title="@string/add_keyword"
+        android:title="@string/add"
         app:showAsAction="always" />
 
     <item

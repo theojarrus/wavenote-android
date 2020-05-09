@@ -2,7 +2,6 @@ package com.theost.wavenote;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -216,7 +215,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         // Ensure user has valid authorization
         if (userAuthenticationIsInvalid()) {
-            //startLoginActivity();
+            startLoginActivity();
         }
 
         if ((!(intent.hasExtra(KEY_LIST_WIDGET_CLICK) && intent.getExtras() != null)) && !mHasTappedNoteListWidgetButton) {
@@ -389,7 +388,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             public void onDrawerClosed(View view) {
                 supportInvalidateOptionsMenu();
                 if (mIsTheoryClicked) {
-                    Intent intent = new Intent(NotesActivity.this, TheoryActivity.class);
+                    Intent intent = new Intent(NotesActivity.this, PhotosActivity.class);
+                    intent.putExtra("chordsBlockEnabled", true);
                     startActivityForResult(intent, Wavenote.INTENT_THEORY);
                     mIsTheoryClicked = false;
                 } else if (mIsSettingsClicked) {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_weight="7"
     android:clickable="true"
     android:focusable="true"
@@ -17,34 +18,181 @@
         android:orientation="vertical"
         android:scrollbars="vertical">
 
-        <ListView
-            android:id="@+id/photos_list"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:focusableInTouchMode="true"
-            android:clickable="true"
-            android:focusable="true"
-            tools:listitem="@layout/photo_item"
-            tools:ignore="MissingConstraints">
-        </ListView>
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/chords_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/custom_vertical_space"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="@string/chords"
+                        android:paddingTop="@dimen/custom_vertical_space"
+                        android:paddingBottom="@dimen/custom_vertical_space"
+                        android:textColorHint="?attr/noteEditorTextColor"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/custom_vertical_space"
+                    android:layout_marginBottom="@dimen/custom_vertical_space"
+                    android:paddingLeft="@dimen/custom_horizontal_space"
+                    android:paddingRight="@dimen/custom_horizontal_space">
+
+                    <Button
+                        android:id="@+id/guitar_chords"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0"
+                        android:onClick="startChordsActivity"
+                        android:orientation="vertical"
+                        android:text="@string/guitar"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        app:strokeColor="@color/blue"
+                        app:strokeWidth="2dp"
+                        tools:ignore="PrivateResource" />
+
+                    <Button
+                        android:id="@+id/piano_chords"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/custom_horizontal_space"
+                        android:layout_marginRight="@dimen/custom_horizontal_space"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0"
+                        android:onClick="startChordsActivity"
+                        android:orientation="vertical"
+                        android:text="@string/piano"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        app:strokeColor="@color/blue"
+                        app:strokeWidth="2dp"
+                        tools:ignore="PrivateResource" />
+
+                    <Button
+                        android:id="@+id/ukulele_chords"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0"
+                        android:onClick="startChordsActivity"
+                        android:orientation="vertical"
+                        android:text="@string/ukulele"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        app:strokeColor="@color/blue"
+                        app:strokeWidth="2dp"
+                        tools:ignore="PrivateResource" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/custom_vertical_space"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="@string/materials"
+                        android:paddingTop="@dimen/custom_vertical_space"
+                        android:paddingBottom="@dimen/custom_vertical_space"
+                        android:textColorHint="?attr/noteEditorTextColor"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/photos_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                tools:ignore="MissingConstraints"
+                tools:listitem="@layout/photo_item" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
     <include
         android:id="@android:id/empty"
-        android:visibility="gone"
-        layout="@layout/empty_view">
-    </include>
+        layout="@layout/empty_view"
+        android:visibility="gone" />
 
     <View
         android:id="@+id/divider_line"
-        android:background="?attr/dividerColor"
-        android:layout_gravity="end"
-        android:layout_height="fill_parent"
         android:layout_width="@dimen/divider_height"
+        android:layout_height="fill_parent"
+        android:layout_gravity="end"
+        android:background="?attr/dividerColor"
         android:visibility="gone"
-        tools:ignore="MissingConstraints">
-    </View>
+        tools:ignore="MissingConstraints" />
 
 </LinearLayout>

@@ -778,7 +778,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void startPhotosActivity() {
-        startActivity(new Intent(getActivity(), NotePhotosActivity.class));
+        startActivity(new Intent(getActivity(), PhotosActivity.class));
     }
 
     private void startChordsActivity() {

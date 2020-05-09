@@ -272,11 +272,11 @@
     <!-- Syntax dictionary -->
     <string name="dictionary">Dictionary</string>
     <string name="dictionary_summary">Edit keywords list</string>
-    <string name="add_keyword">Add Keyword</string>
+    <string name="add">Add</string>
     <string name="keyword">Keyword</string>
     <string name="reset">Reset</string>
     <string name="type">Type</string>
-    <string name="remove_all">Remove all</string>
+    <string name="remove_all">Remove All</string>
     <string name="name">Name</string>
     <string name="chords">Chords</string>
     <string name="guitar">Guitar</string>
@@ -287,6 +287,10 @@
     <string name="transpose_up">Transpose Up</string>
     <string name="transpose_down">Transpose Down</string>
     <string name="materials">Materials</string>
+    <string name="add_photo_camera">Use Camera</string>
+    <string name="add_photo_gallery">Upload from Gallery</string>
+    <string name="add_photo">Add photo</string>
+    <string name="photo_error">Couldn\'t load photo</string>
 
     <string-array name="array_musical_chords">
         <item>Cb</item>

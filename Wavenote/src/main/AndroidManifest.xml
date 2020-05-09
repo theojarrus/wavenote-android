@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Wavenote"
@@ -49,7 +50,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Dictionary"
             android:parentActivityName=".PreferencesActivity"/>
-        <activity android:name=".NotePhotosActivity"
+        <activity android:name=".PhotosActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Photos"
             android:parentActivityName=".NoteEditorActivity"/>
@@ -57,10 +58,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Chords"
             android:parentActivityName=".NoteEditorActivity"/>
-        <activity android:name=".TheoryActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Theory"
-            android:parentActivityName=".NotesActivity"/>
         <activity
             android:name=".NoteEditorActivity"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"

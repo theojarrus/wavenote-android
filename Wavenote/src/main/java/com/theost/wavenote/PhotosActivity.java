@@ -1,6 +1,8 @@
 package com.theost.wavenote;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,26 +17,31 @@ import androidx.core.view.MenuCompat;
 import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
-public class TheoryActivity extends ThemedAppCompatActivity {
+public class PhotosActivity extends ThemedAppCompatActivity {
+
+    private PhotoBottomSheetDialog mPhotoBottomSheet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemeUtils.setTheme(this);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_theory);
+        setContentView(R.layout.activity_photos);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        setTitle(R.string.theory);
+        setTitle(R.string.photos);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        if (getIntent().getBooleanExtra("chordsBlockEnabled", false))
+            findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
 
+        mPhotoBottomSheet = new PhotoBottomSheetDialog(this);
     }
 
     @Override
@@ -50,28 +57,28 @@ public class TheoryActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                addItem();
+                showPhotoSheet();
                 return true;
             case R.id.menu_sort:
-                sortItems();
+                sortPhotos();
                 return true;
             case R.id.menu_remove:
-                removeItem(-1);
+                removePhoto(-1);
                 return true;
             default:
                 return false;
         }
     }
 
-    private void addItem() {
+    public static void addPhoto(Uri selectedImage) {
         // todo
     }
 
-    private  void editItem() {
+    private  void editPhoto() {
         // todo
     }
 
-    private void removeItem(int position) {
+    private void removePhoto(int position) {
         /*
         if (position == -1) {
             todo: remove all
@@ -82,7 +89,7 @@ public class TheoryActivity extends ThemedAppCompatActivity {
          */
     }
 
-    private void sortItems() {
+    private void sortPhotos() {
         // todo
     }
 
@@ -93,6 +100,10 @@ public class TheoryActivity extends ThemedAppCompatActivity {
         DrawableUtils.startAnimatedVectorDrawable(drawable);
     }
      */
+
+    private void showPhotoSheet() {
+        mPhotoBottomSheet.show(getSupportFragmentManager());
+    }
 
     public void startChordsActivity(View view) {
         Intent intent = new Intent(this, ChordsActivity.class);
