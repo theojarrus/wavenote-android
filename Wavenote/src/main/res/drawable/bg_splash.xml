@@ -5,7 +5,7 @@
     android:opacity="opaque">
 
     <item
-        android:drawable="@color/background_dark">
+        android:drawable="?attr/mainBackgroundColor">
     </item>
 
     <item

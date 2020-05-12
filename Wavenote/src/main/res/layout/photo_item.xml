@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -7,48 +8,107 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="horizontal"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/photo_name"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/custom_vertical_space"
-            android:layout_weight="1"
             android:background="@null"
-            android:hint="@string/name"
-            android:importantForAutofill="no"
-            android:inputType="textNoSuggestions"
-            android:maxLength="20"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:paddingTop="@dimen/custom_vertical_space"
-            android:paddingBottom="@dimen/custom_vertical_space"
-            android:textColorHint="?attr/noteEditorTextColor" />
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/photo_trash"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:background="@null"
-            android:contentDescription="@string/description_delete_item"
-            android:src="@drawable/av_trash_empty_blue_24dp" />
+            <EditText
+                android:id="@+id/photo_name"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/bottom_sheet_row_height"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/name"
+                android:importantForAutofill="no"
+                android:inputType="textNoSuggestions"
+                android:maxLength="20"
+                android:text="" />
+
+            <RelativeLayout
+                android:layout_width="@dimen/custom_pane_size"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/photo_name_save"
+                        android:layout_width="@dimen/custom_icon_size"
+                        android:layout_height="@dimen/custom_icon_size"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/save"
+                        android:visibility="invisible"
+                        android:src="@drawable/av_check" />
+
+                    <ImageButton
+                        android:id="@+id/photo_name_cancel"
+                        android:layout_width="@dimen/custom_icon_size"
+                        android:layout_height="@dimen/custom_icon_size"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/cancel"
+                        android:visibility="invisible"
+                        android:src="@drawable/av_close" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/photo_trash"
+                    android:layout_width="@dimen/custom_icon_size"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/description_delete_item"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/av_trash_empty_blue_24dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/created" />
+
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/date_image_created"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Jan 13, 2020, 17:30" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <com.theost.wavenote.photoview.PhotoView
+        android:id="@+id/photo_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/mu_a7_guitar"/>
+        android:src="@drawable/mu_a7_guitar" />
 
     <View
         android:layout_width="match_parent"

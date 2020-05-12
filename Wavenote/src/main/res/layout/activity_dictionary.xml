@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="7"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
+
+    <include
+        android:id="@android:id/empty"
+        layout="@layout/empty_view"
+        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="@dimen/custom_topbar_padding"
-        android:scrollbars="vertical">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ListView
-            android:id="@+id/keywords_list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
-            android:clickable="true"
-            android:focusable="true"
-            tools:listitem="@layout/dictionary_item"
-            tools:ignore="MissingConstraints">
-        </ListView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/keywords_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                tools:ignore="MissingConstraints"
+                tools:listitem="@layout/dictionary_item"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-    <include
-        android:id="@android:id/empty"
-        android:visibility="gone"
-        layout="@layout/empty_view">
-    </include>
-
     <View
         android:id="@+id/divider_line"
-        android:background="?attr/dividerColor"
-        android:layout_gravity="end"
-        android:layout_height="fill_parent"
         android:layout_width="@dimen/divider_height"
-        android:visibility="gone">
-    </View>
+        android:layout_height="fill_parent"
+        android:layout_gravity="end"
+        android:background="?attr/dividerColor"
+        android:visibility="gone" />
 
 </LinearLayout>

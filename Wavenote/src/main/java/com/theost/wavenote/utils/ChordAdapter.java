@@ -14,14 +14,13 @@ import com.theost.wavenote.R;
 
 import java.util.List;
 
-public class ChordsAdapter extends RecyclerView.Adapter<ChordsAdapter.ViewHolder> {
+public class ChordAdapter extends RecyclerView.Adapter<ChordAdapter.ViewHolder> {
 
     private List<Drawable> mData;
     private LayoutInflater mInflater;
     private int mItemSize;
-    private ItemClickListener mClickListener;
 
-    public ChordsAdapter(Context context, List<Drawable> data, int size) {
+    public ChordAdapter(Context context, List<Drawable> data, int size) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.mItemSize = size;
@@ -46,23 +45,13 @@ public class ChordsAdapter extends RecyclerView.Adapter<ChordsAdapter.ViewHolder
         return mData.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mChordImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
             mChordImageView = itemView.findViewById(R.id.chord_photo);
-            itemView.setOnClickListener(this);
         }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
-
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 
     public void updateItemSize(int size) {

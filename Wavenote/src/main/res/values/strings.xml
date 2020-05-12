@@ -212,8 +212,8 @@
     <!-- MUSIC -->
 
     <string name="theory">Theory</string>
-    <string name="empty_photos">No photos found</string>
-    <string name="empty_dictionary">No words found</string>
+    <string name="empty_photos">Add your first photo</string>
+    <string name="empty_dictionary">Add your first keyword</string>
     <string name="empty_chords">No chords found</string>
 
     <!-- PASSCODE -->
@@ -287,10 +287,15 @@
     <string name="transpose_up">Transpose Up</string>
     <string name="transpose_down">Transpose Down</string>
     <string name="materials">Materials</string>
-    <string name="add_photo_camera">Use Camera</string>
-    <string name="add_photo_gallery">Upload from Gallery</string>
+    <string name="add_photo_camera">Camera</string>
+    <string name="add_photo_gallery">Gallery</string>
     <string name="add_photo">Add photo</string>
     <string name="photo_error">Couldn\'t load photo</string>
+    <string name="file_error">Only images can be attached</string>
+    <string name="feature_error">This feature will be available\nin the next version</string>
+    <string name="database_error">Database request error</string>
+    <string name="add_photo_storage">Files</string>
+    <string name="add_keyword">Add Keyword</string>
 
     <string-array name="array_musical_chords">
         <item>Cb</item>

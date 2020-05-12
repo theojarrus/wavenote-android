@@ -101,10 +101,10 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
-    
+
     <style name="Theme.Wavestyle.Splash">
-        <item name="android:navigationBarColor">@color/background_dark</item>
-        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
+        <item name="android:statusBarColor">?attr/mainBackgroundColor</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
@@ -267,12 +267,12 @@
     <!-- Dictionary -->
     <style name="KeywordTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">@color/blue</item>
-        <item name="android:textColor">@color/primary</item>
+        <item name="android:textColor">@color/text_title_disabled</item>
     </style>
 
     <style name="TypeKeywordInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/blue</item>
-        <item name="android:textColor">@color/primary</item>
+        <item name="android:textColor">@color/text_title_disabled</item>
         <item name="boxBackgroundColor">@null</item>
     </style>
 

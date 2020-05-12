@@ -152,7 +152,7 @@
     <!-- Color Sheet -->
 
     <array name="colorsheet_colors">
-        <item>#959BE3</item>
+        <item>#6AB3D0</item>
         <item>#E7C8DD</item>
         <item>#67597A</item>
         <item>#5D4E60</item>
@@ -174,6 +174,6 @@
     <color name="dividerColor">#1F000000</color>
 
     <!-- Dictionary -->
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/primary</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/text_title_disabled</color>
 
 </resources>

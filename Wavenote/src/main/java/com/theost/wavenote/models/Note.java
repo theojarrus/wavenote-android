@@ -52,12 +52,14 @@ public class Note extends BucketObject {
     public static Integer SELECTED_COLOR = -6972445;
     public static String TEXT_COLOR_AC = "#36393e";
     public static String TEXT_COLOR_DI = "#fafafa";
+    public static String PHOTO_SORT_MODE = "date";
     public static boolean TEXT_STYLE_BOLD = true;
     public static boolean TEXT_STYLE_ITALIC = false;
     public static boolean TEXT_STYLE_STROKE = false;
     public static boolean TEXT_STYLE_CODE = false;
     public static boolean TEXT_STYLE_UNDERLINE = false;
     public static boolean TEXT_STYLE_STRIKETHROUGH = false;
+    public static boolean NEED_RESOURCES_UPDATE = true;
     private static final int MAX_PREVIEW_CHARS = 300;
     public static final String[] FULL_TEXT_INDEXES = new String[]{Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
     private static final Spannable BLANK_CONTENT = new SpannableString("");
@@ -176,6 +178,22 @@ public class Note extends BucketObject {
             mTitle = content;
             mContentPreview = content;
         }
+    }
+
+    public static boolean isNeedResourcesUpdate() {
+        return NEED_RESOURCES_UPDATE;
+    }
+
+    public static void setNeedResourcesUpdate(boolean update) {
+        NEED_RESOURCES_UPDATE = update;
+    }
+
+    public static String getPhotoSortMode() {
+        return PHOTO_SORT_MODE;
+    }
+
+    public static void setPhotoSortMode(String mode) {
+        PHOTO_SORT_MODE = mode;
     }
 
     public static boolean isTextStyleBold() { return TEXT_STYLE_BOLD;}

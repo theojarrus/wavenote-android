@@ -27,8 +27,9 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_restore"
         android:enabled="true"
-        android:title="@string/cancel"
+        android:title="@string/restore"
         app:showAsAction="never" />
 
 </menu>

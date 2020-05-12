@@ -11,8 +11,8 @@
     </style>
     
     <style name="Theme.Wavestyle.Splash">
-        <item name="android:navigationBarColor">@color/background_dark</item>
-        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
+        <item name="android:statusBarColor">?attr/mainBackgroundColor</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>

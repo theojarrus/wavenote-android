@@ -2,6 +2,7 @@ package com.theost.wavenote.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
@@ -18,9 +19,11 @@ import android.widget.EditText;
 import androidx.core.content.ContextCompat;
 
 import com.theost.wavenote.R;
+import com.theost.wavenote.models.Note;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,18 +31,22 @@ public class SyntaxHighlighter {
 
     private static final int TITLE_MAX_LENGTH = 20;
     private static boolean isHighlightChanged = false;
+    private static DatabaseHelper localDatabase;
     private static ArrayList<String> noteChords;
+    private static ArrayList<String> keyTitles;
+    private static ArrayList<String> keyWords;
     private static int backTextColor;
     private static int frontTextColor;
 
     @SuppressLint("ResourceAsColor")
     public static void updateSyntaxHighlight(Context context, EditText mContentEditText, String foregroundColor) {
-        String[] keyTitles = context.getResources().getStringArray(R.array.array_musical_titles);
-        String[] keyWords = context.getResources().getStringArray(R.array.array_musical_words);
+
+        if (Note.isNeedResourcesUpdate()) updateResources(context);
+
         Spannable noteContent = mContentEditText.getText();
         frontTextColor = Color.parseColor(foregroundColor);
 
-        backTextColor = ContextCompat.getColor(context, R.color.blue);
+        backTextColor = ContextCompat.getColor(context, R.color.blue_20);
         noteContent = addSyntaxHighlight(keyTitles, noteContent, true);
 
         backTextColor = ContextCompat.getColor(context, R.color.purple);
@@ -52,7 +59,7 @@ public class SyntaxHighlighter {
         }
     }
 
-    public static Spannable addSyntaxHighlight(String[] words, Spannable contentSpan, boolean isTitle) {
+    public static Spannable addSyntaxHighlight(ArrayList<String> words, Spannable contentSpan, boolean isTitle) {
         isHighlightChanged = false;
 
         String contentStr = contentSpan.toString().toLowerCase().replaceAll("[\\t\\n\\r\\u202F\\u00A0]", " ");
@@ -164,6 +171,24 @@ public class SyntaxHighlighter {
         // Setting text and placing cursor at right position
         mContentEditText.setText(noteContent);
         mContentEditText.setSelection(cursorPositionEnd);
+    }
+
+    public static void updateResources(Context context) {
+        localDatabase = new DatabaseHelper(context);
+        Cursor titles = localDatabase.getDictionaryData("Title");
+        Cursor words = localDatabase.getDictionaryData("Word");
+
+        keyTitles = new ArrayList<>();
+        while (titles.moveToNext()) {
+            keyTitles.add(titles.getString(0));
+        }
+
+        keyWords = new ArrayList<>();
+        while (words.moveToNext()) {
+            keyWords.add(words.getString(0));
+        }
+
+        Note.setNeedResourcesUpdate(false);
     }
 
 }

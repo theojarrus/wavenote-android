@@ -2,10 +2,14 @@ package com.theost.wavenote;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +43,7 @@ import androidx.preference.PreferenceManager;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.CrashUtils;
+import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.HtmlCompat;
@@ -215,7 +220,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         // Ensure user has valid authorization
         if (userAuthenticationIsInvalid()) {
-            startLoginActivity();
+            //startLoginActivity();
         }
 
         if ((!(intent.hasExtra(KEY_LIST_WIDGET_CLICK) && intent.getExtras() != null)) && !mHasTappedNoteListWidgetButton) {
@@ -390,6 +395,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 if (mIsTheoryClicked) {
                     Intent intent = new Intent(NotesActivity.this, PhotosActivity.class);
                     intent.putExtra("chordsBlockEnabled", true);
+                    intent.putExtra("noteId", "theory");
                     startActivityForResult(intent, Wavenote.INTENT_THEORY);
                     mIsTheoryClicked = false;
                 } else if (mIsSettingsClicked) {
@@ -1345,6 +1351,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             mNotesActivityReference = new SoftReference<>(context);
         }
 
+        //localDatabase = new DatabaseHelper(this);
+
         @Override
         protected Void doInBackground(Void... voids) {
             NotesActivity activity = mNotesActivityReference.get();
@@ -1357,6 +1365,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             Bucket.ObjectCursor cursor = query.execute();
 
             while (cursor.moveToNext()) {
+                // todo remove photos from storage and database
                 cursor.getObject().delete();
             }
 

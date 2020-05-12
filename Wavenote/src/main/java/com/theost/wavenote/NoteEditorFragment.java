@@ -27,6 +27,7 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -584,6 +585,18 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             case R.id.menu_share:
                 shareNote();
                 return true;
+            case R.id.menu_audiotracks:
+                // todo
+                showNotAvailable();
+                return true;
+            case R.id.menu_import:
+                // todo
+                showNotAvailable();
+                return true;
+            case R.id.menu_export:
+                // todo
+                showNotAvailable();
+                return true;
             case R.id.menu_trash:
                 if (!isAdded()) {
                     return false;
@@ -639,10 +652,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 audioItem.setEnabled(false);
                 importItem.setEnabled(false);
                 exportItem.setEnabled(false);
-                colorItemView.setEnabled(false);
                 sheetItem.setEnabled(false);
                 photoItem.setEnabled(false);
                 audioItem.setEnabled(false);
+                colorItemView.setEnabled(false);
                 DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);  // 0.3 is 30% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 0.3);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 0.3);
@@ -664,10 +677,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 audioItem.setEnabled(true);
                 importItem.setEnabled(true);
                 exportItem.setEnabled(true);
-                colorItemView.setEnabled(true);
                 sheetItem.setEnabled(true);
                 photoItem.setEnabled(true);
                 audioItem.setEnabled(true);
+                colorItemView.setEnabled(true);
                 DrawableUtils.setMenuItemAlpha(checklistItem, 1.0);  // 1.0 is 100% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 1.0);
@@ -687,54 +700,19 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         super.onPrepareOptionsMenu(menu);
     }
 
+    // todo: remove when all features done
+    private void showNotAvailable() {
+        Toast toast = Toast.makeText(getContext(), getContext().getResources().getString(R.string.feature_error), Toast.LENGTH_SHORT);
+        TextView v = toast.getView().findViewById(android.R.id.message);
+        if( v != null) v.setGravity(Gravity.CENTER);
+        toast.show();
+    }
+
     private void insertChecklist() {
         try {
             mContentEditText.insertChecklist();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void onCheckboxClicked(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        switch(view.getId()) {
-            case R.id.text_bold:
-                Note.setTextStyleBold(checked);
-                break;
-            case R.id.text_italic:
-                Note.setTextStyleItalic(checked);
-                break;
-            case R.id.text_stroke:
-                Note.setTextStyleStroke(checked);
-                break;
-            case R.id.text_code:
-                Note.setTextStyleCode(checked);
-                break;
-            case R.id.text_underline:
-                Note.setTextStyleUnderline(checked);
-                break;
-            case R.id.text_strikethrough:
-                Note.setTextStyleStrikethrough(checked);
-                break;
-        }
-    }
-
-    public static boolean isCheckboxActive(View view){
-        switch(view.getId()) {
-            case R.id.text_bold:
-                return Note.isTextStyleBold();
-            case R.id.text_italic:
-                return Note.isTextStyleItalic();
-            case R.id.text_stroke:
-                return Note.isTextStyleStroke();
-            case R.id.text_code:
-                return Note.isTextStyleCode();
-            case R.id.text_underline:
-                return Note.isTextStyleUnderline();
-            case R.id.text_strikethrough:
-                return Note.isTextStyleStrikethrough();
-            default:
-                return false;
         }
     }
 
@@ -778,7 +756,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void startPhotosActivity() {
-        startActivity(new Intent(getActivity(), PhotosActivity.class));
+        Intent intent = new Intent(getActivity(), PhotosActivity.class);
+        intent.putExtra("noteId", mNote.getSimperiumKey());
+        startActivity(intent);
     }
 
     private void startChordsActivity() {

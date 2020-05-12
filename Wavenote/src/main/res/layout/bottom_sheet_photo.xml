@@ -82,6 +82,20 @@
         android:clickable="true"
         android:text="@string/add_photo_gallery" />
 
+    <com.theost.wavenote.widgets.RobotoRegularTextView
+        android:id="@+id/add_photo_storage"
+        style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="?attr/colorOnSurface"
+        android:drawableStart="@drawable/av_add_photo_storage_24dp"
+        android:drawablePadding="@dimen/custom_horizontal_space"
+        android:focusable="true"
+        android:clickable="true"
+        android:text="@string/add_photo_storage" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

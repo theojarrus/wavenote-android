@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.theost.wavenote.utils.ChordsAdapter;
+import com.theost.wavenote.utils.ChordAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 
@@ -48,14 +47,14 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private AutoCompleteTextView mInstrumentInputView;
     private AutoCompleteTextView mColumnsInputView;
     private RecyclerView mChordsRecyclerView;
-    private ChordsAdapter adapter;
+    private ChordAdapter adapter;
     private ImageView mEmptyViewImage;
     private TextView mEmptyViewText;
     private String activeInstrument;
     private boolean isAllChords;
     private int itemWidth;
 
-    @SuppressLint("ResourceType")
+    @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemeUtils.setTheme(this);
@@ -101,7 +100,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         }
 
         mInstrumentInputView = findViewById(R.id.instrument);
-        ViewUtils.disableAutoCompleteTextView(this, mInstrumentInputView, activeInstrument, INSTRUMENTS);
+        mInstrumentInputView.setText(activeInstrument);
+        ViewUtils.disableAutoCompleteTextView(this, mInstrumentInputView, INSTRUMENTS);
 
         if (isAllChords) {
             TextInputLayout mInstrumentLayout = findViewById(R.id.instrument_layout);
@@ -111,7 +111,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         if (mChordsList.size() < itemsInline) itemsInline = mChordsList.size();
 
         mColumnsInputView = findViewById(R.id.columns);
-        ViewUtils.disableAutoCompleteTextView(this, mColumnsInputView, Integer.toString(itemsInline), COLUMNS);
+        mColumnsInputView.setText(Integer.toString(itemsInline));
+        ViewUtils.disableAutoCompleteTextView(this, mColumnsInputView, COLUMNS);
 
         mColumnsInputView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -155,7 +156,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
         updateItemSize();
         updateDrawables();
-        adapter = new ChordsAdapter(this, mChordsDrawable, itemWidth);
+        adapter = new ChordAdapter(this, mChordsDrawable, itemWidth);
         mChordsRecyclerView.setAdapter(adapter);
     }
 

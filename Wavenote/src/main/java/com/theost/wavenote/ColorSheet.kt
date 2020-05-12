@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.theost.wavenote.models.Note
 import com.theost.wavenote.utils.ColorSheetTheme
 import com.theost.wavenote.utils.resolveColor
 import kotlinx.android.synthetic.main.color_sheet.*
@@ -80,19 +81,19 @@ class ColorSheet : BottomSheetDialogFragment() {
             sheetCorners = resources.getDimension(R.dimen.default_dialog_radius)
         }
 
-        text_bold.isChecked = NoteEditorFragment.isCheckboxActive(text_bold)
-        text_italic.isChecked = NoteEditorFragment.isCheckboxActive(text_italic)
-        text_code.isChecked = NoteEditorFragment.isCheckboxActive(text_code)
-        text_stroke.isChecked = NoteEditorFragment.isCheckboxActive(text_stroke)
-        text_underline.isChecked = NoteEditorFragment.isCheckboxActive(text_underline)
-        text_strikethrough.isChecked = NoteEditorFragment.isCheckboxActive(text_strikethrough)
+        text_bold.isChecked = Note.isTextStyleBold()
+        text_italic.isChecked =  Note.isTextStyleItalic()
+        text_code.isChecked =  Note.isTextStyleCode()
+        text_stroke.isChecked = Note.isTextStyleStroke()
+        text_underline.isChecked =  Note.isTextStyleUnderline()
+        text_strikethrough.isChecked =  Note.isTextStyleStrikethrough()
 
-        text_bold.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_bold) }
-        text_italic.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_italic) }
-        text_code.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_code) }
-        text_stroke.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_stroke) }
-        text_underline.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_underline) }
-        text_strikethrough.setOnClickListener { NoteEditorFragment.onCheckboxClicked(text_strikethrough) }
+        text_bold.setOnClickListener { Note.setTextStyleBold(text_bold.isChecked) }
+        text_italic.setOnClickListener { Note.setTextStyleItalic(text_italic.isChecked) }
+        text_code.setOnClickListener { Note.setTextStyleCode(text_code.isChecked) }
+        text_stroke.setOnClickListener { Note.setTextStyleStroke(text_stroke.isChecked) }
+        text_underline.setOnClickListener { Note.setTextStyleUnderline(text_underline.isChecked) }
+        text_strikethrough.setOnClickListener { Note.setTextStyleStrikethrough(text_strikethrough.isChecked) }
 
         val gradientDrawable = GradientDrawable().apply {
             if (ColorSheetTheme.inferTheme(requireContext()) == ColorSheetTheme.LIGHT) {

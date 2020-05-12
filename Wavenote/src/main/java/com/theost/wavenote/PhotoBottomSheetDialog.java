@@ -3,6 +3,7 @@ package com.theost.wavenote;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
     private PhotosActivity mActivity;
     private TextView mCameraButton;
     private TextView mGalleryButton;
+    private TextView mStorageButton;
 
     public PhotoBottomSheetDialog(@NonNull PhotosActivity activity) {
         mActivity = activity;
@@ -44,6 +46,8 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         mCameraButton.setOnClickListener(v -> addPhotoCamera());
         mGalleryButton = photoView.findViewById(R.id.add_photo_gallery);
         mGalleryButton.setOnClickListener(v -> addPhotoGallery());
+        mStorageButton = photoView.findViewById(R.id.add_photo_storage);
+        mStorageButton.setOnClickListener(v -> addPhotoStorage());
 
         if (getDialog() != null) {
             // Set peek height to full height of view (i.e. set STATE_EXPANDED) to avoid buttons
@@ -67,16 +71,9 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        String errorMessage = "";
-        try {
+        if (resultCode == RESULT_OK) {
             Uri selectedImage = imageReturnedIntent.getData();
-            if (selectedImage == null) { errorMessage = this.getResources().getString(R.string.photo_error);
-            } else { PhotosActivity.addPhoto(selectedImage); }
-        } catch (Exception ex) {
-            errorMessage = ex.toString();
-        } finally {
-            Toast toast = Toast.makeText(this.getContext(), errorMessage, Toast.LENGTH_SHORT);
-            toast.show();
+            mActivity.insertPhoto(selectedImage);
         }
         dismiss();
     }
@@ -91,7 +88,15 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
     }
 
     private void addPhotoGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
         startActivityForResult(intent, 1);
     }
+
+    private void addPhotoStorage() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); // ACTION_GET_CONTENT
+        intent.setType("image/*");
+        startActivityForResult(intent, 1);
+    }
+
 }

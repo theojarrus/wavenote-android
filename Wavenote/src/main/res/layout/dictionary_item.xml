@@ -5,15 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp"
-    android:clickable="true"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/custom_horizontal_space"
     android:paddingTop="0dp"
-    android:paddingRight="@dimen/custom_horizontal_space"
     android:paddingBottom="@dimen/custom_vertical_space"
     tools:ignore="MissingConstraints">
 
@@ -22,15 +17,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:layout_marginStart="@dimen/custom_horizontal_space"
         android:layout_marginEnd="@dimen/custom_horizontal_space"
         android:layout_weight="1.5"
         android:hint="@string/keyword">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/keyword_title"
+            android:id="@+id/keyword_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxLength="15" />
+            android:text="@string/word"
+            android:maxLength="20" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -39,7 +36,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginEnd="15dp"
         android:layout_weight="1"
         android:hint="@string/type"
         android:text="@string/type">
@@ -48,18 +44,19 @@
             android:id="@+id/keyword_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/type"
             android:padding="0dp"
             tools:ignore="LabelFor" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageButton
-        android:id="@+id/keyworD_trash"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
+        android:id="@+id/keyword_trash"
+        android:layout_width="@dimen/custom_icon_size"
+        android:layout_height="@dimen/custom_icon_size"
         android:layout_gravity="bottom"
-        android:layout_marginTop="5dp"
-        android:background="@null"
+        android:layout_marginTop="1dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/description_delete_item"
         android:src="@drawable/av_trash_empty_blue_24dp" />
 
