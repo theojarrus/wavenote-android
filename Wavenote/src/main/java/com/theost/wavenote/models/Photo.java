@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Photo {
@@ -35,7 +36,7 @@ public class Photo {
 
     public Bitmap getBitmap(Context context) {
         try {
-            return MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(uri));
+            return MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.fromFile(new File(uri)));
         } catch (IOException ex) {
             return null;
         }

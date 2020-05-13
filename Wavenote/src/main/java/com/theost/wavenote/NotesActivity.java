@@ -2,14 +2,10 @@ package com.theost.wavenote;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -1346,12 +1342,12 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
     private static class EmptyTrashTask extends AsyncTask<Void, Void, Void> {
         private SoftReference<NotesActivity> mNotesActivityReference;
+        private DatabaseHelper localDatabase;
 
         EmptyTrashTask(NotesActivity context) {
             mNotesActivityReference = new SoftReference<>(context);
+            localDatabase = new DatabaseHelper(context);
         }
-
-        //localDatabase = new DatabaseHelper(this);
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -1365,7 +1361,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             Bucket.ObjectCursor cursor = query.execute();
 
             while (cursor.moveToNext()) {
-                // todo remove photos from storage and database
+                localDatabase.removeAllImageData(cursor.getSimperiumKey());
                 cursor.getObject().delete();
             }
 

@@ -23,15 +23,13 @@ import com.theost.wavenote.models.Note;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class SyntaxHighlighter {
 
-    private static final int TITLE_MAX_LENGTH = 20;
+    private static final int TITLE_SPACE_LENGTH = 24;
     private static boolean isHighlightChanged = false;
-    private static DatabaseHelper localDatabase;
     private static ArrayList<String> noteChords;
     private static ArrayList<String> keyTitles;
     private static ArrayList<String> keyWords;
@@ -40,7 +38,6 @@ public class SyntaxHighlighter {
 
     @SuppressLint("ResourceAsColor")
     public static void updateSyntaxHighlight(Context context, EditText mContentEditText, String foregroundColor) {
-
         if (Note.isNeedResourcesUpdate()) updateResources(context);
 
         Spannable noteContent = mContentEditText.getText();
@@ -48,7 +45,6 @@ public class SyntaxHighlighter {
 
         backTextColor = ContextCompat.getColor(context, R.color.blue_20);
         noteContent = addSyntaxHighlight(keyTitles, noteContent, true);
-
         backTextColor = ContextCompat.getColor(context, R.color.purple);
         noteContent = addSyntaxHighlight(keyWords, noteContent, false);
 
@@ -61,18 +57,16 @@ public class SyntaxHighlighter {
 
     public static Spannable addSyntaxHighlight(ArrayList<String> words, Spannable contentSpan, boolean isTitle) {
         isHighlightChanged = false;
-
-        String contentStr = contentSpan.toString().toLowerCase().replaceAll("[\\t\\n\\r\\u202F\\u00A0]", " ");
+        String contentStr = contentSpan.toString().toLowerCase().replaceAll("[\\t\\r\\u202F\\u00A0]", " ");
         String splitterStart = " ";
         String splitterEnd = " ";
         if (isTitle) {
-            splitterStart = "\n[";
-            splitterEnd = "]";
+            splitterStart = "\n";
+            splitterEnd = "\n";
             if ((!contentStr.contains(splitterStart)) || (!contentStr.contains(splitterEnd))) return contentSpan;
         }
         for (String i : words) {
             int index = 0;
-
             while (index != -1) {
                 index = contentStr.indexOf(splitterStart + i.toLowerCase() + splitterEnd, index);
                 if (index != -1) {
@@ -84,11 +78,11 @@ public class SyntaxHighlighter {
                     isHighlightChanged = true;
                     int lastindex = index + i.length();
                     if (isTitle) {
-                        String spaceStart = StrUtils.repeat(" ", (TITLE_MAX_LENGTH - i.length() - 1) / 2);
-                        String spaceEnd = StrUtils.repeat(" ", (TITLE_MAX_LENGTH - i.length() - 1) / 2 + i.length() % 2);
-                        lastindex += splitterStart.length() + splitterEnd.length();
+                        String spaceStart = StrUtils.repeat(" ", (TITLE_SPACE_LENGTH - i.length()) / 2);
+                        String spaceEnd = StrUtils.repeat(" ", (TITLE_SPACE_LENGTH - i.length()) / 2);
+                        lastindex += splitterStart.length();
                         ((Editable) contentSpan).insert(lastindex, spaceEnd);
-                        ((Editable) contentSpan).insert(index + splitterStart.length() / 2, spaceStart);
+                        ((Editable) contentSpan).insert(index + splitterStart.length(), spaceStart);
                         lastindex += spaceStart.length() + spaceEnd.length();
 
                     } else {
@@ -168,13 +162,12 @@ public class SyntaxHighlighter {
             }
         }
 
-        // Setting text and placing cursor at right position
         mContentEditText.setText(noteContent);
         mContentEditText.setSelection(cursorPositionEnd);
     }
 
     public static void updateResources(Context context) {
-        localDatabase = new DatabaseHelper(context);
+        DatabaseHelper localDatabase = new DatabaseHelper(context);
         Cursor titles = localDatabase.getDictionaryData("Title");
         Cursor words = localDatabase.getDictionaryData("Word");
 

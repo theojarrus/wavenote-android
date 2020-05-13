@@ -2,7 +2,6 @@ package com.theost.wavenote;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -136,11 +135,15 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
     }
 
+    public String getNoteId() {
+        return noteId;
+    }
+
     private void showPhotoSheet() {
         mPhotoBottomSheet.show(getSupportFragmentManager());
     }
 
-    private void showError(String error) {
+    public void showError(String error) {
         Toast toast = Toast.makeText(this, error, Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -165,13 +168,12 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         if (adapter != null) adapter.updateData(mPhotoList);
     }
 
-    public void insertPhoto(Uri selectedImage) {
-        if (selectedImage == null) {
+    public void insertPhoto(String uri) {
+        if (uri == null) {
             showError(this.getResources().getString(R.string.photo_error));
             return;
         }
 
-        String uri = selectedImage.toString();
         String date = DateTimeUtils.getDateTextString(this, Calendar.getInstance());
         boolean isInserted = localDatabase.insertImageData(noteId, "", uri, date);
         if (!isInserted) showError(this.getResources().getString(R.string.database_error));

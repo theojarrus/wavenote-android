@@ -291,11 +291,27 @@
     <string name="add_photo_gallery">Gallery</string>
     <string name="add_photo">Add photo</string>
     <string name="photo_error">Couldn\'t load photo</string>
-    <string name="file_error">Only images can be attached</string>
+    <string name="file_error">File attach error</string>
     <string name="feature_error">This feature will be available\nin the next version</string>
     <string name="database_error">Database request error</string>
+    <string name="android_error">Android version error</string>
     <string name="add_photo_storage">Files</string>
     <string name="add_keyword">Add Keyword</string>
+
+    <string-array name="array_musical_titles">
+        <item>[Intro]</item>
+        <item>[Verse]</item>
+        <item>[Pre-Chorus]</item>
+        <item>[Chorus]</item>
+        <item>[Solo]</item>
+        <item>[Bridge]</item>
+        <item>[Outro]</item>
+    </string-array>
+
+    <string-array name="array_musical_words">
+        <item>Tempo</item>
+        <item>Capo</item>
+    </string-array>
 
     <string-array name="array_musical_chords">
         <item>Cb</item>
@@ -424,20 +440,6 @@
         <item>B#m</item>
         <item>B#m7</item>
         <item>B#sus4</item>
-    </string-array>
-
-    <string-array name="array_musical_titles">
-        <item>Intro</item>
-        <item>Verse</item>
-        <item>Pre-Chorus</item>
-        <item>Chorus</item>
-        <item>Solo</item>
-        <item>Bridge</item>
-        <item>Outro</item>
-    </string-array>
-
-    <string-array name="array_musical_words">
-        <item>Tempo</item>
     </string-array>
 
 </resources>

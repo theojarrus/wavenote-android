@@ -37,7 +37,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
