@@ -46,7 +46,7 @@ public class AboutFragment extends Fragment {
         version.setText(String.format("%s %s", getString(R.string.version), BuildConfig.VERSION_NAME));
 
         int thisYear = Calendar.getInstance().get(Calendar.YEAR);
-        copyright.setText(String.format(Locale.getDefault(), "© %1d Automattic", thisYear));
+        copyright.setText(String.format(Locale.getDefault(), "© %1d Theo St.", thisYear));
 
         logoImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wavenote_24dp));
 
