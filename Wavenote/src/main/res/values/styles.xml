@@ -182,13 +182,13 @@
     </style>
 
     <style name="Theme.Wavestyle.About" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:navigationBarColor">@color/blue</item>
+        <item name="android:navigationBarColor">@color/blue_60</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:windowBackground">@color/blue</item>
+        <item name="android:windowBackground">@color/blue_60</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="toolbarColor">@color/blue</item>
+        <item name="toolbarColor">@color/blue_60</item>
     </style>
 
     <style name="Theme.Wavestyle.Passcode" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
