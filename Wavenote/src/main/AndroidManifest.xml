@@ -59,6 +59,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Chords"
             android:parentActivityName=".NoteEditorActivity"/>
+        <activity android:name=".AudioActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Audio"
+            android:parentActivityName=".NoteEditorActivity"/>
         <activity
             android:name=".NoteEditorActivity"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"

@@ -117,6 +117,9 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             case R.id.menu_remove:
                 removeKeyword(null);
                 return true;
+            case android.R.id.home:
+                invalidateOptionsMenu();
+                return true;
             default:
                 return false;
         }

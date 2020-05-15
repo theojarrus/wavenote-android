@@ -167,13 +167,17 @@
 
     <color name="dialogPrimary">#FAFAFA</color>
     <color name="dialogPrimaryVariant">#E0E0E0</color>
-
     <color name="dialogDarkPrimary">@color/background_dark_4</color>
     <color name="dialogDarkPrimaryVariant">#151515</color>
-
     <color name="dividerColor">#1F000000</color>
 
-    <!-- Dictionary -->
+    <!-- Views -->
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/text_title_disabled</color>
+    <color name="mtrl_btn_stroke_color_selector" tools:override="true">@color/blue</color>
+
+    <!-- Highlight -->
+    <color name="syntax_title">@color/blue_20</color>
+    <color name="syntax_word">@color/purple</color>
+    <color name="syntax_chord">#E91E63</color>
 
 </resources>

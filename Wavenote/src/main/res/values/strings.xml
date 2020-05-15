@@ -66,6 +66,8 @@
     <string name="condensed_note_list">Condensed note list</string>
     <string name="sort_order">Sort order</string>
     <string name="detect_links">Detect links</string>
+    <string name="detect_chords">Detect chords</string>
+    <string name="detect_keywords">Detect keywords</string>
 
     <!-- Undo -->
     <string name="undo">Undo</string>
@@ -115,14 +117,14 @@
     <string name="about">About Wavenote</string>
     <string name="about_somewords">Wavenote is made with love by Theo and the folks at Automattic. Source code available on GitHub.</string>
     <string name="about_play_store">Google Play Store</string>
-    <string name="rate_us">Rate Us</string>
+    <string name="rate_us">Rate App</string>
     <string name="no_browser_available">\"Unable to open website. No browser available.\"</string>
     <string name="support_on_patreon">Support on Patreon</string>
-    <string name="telegram">Telegram</string>
-    <string name="about_telegram_handle">\@fedorjedi</string>
-    <string name="instagram">Instagram</string>
-    <string name="about_instagram_handle">\@fedor.jedi</string>
-    <string name="about_patreon_handle">\@theojedi</string>
+    <string name="telegram" translatable="false">Telegram</string>
+    <string name="about_telegram_handle" translatable="false">\@fedorjedi</string>
+    <string name="instagram" translatable="false">Instagram</string>
+    <string name="about_instagram_handle" translatable="false">\@fedor.jedi</string>
+    <string name="about_patreon_handle" translatable="false">\@theojedi</string>
 
     <!-- Unsynced note warnings -->
     <string name="unsynced_notes">Unsynced notes detected</string>
@@ -214,6 +216,7 @@
     <string name="theory">Theory</string>
     <string name="empty_photos">Add your first photo</string>
     <string name="empty_dictionary">Add your first keyword</string>
+    <string name="empty_audio">Add your first audio</string>
     <string name="empty_chords">No chords found</string>
 
     <!-- PASSCODE -->
@@ -253,7 +256,7 @@
     <string name="simperium_title">@string/app_name</string>
 
     <!-- FEATURES -->
-    <string name="audio_tracks">Audio Tracks</string>
+    <string name="audio_tracks">Audio</string>
     <string name="photos">Photos</string>
     <string name="text_color">Text Color</string>
     <string name="menu_export">Export</string>
@@ -267,7 +270,6 @@
     <string name="text_underline">Underline</string>
     <string name="text_strikethrough">Strikethrough</string>
     <string name="text_code">Code</string>
-    <string name="pref_key_detect_syntax">Detect keywords</string>
 
     <!-- Syntax dictionary -->
     <string name="dictionary">Dictionary</string>
@@ -279,24 +281,33 @@
     <string name="remove_all">Remove All</string>
     <string name="name">Name</string>
     <string name="chords">Chords</string>
-    <string name="guitar">Guitar</string>
-    <string name="piano">Piano</string>
-    <string name="ukulele">Ukulele</string>
-    <string name="instrument">Instrument</string>
-    <string name="columns">Columns</string>
+    <string name="metronome">Metronome</string>
+    <string name="countdown">Countdown</string>
+    <string name="mute">Mute</string>
+    <string name="guitar" translatable="false">Guitar</string>
+    <string name="piano" translatable="false">Piano</string>
+    <string name="ukulele" translatable="false">Ukulele</string>
     <string name="transpose_up">Transpose Up</string>
     <string name="transpose_down">Transpose Down</string>
     <string name="materials">Materials</string>
     <string name="add_photo_camera">Camera</string>
     <string name="add_photo_gallery">Gallery</string>
     <string name="add_photo">Add photo</string>
-    <string name="photo_error">Couldn\'t load photo</string>
-    <string name="file_error">File attach error</string>
-    <string name="feature_error">This feature will be available\nin the next version</string>
+    <string name="photo_error">Couldn\'t load image</string>
+    <string name="file_error">Invalid file</string>
+    <string name="feature_error">This feature will be available in the next version</string>
     <string name="database_error">Database request error</string>
-    <string name="android_error">Android version error</string>
+    <string name="android_error">Deprecated Android version</string>
     <string name="add_photo_storage">Files</string>
     <string name="add_keyword">Add Keyword</string>
+    <string name="play" translatable="false">Play</string>
+    <string name="pause" translatable="false">Pause</string>
+    <string name="stop" translatable="false">Stop</string>
+    <string name="select_all">Select All</string>
+    <string name="beat_splitter" translatable="false">/</string>
+    <string name="loop" translatable="false">Loop</string>
+    <string name="null_m_s" translatable="false">0:00</string>
+    <string name="tap" translatable="false">Tap</string>
 
     <string-array name="array_musical_titles">
         <item>[Intro]</item>

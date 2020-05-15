@@ -553,6 +553,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             case R.id.menu_sheet:
                 startChordsActivity();
                 return true;
+            case R.id.menu_audiotracks:
+                startAudioActivity();
+                return true;
             case R.id.menu_checklist:
                 DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
                 insertChecklist();
@@ -583,10 +586,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 return true;
             case R.id.menu_share:
                 shareNote();
-                return true;
-            case R.id.menu_audiotracks:
-                // todo
-                showNotAvailable();
                 return true;
             case R.id.menu_import:
                 // todo
@@ -763,6 +762,12 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private void startChordsActivity() {
         Intent intent = new Intent(getActivity(), ChordsActivity.class);
         intent.putExtra("chords", SyntaxHighlighter.getNoteChords(getContext(), mContentEditText.getText().toString()));
+        startActivity(intent);
+    }
+
+    private void startAudioActivity() {
+        Intent intent = new Intent(getActivity(), AudioActivity.class);
+        intent.putExtra("noteId", mNote.getSimperiumKey());
         startActivity(intent);
     }
 
@@ -1527,7 +1532,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         if (PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX)) {
-            SyntaxHighlighter.updateSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor());
+            SyntaxHighlighter.updateSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor(), PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX));
         }
     }
 

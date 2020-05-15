@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/custom_vertical_space"
+            android:layout_marginBottom="@dimen/custom_vertical_space"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/custom_horizontal_space"
+            android:paddingRight="@dimen/custom_horizontal_space"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Switch
+                    style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/blue"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/metronome"
+                    android:textAlignment="center" />
+
+                <Switch
+                    style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/blue"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/countdown"
+                    android:textAlignment="center" />
+
+                <Switch
+                    style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/blue"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/mute"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bpm_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/metronome_bar"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/metronome_bpm"
+                        style="@style/KeywordTextInputLayoutStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/metronome_tap"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:text="@string/passcodelock_numpad_0" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/metronome_tap"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/custom_horizontal_space"
+                        android:insetLeft="0dp"
+                        android:insetTop="6dp"
+                        android:insetRight="0dp"
+                        android:insetBottom="0dp"
+                        android:text="@string/tap"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/metronome_bpm"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <SeekBar
+                    android:id="@+id/metronome_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/custom_vertical_space"
+                    android:layout_marginBottom="0dp"
+                    android:thumbTint="@color/blue"
+                    app:layout_constraintBottom_toTopOf="@+id/beat_layout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bpm_layout" />
+
+                <LinearLayout
+                    android:id="@+id/beat_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/metronome_bar">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TypeKeywordInputLayoutStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/beat_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:text="@string/passcodelock_numpad_1"
+                            android:textColor="@color/blue"
+                            tools:ignore="LabelFor" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/beat_splitter"
+                        android:textSize="20sp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TypeKeywordInputLayoutStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/beat_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:text="@string/passcodelock_numpad_4"
+                            android:textColor="@color/blue"
+                            tools:ignore="LabelFor"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/count_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/count"
+                    android:layout_width="@dimen/custom_icon_size"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:gravity="center"
+                    android:text="@string/passcodelock_numpad_1"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/controls_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/count_layout"
+                app:layout_constraintRight_toLeftOf="@id/file_controls_layout"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
+                <ImageButton
+                    android:id="@+id/play"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/play"
+                    android:src="@drawable/ma_play_24dp" />
+
+                <ImageButton
+                    android:id="@+id/pause"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/pause"
+                    android:src="@drawable/ma_pause_24dp" />
+
+                <ImageButton
+                    android:id="@+id/stop"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/stop"
+                    android:src="@drawable/ma_stop_24dp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
+                <ToggleButton
+                    android:id="@+id/loop"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:contentDescription="@string/stop"
+                    android:src="@drawable/ma_stop_24dp"
+                    android:textColor="@drawable/toggle_selector"
+                    android:textOff="@string/loop"
+                    android:textOn="@string/loop" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/file_controls_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/controls_layout"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/save"
+                    android:layout_width="@dimen/custom_icon_size"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:background="@null"
+                    android:contentDescription="@string/menu_export"
+                    android:src="@drawable/ma_save_24dp" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/custom_vertical_space"
+            android:layout_marginBottom="@dimen/custom_vertical_space"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/audio_tracks"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/audio_item" />
+
+                    <LinearLayout
+                        android:id="@+id/empty_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:id="@+id/image"
+                            android:layout_width="@dimen/icon_empty"
+                            android:layout_height="@dimen/icon_empty"
+                            android:layout_marginTop="@dimen/padding_large"
+                            android:layout_marginBottom="@dimen/padding_large"
+                            android:adjustViewBounds="true"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/av_audio_24dp"
+                            android:tint="?attr/emptyImageColor" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/empty_audio" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/record_cancel"
+                android:layout_width="@dimen/custom_icon_size"
+                android:layout_height="@dimen/custom_icon_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cancel"
+                android:src="@drawable/av_close"
+                android:visibility="invisible" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/custom_vertical_space"
+                android:layout_marginBottom="@dimen/custom_vertical_space"
+                android:src="@drawable/ma_rec_24dp"
+                app:backgroundTint="?attr/fabColor"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:pressedTranslationZ="12dp"
+                app:tint="?attr/fabIconColor" />
+
+            <TextView
+                android:id="@+id/record_time"
+                android:layout_width="@dimen/custom_icon_size"
+                android:layout_height="@dimen/custom_icon_size"
+                android:gravity="center"
+                android:text="@string/null_m_s"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

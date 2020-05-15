@@ -87,13 +87,6 @@
         android:id="@+id/group_3">
 
         <item
-            android:id="@+id/menu_share"
-            android:enabled="false"
-            android:title="@string/share"
-            app:showAsAction="never">
-        </item>
-
-        <item
             android:id="@+id/menu_import"
             android:title="@string/import_note"
             app:showAsAction="never">
@@ -102,6 +95,13 @@
         <item
             android:id="@+id/menu_export"
             android:title="@string/menu_export"
+            app:showAsAction="never">
+        </item>
+
+        <item
+            android:id="@+id/menu_share"
+            android:enabled="false"
+            android:title="@string/share"
             app:showAsAction="never">
         </item>
 

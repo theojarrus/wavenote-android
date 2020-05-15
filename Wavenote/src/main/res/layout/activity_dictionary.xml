@@ -44,12 +44,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <View
-        android:id="@+id/divider_line"
-        android:layout_width="@dimen/divider_height"
-        android:layout_height="fill_parent"
-        android:layout_gravity="end"
-        android:background="?attr/dividerColor"
-        android:visibility="gone" />
-
 </LinearLayout>

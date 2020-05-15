@@ -179,21 +179,11 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical"
-                tools:ignore="MissingConstraints"
                 tools:listitem="@layout/photo_item"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <View
-        android:id="@+id/divider_line"
-        android:layout_width="@dimen/divider_height"
-        android:layout_height="fill_parent"
-        android:layout_gravity="end"
-        android:background="?attr/dividerColor"
-        android:visibility="gone"
-        tools:ignore="MissingConstraints" />
 
 </LinearLayout>

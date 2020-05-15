@@ -41,8 +41,11 @@ public class PrefUtils {
     // int, preferred font size
     private static final String PREF_FONT_SIZE = "pref_key_font_size";
 
-    // boolean, determines linkifying content in the editor
+    // boolean, determines keywords content in the editor
     public static final String PREF_DETECT_SYNTAX = "pref_key_detect_syntax";
+
+    // boolean, determines chords content in the editor
+    public static final String PREF_DETECT_CHORDS = "pref_key_detect_chords";
 
     // boolean, determines linkifying content in the editor
     public static final String PREF_DETECT_LINKS = "pref_key_detect_links";

@@ -54,7 +54,11 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_key_detect_syntax"
-            android:title="@string/pref_key_detect_syntax"/>
+            android:title="@string/detect_keywords"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_key_detect_chords"
+            android:title="@string/detect_chords"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_key_detect_links"

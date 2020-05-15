@@ -100,9 +100,15 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
     </LinearLayout>
 
-    <com.theost.wavenote.photoview.PhotoView
+    <com.theost.wavenote.views.PhotoView
         android:id="@+id/photo_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

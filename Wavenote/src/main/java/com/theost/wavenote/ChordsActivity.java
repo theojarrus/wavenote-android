@@ -178,6 +178,9 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             case R.id.menu_transposedown:
                 transposeChords(-1);
                 return true;
+            case android.R.id.home:
+                invalidateOptionsMenu();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
