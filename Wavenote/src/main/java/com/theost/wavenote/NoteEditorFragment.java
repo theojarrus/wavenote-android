@@ -16,6 +16,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.Html;
+import android.text.InputType;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.Spanned;
@@ -53,14 +55,22 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import net.lingala.zip4j.*;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.AutoBullet;
 import com.theost.wavenote.utils.ContextUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
+import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.MatchOffsetHighlighter;
 import com.theost.wavenote.utils.NoteUtils;
+import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.WavenoteLinkify;
@@ -79,7 +89,11 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -106,6 +120,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private static final int MAX_REVISIONS = 30;
     private static final int PUBLISH_TIMEOUT = 20000;
     private static final int HISTORY_TIMEOUT = 10000;
+    private StringBuilder resultDialogMessage;
+    private MaterialDialog loadingDialog;
+    private String resultDialogPath;
+    private boolean isExporting;
+    private char[] exportZipPassword = null;
     private boolean isThemeLight = false;
     private Note mNote;
     private final Runnable mAutoSaveRunnable = this::saveAndSyncNote;
@@ -118,6 +137,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private Handler mAutoSaveHandler;
     private Handler mPublishTimeoutHandler;
     private Handler mHistoryTimeoutHandler;
+    private MaterialDialog mExportDialog;
+    private MaterialDialog mPasswordDialog;
+    private MaterialDialog mResultDialog;
     private LinearLayout mPlaceholderView;
     private CursorAdapter mAutocompleteAdapter;
     private boolean mIsLoadingNote;
@@ -362,7 +384,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
         listener = (new Function1() {
             public Object invoke(Object var1) {
-                this.invoke(((Number)var1).intValue());
+                this.invoke(((Number) var1).intValue());
                 return Unit.INSTANCE;
             }
 
@@ -527,7 +549,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         requireContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
         colorItemView.setBackgroundResource(outValue.resourceId);
 
-        int viewSize  = (int) (48 * getResources().getDisplayMetrics().density);
+        int viewSize = (int) (48 * getResources().getDisplayMetrics().density);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewSize, viewSize);
         colorItemView.setLayoutParams(params);
         colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
@@ -587,13 +609,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             case R.id.menu_share:
                 shareNote();
                 return true;
-            case R.id.menu_import:
-                // todo
-                showNotAvailable();
-                return true;
             case R.id.menu_export:
-                // todo
-                showNotAvailable();
+                if (PermissionUtils.requestPermissions(getActivity()))
+                    showExportDialog();
                 return true;
             case R.id.menu_trash:
                 if (!isAdded()) {
@@ -627,7 +645,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
             MenuItem photoItem = menu.findItem(R.id.menu_photos);
             MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
-            MenuItem importItem = menu.findItem(R.id.menu_import);
             MenuItem exportItem = menu.findItem(R.id.menu_export);
             MenuItem colorItem = menu.findItem(R.id.menu_color);
             ImageView colorItemView = (ImageView) colorItem.getActionView();
@@ -648,7 +665,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 sheetItem.setEnabled(false);
                 photoItem.setEnabled(false);
                 audioItem.setEnabled(false);
-                importItem.setEnabled(false);
                 exportItem.setEnabled(false);
                 sheetItem.setEnabled(false);
                 photoItem.setEnabled(false);
@@ -673,7 +689,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 sheetItem.setEnabled(true);
                 photoItem.setEnabled(true);
                 audioItem.setEnabled(true);
-                importItem.setEnabled(true);
                 exportItem.setEnabled(true);
                 sheetItem.setEnabled(true);
                 photoItem.setEnabled(true);
@@ -698,12 +713,198 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         super.onPrepareOptionsMenu(menu);
     }
 
-    // todo: remove when all features done
-    private void showNotAvailable() {
-        Toast toast = Toast.makeText(getContext(), getContext().getResources().getString(R.string.feature_error), Toast.LENGTH_SHORT);
+    private void showToast(String message) {
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         TextView v = toast.getView().findViewById(android.R.id.message);
-        if( v != null) v.setGravity(Gravity.CENTER);
+        if (v != null) v.setGravity(Gravity.CENTER);
         toast.show();
+    }
+
+    private void showExportDialog() {
+        if (!isExporting) {
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.export)
+                    .positiveText(R.string.export)
+                    .negativeText(R.string.cancel)
+                    .items(R.array.array_export_modes)
+                    .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+                        if (Arrays.toString(text).contains("Password")) {
+                            if (Arrays.toString(text).contains("Zip") && text.length > 2) {
+                                showPasswordDialog(text);
+                            }
+                        } else if ((Arrays.toString(text).contains("Zip") && text.length > 1) ||
+                                (!Arrays.toString(text).contains("Zip") && text.length > 0)) {
+                            exportNote(text);
+                        }
+                        return true;
+                    }).show();
+        } else {
+            showToast(getContext().getResources().getString(R.string.exporting_error));
+        }
+    }
+
+    private void showPasswordDialog(CharSequence[] modes) {
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.export)
+                .positiveText(R.string.set)
+                .negativeText(R.string.cancel)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                .input(R.string.simperium_hint_password, 0, (dialog, input) -> {
+                    exportZipPassword = input.toString().trim().toCharArray();
+                    exportNote(Arrays.copyOfRange(modes, 0, modes.length - 1));
+                }).show();
+    }
+
+    private void showLoadingDialog() {
+        loadingDialog = new MaterialDialog.Builder(getContext())
+                .title(R.string.export)
+                .content(R.string.exporting)
+                .canceledOnTouchOutside(false)
+                .progress(true, 0)
+                .progressIndeterminateStyle(true).build();
+        loadingDialog.show();
+    }
+
+    private void showResultDialog() {
+        loadingDialog.dismiss();
+        if (!(resultDialogMessage == null)) {
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.export)
+                    .content(resultDialogMessage)
+                    .positiveText(android.R.string.ok)
+                    .show();
+            showToast(getContext().getResources().getString(R.string.path) + ": " + resultDialogPath);
+        } else {
+            getContext().getResources().getString(R.string.feature_error);
+        }
+    }
+
+    private void updateResult(ArrayList<String> succesList, ArrayList<String> errorList, String path) {
+        resultDialogMessage = new StringBuilder();
+        resultDialogPath = path;
+
+        if (errorList.size() == 0 && succesList.size() == 0) {
+            resultDialogMessage = null;
+            return;
+        }
+
+        if (errorList.size() > 0) {
+            resultDialogMessage.append(getContext().getResources().getString(R.string.export_error)).append(": ");
+            for (String i : errorList) {
+                resultDialogMessage.append(i.toLowerCase());
+                if (errorList.indexOf(i) != errorList.size() - 1) {
+                    resultDialogMessage.append(", ");
+                } else if (succesList.size() > 0) {
+                    resultDialogMessage.append("\n\n");
+                }
+            }
+        }
+
+        if (succesList.size() > 0) {
+            resultDialogMessage.append(getContext().getResources().getString(R.string.export_succesful)).append(": ");
+            for (String j : succesList) {
+                resultDialogMessage.append(j.toLowerCase());
+                if (succesList.indexOf(j) != succesList.size() - 1)
+                    resultDialogMessage.append(", ");
+            }
+        }
+    }
+
+    private void exportNote(CharSequence[] modes) {
+        showLoadingDialog();
+        ExportThread thread = new ExportThread(modes);
+        thread.start();
+    }
+
+    private Handler mExportHandler = new Handler(msg -> {
+        if (msg.what == 0)
+            showResultDialog();
+        return true;
+    });
+
+    private class ExportThread extends Thread {
+        CharSequence[] modes;
+
+        private ExportThread(CharSequence[] modes) {
+            this.modes = modes;
+        }
+
+        @Override
+        public void run() {
+            isExporting = true;
+
+            ArrayList<String> successList = new ArrayList<>();
+            ArrayList<String> errorList = new ArrayList<>();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String exportDirPath = preferences.getString(PrefUtils.PREF_EXPORT_DIR, FileUtils.getDefaultDir(getContext()));
+            File dirRoot = new File(exportDirPath);
+            String noteName = mNote.getTitle();
+            if (noteName.equals("")) noteName = "Note - " + mNote.getSimperiumKey();
+            File dirOld = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey());
+            File dirNew = new File(exportDirPath + "/" + noteName);
+            for (CharSequence charSequence : modes) {
+                String mode = charSequence.toString().toLowerCase();
+                switch (mode) {
+                    case "plaintext":
+                        try {
+                            File dirTextNew = new File(dirNew + FileUtils.TEXT_DIR);
+                            FileUtils.createFile(dirTextNew, noteName + ".txt", mContentEditText.getText().toString());
+                            successList.add(mode);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            errorList.add(mode);
+                        }
+                        break;
+                    case "html":
+                        try {
+                            File dirTextNew = new File(dirNew + FileUtils.TEXT_DIR);
+                            FileUtils.createFile(dirTextNew, noteName + ".htm", Html.toHtml(mContentEditText.getText()));
+                            successList.add(mode);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            errorList.add(mode);
+                        }
+                        break;
+                    case "photo":
+                        File dirPhotoOld = new File(dirOld + FileUtils.PHOTOS_DIR);
+                        File dirPhotoNew = new File(dirNew + FileUtils.PHOTOS_DIR);
+                        try {
+                            for (String j : dirPhotoOld.list()) {
+                                FileUtils.copyFile(dirPhotoOld, dirPhotoNew, j);
+                            }
+                            successList.add(mode);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            errorList.add(mode);
+                        }
+                        break;
+                    case "zip":
+                        try {
+                            File file = new File(dirNew + ".zip");
+                            if (file.exists()) file.delete();
+                            if (exportZipPassword != null) {
+                                ZipParameters zipParameters = new ZipParameters();
+                                zipParameters.setEncryptFiles(true);
+                                zipParameters.setEncryptionMethod(EncryptionMethod.AES);
+                                ZipFile zipFile = new ZipFile(file, exportZipPassword);
+                                zipFile.addFolder(dirRoot, zipParameters);
+                            } else {
+                                ZipFile zipFile = new ZipFile(file);
+                                zipFile.addFolder(dirRoot);
+                            }
+                            FileUtils.removeFiles(dirNew);
+                            successList.add(mode);
+                        } catch (ZipException e) {
+                            e.printStackTrace();
+                            errorList.add(mode);
+                        }
+                        break;
+                }
+            }
+            updateResult(successList, errorList, exportDirPath);
+            isExporting = false;
+            mExportHandler.sendEmptyMessage(0);
+        }
     }
 
     private void insertChecklist() {
@@ -978,7 +1179,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     /**
      * Set the note title to be a larger size and bold style.
-     *
+     * <p>
      * Remove all existing spans before applying spans or performance issues will occur.  Since both
      * {@link RelativeSizeSpan} and {@link StyleSpan} inherit from {@link MetricAffectingSpan}, all
      * spans are removed when {@link MetricAffectingSpan} is removed.
@@ -1061,7 +1262,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private String getNoteTagsString() {
         StringBuilder tags = new StringBuilder();
 
-        for (int i= 0; i < mTagChips.getChildCount(); i++) {
+        for (int i = 0; i < mTagChips.getChildCount(); i++) {
             tags.append(((Chip) mTagChips.getChildAt(i)).getText()).append(" ");
         }
 
@@ -1569,12 +1770,12 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private ColorStateList getChipBackgroundColor() {
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_checked}, // checked
-                new int[] {-android.R.attr.state_checked}  // unchecked
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_checked}, // checked
+                new int[]{-android.R.attr.state_checked}  // unchecked
         };
 
-        int[] colors = new int[] {
+        int[] colors = new int[]{
                 ThemeUtils.getColorFromAttribute(requireContext(), R.attr.chipCheckedOnBackgroundColor),
                 ThemeUtils.getColorFromAttribute(requireContext(), R.attr.chipCheckedOffBackgroundColor)
         };

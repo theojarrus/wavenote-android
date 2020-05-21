@@ -67,5 +67,7 @@
     <dimen name="custom_horizontal_space">15dp</dimen>
     <dimen name="custom_icon_size">55dp</dimen>
     <dimen name="custom_pane_size">110dp</dimen>
+    <dimen name="custom_padding_small">10dp</dimen>
+    <dimen name="custom_text_small">10sp</dimen>
 
 </resources>

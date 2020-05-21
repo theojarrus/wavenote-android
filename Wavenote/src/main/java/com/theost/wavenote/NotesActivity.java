@@ -25,8 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -36,12 +34,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.CrashUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
+import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.HtmlCompat;
 import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.StrUtils;
@@ -58,6 +58,7 @@ import com.simperium.client.User;
 
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.io.File;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +68,7 @@ import java.util.Map;
 
 import static com.theost.wavenote.NoteListFragment.TAG_PREFIX;
 import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
+import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 import static com.theost.wavenote.utils.TagsAdapter.ALL_NOTES_ID;
 import static com.theost.wavenote.utils.TagsAdapter.DEFAULT_ITEM_POSITION;
 import static com.theost.wavenote.utils.TagsAdapter.SETTINGS_ID;
@@ -840,18 +842,15 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
                 return true;
             case R.id.menu_empty_trash:
-                AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
-
-                alert.setTitle(R.string.empty_trash);
-                alert.setMessage(R.string.confirm_empty_trash);
-                alert.setPositiveButton(R.string.yes, (dialog, whichButton) -> {
-                    new EmptyTrashTask(NotesActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    setIconAfterAnimation(item, R.drawable.ic_trash_disabled_24dp, R.string.empty_trash);
-                });
-                alert.setNegativeButton(R.string.no, (dialog, whichButton) -> {
-                    // Do nothing, just closing the dialog
-                });
-                alert.show();
+                new MaterialDialog.Builder(this)
+                        .title(R.string.empty_trash)
+                        .content(R.string.confirm_empty_trash)
+                        .positiveText(R.string.yes)
+                        .negativeText(R.string.no)
+                        .onPositive((dialog, which) -> {
+                            new EmptyTrashTask(NotesActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            setIconAfterAnimation(item, R.drawable.ic_trash_disabled_24dp, R.string.empty_trash);
+                        }).show();
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -1361,6 +1360,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             Bucket.ObjectCursor cursor = query.execute();
 
             while (cursor.moveToNext()) {
+                FileUtils.removeFiles(new File(activity.getCacheDir() + NOTES_DIR + cursor.getSimperiumKey()));
                 localDatabase.removeAllImageData(cursor.getSimperiumKey());
                 cursor.getObject().delete();
             }

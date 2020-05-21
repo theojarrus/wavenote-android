@@ -32,7 +32,6 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.KeywordAdapter;
-import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 
@@ -54,6 +53,8 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private String activeSortType;
     private MenuItem mRemoveItem;
     private MenuItem mSortItem;
+    private int colorEnabled;
+    private int colorDisabled;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,6 +148,11 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     private void createDialogView() {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
+        colorEnabled = ContextCompat.getColor(this, typedValue.resourceId);
+        colorDisabled = ContextCompat.getColor(this, R.color.gray_20);
+
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
         LayoutInflater layout = LayoutInflater.from(this);
         @SuppressLint("InflateParams") View promptsView = layout.inflate(R.layout.add_dialog, null);
@@ -158,10 +164,6 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     private void updateDialog() {
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        int colorEnabled = ContextCompat.getColor(this, typedValue.resourceId);
-        int colorDisabled = ContextCompat.getColor(this, R.color.gray_20);
         final Button addButton = keywordDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         addButton.setEnabled(false);
         addButton.setTextColor(colorDisabled);

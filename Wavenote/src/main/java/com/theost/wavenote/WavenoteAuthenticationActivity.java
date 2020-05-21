@@ -1,15 +1,13 @@
 package com.theost.wavenote;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.WordPressUtils;
 import com.simperium.android.AuthenticationActivity;
@@ -108,7 +106,7 @@ public class WavenoteAuthenticationActivity extends AuthenticationActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         if (savedInstanceState.containsKey(STATE_AUTH_STATE)) {
@@ -121,11 +119,10 @@ public class WavenoteAuthenticationActivity extends AuthenticationActivity {
             return;
         }
 
-        Context context = new ContextThemeWrapper(WavenoteAuthenticationActivity.this, getTheme());
-        new AlertDialog.Builder(context)
-            .setTitle(R.string.simperium_dialog_title_error)
-            .setMessage(message)
-            .setPositiveButton(android.R.string.ok, null)
-            .show();
+        new MaterialDialog.Builder(this)
+                .title(R.string.simperium_dialog_title_error)
+                .content(message)
+                .positiveText(android.R.string.ok)
+                .show();
     }
 }

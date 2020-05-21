@@ -1,11 +1,10 @@
 package com.theost.wavenote;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,13 +21,12 @@ import android.widget.Toast;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.BaseCursorAdapter;
@@ -78,19 +75,19 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchMenuItem.setOnActionExpandListener(
-            new MenuItem.OnActionExpandListener() {
-                @Override
-                public boolean onMenuItemActionCollapse(MenuItem item) {
-                    mIsSearching = false;
-                    return true;
-                }
+                new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        mIsSearching = false;
+                        return true;
+                    }
 
-                @Override
-                public boolean onMenuItemActionExpand(MenuItem item) {
-                    mIsSearching = true;
-                    return true;
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        mIsSearching = true;
+                        return true;
+                    }
                 }
-            }
         );
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         LinearLayout searchEditFrame = searchView.findViewById(R.id.search_edit_frame);
@@ -100,34 +97,34 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
         @SuppressWarnings("ResourceType")
         String hintHexColor = getString(R.color.text_title_disabled).replace("ff", "");
         searchView.setQueryHint(
-            HtmlCompat.fromHtml(
-                String.format(
-                    "<font color=\"%s\">%s</font>",
-                    hintHexColor,
-                    getString(R.string.search_tags_hint)
+                HtmlCompat.fromHtml(
+                        String.format(
+                                "<font color=\"%s\">%s</font>",
+                                hintHexColor,
+                                getString(R.string.search_tags_hint)
+                        )
                 )
-            )
         );
 
         searchView.setOnQueryTextListener(
-            new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextChange(String query) {
-                    if (mSearchMenuItem.isActionViewExpanded()) {
-                        mSearchQuery = query;
-                        refreshTagsSearch();
-                        mTagsList.scrollToPosition(0);
-                        checkEmptyList();
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextChange(String query) {
+                        if (mSearchMenuItem.isActionViewExpanded()) {
+                            mSearchQuery = query;
+                            refreshTagsSearch();
+                            mTagsList.scrollToPosition(0);
+                            checkEmptyList();
+                        }
+
+                        return true;
                     }
 
-                    return true;
+                    @Override
+                    public boolean onQueryTextSubmit(String queryText) {
+                        return true;
+                    }
                 }
-
-                @Override
-                public boolean onQueryTextSubmit(String queryText) {
-                    return true;
-                }
-            }
         );
 
         searchView.setOnCloseListener(
@@ -217,9 +214,9 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
 
     protected void refreshTagsSearch() {
         Query<Tag> tags = Tag.all(mTagsBucket)
-            .where(NAME_PROPERTY, Query.ComparisonType.LIKE, "%" + mSearchQuery + "%")
-            .orderByKey().include(Tag.NOTE_COUNT_INDEX_NAME)
-            .reorder();
+                .where(NAME_PROPERTY, Query.ComparisonType.LIKE, "%" + mSearchQuery + "%")
+                .orderByKey().include(Tag.NOTE_COUNT_INDEX_NAME)
+                .reorder();
         Bucket.ObjectCursor<Tag> cursor = tags.execute();
         mTagsAdapter.swapCursor(cursor);
     }
@@ -332,14 +329,13 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private TextView tagTitle;
             private TextView tagCountTextView;
-            private ImageButton deleteButton;
 
             private ViewHolder(View itemView) {
                 super(itemView);
 
                 tagTitle = itemView.findViewById(R.id.tag_name);
                 tagCountTextView = itemView.findViewById(R.id.tag_count);
-                deleteButton = itemView.findViewById(R.id.tag_trash);
+                ImageButton deleteButton = itemView.findViewById(R.id.tag_trash);
 
                 deleteButton.setOnClickListener(view -> {
                     if (!isAdded() || !hasItem(getAdapterPosition())) {
@@ -351,14 +347,13 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                     if (tagCount == 0) {
                         deleteTag(tag);
                     } else if (tagCount > 0) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.Dialog));
-                        alert.setTitle(R.string.delete_tag);
-                        alert.setMessage(getString(R.string.confirm_delete_tag));
-                        alert.setPositiveButton(R.string.yes, (dialog, whichButton) -> deleteTag(tag));
-                        alert.setNegativeButton(R.string.no, (dialog, whichButton) -> {
-                            // Do nothing, just closing the dialog
-                        });
-                        alert.show();
+                        new MaterialDialog.Builder(getContext())
+                                .title(R.string.delete_tag)
+                                .content(R.string.confirm_delete_tag)
+                                .positiveText(R.string.yes)
+                                .negativeText(R.string.no)
+                                .onPositive((dialog, which) -> deleteTag(tag))
+                                .show();
                     }
                 });
                 deleteButton.setOnLongClickListener(v -> {
@@ -378,29 +373,20 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                 if (!isAdded() || !hasItem(getAdapterPosition())) {
                     return;
                 }
-
-                final AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.Dialog));
-                @SuppressLint("InflateParams") LinearLayout alertView = (LinearLayout) requireActivity().getLayoutInflater().inflate(R.layout.edit_tag, null);
-
                 final Tag tag = ((Bucket.ObjectCursor<Tag>) getItem(getAdapterPosition())).getObject();
-
-                final EditText tagNameEditText = alertView.findViewById(R.id.tag_name_edit);
-                tagNameEditText.setText(tag.getName());
-                tagNameEditText.setSelection(tagNameEditText.length());
-                alert.setView(alertView);
-                alert.setTitle(R.string.rename_tag);
-                alert.setPositiveButton(R.string.save, (dialog, whichButton) -> {
-                    String value = tagNameEditText.getText().toString().trim();
-                    try {
-                        tag.renameTo(value, mNotesBucket);
-                    } catch (BucketObjectNameInvalid e) {
-                        android.util.Log.e(Wavenote.TAG, "Unable to rename tag", e);
-                    }
-                });
-                alert.setNegativeButton(R.string.cancel, (dialog, whichButton) -> {
-                    // Do nothing
-                });
-                alert.show();
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.rename_tag)
+                        .positiveText(R.string.save)
+                        .negativeText(R.string.cancel)
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input(R.string.tag_name, 0, (dialog, input) -> {
+                            String value = input.toString().trim();
+                            try {
+                                tag.renameTo(value, mNotesBucket);
+                            } catch (BucketObjectNameInvalid e) {
+                                android.util.Log.e(Wavenote.TAG, "Unable to rename tag", e);
+                            }
+                        }).show();
             }
 
             private void deleteTag(Tag tag) {
@@ -424,7 +410,7 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, Cursor cursor) {
-            Tag tag = ((Bucket.ObjectCursor<Tag>)cursor).getObject();
+            Tag tag = ((Bucket.ObjectCursor<Tag>) cursor).getObject();
             holder.tagTitle.setText(tag.getName());
             final int tagCount = mNotesBucket.query().where("tags", Query.ComparisonType.EQUAL_TO, tag.getName()).count();
 

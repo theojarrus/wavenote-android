@@ -24,12 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
+import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
+import static com.theost.wavenote.utils.FileUtils.PHOTOS_DIR;
 
 public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     private static final String TAG = InfoBottomSheetDialog.class.getSimpleName();
-    private static final String CACHE_NOTES_DIR = "/Notes/";
-    private static final String CACHE_PHOTOS_DIR = "/Photos/";
     private static final String FILENAME_PATERN = "/photo_%d.jpg";
     private static final int CAMERA_REQUEST = 0;
     private static final int FILE_REQUEST = 1;
@@ -133,6 +133,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         try {
             return MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -141,7 +142,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
     private File getFile() {
         File file;
         int fileId = 0;
-        File directory = new File(getContext().getCacheDir() + CACHE_NOTES_DIR + noteId + CACHE_PHOTOS_DIR);
+        File directory = new File(getContext().getCacheDir() + NOTES_DIR + noteId + PHOTOS_DIR);
         if (!directory.exists()) directory.mkdirs();
         while (true) {
             fileId += 1;

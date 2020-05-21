@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: com.afollestad.material-dialogs:commons:0.9.0.1@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/224b855e6d8c74a8167660a36b88982b/jetified-commons-0.9.0.1/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/224b855e6d8c74a8167660a36b88982b/jetified-commons-0.9.0.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/224b855e6d8c74a8167660a36b88982b/jetified-commons-0.9.0.1/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.afollestad.material-dialogs/commons/0.9.0.1/176373d2367527625644af1b9d231368108e29c5/commons-0.9.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.afollestad.material-dialogs/commons/0.9.0.1/32a93443c415c71a36f0eaef7c0e8a19669f29f8/commons-0.9.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

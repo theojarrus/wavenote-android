@@ -144,7 +144,6 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
         MenuItem publishItem = menu.findItem(R.id.menu_publish);
         MenuItem copyLinkItem = menu.findItem(R.id.menu_copy);
         MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
-        MenuItem importItem = menu.findItem(R.id.menu_import);
         MenuItem exportItem = menu.findItem(R.id.menu_export);
         MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
         MenuItem photoItem = menu.findItem(R.id.menu_photos);
@@ -161,7 +160,6 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
         publishItem.setEnabled(false);
         copyLinkItem.setEnabled(false);
         markdownItem.setEnabled(false);
-        importItem.setEnabled(false);
         exportItem.setEnabled(false);
         sheetItem.setEnabled(false);
         photoItem.setEnabled(false);

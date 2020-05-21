@@ -83,6 +83,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/export">
+        <Preference
+            android:title="@string/directory"
+            android:key="pref_key_export_dir"
+            android:summary="@string/path"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/account">
         <Preference
             android:key="pref_key_authenticate"/>

@@ -1,26 +1,37 @@
 package com.theost.wavenote;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
+import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
+import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.PermissionUtils;
+import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 import org.wordpress.passcodelock.PasscodePreferenceFragmentCompat;
 
+import java.io.File;
+
 import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
 
-public class PreferencesActivity extends ThemedAppCompatActivity {
+public class PreferencesActivity extends ThemedAppCompatActivity implements FolderChooserDialog.FolderCallback {
     private static final String EXTRA_THEME_CHANGED = "themeChanged";
 
     private PasscodePreferenceFragmentCompat mPasscodePreferenceFragment;
     private PreferencesFragment mPreferencesFragment;
+    private SharedPreferences preferences;
+    private Preference mDirectoryPreference;
     private boolean mIsThemeChanged;
 
     @Override
@@ -76,10 +87,20 @@ public class PreferencesActivity extends ThemedAppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        Preference togglePref =
-                mPreferencesFragment.findPreference(getString(R.string.pref_key_passcode_toggle));
-        Preference changePref =
-                mPreferencesFragment.findPreference(getString(R.string.pref_key_change_passcode));
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mDirectoryPreference = mPreferencesFragment.findPreference(PrefUtils.PREF_EXPORT_DIR);
+        mDirectoryPreference.setOnPreferenceClickListener(preference -> {
+            if (PermissionUtils.requestPermissions(this)) {
+                showFolderDialog();
+                updateExportDir();
+            }
+            return true;
+        });
+
+        updateExportDir();
+
+        Preference togglePref = mPreferencesFragment.findPreference(getString(R.string.pref_key_passcode_toggle));
+        Preference changePref = mPreferencesFragment.findPreference(getString(R.string.pref_key_change_passcode));
 
         if (togglePref != null && changePref != null) {
             mPasscodePreferenceFragment.setPreferences(togglePref, changePref);
@@ -116,4 +137,24 @@ public class PreferencesActivity extends ThemedAppCompatActivity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
     }
+
+    @Override
+    public void onFolderSelection(@NonNull FolderChooserDialog dialog, @NonNull File folder) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PrefUtils.PREF_EXPORT_DIR, folder.getAbsolutePath());
+        editor.apply();
+        updateExportDir();
+    }
+
+    private void showFolderDialog() {
+        FolderChooserDialog.Builder builder = new FolderChooserDialog.Builder(this)
+                .chooseButton(R.string.choose_folder)
+                .tag("optional-identifier");
+        builder.show();
+    }
+
+    private void updateExportDir() {
+        mDirectoryPreference.setSummary(preferences.getString(PrefUtils.PREF_EXPORT_DIR, FileUtils.getDefaultDir(this)));
+    }
+
 }

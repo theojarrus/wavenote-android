@@ -16,202 +16,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="-1dp"
-            android:background="@color/dividerColor" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/custom_vertical_space"
-            android:layout_marginBottom="@dimen/custom_vertical_space"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/custom_horizontal_space"
-            android:paddingRight="@dimen/custom_horizontal_space"
-            android:baselineAligned="false">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <ToggleButton
+                android:id="@+id/metronome"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/custom_icon_size"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:background="@null"
+                android:textColor="@drawable/toggle_selector"
+                android:textOff="@string/metronome_en"
+                android:textOn="@string/metronome_en" />
 
-                <Switch
-                    style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/blue"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/metronome"
-                    android:textAlignment="center" />
-
-                <Switch
-                    style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/blue"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/countdown"
-                    android:textAlignment="center" />
-
-                <Switch
-                    style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/blue"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/mute"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <View
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="-1dp"
+                android:background="@color/dividerColor" />
+
+            <ToggleButton
+                android:id="@+id/countdown"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/custom_icon_size"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/bpm_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/metronome_bar"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/metronome_bpm"
-                        style="@style/KeywordTextInputLayoutStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@+id/metronome_tap"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:maxLength="3"
-                            android:text="@string/passcodelock_numpad_0" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Button
-                        android:id="@+id/metronome_tap"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/custom_horizontal_space"
-                        android:insetLeft="0dp"
-                        android:insetTop="6dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:text="@string/tap"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@+id/metronome_bpm"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <SeekBar
-                    android:id="@+id/metronome_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/custom_vertical_space"
-                    android:layout_marginBottom="0dp"
-                    android:thumbTint="@color/blue"
-                    app:layout_constraintBottom_toTopOf="@+id/beat_layout"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/bpm_layout" />
-
-                <LinearLayout
-                    android:id="@+id/beat_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/metronome_bar">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/TypeKeywordInputLayoutStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/beat_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:maxLength="2"
-                            android:text="@string/passcodelock_numpad_1"
-                            android:textColor="@color/blue"
-                            tools:ignore="LabelFor" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/beat_splitter"
-                        android:textSize="20sp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/TypeKeywordInputLayoutStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/beat_2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:maxLength="2"
-                            android:text="@string/passcodelock_numpad_4"
-                            android:textColor="@color/blue"
-                            tools:ignore="LabelFor"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:background="@null"
+                android:textColor="@drawable/toggle_selector"
+                android:textOff="@string/countdown_en"
+                android:textOn="@string/countdown_en" />
 
         </LinearLayout>
 
@@ -262,6 +96,22 @@
                     android:layout_marginTop="-1dp"
                     android:background="@color/dividerColor" />
 
+                <ToggleButton
+                    android:id="@+id/mix"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textColor="@drawable/toggle_selector"
+                    android:textOff="@string/mix"
+                    android:textOn="@string/mix" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
                 <ImageButton
                     android:id="@+id/play"
                     android:layout_width="0dp"
@@ -270,15 +120,6 @@
                     android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/play"
                     android:src="@drawable/ma_play_24dp" />
-
-                <ImageButton
-                    android:id="@+id/pause"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/custom_icon_size"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:contentDescription="@string/pause"
-                    android:src="@drawable/ma_pause_24dp" />
 
                 <ImageButton
                     android:id="@+id/stop"
@@ -301,8 +142,6 @@
                     android:layout_height="@dimen/custom_icon_size"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:contentDescription="@string/stop"
-                    android:src="@drawable/ma_stop_24dp"
                     android:textColor="@drawable/toggle_selector"
                     android:textOff="@string/loop"
                     android:textOn="@string/loop" />
@@ -328,7 +167,7 @@
                     android:layout_width="@dimen/custom_icon_size"
                     android:layout_height="@dimen/custom_icon_size"
                     android:background="@null"
-                    android:contentDescription="@string/menu_export"
+                    android:contentDescription="@string/export"
                     android:src="@drawable/ma_save_24dp" />
 
             </LinearLayout>
@@ -344,8 +183,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/custom_vertical_space"
-            android:layout_marginBottom="@dimen/custom_vertical_space"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -360,22 +197,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/audio_tracks"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/audio_item" />
-
                     <LinearLayout
                         android:id="@+id/empty_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:visibility="gone"
-                        tools:ignore="UseCompoundDrawables">
+                        android:visibility="visible"
+                        tools:ignore="UseCompoundDrawables,UselessParent">
 
                         <ImageView
                             android:id="@+id/image"
@@ -410,17 +239,67 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/custom_padding_small">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/m_audiotrack_black_18dp"
+                    android:gravity="center"
+                    android:text="@string/default_bpm"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_tune_and_beat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/custom_padding_small"
+                    android:paddingEnd="@dimen/custom_padding_small"
+                    android:text="@string/default_beat"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_adjust"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/adjust_record"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:gravity="center">
 
             <ImageButton
-                android:id="@+id/record_cancel"
+                android:id="@+id/add_track"
                 android:layout_width="@dimen/custom_icon_size"
                 android:layout_height="@dimen/custom_icon_size"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/cancel"
-                android:src="@drawable/av_close"
-                android:visibility="invisible" />
+                android:src="@drawable/av_add_track_24dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/record"
@@ -435,14 +314,10 @@
                 app:pressedTranslationZ="12dp"
                 app:tint="?attr/fabIconColor" />
 
-            <TextView
-                android:id="@+id/record_time"
+            <View
+                android:id="@+id/invisible"
                 android:layout_width="@dimen/custom_icon_size"
-                android:layout_height="@dimen/custom_icon_size"
-                android:gravity="center"
-                android:text="@string/null_m_s"
-                android:textSize="16sp"
-                android:visibility="invisible" />
+                android:layout_height="@dimen/custom_icon_size" />
 
         </LinearLayout>
 

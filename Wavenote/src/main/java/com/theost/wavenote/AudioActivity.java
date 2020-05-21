@@ -35,18 +35,18 @@ public class AudioActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        RecyclerView recyclerView = findViewById(R.id.audio_tracks);
+        //RecyclerView recyclerView = findViewById(R.id.audio_tracks);
         LinearLayout emptyView = findViewById(R.id.empty_view);
 
         // if data == null
-        recyclerView.setVisibility(View.GONE);
+        //recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.VISIBLE);
 
-        AutoCompleteTextView mBeatAccentTextView = findViewById(R.id.beat_1);
-        AutoCompleteTextView mBeatCountTextView = findViewById(R.id.beat_2);
+        //AutoCompleteTextView mBeatAccentTextView = findViewById(R.id.beat_1);
+        //AutoCompleteTextView mBeatCountTextView = findViewById(R.id.beat_2);
 
-        ViewUtils.disableAutoCompleteTextView(this, mBeatAccentTextView, BEATS);
-        ViewUtils.disableAutoCompleteTextView(this, mBeatCountTextView, BEATS);
+        //ViewUtils.disableAutoCompleteTextView(this, mBeatAccentTextView, BEATS);
+        //ViewUtils.disableAutoCompleteTextView(this, mBeatCountTextView, BEATS);
 
     }
 
@@ -61,10 +61,10 @@ public class AudioActivity extends ThemedAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_select:
+            case R.id.menu_remove:
                 // todo
                 return true;
-            case R.id.menu_remove:
+            case R.id.menu_import:
                 // todo
                 return true;
             case android.R.id.home:

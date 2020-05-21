@@ -2,22 +2,19 @@ package com.theost.wavenote;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Preferences;
 import com.theost.wavenote.utils.CrashUtils;
@@ -38,6 +35,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         Simperium.OnUserCreatedListener {
 
     private static final String WEB_APP_URL = "https://app.simplenote.com";
+    private static final int REQUEST_DIR = 0;
 
     private Bucket<Preferences> mPreferencesBucket;
 
@@ -134,9 +132,9 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         mPreferencesBucket.stop();
     }
 
-    private DialogInterface.OnClickListener logOutClickListener = (dialogInterface, i) -> logOut();
+    private MaterialDialog.SingleButtonCallback logOutClickListener = (dialogInterface, i) -> logOut();
 
-    private DialogInterface.OnClickListener loadWebAppClickListener = (dialogInterface, i) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WEB_APP_URL)));
+    private MaterialDialog.SingleButtonCallback loadWebAppClickListener = (dialogInterface, i) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WEB_APP_URL)));
 
     private boolean hasUnsyncedNotes() {
         Wavenote application = (Wavenote) getActivity().getApplication();
@@ -148,7 +146,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
                 return true;
             }
         }
-
         return false;
     }
 
@@ -224,12 +221,14 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
 
             // Safety first! Check if any notes are unsynced and warn the user if so.
             if (hasUnsyncedNotes) {
-                new AlertDialog.Builder(new ContextThemeWrapper(fragment.requireContext(), R.style.Dialog))
-                        .setTitle(R.string.unsynced_notes)
-                        .setMessage(R.string.unsynced_notes_message)
-                        .setPositiveButton(R.string.delete_notes, fragment.logOutClickListener)
-                        .setNeutralButton(R.string.visit_web_app, fragment.loadWebAppClickListener)
-                        .setNegativeButton(R.string.cancel, null)
+                new MaterialDialog.Builder(fragment.getContext())
+                        .title(R.string.unsynced_notes)
+                        .content(R.string.unsynced_notes_message)
+                        .positiveText(R.string.delete_notes)
+                        .neutralText(R.string.visit_web_app)
+                        .negativeText(R.string.cancel)
+                        .onPositive(fragment.logOutClickListener)
+                        .onNeutral(fragment.loadWebAppClickListener)
                         .show();
             } else {
                 fragment.logOut();

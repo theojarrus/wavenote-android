@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -32,7 +31,6 @@ import com.simperium.client.Bucket;
 import com.simperium.client.Bucket.ObjectCursor;
 import com.simperium.client.Query;
 import com.simperium.client.User;
-import com.theost.wavenote.utils.WidgetUtils;
 
 public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
     private AppWidgetManager mWidgetManager;
@@ -101,20 +99,10 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
         builder.setView(layout)
             .setTitle(R.string.select_note)
             .setOnDismissListener(
-                new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        finish();
-                    }
-                }
+                    dialog -> finish()
             )
             .setNegativeButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                }
+                    (dialog, which) -> finish()
             )
             .show();
     }
@@ -164,55 +152,52 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
                     R.color.text_title_disabled);
             contentTextView.setText(snippetSpan);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Get the selected note
-                    Note note = mNotesAdapter.getItem((int)view.getTag());
+            view.setOnClickListener(view1 -> {
+                // Get the selected note
+                Note note = mNotesAdapter.getItem((int) view1.getTag());
 
-                    // Store link between note and widget in SharedPreferences
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    preferences.edit().putString(PrefUtils.PREF_NOTE_WIDGET_NOTE + mAppWidgetId, note.getSimperiumKey()).apply();
+                // Store link between note and widget in SharedPreferences
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                preferences.edit().putString(PrefUtils.PREF_NOTE_WIDGET_NOTE + mAppWidgetId, note.getSimperiumKey()).apply();
 
-                    // Prepare bundle for NoteEditorActivity
-                    Bundle arguments = new Bundle();
-                    arguments.putBoolean(NoteEditorFragment.ARG_IS_FROM_WIDGET, true);
-                    arguments.putString(NoteEditorFragment.ARG_ITEM_ID, note.getSimperiumKey());
-                    arguments.putBoolean(NoteEditorFragment.ARG_MARKDOWN_ENABLED, note.isMarkdownEnabled());
-                    arguments.putBoolean(NoteEditorFragment.ARG_PREVIEW_ENABLED, note.isPreviewEnabled());
+                // Prepare bundle for NoteEditorActivity
+                Bundle arguments = new Bundle();
+                arguments.putBoolean(NoteEditorFragment.ARG_IS_FROM_WIDGET, true);
+                arguments.putString(NoteEditorFragment.ARG_ITEM_ID, note.getSimperiumKey());
+                arguments.putBoolean(NoteEditorFragment.ARG_MARKDOWN_ENABLED, note.isMarkdownEnabled());
+                arguments.putBoolean(NoteEditorFragment.ARG_PREVIEW_ENABLED, note.isPreviewEnabled());
 
-                    // Create intent to navigate to selected note on widget click
-                    Intent intent = new Intent(context, NoteEditorActivity.class);
-                    intent.putExtras(arguments);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, mAppWidgetId, intent, 0);
+                // Create intent to navigate to selected note on widget click
+                Intent intent = new Intent(context, NoteEditorActivity.class);
+                intent.putExtras(arguments);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, mAppWidgetId, intent, 0);
 
-                    // Remove title from content
-                    String title = note.getTitle();
-                    String contentWithoutTitle = note.getContent().toString().replace(title, "");
-                    int indexOfNewline = contentWithoutTitle.indexOf("\n") + 1;
-                    String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
+                // Remove title from content
+                String title1 = note.getTitle();
+                String contentWithoutTitle = note.getContent().toString().replace(title1, "");
+                int indexOfNewline = contentWithoutTitle.indexOf("\n") + 1;
+                String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
 
-                    // Set widget content
-                    mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-                    mRemoteViews.setTextViewText(R.id.widget_text, title);
-                    mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    mRemoteViews.setTextViewText(R.id.widget_text_title, title);
-                    mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
-                    contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
-                            contentSpan,
-                            ChecklistUtils.CHECKLIST_REGEX
-                    );
-                    mRemoteViews.setTextViewText(R.id.widget_text_content, contentSpan);
-                    mWidgetManager.updateAppWidget(mAppWidgetId, mRemoteViews);
+                // Set widget content
+                mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
+                mRemoteViews.setTextViewText(R.id.widget_text, title1);
+                mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                mRemoteViews.setTextViewText(R.id.widget_text_title, title1);
+                mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
+                contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
+                        contentSpan,
+                        ChecklistUtils.CHECKLIST_REGEX
+                );
+                mRemoteViews.setTextViewText(R.id.widget_text_content, contentSpan);
+                mWidgetManager.updateAppWidget(mAppWidgetId, mRemoteViews);
 
-                    // Set the result as successful
-                    Intent resultValue = new Intent();
-                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-                    setResult(RESULT_OK, resultValue);
-                    finish();
-                }
+                // Set the result as successful
+                Intent resultValue = new Intent();
+                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                setResult(RESULT_OK, resultValue);
+                finish();
             });
         }
     }

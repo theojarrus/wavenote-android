@@ -53,6 +53,9 @@ public class PrefUtils {
     // boolean, set on first launch
     public static final String PREF_FIRST_LAUNCH = "pref_key_first_launch";
 
+    // boolean, determines export dir path
+    public static final String PREF_EXPORT_DIR = "pref_key_export_dir";
+
     // boolean, set to require an account to access the app
     public static final String PREF_ACCOUNT_REQUIRED = "pref_key_account_required";
 

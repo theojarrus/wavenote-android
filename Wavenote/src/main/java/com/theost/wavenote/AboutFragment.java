@@ -21,7 +21,6 @@ import java.util.Locale;
 
 public class AboutFragment extends Fragment {
 
-    private static final String DEVELOPER_TELEGRAM_URL = "https://t.me/fedorjedi";
     private static final String DEVELOPER_INSTAGRAM_URL = "https://instagram.com/fedor.jedi";
     private static final String DEVELOPER_PATREON_URL = "https://patreon.com/theojedi";
     private static final String WAVENOTE_GITHUB_URL = "https://github.com/fedor-jedi/wavenote-android";
@@ -37,7 +36,6 @@ public class AboutFragment extends Fragment {
         TextView version = view.findViewById(R.id.about_version);
         TextView copyright = view.findViewById(R.id.about_copyright);
         ImageView logoImageView = view.findViewById(R.id.about_logo);
-        View telegram = view.findViewById(R.id.about_telegram);
         View instagram = view.findViewById(R.id.about_instagram);
         View playStore = view.findViewById(R.id.about_play_store);
         View patreon = view.findViewById(R.id.about_donate);
@@ -49,14 +47,6 @@ public class AboutFragment extends Fragment {
         copyright.setText(String.format(Locale.getDefault(), "© %1d Theo St.", thisYear));
 
         logoImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wavenote_24dp));
-
-        telegram.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_TELEGRAM_URL)));
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-            }
-        });
 
         instagram.setOnClickListener(v -> {
             try {

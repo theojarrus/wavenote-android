@@ -23,14 +23,18 @@ import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DateTimeUtils;
 import com.theost.wavenote.utils.DrawableUtils;
+import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.PhotoAdapter;
 import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 
 public class PhotosActivity extends ThemedAppCompatActivity {
 
@@ -195,17 +199,29 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     public boolean removePhoto(String id) {
         if (adapter.getItemCount() == 0) return false;
-        boolean isRemoved;
+        boolean isRemovedFile = false;
+        boolean isRemoved = false;
         if (id == null) {
-            isRemoved = localDatabase.removeAllImageData(noteId);
-            if (isRemoved) {
-                adapter.clearData();
-                checkEmptyView();
+            isRemovedFile = FileUtils.removeFiles(new File(this.getCacheDir() + NOTES_DIR + noteId));
+            if (isRemovedFile) {
+                isRemoved = localDatabase.removeAllImageData(noteId);
+                if (isRemoved) {
+                    adapter.clearData();
+                    checkEmptyView();
+                }
             }
         } else {
-            isRemoved = localDatabase.removeImageData(id);
+            String path = localDatabase.getImageUri(id);
+            if (path != null)
+                isRemovedFile = FileUtils.removeFile(path);
+            if (isRemovedFile) {
+                isRemoved = localDatabase.removeImageData(id);
+            }
         }
-        if (!isRemoved) {
+        if (!isRemovedFile) {
+            showError(this.getResources().getString(R.string.file_error));
+            return false;
+        } else if (!isRemoved) {
             showError(this.getResources().getString(R.string.database_error));
             return false;
         }

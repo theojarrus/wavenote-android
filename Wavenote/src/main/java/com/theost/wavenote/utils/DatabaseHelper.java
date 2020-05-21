@@ -1,5 +1,6 @@
 package com.theost.wavenote.utils;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -53,11 +54,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor result;
         try {
-            result = db.rawQuery("SELECT * FROM " + NAME_IMAGES_TABLE + " WHERE NOTE_ID='" + noteId + "'", null);
+            result = db.rawQuery("SELECT * FROM " + NAME_IMAGES_TABLE + " WHERE " + COL_1_IMAGES + "='" + noteId + "'", null);
         } catch (Exception e) {
+            e.printStackTrace();
             result = null;
         }
         return result;
+    }
+
+    @SuppressLint("Recycle")
+    public String getImageUri(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor result;
+        String uri;
+        try {
+            result = db.rawQuery("SELECT " + COL_3_IMAGES + " FROM " + NAME_IMAGES_TABLE + " WHERE " + COL_0 + "='" + id + "'", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = null;
+        }
+        if (result.getCount() != 0) {
+            result.moveToFirst();
+            return result.getString(0);
+        }
+        return null;
     }
 
     public boolean renameImageData(String id, String name) {

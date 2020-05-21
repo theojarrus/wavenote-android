@@ -108,7 +108,7 @@
 
     </LinearLayout>
 
-    <com.theost.wavenote.views.PhotoView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photo_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

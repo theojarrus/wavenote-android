@@ -87,7 +87,7 @@ Language: ru
     <string name="note_not_found">Уведомление не найдено</string>
     <string name="loading_note">Загрузка уведомления…</string>
     <string name="passcode_summary">Нельзя делать снимки экрана, если включена блокировка с помощью пароля</string>
-    <string name="all_notes">Все примечания</string>
+    <string name="all_notes">Все заметки</string>
     <string name="appearance">Внешний вид</string>
     <string name="sort_tags_alphabetically">Сортировать по алфавиту</string>
     <string name="empty_note_post">Невозможно опубликовать пустую заметку.</string>
@@ -127,7 +127,7 @@ Language: ru
     <string name="no_browser_available">\"Не удалось открыть веб-сайт. Браузер недоступен\".</string>
     <string name="rate_us">Оцените приложение</string>
     <string name="about_play_store">Магазин Google Play</string>
-    <string name="about">О приложении Simplenote</string>
+    <string name="about">О приложении Wavenote</string>
     <string name="markdown_show">Показать Markdown</string>
     <string name="markdown_hide">Скрыть Markdown</string>
     <string name="markdown">Markdown</string>
@@ -217,7 +217,7 @@ Language: ru
     <string name="audio_tracks">Аудио</string>
     <string name="photos">Фото</string>
     <string name="text_color">Цвет текста</string>
-    <string name="menu_export">Экспорт</string>
+    <string name="export">Экспорт</string>
     <string name="import_note">Импорт</string>
     <string name="text_style">Стиль</string>
     <string name="text_bold">Жирный</string>
@@ -248,8 +248,17 @@ Language: ru
     <string name="android_error">Устаревшая версия Android</string>
     <string name="add_photo_storage">Файлы</string>
     <string name="add_keyword">Добавить ключевое слово</string>
-    <string name="select_all">Выделить всё</string>
     <string name="feature_error">Функция будет доступна в следующей версии</string>
-    <string name="countdown">Отсчёт</string>
     <string name="mute">Заглушить</string>
+    <string name="directory">Папка</string>
+    <string name="path">Путь</string>
+    <string name="choose_folder">Выбрать папку</string>
+    <string name="dialog_success">Успешно</string>
+    <string name="dialog_failure">Ошибка</string>
+    <string name="export_error">Возникли проблемы с экспортом</string>
+    <string name="exporting_error">Подождите немного, уже экспортируется</string>
+    <string name="export_succesful">Успешно экспортировано</string>
+    <string name="exporting">Экспорт… Это может занять некоторое время</string>
+    <string name="adjust_record">Калибровать</string>
+    <string name="set">Применить</string>
 </resources>

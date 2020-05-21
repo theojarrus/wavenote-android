@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">Wavenote</string>
     <string name="app_launcher_name" translatable="false">@string/app_name</string>
@@ -56,6 +56,7 @@
     <string name="characters">Characters</string>
     <string name="logo">Logo</string>
     <string name="copy_link">Copy Link</string>
+    <string name="copy" tools:ignore="PrivateResource">Copy</string>
     <string name="more_options">More Options</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
@@ -68,6 +69,11 @@
     <string name="detect_links">Detect links</string>
     <string name="detect_chords">Detect chords</string>
     <string name="detect_keywords">Detect keywords</string>
+
+
+    <!-- Files -->
+    <string name="directory">Directory</string>
+    <string name="path">Path</string>
 
     <!-- Undo -->
     <string name="undo">Undo</string>
@@ -259,8 +265,9 @@
     <string name="audio_tracks">Audio</string>
     <string name="photos">Photos</string>
     <string name="text_color">Text Color</string>
-    <string name="menu_export">Export</string>
+    <string name="export">Export</string>
     <string name="import_note">Import</string>
+    <string name="choose_folder">Choose folder</string>
 
     <!-- Color Sheet -->
     <string name="text_style">Style</string>
@@ -271,7 +278,7 @@
     <string name="text_strikethrough">Strikethrough</string>
     <string name="text_code">Code</string>
 
-    <!-- Syntax dictionary -->
+    <!-- Musical -->
     <string name="dictionary">Dictionary</string>
     <string name="dictionary_summary">Edit keywords list</string>
     <string name="add">Add</string>
@@ -281,8 +288,8 @@
     <string name="remove_all">Remove All</string>
     <string name="name">Name</string>
     <string name="chords">Chords</string>
-    <string name="metronome">Metronome</string>
-    <string name="countdown">Countdown</string>
+    <string name="metronome_en">Metronome</string>
+    <string name="countdown_en">Countdown</string>
     <string name="mute">Mute</string>
     <string name="guitar" translatable="false">Guitar</string>
     <string name="piano" translatable="false">Piano</string>
@@ -295,6 +302,12 @@
     <string name="add_photo">Add photo</string>
     <string name="photo_error">Couldn\'t load image</string>
     <string name="file_error">Invalid file</string>
+    <string name="dialog_success">Success</string>
+    <string name="dialog_failure">Failed</string>
+    <string name="export_error">Some problems with exporting</string>
+    <string name="exporting_error">Wait a bit, already exporting</string>
+    <string name="export_succesful">Successful exported</string>
+    <string name="exporting">Exporting… It could take a some time.</string>
     <string name="feature_error">This feature will be available in the next version</string>
     <string name="database_error">Database request error</string>
     <string name="android_error">Deprecated Android version</string>
@@ -303,11 +316,22 @@
     <string name="play" translatable="false">Play</string>
     <string name="pause" translatable="false">Pause</string>
     <string name="stop" translatable="false">Stop</string>
-    <string name="select_all">Select All</string>
     <string name="beat_splitter" translatable="false">/</string>
     <string name="loop" translatable="false">Loop</string>
-    <string name="null_m_s" translatable="false">0:00</string>
     <string name="tap" translatable="false">Tap</string>
+    <string name="adjust_record">Adjust record</string>
+    <string name="default_beat" translatable="false">C 4/4</string>
+    <string name="default_bpm" translatable="false">= 120</string>
+    <string name="mix" translatable="false">Mix</string>
+    <string name="set">Set</string>
+
+    <string-array name="array_export_modes">
+        <item>Plaintext</item>
+        <item>Html</item>
+        <item>Photo</item>
+        <item>Zip</item>
+        <item>Password</item>
+    </string-array>
 
     <string-array name="array_musical_titles">
         <item>[Intro]</item>
