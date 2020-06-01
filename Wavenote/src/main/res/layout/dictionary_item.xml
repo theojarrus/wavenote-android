@@ -13,7 +13,7 @@
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/KeywordTextInputLayoutStyle"
+        style="@style/WaveStyle.InputLayoutStyle.Outlined"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
@@ -32,7 +32,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/TypeKeywordInputLayoutStyle"
+        style="@style/WaveStyle.BasicAutocompleteLayout.Outlined"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"

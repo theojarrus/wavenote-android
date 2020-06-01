@@ -36,6 +36,11 @@ public class StrUtils {
         return value;
     }
 
+    // check is text empty
+    public static boolean isEmpty(String text) {
+        return text == null || text.trim().isEmpty();
+    }
+
     // exception-less conversion of string to int
     public static int strToInt(final String value) {
         return strToInt(value, 0);
@@ -45,7 +50,7 @@ public class StrUtils {
         if (value == null)
             return defaultInt;
         try {
-            return Integer.valueOf(value);
+            return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             return defaultInt;
         }
@@ -60,7 +65,7 @@ public class StrUtils {
         if (value == null)
             return defaultLong;
         try {
-            return Long.valueOf(value);
+            return Long.parseLong(value);
         } catch (NumberFormatException e) {
             return defaultLong;
         }
@@ -75,7 +80,7 @@ public class StrUtils {
         if (value == null)
             return defaultFloat;
         try {
-            return Float.valueOf(value);
+            return Float.parseFloat(value);
         } catch (NumberFormatException e) {
             return defaultFloat;
         }

@@ -107,8 +107,7 @@ public class CrashUtils implements CrashLoggingDataProvider {
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             return resources.getConfiguration().getLocales().get(0);
-        }
-        else {
+        }else {
             return resources.getConfiguration().locale;
         }
     }

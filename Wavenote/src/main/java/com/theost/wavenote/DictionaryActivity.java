@@ -1,35 +1,33 @@
 package com.theost.wavenote;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
 import com.theost.wavenote.models.Keyword;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.KeywordAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
@@ -43,7 +41,6 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
 
     private final String[] KEYWORD_TYPES = {"Word", "Title"};
     private final String[] SORT_TYPES = {"date", "name", "type"};
-    private androidx.appcompat.app.AlertDialog keywordDialog;
     private KeywordAdapter adapter;
     private List<Keyword> mKeywordList;
     private LinearLayout emptyView;
@@ -83,7 +80,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         mKeywordRecyclerView = findViewById(R.id.keywords_list);
         localDatabase = new DatabaseHelper(this);
 
-        createDialogView();
+        updateColors();
         updateData();
         adapter = new KeywordAdapter(this, mKeywordList);
         mKeywordRecyclerView.setAdapter(adapter);
@@ -143,41 +140,36 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     public void disableDictionaryInputs(EditText editText, AutoCompleteTextView autoCompleteTextView) {
-        ViewUtils.disableEditText(editText);
-        ViewUtils.disableAutoCompleteTextView(this, autoCompleteTextView, KEYWORD_TYPES);
+        ViewUtils.disbaleInput(editText);
+        ViewUtils.disbaleInput(autoCompleteTextView);
+        ViewUtils.updateDropdown(this, autoCompleteTextView, KEYWORD_TYPES);
     }
 
-    private void createDialogView() {
+    private void updateColors() {
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
         colorEnabled = ContextCompat.getColor(this, typedValue.resourceId);
         colorDisabled = ContextCompat.getColor(this, R.color.gray_20);
-
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Dialog));
-        LayoutInflater layout = LayoutInflater.from(this);
-        @SuppressLint("InflateParams") View promptsView = layout.inflate(R.layout.add_dialog, null);
-        builder.setView(promptsView);
-        builder.setTitle(R.string.add_keyword);
-        builder.setPositiveButton(R.string.add, (dialog, whichButton) -> insertKeyword(mAddKeywordEditText.getText().toString()));
-        builder.setNegativeButton(R.string.cancel, (dialog, whichButton) -> {});
-        keywordDialog = builder.create();
     }
 
-    private void updateDialog() {
-        final Button addButton = keywordDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        addButton.setEnabled(false);
-        addButton.setTextColor(colorDisabled);
-        mAddKeywordEditText = keywordDialog.findViewById(R.id.dialog_keyword);
+    private void showDialog() {
+        MaterialDialog keywordDialog = new MaterialDialog.Builder(this)
+                .customView(R.layout.add_dialog, false)
+                .title(R.string.add_keyword)
+                .positiveText(R.string.add)
+                .positiveColor(colorDisabled)
+                .onPositive((dialog, which) -> insertKeyword(mAddKeywordEditText.getText().toString()))
+                .negativeText(R.string.cancel).build();
+        MDButton addButton = keywordDialog.getActionButton(DialogAction.POSITIVE);
+        mAddKeywordEditText = keywordDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddKeywordEditText.setText("");
         mAddKeywordEditText.requestFocus();
         mAddKeywordEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
                 if (mAddKeywordEditText.getText().length() == 0) {
-                    addButton.setEnabled(false);
                     addButton.setTextColor(colorDisabled);
                 } else {
-                    addButton.setEnabled(true);
                     addButton.setTextColor(colorEnabled);
                 }
             }
@@ -190,16 +182,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
-    }
-
-    private void showDialog() {
         keywordDialog.show();
-        updateDialog();
-    }
-
-    private void showError(String error) {
-        Toast toast = Toast.makeText(this, error, Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     private void updateData() {
@@ -217,7 +200,6 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     private void restoreData() {
-        removeKeyword(null);
         String[] resourceWords = this.getResources().getStringArray(R.array.array_musical_words);
         String[] resourceTitles = this.getResources().getStringArray(R.array.array_musical_titles);
         for (String i : resourceWords) localDatabase.insertDictionaryData(i, KEYWORD_TYPES[0]);
@@ -228,9 +210,10 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     private void insertKeyword(String keyword) {
+        if (keyword.equals("")) return;
         boolean isInserted = localDatabase.insertDictionaryData(keyword, KEYWORD_TYPES[0]);
         if (!isInserted) {
-            showError(this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, this.getResources().getString(R.string.database_error));
         }
         updateData();
         sortKeywords(false);
@@ -240,7 +223,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     public boolean renameKeyword(String id, String type) {
         boolean isRenamed = localDatabase.renameDictionaryData(id, type);
         if (!isRenamed) {
-            showError(this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
             return false;
         }
         return true;
@@ -250,7 +233,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         if (adapter.getItemCount() == 0) return false;
         boolean isRemoved;
         if (id == null) {
-            isRemoved = localDatabase.removeDictionaryData("ID");
+            isRemoved = localDatabase.removeDictionaryData(DatabaseHelper.COL_0);
             if (isRemoved) {
                 adapter.clearData();
                 checkEmptyView();
@@ -259,7 +242,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             isRemoved = localDatabase.removeDictionaryData(id);
         }
         if (!isRemoved) {
-            showError(this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
             return false;
         }
         return true;

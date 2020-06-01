@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.ChordAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
@@ -39,7 +40,6 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private final String[] NOTES_ORDER = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"};
     private final String[] INSTRUMENTS = {"Guitar", "Piano", "Ukulele"};
     private final String[] COLUMNS = {"1", "2", "3", "4", "5", "6"};
-    private int itemsInline = 4;
     private List<Drawable> mChordsDrawable;
     private List<String> mChordsReplace;
     private List<String> mNotesOrder;
@@ -48,10 +48,9 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private AutoCompleteTextView mColumnsInputView;
     private RecyclerView mChordsRecyclerView;
     private ChordAdapter adapter;
-    private ImageView mEmptyViewImage;
-    private TextView mEmptyViewText;
     private String activeInstrument;
     private boolean isAllChords;
+    private int itemsInline;
     private int itemWidth;
 
     @SuppressLint({"ResourceType", "SetTextI18n"})
@@ -73,8 +72,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         }
 
         LinearLayout emptyView = findViewById(android.R.id.empty);
-        mEmptyViewImage = emptyView.findViewById(R.id.image);
-        mEmptyViewText = emptyView.findViewById(R.id.text);
+        ImageView mEmptyViewImage = emptyView.findViewById(R.id.image);
+        TextView mEmptyViewText = emptyView.findViewById(R.id.text);
         mEmptyViewImage.setImageResource(R.drawable.m_audiotrack_black_24dp);
         mEmptyViewText.setText(R.string.empty_chords);
 
@@ -82,8 +81,10 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mChordsList = getIntent().getStringArrayListExtra("chords");
         activeInstrument = getIntent().getStringExtra("activeInstrument");
         if (activeInstrument == null) {
-            activeInstrument = INSTRUMENTS[0];
+            activeInstrument = Note.getActiveInstrument();
         }
+
+        itemsInline = Note.getActiveTabColumns();
 
         mChordsReplace = Arrays.asList(CHORDS_REPLACEMENT);
         mNotesOrder = Arrays.asList(NOTES_ORDER);
@@ -101,7 +102,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
         mInstrumentInputView = findViewById(R.id.instrument);
         mInstrumentInputView.setText(activeInstrument);
-        ViewUtils.disableAutoCompleteTextView(this, mInstrumentInputView, INSTRUMENTS);
+        ViewUtils.disbaleInput(mInstrumentInputView);
+        ViewUtils.updateDropdown(this, mInstrumentInputView, INSTRUMENTS);
 
         if (isAllChords) {
             TextInputLayout mInstrumentLayout = findViewById(R.id.instrument_layout);
@@ -112,7 +114,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
         mColumnsInputView = findViewById(R.id.columns);
         mColumnsInputView.setText(Integer.toString(itemsInline));
-        ViewUtils.disableAutoCompleteTextView(this, mColumnsInputView, COLUMNS);
+        ViewUtils.disbaleInput(mColumnsInputView);
+        ViewUtils.updateDropdown(this, mColumnsInputView, COLUMNS);
 
         mColumnsInputView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -129,6 +132,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                 int tmpItemsInline = Integer.parseInt(s.toString());
                 if (tmpItemsInline != itemsInline) {
                     itemsInline = tmpItemsInline;
+                    Note.setActiveTabColumns(itemsInline);
                     updateItemSize();
                 }
             }
@@ -149,6 +153,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                 String tmpInstrument = s.toString();
                 if (!(tmpInstrument.equals(activeInstrument))) {
                     activeInstrument = tmpInstrument;
+                    Note.setActiveInstrument(activeInstrument);
                     updateDrawables();
                 }
             }

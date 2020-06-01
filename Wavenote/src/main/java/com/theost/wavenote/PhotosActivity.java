@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -22,8 +21,10 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DateTimeUtils;
+import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PhotoAdapter;
 import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
@@ -44,6 +45,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private List<Photo> mPhotoList;
     private PhotoAdapter adapter;
     private LinearLayout emptyView;
+    private LinearLayout mMaterialTitle;
+
     private DatabaseHelper localDatabase;
     private MenuItem mRemoveItem;
     private MenuItem mSortItem;
@@ -83,6 +86,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         mPhotoBottomSheet = new PhotoBottomSheetDialog(this);
 
         mPhotoRecyclerView = findViewById(R.id.photos_list);
+        mMaterialTitle = findViewById(R.id.materials_title);
 
         localDatabase = new DatabaseHelper(this);
 
@@ -109,7 +113,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                showPhotoSheet();
+                if (PermissionUtils.requestPermissions(this))
+                    showPhotoSheet();
                 return true;
             case R.id.menu_sort:
                 sortPhotos(true);
@@ -130,7 +135,10 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             mRemoveItem.setEnabled(false);
             mSortItem.setEnabled(false);
             DrawableUtils.setMenuItemAlpha(mSortItem, 0.3);
-            if (noteId.equals("theory")) return;
+            if (noteId.equals("theory")) {
+                mMaterialTitle.setVisibility(View.GONE);
+                return;
+            }
             mPhotoRecyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
@@ -139,6 +147,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             mRemoveItem.setEnabled(true);
             mSortItem.setEnabled(true);
             DrawableUtils.setMenuItemAlpha(mSortItem, 1.0);
+            if (noteId.equals("theory"))
+                mMaterialTitle.setVisibility(View.VISIBLE);
         }
     }
 
@@ -148,11 +158,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     private void showPhotoSheet() {
         mPhotoBottomSheet.show(getSupportFragmentManager());
-    }
-
-    public void showError(String error) {
-        Toast toast = Toast.makeText(this, error, Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     private void updateData() {
@@ -168,8 +173,11 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             if (photo.getBitmap(this) != null) {
                 mPhotoList.add(photo);
             } else {
-                localDatabase.removeImageData(id);
-                showError(this.getResources().getString(R.string.file_error));
+                DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+                boolean isRemoved = localDatabase.removeImageData(id);
+                if (!isRemoved) {
+                    DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+                }
             }
         }
         if (adapter != null) adapter.updateData(mPhotoList);
@@ -177,13 +185,14 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     public void insertPhoto(String uri) {
         if (uri == null) {
-            showError(this.getResources().getString(R.string.photo_error));
+            DisplayUtils.showToast(this, getResources().getString(R.string.photo_error));
             return;
         }
 
         String date = DateTimeUtils.getDateTextString(this, Calendar.getInstance());
         boolean isInserted = localDatabase.insertImageData(noteId, "", uri, date);
-        if (!isInserted) showError(this.getResources().getString(R.string.database_error));
+        if (!isInserted)
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
 
         updateData();
         sortPhotos(false);
@@ -193,7 +202,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public void renamePhoto(String id, String name) {
         boolean isRenamed = localDatabase.renameImageData(id, name);
         if (!isRenamed) {
-            showError(this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
         }
     }
 
@@ -219,10 +228,10 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             }
         }
         if (!isRemovedFile) {
-            showError(this.getResources().getString(R.string.file_error));
+            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
             return false;
         } else if (!isRemoved) {
-            showError(this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
             return false;
         }
         return true;

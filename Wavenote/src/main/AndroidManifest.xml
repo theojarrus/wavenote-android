@@ -73,6 +73,11 @@
             android:label="Preferences"
             android:parentActivityName=".NotesActivity" />
         <activity
+            android:name=".MetronomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Metronome"
+            android:parentActivityName=".NotesActivity" />
+        <activity
             android:name=".TagsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity

@@ -46,6 +46,10 @@ android {
 
     }
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+    }
+
     lintOptions {
         checkReleaseBuilds false
     }
@@ -102,6 +106,7 @@ dependencies {
         exclude group: 'org.jetbrains', module: 'annotations'
     }
 
+    // Zip4j
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.5.2'
 
     // Google Support
@@ -124,10 +129,14 @@ dependencies {
     // Google Play Services
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     // Third Party
-    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation 'com.commonsware.cwac:anddown:0.4.0'
     implementation 'net.openid:appauth:0.7.0'
     wearApp project(':Wear')
+    // Butter Knife
+    //noinspection AnnotationProcessorOnCompilePath
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 }
 
 repositories {

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.automattic:tracks:1.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1643baf7130e10b36d0dbc268cea901e/jetified-tracks-1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1643baf7130e10b36d0dbc268cea901e/jetified-tracks-1.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a01931ad3e07ac233b2e100c0b2e199a/jetified-tracks-1.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a01931ad3e07ac233b2e100c0b2e199a/jetified-tracks-1.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.automattic/tracks/1.2/ed3ef133b2d7421cb9f50f8678835659c69a3b3f/tracks-1.2-javadoc.jar!/" />

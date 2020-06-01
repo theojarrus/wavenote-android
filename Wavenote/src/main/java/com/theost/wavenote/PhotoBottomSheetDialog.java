@@ -18,19 +18,17 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.FileUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
-import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
-import static com.theost.wavenote.utils.FileUtils.PHOTOS_DIR;
 
 public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     private static final String TAG = InfoBottomSheetDialog.class.getSimpleName();
-    private static final String FILENAME_PATERN = "/photo_%d.jpg";
     private static final int CAMERA_REQUEST = 0;
     private static final int FILE_REQUEST = 1;
 
@@ -81,15 +79,22 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             Bitmap imageBitmap;
-            File file = getFile();
-            if (requestCode == 0) {
+            File file = FileUtils.createNoteFile(getContext(), noteId, "photo");
+            if (file == null) dismiss();
+            if (requestCode == CAMERA_REQUEST) {
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");
             } else {
                 Uri imageUri = data.getData();
                 imageBitmap = getBitmap(imageUri);
             }
-            createPhotoFile(imageBitmap, file);
+            try {
+                FileUtils.createPhotoFile(imageBitmap, file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.file_error));
+                dismiss();
+            }
             mActivity.insertPhoto(file.getPath());
         }
         dismiss();
@@ -118,38 +123,12 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         startActivityForResult(intent, FILE_REQUEST);
     }
 
-    private void createPhotoFile(Bitmap imageBitmap, File file) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(file);
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOut);
-            fileOut.flush();
-            fileOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private Bitmap getBitmap(Uri imageUri) {
         try {
             return MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    @SuppressLint("DefaultLocale")
-    private File getFile() {
-        File file;
-        int fileId = 0;
-        File directory = new File(getContext().getCacheDir() + NOTES_DIR + noteId + PHOTOS_DIR);
-        if (!directory.exists()) directory.mkdirs();
-        while (true) {
-            fileId += 1;
-            file = new File(directory.getPath(), String.format(FILENAME_PATERN, fileId));
-            if (!file.exists()) {
-                return file;
-            }
         }
     }
 

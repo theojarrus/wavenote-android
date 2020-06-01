@@ -49,11 +49,13 @@ public class Note extends BucketObject {
     public static final String MATCHED_TITLE_INDEX_NAME = "matchedTitle";
     public static final String MATCHED_CONTENT_INDEX_NAME = "matchedContent";
     public static final String PUBLISH_URL = "http://simp.ly/publish/";
-    public static Integer SELECTED_COLOR = -6972445;
+    public static Integer SELECTED_COLOR = -1;
     public static String TEXT_COLOR_AC = "#36393e";
     public static String TEXT_COLOR_DI = "#fafafa";
     public static String PHOTO_SORT_MODE = "date";
-    public static boolean TEXT_STYLE_BOLD = true;
+    public static String ACTIVE_INSTRUMENT = "Guitar";
+    public static int ACTIVE_TAB_COLUMNS = 4;
+    public static boolean TEXT_STYLE_BOLD = false;
     public static boolean TEXT_STYLE_ITALIC = false;
     public static boolean TEXT_STYLE_STROKE = false;
     public static boolean TEXT_STYLE_CODE = false;
@@ -61,6 +63,7 @@ public class Note extends BucketObject {
     public static boolean TEXT_STYLE_STRIKETHROUGH = false;
     public static boolean NEED_RESOURCES_UPDATE = true;
     private static final int MAX_PREVIEW_CHARS = 300;
+    public static String ACTIVE_METRONOME_SOUND;
     public static final String[] FULL_TEXT_INDEXES = new String[]{Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
     private static final Spannable BLANK_CONTENT = new SpannableString("");
     private static final String SPACE = " ";
@@ -178,6 +181,30 @@ public class Note extends BucketObject {
             mTitle = content;
             mContentPreview = content;
         }
+    }
+
+    public static String getActiveInstrument() {
+        return ACTIVE_INSTRUMENT;
+    }
+
+    public static void setActiveInstrument(String activeInstrument) {
+        ACTIVE_INSTRUMENT = activeInstrument;
+    }
+
+    public static int getActiveTabColumns() {
+        return ACTIVE_TAB_COLUMNS;
+    }
+
+    public static void setActiveTabColumns(int activeTabColumns) {
+        ACTIVE_TAB_COLUMNS = activeTabColumns;
+    }
+
+    public static String getActiveMetronomeSound() {
+        return ACTIVE_METRONOME_SOUND;
+    }
+
+    public static void setActiveMetronomeSound(String activeMetronomeSound) {
+        ACTIVE_METRONOME_SOUND = activeMetronomeSound;
     }
 
     public static boolean isNeedResourcesUpdate() {

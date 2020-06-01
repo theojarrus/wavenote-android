@@ -173,7 +173,7 @@
 
     <!-- Views -->
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/text_title_disabled</color>
-    <color name="mtrl_btn_stroke_color_selector" tools:override="true">@color/blue</color>
+    <color name="mtrl_btn_stroke_color_selector" tools:override="true">@color/blue_20</color>
 
     <!-- Highlight -->
     <color name="syntax_title">@color/blue_20</color>

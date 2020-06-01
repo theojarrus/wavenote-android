@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Translation-Revision-Date: 2020-04-01 00:54:04+0000
-Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
-Language: ru
--->
+
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <string name="search">Поиск заметок или меток</string>
     <string name="empty_tags_search">Метки не найдены</string>
     <string name="empty_notes_widget">Нет заметок</string>
@@ -235,7 +231,6 @@ Language: ru
     <string name="remove_all">Удалить всё</string>
     <string name="name">Имя</string>
     <string name="chords">Аккорды</string>
-    <string name="metronome">Метроном</string>
     <string name="transpose_up">Транспонировать вверх</string>
     <string name="transpose_down">Транспонировать вниз</string>
     <string name="materials">Материалы</string>
@@ -258,7 +253,24 @@ Language: ru
     <string name="export_error">Возникли проблемы с экспортом</string>
     <string name="exporting_error">Подождите немного, уже экспортируется</string>
     <string name="export_succesful">Успешно экспортировано</string>
-    <string name="exporting">Экспорт… Это может занять некоторое время</string>
     <string name="adjust_record">Калибровать</string>
     <string name="set">Применить</string>
+    <string name="photo_found_error">Фото не найдены</string>
+    <string name="metronome">Метроном</string>
+    <string name="select_tone">Выберите тон</string>
+    <string name="select_beat">Выберите размер</string>
+    <string name="remove">Удалить</string>
+    <string name="add_sound">Добавить звук</string>
+    <string name="exist_error">Файл с таким именем уже существует</string>
+    <string name="imported">Импортировано</string>
+    <string name="sample_error">Аудио может воспроизводится некорректно, потому что sample rate файла не</string>
+    <string name="choose">Выбрать</string>
+    <string name="choose_beat">Выберите %s бит</string>
+    <string name="strong">Сильный</string>
+    <string name="weak">Слабый</string>
+    <string name="convert_error">Ошибка конвертирования</string>
+    <string name="wait_a_bit">Подождите немного</string>
+    <string name="exporting">Экспорт… Это может занять некоторе время</string>
+    <string name="importing">Импорт… Это может занять некоторе время</string>
+
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +37,13 @@ public class Photo {
 
     public Bitmap getBitmap(Context context) {
         try {
-            return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.getContentResolver(), Uri.fromFile(new File(uri))));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.getContentResolver(), Uri.fromFile(new File(uri))));
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     public String getDate() {

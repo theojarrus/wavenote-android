@@ -59,10 +59,10 @@
     <!-- Color Sheet -->
     <dimen name="default_dialog_radius">4dp</dimen>
 
+    <!-- Custom -->
     <dimen name="mtrl_textinput_box_stroke_width_default" tools:override="true">2dp</dimen>
     <dimen name="mtrl_button_box_stroke_width_default" tools:override="true">2dp</dimen>
     <dimen name="mtrl_btn_stroke_size" tools:override="true">2dp</dimen>
-    <dimen name="custom_topbar_padding">12dp</dimen>
     <dimen name="custom_vertical_space">15dp</dimen>
     <dimen name="custom_horizontal_space">15dp</dimen>
     <dimen name="custom_icon_size">55dp</dimen>

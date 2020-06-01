@@ -33,7 +33,6 @@ public class Wavenote extends Application {
     // intent IDs
     public static final int INTENT_PREFERENCES = 1;
     public static final int INTENT_EDIT_NOTE = 2;
-    public static final int INTENT_THEORY = 3;
     public static final String DELETED_NOTE_ID = "deletedNoteId";
     public static final String SELECTED_NOTE_ID = "selectedNoteId";
     private static final String AUTH_PROVIDER = "simplenote.com";
@@ -154,7 +153,7 @@ public class Wavenote extends Application {
         }
 
         @Override
-        public void onActivityStarted(@NonNull  Activity activity) {
+        public void onActivityStarted(@NonNull Activity activity) {
         }
 
         @Override

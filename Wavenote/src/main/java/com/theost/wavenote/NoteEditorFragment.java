@@ -29,7 +29,6 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -129,6 +128,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private Note mNote;
     private final Runnable mAutoSaveRunnable = this::saveAndSyncNote;
     private Bucket<Note> mNotesBucket;
+    private ExportThread exportThread;
     private View mRootView;
     private View mTagPadding;
     private WavenoteEditText mContentEditText;
@@ -610,8 +610,15 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 shareNote();
                 return true;
             case R.id.menu_export:
-                if (PermissionUtils.requestPermissions(getActivity()))
-                    showExportDialog();
+                if (PermissionUtils.requestPermissions(getActivity())) {
+                    if (!isExporting) {
+                        showExportDialog();
+                    } else {
+                        DisplayUtils.showToast(getContext(),
+                                getContext().getResources()
+                                        .getString(R.string.exporting_error));
+                    }
+                }
                 return true;
             case R.id.menu_trash:
                 if (!isAdded()) {
@@ -713,34 +720,23 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         super.onPrepareOptionsMenu(menu);
     }
 
-    private void showToast(String message) {
-        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
-        TextView v = toast.getView().findViewById(android.R.id.message);
-        if (v != null) v.setGravity(Gravity.CENTER);
-        toast.show();
-    }
-
     private void showExportDialog() {
-        if (!isExporting) {
-            new MaterialDialog.Builder(getContext())
-                    .title(R.string.export)
-                    .positiveText(R.string.export)
-                    .negativeText(R.string.cancel)
-                    .items(R.array.array_export_modes)
-                    .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
-                        if (Arrays.toString(text).contains("Password")) {
-                            if (Arrays.toString(text).contains("Zip") && text.length > 2) {
-                                showPasswordDialog(text);
-                            }
-                        } else if ((Arrays.toString(text).contains("Zip") && text.length > 1) ||
-                                (!Arrays.toString(text).contains("Zip") && text.length > 0)) {
-                            exportNote(text);
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.export)
+                .positiveText(R.string.export)
+                .negativeText(R.string.cancel)
+                .items(R.array.array_export_modes)
+                .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+                    if (Arrays.toString(text).contains("Password")) {
+                        if (Arrays.toString(text).contains("Zip") && text.length > 2) {
+                            showPasswordDialog(text);
                         }
-                        return true;
-                    }).show();
-        } else {
-            showToast(getContext().getResources().getString(R.string.exporting_error));
-        }
+                    } else if ((Arrays.toString(text).contains("Zip") && text.length > 1) ||
+                            (!Arrays.toString(text).contains("Zip") && text.length > 0)) {
+                        exportNote(text);
+                    }
+                    return true;
+                }).show();
     }
 
     private void showPasswordDialog(CharSequence[] modes) {
@@ -773,7 +769,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     .content(resultDialogMessage)
                     .positiveText(android.R.string.ok)
                     .show();
-            showToast(getContext().getResources().getString(R.string.path) + ": " + resultDialogPath);
+            DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.path) + ": " + resultDialogPath);
         } else {
             getContext().getResources().getString(R.string.feature_error);
         }
@@ -812,17 +808,19 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void exportNote(CharSequence[] modes) {
         showLoadingDialog();
-        ExportThread thread = new ExportThread(modes);
-        thread.start();
+        exportThread = new ExportThread(modes);
+        exportThread.start();
     }
 
     private Handler mExportHandler = new Handler(msg -> {
         if (msg.what == 0)
             showResultDialog();
+        exportThread.interrupt();
         return true;
     });
 
     private class ExportThread extends Thread {
+
         CharSequence[] modes;
 
         private ExportThread(CharSequence[] modes) {
@@ -867,15 +865,24 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                         break;
                     case "photo":
                         File dirPhotoOld = new File(dirOld + FileUtils.PHOTOS_DIR);
-                        File dirPhotoNew = new File(dirNew + FileUtils.PHOTOS_DIR);
-                        try {
-                            for (String j : dirPhotoOld.list()) {
-                                FileUtils.copyFile(dirPhotoOld, dirPhotoNew, j);
+                        if (dirPhotoOld.list().length != 0) {
+                            File dirPhotoNew = new File(dirNew + FileUtils.PHOTOS_DIR);
+                            try {
+                                ArrayList<Boolean> copiedFiles = new ArrayList<>();
+                                for (String j : dirPhotoOld.list()) {
+                                    copiedFiles.add(FileUtils.copyFile(dirPhotoOld, dirPhotoNew, j));
+                                }
+                                if (copiedFiles.indexOf(false) == -1) {
+                                    successList.add(mode);
+                                } else {
+                                    errorList.add(mode);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                errorList.add(mode);
                             }
-                            successList.add(mode);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            errorList.add(mode);
+                        } else {
+                            errorList.add(getContext().getString(R.string.photo_found_error).toLowerCase());
                         }
                         break;
                     case "zip":
@@ -887,10 +894,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                                 zipParameters.setEncryptFiles(true);
                                 zipParameters.setEncryptionMethod(EncryptionMethod.AES);
                                 ZipFile zipFile = new ZipFile(file, exportZipPassword);
-                                zipFile.addFolder(dirRoot, zipParameters);
+                                zipFile.addFolder(dirNew, zipParameters);
                             } else {
                                 ZipFile zipFile = new ZipFile(file);
-                                zipFile.addFolder(dirRoot);
+                                zipFile.addFolder(dirNew);
                             }
                             FileUtils.removeFiles(dirNew);
                             successList.add(mode);
@@ -1725,6 +1732,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 fragment.updateMarkdownView();
             }
         }
+
     }
 
     private void syntaxHighlightEditorContent() {

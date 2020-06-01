@@ -267,7 +267,12 @@
     <string name="text_color">Text Color</string>
     <string name="export">Export</string>
     <string name="import_note">Import</string>
+    <string name="choose">Choose</string>
+    <string name="choose_beat">Choose %s beat file</string>
     <string name="choose_folder">Choose folder</string>
+    <string name="imported">Imported</string>
+    <string name="strong">Strong</string>
+    <string name="weak">Weak</string>
 
     <!-- Color Sheet -->
     <string name="text_style">Style</string>
@@ -278,6 +283,18 @@
     <string name="text_strikethrough">Strikethrough</string>
     <string name="text_code">Code</string>
 
+    <!-- Errors -->
+    <string name="wait_a_bit">Wait a bit</string>
+    <string name="convert_error">Conversion error</string>
+    <string name="photo_found_error">Photos not found</string>
+    <string name="database_error">Database request error</string>
+    <string name="exist_error">File with this name already exist</string>
+    <string name="android_error">Deprecated Android version</string>
+    <string name="export_error">Some problems with exporting</string>
+    <string name="exporting_error">Wait a bit, already exporting</string>
+    <string name="feature_error">This feature will be available in the next version</string>
+    <string name="sample_error">Audio may sound incorrect, because file sample rate is not</string>
+
     <!-- Musical -->
     <string name="dictionary">Dictionary</string>
     <string name="dictionary_summary">Edit keywords list</string>
@@ -285,11 +302,13 @@
     <string name="keyword">Keyword</string>
     <string name="reset">Reset</string>
     <string name="type">Type</string>
+    <string name="remove">Remove</string>
     <string name="remove_all">Remove All</string>
     <string name="name">Name</string>
     <string name="chords">Chords</string>
-    <string name="metronome_en">Metronome</string>
-    <string name="countdown_en">Countdown</string>
+    <string name="metronome_en" translatable="false">Metronome</string>
+    <string name="countdown_en" translatable="false">Countdown</string>
+    <string name="metronome">Metronome</string>
     <string name="mute">Mute</string>
     <string name="guitar" translatable="false">Guitar</string>
     <string name="piano" translatable="false">Piano</string>
@@ -304,15 +323,12 @@
     <string name="file_error">Invalid file</string>
     <string name="dialog_success">Success</string>
     <string name="dialog_failure">Failed</string>
-    <string name="export_error">Some problems with exporting</string>
-    <string name="exporting_error">Wait a bit, already exporting</string>
     <string name="export_succesful">Successful exported</string>
     <string name="exporting">Exporting… It could take a some time.</string>
-    <string name="feature_error">This feature will be available in the next version</string>
-    <string name="database_error">Database request error</string>
-    <string name="android_error">Deprecated Android version</string>
+    <string name="importing">Importing… It could take a some time.</string>
     <string name="add_photo_storage">Files</string>
     <string name="add_keyword">Add Keyword</string>
+    <string name="add_sound">Add Sound</string>
     <string name="play" translatable="false">Play</string>
     <string name="pause" translatable="false">Pause</string>
     <string name="stop" translatable="false">Stop</string>
@@ -324,6 +340,11 @@
     <string name="default_bpm" translatable="false">= 120</string>
     <string name="mix" translatable="false">Mix</string>
     <string name="set">Set</string>
+    <string name="default_beat_1" translatable="false">C</string>
+    <string name="default_beat_2" translatable="false">4/4</string>
+    <string name="default_bpm_c" translatable="false">120</string>
+    <string name="select_tone">Select Tone</string>
+    <string name="select_beat">Select Beat</string>
 
     <string-array name="array_export_modes">
         <item>Plaintext</item>
@@ -331,6 +352,28 @@
         <item>Photo</item>
         <item>Zip</item>
         <item>Password</item>
+    </string-array>
+
+    <string-array name="metronome_sounds">
+        <item>Basic</item>
+        <item>Sticks</item>
+        <item>Claps</item>
+        <item>Drums</item>
+        <item>Synth</item>
+        <item>Machine</item>
+    </string-array>
+
+    <string-array name="beats_array">
+        <item tools:ignore="TypographyFractions">1/4</item>
+        <item>2/4</item>
+        <item tools:ignore="TypographyFractions">3/4</item>
+        <item>4/4</item>
+        <item>5/4</item>
+        <item>5/8</item>
+        <item>6/8</item>
+        <item>7/8</item>
+        <item>9/8</item>
+        <item>12/8</item>
     </string-array>
 
     <string-array name="array_musical_titles">
@@ -341,6 +384,7 @@
         <item>[Solo]</item>
         <item>[Bridge]</item>
         <item>[Outro]</item>
+        <item>[Instrumental]</item>
     </string-array>
 
     <string-array name="array_musical_words">

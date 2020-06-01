@@ -36,13 +36,13 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/custom_horizontal_space"
-                android:paddingRight="@dimen/custom_horizontal_space"
+                android:paddingStart="@dimen/custom_horizontal_space"
+                android:paddingEnd="0dp"
                 android:baselineAligned="false">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/instrument_layout"
-                    style="@style/TypeKeywordInputLayoutStyle"
+                    style="@style/WaveStyle.BasicAutocompleteLayout.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -66,7 +66,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TypeKeywordInputLayoutStyle"
+                    style="@style/WaveStyle.BasicAutocompleteLayout.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

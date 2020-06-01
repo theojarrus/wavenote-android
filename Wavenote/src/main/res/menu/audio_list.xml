@@ -7,15 +7,15 @@
     tools:ignore="AlwaysShowAction">
 
     <item
-        android:id="@+id/menu_remove"
-        android:enabled="true"
-        android:title="@string/remove_all"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_import"
         android:enabled="true"
         android:title="@string/import_note"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_remove"
+        android:enabled="true"
+        android:title="@string/remove_all"
         app:showAsAction="never" />
 
 </menu>

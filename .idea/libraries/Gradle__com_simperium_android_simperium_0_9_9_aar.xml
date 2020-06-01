@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.simperium.android:simperium:0.9.9@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9f37db393c42ca6bd2d587917a3bc73d/jetified-simperium-0.9.9/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9f37db393c42ca6bd2d587917a3bc73d/jetified-simperium-0.9.9/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3d0a5cc9e1897455c922dba9043f9cbd/jetified-simperium-0.9.9/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3d0a5cc9e1897455c922dba9043f9cbd/jetified-simperium-0.9.9/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.simperium.android/simperium/0.9.9/7906c05d4b0f7fdf1021ac434b37591072299f4f/simperium-0.9.9-javadoc.jar!/" />

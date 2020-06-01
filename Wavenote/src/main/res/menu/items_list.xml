@@ -21,15 +21,15 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_remove"
-        android:enabled="true"
-        android:title="@string/remove_all"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_restore"
         android:enabled="true"
         android:title="@string/restore"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_remove"
+        android:enabled="true"
+        android:title="@string/remove_all"
         app:showAsAction="never" />
 
 </menu>

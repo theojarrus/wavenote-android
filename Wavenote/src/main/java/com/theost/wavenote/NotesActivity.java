@@ -71,6 +71,7 @@ import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
 import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 import static com.theost.wavenote.utils.TagsAdapter.ALL_NOTES_ID;
 import static com.theost.wavenote.utils.TagsAdapter.DEFAULT_ITEM_POSITION;
+import static com.theost.wavenote.utils.TagsAdapter.METRONOME_ID;
 import static com.theost.wavenote.utils.TagsAdapter.SETTINGS_ID;
 import static com.theost.wavenote.utils.TagsAdapter.TAGS_ID;
 import static com.theost.wavenote.utils.TagsAdapter.THEORY_ID;
@@ -90,6 +91,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     protected Bucket<Tag> mTagsBucket;
     private boolean mHasTappedNoteListWidgetButton;
     private boolean mIsTheoryClicked;
+    private boolean mIsMetronomeClicked;
     private boolean mIsSettingsClicked;
     private boolean mIsShowingMarkdown;
     private boolean mIsTabletFullscreen;
@@ -365,6 +367,9 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                     if (item.getItemId() == THEORY_ID) {
                         mIsTheoryClicked = true;
                         return false;
+                    } else if (item.getItemId() == METRONOME_ID) {
+                        mIsMetronomeClicked = true;
+                        return false;
                     } else if (item.getItemId() == SETTINGS_ID) {
                         mIsSettingsClicked = true;
                         return false;
@@ -378,7 +383,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         mNavigationMenu = navigationView.getMenu();
         mNavigationMenu.add(GROUP_PRIMARY, ALL_NOTES_ID, Menu.NONE, getString(R.string.all_notes)).setIcon(R.drawable.ic_notes_24dp).setCheckable(true);
-        mNavigationMenu.add(GROUP_PRIMARY, THEORY_ID, Menu.NONE, getString(R.string.theory)).setIcon(R.drawable.ic_theory_24dp).setCheckable(true);
+        mNavigationMenu.add(GROUP_PRIMARY, THEORY_ID, Menu.NONE, getString(R.string.theory)).setIcon(R.drawable.ic_theory_24dp).setCheckable(false);
+        mNavigationMenu.add(GROUP_PRIMARY, METRONOME_ID, Menu.NONE, getString(R.string.metronome)).setIcon(R.drawable.ic_metronome_24dp).setCheckable(false);
         mNavigationMenu.add(GROUP_PRIMARY, TRASH_ID, Menu.NONE, getString(R.string.trash)).setIcon(R.drawable.ic_trash_24dp).setCheckable(true);
         mNavigationMenu.add(GROUP_PRIMARY, SETTINGS_ID, Menu.NONE, getString(R.string.settings)).setIcon(R.drawable.ic_settings_24dp).setCheckable(false);
         mTagsAdapter = new TagsAdapter(this, mNotesBucket);
@@ -394,8 +400,12 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                     Intent intent = new Intent(NotesActivity.this, PhotosActivity.class);
                     intent.putExtra("chordsBlockEnabled", true);
                     intent.putExtra("noteId", "theory");
-                    startActivityForResult(intent, Wavenote.INTENT_THEORY);
+                    startActivity(intent);
                     mIsTheoryClicked = false;
+                } else if (mIsMetronomeClicked) {
+                    Intent intent = new Intent(NotesActivity.this, MetronomeActivity.class);
+                    startActivity(intent);
+                    mIsMetronomeClicked = false;
                 } else if (mIsSettingsClicked) {
                     Intent intent = new Intent(NotesActivity.this, PreferencesActivity.class);
                     startActivityForResult(intent, Wavenote.INTENT_PREFERENCES);
