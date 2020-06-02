@@ -131,7 +131,7 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/metronome_tap"
                     style="@style/WaveStyle.Button.Outlined"
                     android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
                     android:insetTop="0dp"
                     android:insetRight="0dp"
                     android:insetBottom="0dp"
-                    android:text="@string/tap" />
+                    android:text="@string/tap"/>
 
             </LinearLayout>
 
@@ -153,7 +153,7 @@
                 android:paddingEnd="@dimen/padding_medium"
                 android:gravity="center">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/metronome_play"
                     style="@style/WaveStyle.Button.Outlined"
                     android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                     android:insetTop="0dp"
                     android:insetRight="0dp"
                     android:insetBottom="0dp"
-                    android:text="@string/play" />
+                    android:text="@string/play"/>
 
             </LinearLayout>
 

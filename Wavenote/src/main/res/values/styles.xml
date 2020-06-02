@@ -267,6 +267,7 @@
     <style name="WaveStyle.InputLayoutStyle.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">?attr/colorAccent</item>
         <item name="android:textColor">@color/text_title_disabled</item>
+        <item name="boxBackgroundColor">@null</item>
     </style>
 
     <style name="WaveStyle.BasicAutocompleteLayout.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
@@ -277,8 +278,9 @@
     </style>
 
     <style name="WaveStyle.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="boxStrokeColor">?attr/colorAccent</item>
+        <item name="strokeColor">?attr/colorAccent</item>
         <item name="android:textColor">?attr/colorAccent</item>
+        <item name="colorButtonNormal">?attr/colorAccent</item>
         <item name="boxBackgroundColor">@null</item>
     </style>
 

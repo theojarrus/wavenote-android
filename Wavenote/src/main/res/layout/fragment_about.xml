@@ -8,9 +8,10 @@
     android:layout_width="match_parent">
 
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/about_logo"
@@ -186,7 +187,6 @@
         <View
             android:background="@color/white"
             android:layout_height="1px"
-            android:layout_marginBottom="@dimen/padding_extra_large"
             android:layout_width="match_parent">
         </View>
 
@@ -199,8 +199,6 @@
             android:layout_marginTop="@dimen/padding_small"
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:paddingEnd="@dimen/padding_large"
-            android:paddingStart="@dimen/padding_large"
             android:textSize="15sp">
         </com.theost.wavenote.widgets.RobotoLightTextView>
 

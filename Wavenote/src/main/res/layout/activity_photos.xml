@@ -76,7 +76,7 @@
                     android:paddingLeft="@dimen/custom_horizontal_space"
                     android:paddingRight="@dimen/custom_horizontal_space">
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/guitar_chords"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                         app:strokeWidth="2dp"
                         tools:ignore="PrivateResource" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/piano_chords"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
                         app:strokeWidth="2dp"
                         tools:ignore="PrivateResource" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/ukulele_chords"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"

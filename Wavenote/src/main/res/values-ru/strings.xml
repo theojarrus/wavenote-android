@@ -272,5 +272,6 @@
     <string name="wait_a_bit">Подождите немного</string>
     <string name="exporting">Экспорт… Это может занять некоторе время</string>
     <string name="importing">Импорт… Это может занять некоторе время</string>
+    <string name="error_network_required">Необходимо интернет подключение. Пожалуйста, проверьте соединение и попробуйте снова</string>
 
 </resources>

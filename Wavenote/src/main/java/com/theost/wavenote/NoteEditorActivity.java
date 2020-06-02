@@ -278,64 +278,42 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
         mButtonPrevious = findViewById(R.id.button_previous);
         mButtonNext = findViewById(R.id.button_next);
 
-        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSearchMatchIndex > 0) {
-                    mSearchMatchIndex--;
-                    mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);
-                    new Handler().postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                updateSearchMatchBarStatus();
-                            }
-                        },
-                        getResources().getInteger(android.R.integer.config_mediumAnimTime)
-                    );
-                }
+        mButtonPrevious.setOnClickListener(v -> {
+            if (mSearchMatchIndex > 0) {
+                mSearchMatchIndex--;
+                mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);
+                new Handler().postDelayed(
+                        this::updateSearchMatchBarStatus,
+                    getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                );
             }
         });
-        mButtonPrevious.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (v.isHapticFeedbackEnabled()) {
-                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(NoteEditorActivity.this, getString(R.string.previous), Toast.LENGTH_SHORT).show();
-                return true;
+        mButtonPrevious.setOnLongClickListener(v -> {
+            if (v.isHapticFeedbackEnabled()) {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(NoteEditorActivity.this, getString(R.string.previous), Toast.LENGTH_SHORT).show();
+            return true;
         });
 
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSearchMatchIndex < mSearchMatchIndexes.length - 1) {
-                    mSearchMatchIndex++;
-                    mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);
-                    new Handler().postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                updateSearchMatchBarStatus();
-                            }
-                        },
-                        getResources().getInteger(android.R.integer.config_mediumAnimTime)
-                    );
-                }
+        mButtonNext.setOnClickListener(v -> {
+            if (mSearchMatchIndex < mSearchMatchIndexes.length - 1) {
+                mSearchMatchIndex++;
+                mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);
+                new Handler().postDelayed(
+                        this::updateSearchMatchBarStatus,
+                    getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                );
             }
         });
-        mButtonNext.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (v.isHapticFeedbackEnabled()) {
-                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(NoteEditorActivity.this, getString(R.string.next), Toast.LENGTH_SHORT).show();
-                return true;
+        mButtonNext.setOnLongClickListener(v -> {
+            if (v.isHapticFeedbackEnabled()) {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(NoteEditorActivity.this, getString(R.string.next), Toast.LENGTH_SHORT).show();
+            return true;
         });
 
         mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);

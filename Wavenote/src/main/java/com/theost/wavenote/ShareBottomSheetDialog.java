@@ -2,7 +2,6 @@ package com.theost.wavenote;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
@@ -11,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +37,9 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
     private List<ShareButtonAdapter.ShareButtonItem> mShareButtons;
     private RecyclerView mRecyclerView;
     private ShareSheetListener mListener;
+    private TextView mPublishButton;
+    private TextView mUnpublishButton;
+    private TextView mWordPressButton;
 
     public ShareBottomSheetDialog(@NonNull final Fragment fragment, @NonNull final ShareSheetListener shareSheetListener) {
         mFragment = fragment;
@@ -47,14 +50,21 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (getDialog() != null) {
-            getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    mListener.onShareDismissed();
-                }
-            });
+            getDialog().setOnDismissListener(dialog -> mListener.onShareDismissed());
 
             getDialog().setContentView(R.layout.bottom_sheet_share);
+            TextView mCollaborateButton = getDialog().findViewById(R.id.share_collaborate_button);
+            mPublishButton = getDialog().findViewById(R.id.share_publish_button);
+            mUnpublishButton = getDialog().findViewById(R.id.share_unpublish_button);
+            mWordPressButton = getDialog().findViewById(R.id.share_wp_post);
+
+            mCollaborateButton.setOnClickListener(v -> mListener.onShareCollaborateClicked());
+
+            mPublishButton.setOnClickListener(v -> mListener.onSharePublishClicked());
+
+            mUnpublishButton.setOnClickListener(v -> mListener.onShareUnpublishClicked());
+
+            mWordPressButton.setOnClickListener(v -> mListener.onWordPressPostClicked());
 
             mRecyclerView = getDialog().findViewById(R.id.share_button_recycler_view);
             mRecyclerView.setHasFixedSize(true);
@@ -66,28 +76,20 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
             mShareButtons = getShareButtons(mFragment.requireActivity(), mShareIntent);
 
             View colorSheetClose = getDialog().findViewById(R.id.colorSheetClose);
-            colorSheetClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+            colorSheetClose.setOnClickListener(v -> dismiss());
         }
 
         if (getDialog() != null) {
             // Set peek height to half height of view (i.e. set STATE_HALF_EXPANDED) to show some of
             // sharing options when bottom sheet is shown.
-            getDialog().setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                    FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            getDialog().setOnShowListener(dialogInterface -> {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                    if (bottomSheet != null) {
-                        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-                        behavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-                        behavior.setSkipCollapsed(true);
-                    }
+                if (bottomSheet != null) {
+                    BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+                    behavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                    behavior.setSkipCollapsed(true);
                 }
             });
         }
@@ -99,15 +101,20 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
         if (mFragment.isAdded()) {
             showNow(manager, TAG);
 
+            if (note.isPublished()) {
+                mPublishButton.setVisibility(View.GONE);
+                mUnpublishButton.setVisibility(View.VISIBLE);
+            } else {
+                mPublishButton.setVisibility(View.VISIBLE);
+                mUnpublishButton.setVisibility(View.GONE);
+            }
+
             mShareIntent.putExtra(Intent.EXTRA_TEXT, note.getContent());
 
-            final ShareButtonAdapter.ItemListener shareListener = new ShareButtonAdapter.ItemListener() {
-                @Override
-                public void onItemClick(ShareButtonAdapter.ShareButtonItem item) {
-                    mShareIntent.setComponent(new ComponentName(item.getPackageName(), item.getActivityName()));
-                    mFragment.requireActivity().startActivity(Intent.createChooser(mShareIntent, mFragment.getString(R.string.share)));
-                    dismiss();
-                }
+            final ShareButtonAdapter.ItemListener shareListener = item -> {
+                mShareIntent.setComponent(new ComponentName(item.getPackageName(), item.getActivityName()));
+                mFragment.requireActivity().startActivity(Intent.createChooser(mShareIntent, mFragment.getString(R.string.share)));
+                dismiss();
             };
 
             mRecyclerView.setAdapter(new ShareButtonAdapter(mShareButtons, shareListener));
@@ -131,6 +138,10 @@ public class ShareBottomSheetDialog extends BottomSheetDialogBase {
     }
 
     public interface ShareSheetListener {
+        void onShareCollaborateClicked();
         void onShareDismissed();
+        void onSharePublishClicked();
+        void onShareUnpublishClicked();
+        void onWordPressPostClicked();
     }
 }

@@ -294,6 +294,7 @@
     <string name="exporting_error">Wait a bit, already exporting</string>
     <string name="feature_error">This feature will be available in the next version</string>
     <string name="sample_error">Audio may sound incorrect, because file sample rate is not</string>
+    <string name="error_network_required">A network connection is required. Please, check your connection and try again</string>
 
     <!-- Musical -->
     <string name="dictionary">Dictionary</string>

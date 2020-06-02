@@ -81,10 +81,10 @@ public class WordPressUtils {
 
         OkHttpClient client = new OkHttpClient().newBuilder().readTimeout(30, TimeUnit.SECONDS).build();
         Request request = new Request.Builder()
-                    .url(WP_API_URL + "me/sites")
-                    .header("Authorization", String.format(Locale.ENGLISH, "BEARER %s", wpToken))
-                    .get()
-                    .build();
+                .url(WP_API_URL + "me/sites")
+                .header("Authorization", String.format(Locale.ENGLISH, "BEARER %s", wpToken))
+                .get()
+                .build();
 
         client.newCall(request).enqueue(callback);
     }

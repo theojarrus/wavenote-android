@@ -52,6 +52,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import net.lingala.zip4j.*;
@@ -68,6 +69,7 @@ import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.MatchOffsetHighlighter;
+import com.theost.wavenote.utils.NetworkUtils;
 import com.theost.wavenote.utils.NoteUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PrefUtils;
@@ -1072,12 +1074,21 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             mNote.setThemeText(lightColor, darkColor, isThemeLight);
 
             // Restore the cursor position if possible.
+
             int cursorPosition = newCursorLocation(mNote.getContent().toString(), getNoteContentString(), mContentEditText.getSelectionEnd());
 
             mContentEditText.setText(mNote.getContent());
 
             if (isNoteUpdate) {
                 // Save the note so any local changes get synced
+                // Update markdown and preview flags from updated note.
+                mIsMarkdownEnabled = mNote.isMarkdownEnabled();
+                mIsPreviewEnabled = mNote.isPreviewEnabled();
+
+                // Show/Hide tabs based on markdown flag.
+                setMarkdown(mIsMarkdownEnabled);
+
+                // Save note so any local changes get synced.
                 mNote.save();
 
                 if (mContentEditText.hasFocus()
@@ -1281,8 +1292,54 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
      */
 
     @Override
-    public void onShareDismissed() {
+    public void onSharePublishClicked() {
+        publishNote();
+        if (mShareBottomSheet != null) {
+            mShareBottomSheet.dismiss();
+        }
     }
+
+    @Override
+    public void onShareUnpublishClicked() {
+        unpublishNote();
+        if (mShareBottomSheet != null) {
+            mShareBottomSheet.dismiss();
+        }
+    }
+
+    @Override
+    public void onWordPressPostClicked() {
+        if (mShareBottomSheet != null) {
+            mShareBottomSheet.dismiss();
+        }
+
+        if (getFragmentManager() == null) {
+            return;
+        }
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(WordPressDialogFragment.DIALOG_TAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        WordPressDialogFragment wpDialogFragment = new WordPressDialogFragment();
+        wpDialogFragment.setNote(mNote);
+        wpDialogFragment.show(ft, WordPressDialogFragment.DIALOG_TAG);
+    }
+
+    @Override
+    public void onShareCollaborateClicked() {
+        Toast.makeText(getActivity(), R.string.collaborate_message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onShareDismissed() {
+
+    }
+
 
     /**
      * History bottom sheet listeners
@@ -1322,13 +1379,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void saveNote() {
         try {
-            if (mNote == null || mContentEditText == null || mIsLoadingNote ||
+            if (mNote == null || mNotesBucket == null || mContentEditText == null || mIsLoadingNote ||
                     (mHistoryBottomSheet != null && mHistoryBottomSheet.getDialog() != null && mHistoryBottomSheet.getDialog().isShowing())) {
                 return;
             } else {
-                Wavenote application = (Wavenote) requireActivity().getApplication();
-                Bucket<Note> notesBucket = application.getNotesBucket();
-                mNote = notesBucket.get(mNote.getSimperiumKey());
+                mNote = mNotesBucket.get(mNote.getSimperiumKey());
                 mIsPreviewEnabled = mNote.isPreviewEnabled();
             }
 
@@ -1488,6 +1543,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void publishNote() {
+        if (NetworkUtils.isNetworkAvailable(requireContext())) {
+            Toast.makeText(requireContext(), R.string.error_network_required, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (isAdded()) {
             mPublishingSnackbar = Snackbar.make(mRootView, R.string.publishing, Snackbar.LENGTH_INDEFINITE);
             mPublishingSnackbar.show();
@@ -1497,6 +1557,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void unpublishNote() {
+        if (NetworkUtils.isNetworkAvailable(requireContext())) {
+            Toast.makeText(requireContext(), R.string.error_network_required, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (isAdded()) {
             mPublishingSnackbar = Snackbar.make(mRootView, R.string.unpublishing, Snackbar.LENGTH_INDEFINITE);
             mPublishingSnackbar.show();

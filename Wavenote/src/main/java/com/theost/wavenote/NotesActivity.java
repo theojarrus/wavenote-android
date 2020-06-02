@@ -220,7 +220,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         // Ensure user has valid authorization
         if (userAuthenticationIsInvalid()) {
-            //startLoginActivity();
+            // startLoginActivity();
         }
 
         if ((!(intent.hasExtra(KEY_LIST_WIDGET_CLICK) && intent.getExtras() != null)) && !mHasTappedNoteListWidgetButton) {
@@ -768,7 +768,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             // Restore the search query on landscape tablets
             if (!TextUtils.isEmpty(mTabletSearchQuery)) {
                 mSearchMenuItem.expandActionView();
-                mSearchView.setQuery(mTabletSearchQuery, false);
+                mSearchView.setQuery(mTabletSearchQuery, true);
                 mSearchView.clearFocus();
             }
 
@@ -872,6 +872,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        if (DisplayUtils.isLargeScreenLandscape(NotesActivity.this)) {
+            updateActionsForLargeLandscape(menu);
+        }
+
         MenuItem pinItem = menu.findItem(R.id.menu_pin);
         MenuItem shareItem = menu.findItem(R.id.menu_share);
         MenuItem historyItem = menu.findItem(R.id.menu_history);
@@ -959,7 +963,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             menu.setGroupVisible(R.id.group_3, false);
         }
 
-        menu.findItem(R.id.menu_empty_trash).setVisible(false);
+        menu.findItem(R.id.menu_empty_trash).setVisible(mSelectedTag != null && mSelectedTag.id == TRASH_ID);
     }
 
     public void updateViewsAfterTrashAction(Note note) {

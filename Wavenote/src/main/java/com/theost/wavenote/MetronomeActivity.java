@@ -181,7 +181,6 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         checkSoundView();
 
         mSoundTextView.requestFocus();
-        mSoundTextView.dismissDropDown();
         ViewUtils.disbaleInput(mSoundTextView);
         mSoundTextView.addTextChangedListener(new TextWatcher() {
             @Override
