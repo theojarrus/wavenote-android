@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">Wavenote</string>
-    <string name="noted">تمت الملاحظة</string>
-    <string name="error">خطأ</string>
-
-</resources>
