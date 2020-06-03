@@ -2,9 +2,8 @@ package com.theost.wavenote.models;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +36,7 @@ public class Photo {
 
     public Bitmap getBitmap(Context context) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.getContentResolver(), Uri.fromFile(new File(uri))));
-            }
+            return MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.fromFile(new File(uri)));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

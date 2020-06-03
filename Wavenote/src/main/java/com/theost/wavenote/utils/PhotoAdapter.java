@@ -124,9 +124,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     }
 
     public void sortByDate() {
-        Comparator<Photo> comparator = (k1, k2) -> (Integer.parseInt(k1.getId()) - Integer.parseInt(k2.getId()));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            Collections.sort(mData, comparator.reversed());
+        Comparator<Photo> comparator = (k1, k2) -> (Integer.parseInt(k2.getId()) - Integer.parseInt(k1.getId()));
+            Collections.sort(mData, comparator);
         notifyDataSetChanged();
     }
 

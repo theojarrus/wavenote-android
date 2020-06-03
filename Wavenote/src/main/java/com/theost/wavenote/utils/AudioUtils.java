@@ -38,7 +38,7 @@ public class AudioUtils {
     }
 
     public static AudioTrack createTrack(int channelCount) {
-        int channelConfig = AudioFormat.CHANNEL_OUT_DEFAULT;
+        int channelConfig;
 
         if (channelCount == 1) {
             channelConfig = AudioFormat.CHANNEL_OUT_MONO;
@@ -59,9 +59,7 @@ public class AudioUtils {
                     CHANNEL_OUT_SIDE_LEFT | CHANNEL_OUT_SIDE_RIGHT |
                     CHANNEL_OUT_BACK_LEFT | CHANNEL_OUT_BACK_RIGHT;
         } else if (channelCount == 8) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                channelConfig = AudioFormat.CHANNEL_OUT_7POINT1_SURROUND;
-            }
+            channelConfig = AudioFormat.CHANNEL_OUT_7POINT1_SURROUND;
         } else {
             throw new IllegalArgumentException("channelCount not support");
         }
@@ -117,7 +115,7 @@ public class AudioUtils {
     }
 
     public static byte[] convertToMono(byte[] stereoBytes) {
-        byte [] monoBytes = new byte[stereoBytes.length / 2];
+        byte[] monoBytes = new byte[stereoBytes.length / 2];
         for (int i = 0; i < monoBytes.length - monoBytes.length % 2; i += 2) {
             monoBytes[i] = stereoBytes[i * 2];
             monoBytes[i + 1] = stereoBytes[i * 2 + 1];
@@ -126,7 +124,7 @@ public class AudioUtils {
     }
 
     public static byte[] convertToStereo(byte[] monoBytes) {
-        byte [] stereoBytes = new byte[monoBytes.length * 2];
+        byte[] stereoBytes = new byte[monoBytes.length * 2];
         for (int i = 0; i < monoBytes.length; i += 2) {
             stereoBytes[i * 2] = monoBytes[i];
             stereoBytes[i * 2 + 1] = monoBytes[i + 1];
@@ -186,7 +184,7 @@ public class AudioUtils {
         header[27] = (byte) ((sampleRate >> 24) & 0xff);
 
         //ByteRate : ByteRate = SampleRate * NumChannels * BitsPerSample/8
-        long byteRate = sampleRate *  channels * bitsPerSample / 8;
+        long byteRate = sampleRate * channels * bitsPerSample / 8;
         header[28] = (byte) (byteRate & 0xff);
         header[29] = (byte) ((byteRate >> 8) & 0xff);
         header[30] = (byte) ((byteRate >> 16) & 0xff);

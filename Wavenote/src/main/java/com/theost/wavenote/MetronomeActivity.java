@@ -175,12 +175,14 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
         updateSoundData();
 
-        if (Note.getActiveMetronomeSound() == null) Note.setActiveMetronomeSound(soundData[DEFAULT_SOUND]);
+        ViewUtils.removeFocus(mSoundTextView);
+
+        if (Note.getActiveMetronomeSound() == null)
+            Note.setActiveMetronomeSound(soundData[DEFAULT_SOUND]);
         mSoundTextView.setText(Note.getActiveMetronomeSound());
 
         checkSoundView();
 
-        mSoundTextView.requestFocus();
         ViewUtils.disbaleInput(mSoundTextView);
         mSoundTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -198,21 +200,26 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             }
         });
 
+        ViewUtils.restoreFocus(mSoundTextView);
+        mSoundTextView.requestFocus();
+        mSoundTextView.dismissDropDown();
+
         initToneList();
 
         audioTrack = AudioUtils.createTrack(AudioConfig.BEAT_CHANNEL_COUNT);
         pcmAudioFile = PCMAnalyser.createPCMAnalyser(AudioConfig.BEAT_CHANNEL_COUNT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             mSpeedBar.setMin(MIN_SPEED);
-            mSpeedBar.setMax(MAX_SPEED);
         }
 
+        mSpeedBar.setMax(MAX_SPEED);
         mSpeedBar.setProgress(currentSpeed);
         mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
+                    if (progress < MIN_SPEED) progress = MIN_SPEED;
                     currentSpeed = Integer.valueOf(progress).shortValue();
                     refreshSpeed();
                 }

@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager;
 
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DrawableUtils;
+import com.theost.wavenote.utils.HtmlCompat;
 import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.WordPressUtils;
@@ -198,7 +199,7 @@ public class WordPressDialogFragment extends AppCompatDialogFragment {
 
             try {
                 JSONObject site = mSitesArray.getJSONObject(position);
-                Spanned rowText = Html.fromHtml(String.format(
+                Spanned rowText = HtmlCompat.fromHtml(String.format(
                         Locale.ENGLISH,
                         "%s<br/><small><span style=\"color:#" +
                                 Integer.toHexString(DrawableUtils.getColor(requireContext(), R.attr.notePreviewColor) & 0xffffff) +
