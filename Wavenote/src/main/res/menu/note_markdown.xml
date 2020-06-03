@@ -28,7 +28,7 @@
     <item
         android:id="@+id/menu_audiotracks"
         android:icon="@drawable/m_graphic_eq_white_24dp"
-        android:title="@string/audio_tracks"
+        android:title="@string/music_studio"
         app:showAsAction="always" />
 
     <item

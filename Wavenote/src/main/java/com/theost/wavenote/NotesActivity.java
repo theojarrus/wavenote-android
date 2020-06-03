@@ -343,11 +343,20 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 new int[]{-android.R.attr.state_checked}  // unchecked
         };
 
-        int[] colors = new int[]{
-                getResources().getColor(R.color.text_title_disabled, getTheme()),
-                ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
-                ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
-        };
+        int[] colors;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            colors = new int[]{
+                    getResources().getColor(R.color.text_title_disabled, getTheme()),
+                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
+                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
+            };
+        } else {
+            colors = new int[]{
+                    getResources().getColor(R.color.text_title_disabled),
+                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
+                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
+            };
+        }
 
         return new ColorStateList(states, colors);
     }

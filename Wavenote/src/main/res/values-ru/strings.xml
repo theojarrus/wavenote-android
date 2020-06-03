@@ -210,7 +210,7 @@
     <string name="empty_audio">Добавьте ваше первое аудио</string>
     <string name="empty_chords">Не найдено аккордов</string>
     <string name="simperium_dialog_message_password_login">Пароль должен быть не менее %1$d символов, и не может содержать символы новой строки, пробелы и символы табуляции.</string>
-    <string name="audio_tracks">Аудио</string>
+    <string name="music_studio">Студия</string>
     <string name="photos">Фото</string>
     <string name="text_color">Цвет текста</string>
     <string name="export">Экспорт</string>

@@ -102,6 +102,6 @@ public class ThemeUtils {
         TypedArray typedArray = context.obtainStyledAttributes(new int[]{attribute});
         int colorResId = typedArray.getResourceId(0, android.R.color.black);
         typedArray.recycle();
-        return context.getColor(colorResId);
+        return context.getResources().getColor(colorResId);
     }
 }
