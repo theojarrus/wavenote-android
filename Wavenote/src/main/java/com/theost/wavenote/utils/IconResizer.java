@@ -20,8 +20,8 @@ import com.theost.wavenote.R;
 public class IconResizer {
 
     // Code is borrowed from com.android.launcher.Utilities.
-    private int mIconWidth = -1;
-    private int mIconHeight = -1;
+    private int mIconWidth;
+    private int mIconHeight;
     private final Rect mOldBounds = new Rect();
     private Canvas mCanvas = new Canvas();
     private Context context;

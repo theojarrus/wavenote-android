@@ -2,6 +2,7 @@ package com.theost.wavenote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.AudioTrack;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -140,6 +142,10 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     Button mTapButton;
     @BindView(R.id.metronome_tune)
     TextView mTuneTextView;
+    @BindView(R.id.actions)
+    LinearLayout mActionsLayout;
+    @BindView(R.id.play_action)
+    LinearLayout mPlayLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,6 +157,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        updateOrientation(getResources().getConfiguration().orientation);
 
         setTitle(R.string.metronome);
 
@@ -275,6 +282,23 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateOrientation(newConfig.orientation);
+    }
+
+    private void updateOrientation(int orientation) {
+        int padding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.custom_space));
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mPlayLayout.setPadding(padding, 0, 0,0);
+            mActionsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT){
+            mPlayLayout.setPadding(0, padding, 0,0);
+            mActionsLayout.setOrientation(LinearLayout.VERTICAL);
         }
     }
 

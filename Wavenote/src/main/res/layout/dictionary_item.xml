@@ -9,7 +9,7 @@
     android:clipToPadding="false"
     android:orientation="horizontal"
     android:paddingTop="0dp"
-    android:paddingBottom="@dimen/custom_vertical_space"
+    android:paddingBottom="@dimen/custom_space"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -17,8 +17,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginStart="@dimen/custom_horizontal_space"
-        android:layout_marginEnd="@dimen/custom_horizontal_space"
+        android:layout_marginStart="@dimen/custom_space"
+        android:layout_marginEnd="@dimen/custom_space"
         android:layout_weight="1.5"
         android:hint="@string/keyword">
 

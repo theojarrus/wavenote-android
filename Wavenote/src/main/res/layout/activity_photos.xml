@@ -50,12 +50,12 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/custom_vertical_space"
+                        android:layout_marginEnd="@dimen/custom_space"
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="@string/chords"
-                        android:paddingTop="@dimen/custom_vertical_space"
-                        android:paddingBottom="@dimen/custom_vertical_space"
+                        android:paddingTop="@dimen/custom_space"
+                        android:paddingBottom="@dimen/custom_space"
                         android:textColorHint="?attr/noteEditorTextColor"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -71,10 +71,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/custom_vertical_space"
-                    android:layout_marginBottom="@dimen/custom_vertical_space"
-                    android:paddingLeft="@dimen/custom_horizontal_space"
-                    android:paddingRight="@dimen/custom_horizontal_space">
+                    android:layout_marginTop="@dimen/custom_space"
+                    android:layout_marginBottom="@dimen/custom_space"
+                    android:paddingLeft="@dimen/custom_space"
+                    android:paddingRight="@dimen/custom_space">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/guitar_chords"
@@ -98,8 +98,8 @@
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/custom_horizontal_space"
-                        android:layout_marginRight="@dimen/custom_horizontal_space"
+                        android:layout_marginLeft="@dimen/custom_space"
+                        android:layout_marginRight="@dimen/custom_space"
                         android:layout_weight="1"
                         android:fontFamily="sans-serif-medium"
                         android:letterSpacing="0"
@@ -160,12 +160,12 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/custom_vertical_space"
+                        android:layout_marginEnd="@dimen/custom_space"
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="@string/materials"
-                        android:paddingTop="@dimen/custom_vertical_space"
-                        android:paddingBottom="@dimen/custom_vertical_space"
+                        android:paddingTop="@dimen/custom_space"
+                        android:paddingBottom="@dimen/custom_space"
                         android:textColorHint="?attr/noteEditorTextColor"
                         android:textSize="15sp"
                         android:textStyle="bold" />

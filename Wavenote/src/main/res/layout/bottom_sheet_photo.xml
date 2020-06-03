@@ -63,7 +63,7 @@
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
         android:drawableStart="@drawable/av_add_photo_camera_24dp"
-        android:drawablePadding="@dimen/custom_horizontal_space"
+        android:drawablePadding="@dimen/custom_space"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/add_photo_camera" />
@@ -77,7 +77,7 @@
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
         android:drawableStart="@drawable/av_add_photo_gallery_24dp"
-        android:drawablePadding="@dimen/custom_horizontal_space"
+        android:drawablePadding="@dimen/custom_space"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/add_photo_gallery" />
@@ -91,7 +91,7 @@
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
         android:drawableStart="@drawable/av_add_photo_storage_24dp"
-        android:drawablePadding="@dimen/custom_horizontal_space"
+        android:drawablePadding="@dimen/custom_space"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/add_photo_storage" />
