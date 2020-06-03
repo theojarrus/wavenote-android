@@ -57,10 +57,11 @@
     <LinearLayout
         android:id="@+id/share_custom_buttons"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/padding_extra_large"
-        android:layout_marginStart="@dimen/padding_extra_large"
         android:layout_width="match_parent"
-        android:padding="@dimen/padding_extra_large">
+        android:paddingTop="@dimen/padding_extra_large"
+        android:paddingBottom="@dimen/padding_extra_large"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small">
 
         <com.theost.wavenote.widgets.RobotoRegularTextView
             android:id="@+id/share_collaborate_button"

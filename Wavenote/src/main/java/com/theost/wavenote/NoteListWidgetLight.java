@@ -63,7 +63,7 @@ public class NoteListWidgetLight extends AppWidgetProvider {
     private void resizeWidget(Context context, Bundle appWidgetOptions, RemoteViews views) {
         // Show/Hide add button based on widget height and width
         if (appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) > MINIMUM_HEIGHT_FOR_BUTTON &&
-            appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) > MINIMUM_WIDTH_FOR_BUTTON) {
+                appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) > MINIMUM_WIDTH_FOR_BUTTON) {
             views.setViewPadding(R.id.widget_list, 0, 0, 0, context.getResources().getDimensionPixelSize(R.dimen.note_list_item_padding_bottom_button_widget));
             views.setViewVisibility(R.id.widget_button, View.VISIBLE);
         } else {
@@ -89,10 +89,14 @@ public class NoteListWidgetLight extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
             views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.log_in_use_widget));
-            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
             views.setViewVisibility(R.id.widget_text, View.VISIBLE);
             views.setViewVisibility(R.id.widget_list, View.GONE);
             views.setViewVisibility(R.id.widget_button, View.GONE);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+            } else {
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
+            }
         } else {
             Bucket<Note> notesBucket = currentApp.getNotesBucket();
             Query<Note> query = Note.all(notesBucket);
@@ -125,13 +129,17 @@ public class NoteListWidgetLight extends AppWidgetProvider {
                 views.setOnClickPendingIntent(R.id.widget_button, pendingIntent);
 
                 views.setEmptyView(R.id.widget_list, R.id.widget_text);
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
                 views.setViewVisibility(R.id.widget_text, View.GONE);
                 views.setViewVisibility(R.id.widget_list, View.VISIBLE);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+                } else {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
+                }
 
                 if (appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) > MINIMUM_HEIGHT_FOR_BUTTON &&
-                    appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) > MINIMUM_WIDTH_FOR_BUTTON) {
+                        appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) > MINIMUM_WIDTH_FOR_BUTTON) {
                     views.setViewVisibility(R.id.widget_button, View.VISIBLE);
                 } else {
                     views.setViewVisibility(R.id.widget_button, View.GONE);
@@ -143,11 +151,15 @@ public class NoteListWidgetLight extends AppWidgetProvider {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, 0);
                 views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
                 views.setViewVisibility(R.id.widget_text, View.VISIBLE);
                 views.setViewVisibility(R.id.widget_list, View.GONE);
                 views.setViewVisibility(R.id.widget_button, View.GONE);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+                } else {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
+                }
             }
         }
 

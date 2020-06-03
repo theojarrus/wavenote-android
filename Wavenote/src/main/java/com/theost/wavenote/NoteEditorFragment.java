@@ -211,7 +211,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             int colorResId = ThemeUtils.isLightTheme(requireContext()) ? R.color.background_light : R.color.background_dark;
-            requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
+            } else {
+                requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId));
+            }
             return true;
         }
 
@@ -262,7 +266,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
             new Handler().postDelayed(
-                    () -> requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme())),
+                    () -> {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
+                        } else {
+                            requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
+                        }
+                    },
                     requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
             );
         }

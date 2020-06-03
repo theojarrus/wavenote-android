@@ -3,9 +3,7 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:height="@dimen/share_icon_size"
-        android:width="@dimen/share_icon_size">
+    <item>
 
         <shape
             android:shape="oval">
@@ -14,6 +12,10 @@
                 android:color="@color/blue">
             </solid>
 
+            <size
+                android:width="@dimen/share_icon_size"
+                android:height="@dimen/share_icon_size" />
+
         </shape>
 
     </item>
@@ -21,9 +23,10 @@
     <item
         android:bottom="@dimen/padding_small"
         android:drawable="@drawable/ic_wordpress_24dp"
-        android:end="@dimen/padding_small"
-        android:start="@dimen/padding_small"
-        android:top="@dimen/padding_small">
+        android:right="@dimen/padding_small"
+        android:left="@dimen/padding_small"
+        android:top="@dimen/padding_small"
+        android:gravity="center">
     </item>
 
 </layer-list>

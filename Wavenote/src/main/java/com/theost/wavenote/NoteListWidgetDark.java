@@ -78,7 +78,12 @@ public class NoteListWidgetDark extends AppWidgetProvider {
             // Create intent to navigate to notes activity which redirects to login on widget click
             Intent intent = new Intent(context, NotesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
+            } else {
+                pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            }
             views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
             // Reset intent to navigate to note editor on note list add button click to navigate to notes activity, which redirects to login/signup
@@ -86,10 +91,14 @@ public class NoteListWidgetDark extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_button, PendingIntent.getActivity(context, appWidgetId, intentButton, PendingIntent.FLAG_UPDATE_CURRENT));
 
             views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.log_in_use_widget));
-            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
             views.setViewVisibility(R.id.widget_text, View.VISIBLE);
             views.setViewVisibility(R.id.widget_list, View.GONE);
             views.setViewVisibility(R.id.widget_button, View.GONE);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+            } else {
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
+            }
         } else {
             Bucket<Note> notesBucket = currentApp.getNotesBucket();
             Query<Note> query = Note.all(notesBucket);
@@ -122,15 +131,24 @@ public class NoteListWidgetDark extends AppWidgetProvider {
                 views.setOnClickPendingIntent(R.id.widget_button, pendingIntentButton);
 
                 views.setEmptyView(R.id.widget_list, R.id.widget_text);
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
                 views.setViewVisibility(R.id.widget_text, View.GONE);
                 views.setViewVisibility(R.id.widget_list, View.VISIBLE);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                } else {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
+                }
             } else {
                 // Create intent to navigate to notes activity on widget click
                 Intent intent = new Intent(context, NotesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent pendingIntent;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
+                } else {
+                    pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                }
                 views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
                 // Create intent to navigate to note editor on note list add button click
@@ -139,10 +157,14 @@ public class NoteListWidgetDark extends AppWidgetProvider {
                 PendingIntent pendingIntentButton = PendingIntent.getActivity(context, appWidgetId, intentButton, PendingIntent.FLAG_UPDATE_CURRENT);
                 views.setOnClickPendingIntent(R.id.widget_button, pendingIntentButton);
 
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
                 views.setViewVisibility(R.id.widget_text, View.VISIBLE);
                 views.setViewVisibility(R.id.widget_list, View.GONE);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                } else {
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
+                }
             }
         }
 

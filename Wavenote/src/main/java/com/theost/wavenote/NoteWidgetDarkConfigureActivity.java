@@ -182,9 +182,14 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
                 // Set widget content
                 mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                 mRemoteViews.setTextViewText(R.id.widget_text, title1);
-                mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 mRemoteViews.setTextViewText(R.id.widget_text_title, title1);
-                mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                    mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                } else {
+                    mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark));
+                    mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark));
+                }
                 SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
                 contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
                         contentSpan,
