@@ -16,7 +16,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Spannable;
@@ -75,6 +74,7 @@ import com.theost.wavenote.utils.DictionaryUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.HtmlCompat;
 import com.theost.wavenote.utils.MatchOffsetHighlighter;
 import com.theost.wavenote.utils.NetworkUtils;
 import com.theost.wavenote.utils.NoteUtils;
@@ -1024,7 +1024,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     case "html":
                         try {
                             File dirTextNew = new File(dirNew + FileUtils.TEXT_DIR);
-                            FileUtils.createFile(dirTextNew, noteName + ".htm", Html.toHtml(mContentEditText.getText()));
+                            FileUtils.createFile(dirTextNew, noteName + ".htm", HtmlCompat.toHtml(mContentEditText.getText()));
                             successList.add(mode);
                         } catch (IOException e) {
                             e.printStackTrace();

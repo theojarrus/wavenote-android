@@ -401,6 +401,12 @@
         <item>Capo</item>
     </string-array>
 
+    <string-array name="array_musical_instruments">
+        <item>Guitar</item>
+        <item>Piano</item>
+        <item>Ukulele</item>
+    </string-array>
+
     <string-array name="array_musical_chords">
         <item>Cb</item>
         <item>Cb7</item>

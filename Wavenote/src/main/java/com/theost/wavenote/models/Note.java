@@ -1,7 +1,6 @@
 package com.theost.wavenote.models;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -53,7 +52,7 @@ public class Note extends BucketObject {
     public static String TEXT_COLOR_AC = "#36393e";
     public static String TEXT_COLOR_DI = "#fafafa";
     public static String PHOTO_SORT_MODE = "date";
-    public static String ACTIVE_INSTRUMENT = "Guitar";
+    public static String ACTIVE_INSTRUMENT;
     public static int ACTIVE_TAB_COLUMNS = 4;
     public static boolean TEXT_STYLE_BOLD = false;
     public static boolean TEXT_STYLE_ITALIC = false;
@@ -315,7 +314,7 @@ public class Note extends BucketObject {
     public void setContent(Spannable content) {
         mTitle = null;
         mContentPreview = null;
-        String strContent = Html.toHtml(content).replaceAll("<img .*?>","- [ ]");
+        String strContent = HtmlCompat.toHtml(content).replaceAll("<img .*?>","- [ ]");
         setProperty(CONTENT_PROPERTY, strContent);
     }
 

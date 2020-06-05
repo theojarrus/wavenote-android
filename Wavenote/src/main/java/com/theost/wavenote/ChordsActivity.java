@@ -38,8 +38,9 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
     private final String[] CHORDS_REPLACEMENT = {"Cb", "B", "B#", "C", "Db", "C#", "D#", "Eb", "Fb", "E", "E#", "F", "Gb", "F#", "G#", "Ab", "A#", "Bb"};
     private final String[] NOTES_ORDER = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"};
-    private final String[] INSTRUMENTS = {"Guitar", "Piano", "Ukulele"};
     private final String[] COLUMNS = {"1", "2", "3", "4", "5", "6"};
+    private final int DEFAULT_INSTRUMENT = 0;
+    private String[] mInstrumentsList;
     private List<Drawable> mChordsDrawable;
     private List<String> mChordsReplace;
     private List<String> mNotesOrder;
@@ -79,9 +80,17 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
         isAllChords = getIntent().getBooleanExtra("isAllChords", false);
         mChordsList = getIntent().getStringArrayListExtra("chords");
+
+        mInstrumentsList = getResources().getStringArray(R.array.array_musical_instruments);
+
         activeInstrument = getIntent().getStringExtra("activeInstrument");
         if (activeInstrument == null) {
-            activeInstrument = Note.getActiveInstrument();
+            String savedInstrument = Note.getActiveInstrument();
+            if (savedInstrument == null) {
+                activeInstrument = mInstrumentsList[DEFAULT_INSTRUMENT];
+            } else {
+                activeInstrument = savedInstrument;
+            }
         }
 
         itemsInline = Note.getActiveTabColumns();
@@ -103,7 +112,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mInstrumentInputView = findViewById(R.id.instrument);
         mInstrumentInputView.setText(activeInstrument);
         ViewUtils.disbaleInput(mInstrumentInputView);
-        ViewUtils.updateDropdown(this, mInstrumentInputView, INSTRUMENTS);
+        ViewUtils.updateDropdown(this, mInstrumentInputView, mInstrumentsList);
 
         if (isAllChords) {
             TextInputLayout mInstrumentLayout = findViewById(R.id.instrument_layout);
