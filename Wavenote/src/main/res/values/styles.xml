@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="ActionMode.Wavestyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">?attr/actionModeBackgroundColor</item>
@@ -99,14 +99,14 @@
     <style name="Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="Theme.Wavestyle.Splash">
         <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
         <item name="android:statusBarColor">?attr/mainBackgroundColor</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
@@ -187,7 +187,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:windowBackground">@color/blue_60</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="toolbarColor">@color/blue_60</item>
     </style>
 

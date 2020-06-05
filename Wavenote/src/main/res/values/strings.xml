@@ -23,6 +23,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="word">Word</string>
+    <string name="title">Title</string>
     <string name="more_info">More Information</string>
     <string name="note_selected">%d note selected</string>
     <string name="notes_selected">%d notes selected</string>
@@ -346,6 +347,8 @@
     <string name="default_bpm_c" translatable="false">120</string>
     <string name="select_tone">Select Tone</string>
     <string name="select_beat">Select Beat</string>
+    <string name="stylize">Stylize</string>
+    <string name="add_to_dictionary">Add to Dictionary</string>
 
     <string-array name="array_export_modes">
         <item>Plaintext</item>
@@ -375,6 +378,11 @@
         <item>7/8</item>
         <item>9/8</item>
         <item>12/8</item>
+    </string-array>
+
+    <string-array name="keyword_types">
+        <item>Title</item>
+        <item>Word</item>
     </string-array>
 
     <string-array name="array_musical_titles">

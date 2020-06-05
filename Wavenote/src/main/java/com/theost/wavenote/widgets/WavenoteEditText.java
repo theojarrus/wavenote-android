@@ -106,24 +106,21 @@ public class WavenoteEditText extends AppCompatEditText {
             int iconSize = DisplayUtils.getChecklistIconSize(getContext());
             iconDrawable.setBounds(0, 0, iconSize, iconSize);
             final CenteredImageSpan newImageSpan = new CenteredImageSpan(getContext(), iconDrawable);
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    editable.setSpan(newImageSpan, checkboxStart, checkboxEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    editable.removeSpan(imageSpans[0]);
-                    fixLineSpacing();
+            new Handler().post(() -> {
+                editable.setSpan(newImageSpan, checkboxStart, checkboxEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                editable.removeSpan(imageSpans[0]);
+                fixLineSpacing();
 
-                    // Restore the selection
-                    if (selectionStart >= 0
-                            && selectionStart <= editable.length()
-                            && selectionEnd <= editable.length() && hasFocus()) {
-                        setSelection(selectionStart, selectionEnd);
-                        setCursorVisible(true);
-                    }
+                // Restore the selection
+                if (selectionStart >= 0
+                        && selectionStart <= editable.length()
+                        && selectionEnd <= editable.length() && hasFocus()) {
+                    setSelection(selectionStart, selectionEnd);
+                    setCursorVisible(true);
+                }
 
-                    if (mOnCheckboxToggledListener != null) {
-                        mOnCheckboxToggledListener.onCheckboxToggled();
-                    }
+                if (mOnCheckboxToggledListener != null) {
+                    mOnCheckboxToggledListener.onCheckboxToggled();
                 }
             });
         }
@@ -139,6 +136,10 @@ public class WavenoteEditText extends AppCompatEditText {
         }
 
         return 0;
+    }
+
+    public String getSelectedString() {
+        return getText().toString().substring(getSelectionStart(), getSelectionEnd());
     }
 
     public void insertChecklist() {

@@ -670,8 +670,8 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 return;
             }
 
-            byte[] monoHeader = AudioUtils.createWaveFileHeader(audioParams[3], 1, audioParams[1], (int) audioParams[2]);
-            byte[] stereoHeader = AudioUtils.createWaveFileHeader(audioParams[3] * 2, 2, audioParams[1], (int) audioParams[2]);
+            byte[] monoHeader = AudioUtils.createWaveFileHeader(audioParams[3], 1, audioParams[1], (int) (long) audioParams[2]);
+            byte[] stereoHeader = AudioUtils.createWaveFileHeader(audioParams[3] * 2, 2, audioParams[1], (int) (long) audioParams[2]);
 
             byte[] monoStream = new byte[monoHeader.length + monoBytes.length];
             System.arraycopy(monoHeader, 0, monoStream, 0, monoHeader.length);
@@ -717,7 +717,11 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private void pickFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("audio/x-wav");
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            intent.setType("audio/x-wav");
+        } else {
+            intent.setType("audio/wav");
+        }
         startActivityForResult(intent, FILE_REQUEST);
     }
 

@@ -7,7 +7,6 @@ import android.media.AudioTrack;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaRecorder;
-import android.os.Build;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,7 +58,11 @@ public class AudioUtils {
                     CHANNEL_OUT_SIDE_LEFT | CHANNEL_OUT_SIDE_RIGHT |
                     CHANNEL_OUT_BACK_LEFT | CHANNEL_OUT_BACK_RIGHT;
         } else if (channelCount == 8) {
-            channelConfig = AudioFormat.CHANNEL_OUT_7POINT1_SURROUND;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                channelConfig = AudioFormat.CHANNEL_OUT_7POINT1_SURROUND;
+            } else {
+                channelConfig = AudioFormat.CHANNEL_OUT_7POINT1;
+            }
         } else {
             throw new IllegalArgumentException("channelCount not support");
         }
@@ -91,8 +94,14 @@ public class AudioUtils {
 
         long channelCount = mediaFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
         long sampleRate = mediaFormat.getInteger(MediaFormat.KEY_SAMPLE_RATE);
-        long bitRate = mediaFormat.getInteger("bits-per-sample");
         long audioSize = new File(path).length();
+
+        long bitRate;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            bitRate = mediaFormat.getInteger("bits-per-sample");
+        } else {
+            bitRate = audioSize / (channelCount * sampleRate * mediaFormat.getLong(MediaFormat.KEY_DURATION));
+        }
 
         return new long[]{channelCount, sampleRate, bitRate, audioSize};
     }

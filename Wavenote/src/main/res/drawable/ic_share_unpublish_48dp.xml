@@ -21,8 +21,8 @@
     </item>
 
     <item
-        android:bottom="@dimen/padding_small"
         android:drawable="@drawable/ic_unpublish_24dp"
+        android:bottom="@dimen/padding_small"
         android:right="@dimen/padding_small"
         android:left="@dimen/padding_small"
         android:top="@dimen/padding_small"

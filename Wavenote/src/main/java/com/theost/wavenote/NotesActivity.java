@@ -1270,7 +1270,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_search));
         } else if (mSelectedTag != null) {
             if (mSelectedTag.id == ALL_NOTES_ID) {
-                getNoteListFragment().setEmptyListImage(R.drawable.ic_notes_24dp);
+                getNoteListFragment().setEmptyListImage(R.drawable.ic_notes_list_24dp);
                 getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_all));
             } else if (mSelectedTag.id == TRASH_ID) {
                 getNoteListFragment().setEmptyListImage(R.drawable.ic_trash_24dp);
@@ -1283,7 +1283,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_tag, mSelectedTag.name));
             }
         } else {
-            getNoteListFragment().setEmptyListImage(R.drawable.ic_notes_24dp);
+            getNoteListFragment().setEmptyListImage(R.drawable.ic_notes_list_24dp);
             getNoteListFragment().setEmptyListMessage(getString(R.string.empty_notes_all));
         }
     }

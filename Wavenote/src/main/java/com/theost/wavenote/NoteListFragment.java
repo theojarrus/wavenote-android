@@ -289,7 +289,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         emptyView.setVisibility(View.GONE);
         mEmptyViewImage = emptyView.findViewById(R.id.image);
         mEmptyViewText = emptyView.findViewById(R.id.text);
-        setEmptyListImage(R.drawable.ic_notes_24dp);
+        setEmptyListImage(R.drawable.ic_notes_list_24dp);
         setEmptyListMessage(getString(R.string.empty_notes_all));
         mDividerLine = view.findViewById(R.id.divider_line);
 

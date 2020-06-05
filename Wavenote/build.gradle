@@ -134,7 +134,6 @@ dependencies {
     implementation 'net.openid:appauth:0.7.0'
     wearApp project(':Wear')
     // Butter Knife
-    //noinspection AnnotationProcessorOnCompilePath
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 }

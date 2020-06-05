@@ -80,7 +80,10 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         if (resultCode == RESULT_OK) {
             Bitmap imageBitmap;
             File file = FileUtils.createNoteFile(getContext(), noteId, "photo");
-            if (file == null) dismiss();
+            if (file == null) {
+                dismiss();
+                return;
+            }
             if (requestCode == CAMERA_REQUEST) {
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");

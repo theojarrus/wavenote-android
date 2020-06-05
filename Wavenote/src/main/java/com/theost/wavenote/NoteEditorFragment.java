@@ -39,8 +39,10 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +50,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 
+import androidx.appcompat.widget.ActionBarContextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 import androidx.core.widget.NestedScrollView;
@@ -60,11 +63,15 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.model.enums.EncryptionMethod;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.AutoBullet;
 import com.theost.wavenote.utils.ContextUtils;
+import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DictionaryUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
@@ -169,9 +176,16 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private boolean mIsFromWidget;
     private Function1 listener;
     private ColorSheet colorSheet;
-    private int[] colors;
+    private int[] styleColors;
     private String lightColor;
     private String darkColor;
+
+    private DatabaseHelper localDatabase;
+    private EditText mAddKeywordEditText;
+    private RadioGroup mAddKeywordType;
+    private String[] keywordTypes;
+    private int[] keywordColors;
+    private int keywordMaxLength;
 
     // Hides the history bottom sheet if no revisions are loaded
     private final Runnable mHistoryTimeoutRunnable = new Runnable() {
@@ -384,10 +398,53 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mHighlighter = new MatchOffsetHighlighter(mMatchHighlighter, mContentEditText);
         mPlaceholderView = mRootView.findViewById(R.id.placeholder);
 
+        mContentEditText.setCustomSelectionActionModeCallback(new android.view.ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.selection, menu);
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+                    mode.setTitle("");
+                    menu.findItem(R.id.add_dictionary).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    menu.findItem(R.id.stylize).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    for (int i = 0; i < menu.size(); i++) {
+                        menu.getItem(i).setTitle("");
+                        menu.getItem(i).getIcon().setTint(getContext().getResources().getColor(getActionColor()));
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.add_dictionary:
+                        showKeywordDialog();
+                        return true;
+                    case R.id.stylize:
+                        changeTextColor();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(android.view.ActionMode mode) {}
+        });
+
+        keywordColors = DictionaryUtils.getKeywordColors(getContext());
+        keywordTypes = DictionaryUtils.getKeywordTypes(getContext());
+
         colorSheet = new ColorSheet();
         colorSheet.cornerRadius(8);
 
-        colors = getResources().getIntArray(R.array.colorsheet_colors);
+        styleColors = getResources().getIntArray(R.array.colorsheet_colors);
         lightColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_light)).substring(2).toUpperCase();
         darkColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_dark)).substring(2).toUpperCase();
         if (ThemeUtils.isLightTheme(requireContext())) {
@@ -470,6 +527,18 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             Layout layout = mContentEditText.getLayout();
             int lineTop = layout.getLineTop(layout.getLineForOffset(location));
             ((NestedScrollView) mRootView).smoothScrollTo(0, lineTop);
+        }
+    }
+
+    private void removeActionBar(View v) {
+        ViewGroup viewgroup = (ViewGroup) v;
+        for (int i = 0; i < viewgroup.getChildCount(); i++) {
+            View v1 = viewgroup.getChildAt(i);
+            if (v1 instanceof ViewGroup)
+                removeActionBar(v1);
+            if (v1 instanceof ActionBarContextView) {
+                viewgroup.removeView(v1);
+            }
         }
     }
 
@@ -565,12 +634,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewSize, viewSize);
         colorItemView.setLayoutParams(params);
         colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-
         colorItemView.setOnClickListener(v -> onOptionsItemSelected(colorItem));
-        colorItemView.setOnLongClickListener(v -> {
-            pickTextColor();
-            return true;
-        });
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            colorItemView.setOnLongClickListener(v -> {
+                pickTextColor();
+                return true;
+            });
+        }
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -582,7 +653,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 startPhotosActivity();
                 return true;
             case R.id.menu_color:
-                changeTextColor();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    changeTextColor();
+                } else {
+                    pickTextColor();
+                }
                 return true;
             case R.id.menu_sheet:
                 startChordsActivity();
@@ -732,6 +807,87 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         super.onPrepareOptionsMenu(menu);
     }
 
+    private int getActionColor() {
+        TypedValue typedValue = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.actionModeTextColor, typedValue, true);
+        return typedValue.resourceId;
+    }
+
+    private void showKeywordDialog() {
+        updateKeyDialogData();
+        String selectedText = mContentEditText.getSelectedString().trim();
+        if (selectedText.length() > keywordMaxLength)
+            selectedText = selectedText.substring(0, keywordMaxLength);
+        MaterialDialog keywordDialog = new MaterialDialog.Builder(getContext())
+                .customView(R.layout.add_dialog, false)
+                .title(R.string.add_keyword)
+                .positiveText(R.string.import_note)
+                .positiveColor(keywordColors[1])
+                .onPositive((dialog, which) -> insertKeyword(mAddKeywordEditText.getText().toString()))
+                .negativeText(R.string.cancel).build();
+        MDButton addButton = keywordDialog.getActionButton(DialogAction.POSITIVE);
+        mAddKeywordType = keywordDialog.getCustomView().findViewById(R.id.keyword_type);
+        mAddKeywordType.setVisibility(View.VISIBLE);
+        mAddKeywordEditText = keywordDialog.getCustomView().findViewById(R.id.dialog_input);
+        mAddKeywordEditText.setText(selectedText);
+        mAddKeywordEditText.requestFocus();
+        mAddKeywordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                if (mAddKeywordEditText.getText().length() == 0) {
+                    addButton.setEnabled(false);
+                    addButton.setTextColor(keywordColors[0]);
+                } else {
+                    addButton.setEnabled(true);
+                    addButton.setTextColor(keywordColors[1]);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+        keywordDialog.show();
+    }
+
+    private void insertKeyword(String keyword) {
+        if (keyword.equals("") || mAddKeywordType.getCheckedRadioButtonId() == -1) return;
+        String type;
+        switch (mAddKeywordType.getCheckedRadioButtonId()) {
+            case R.id.type_title:
+                type = keywordTypes[0];
+                break;
+            case R.id.type_word:
+                type = keywordTypes[1];
+                break;
+            default:
+                return;
+        }
+        boolean isInserted = localDatabase.insertDictionaryData(keyword, type);
+        if (isInserted) {
+            DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.created));
+            Note.setNeedResourcesUpdate(true);
+            syntaxHighlightEditorContent();
+        } else {
+            DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.database_error));
+        }
+    }
+
+    private void updateKeyDialogData() {
+        if (localDatabase == null)
+            localDatabase = new DatabaseHelper(getContext());
+        if (keywordTypes == null)
+            keywordTypes = DictionaryUtils.getKeywordTypes(getContext());
+        if (keywordColors == null)
+            keywordColors = DictionaryUtils.getKeywordColors(getContext());
+        if (keywordMaxLength == 0)
+            keywordMaxLength = DictionaryUtils.getKeywordMaxLength(getContext());
+    }
+
     private void showExportDialog() {
         new MaterialDialog.Builder(getContext())
                 .title(R.string.export)
@@ -877,7 +1033,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                         break;
                     case "photo":
                         File dirPhotoOld = new File(dirOld + FileUtils.PHOTOS_DIR);
-                        if (dirPhotoOld.list().length != 0) {
+                        if (dirPhotoOld.exists() && dirPhotoOld.list().length != 0) {
                             File dirPhotoNew = new File(dirNew + FileUtils.PHOTOS_DIR);
                             try {
                                 ArrayList<Boolean> copiedFiles = new ArrayList<>();
@@ -1585,7 +1741,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void pickTextColor() {
-        colorSheet.colorPicker(colors, mNote.getSelectedColor(), true, listener);
+        colorSheet.colorPicker(styleColors, mNote.getSelectedColor(), true, listener);
         this.colorSheet.show(getParentFragmentManager());
     }
 

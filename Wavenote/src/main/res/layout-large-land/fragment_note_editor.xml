@@ -40,6 +40,7 @@
                     android:lineSpacingExtra="@dimen/line_spacing"
                     android:lineSpacingMultiplier="1.0"
                     android:maxLength="999999999"
+                    android:imeOptions="flagNoExtractUi"
                     android:nextFocusDown="@id/tag_input"
                     android:nextFocusForward="@id/tag_input"
                     android:paddingBottom="@dimen/padding_extra_extra_large"

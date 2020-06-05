@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/add_dictionary"
+        android:icon="@drawable/ic_theory_24dp"
+        android:title="@string/add_to_dictionary"
+        app:showAsAction="never" />
+    <item android:id="@+id/stylize"
+        android:icon="@drawable/m_pallete_outlined_24dp"
+        android:title="@string/stylize"
+        app:showAsAction="never" />
+</menu>
