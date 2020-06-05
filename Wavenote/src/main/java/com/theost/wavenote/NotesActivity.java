@@ -783,14 +783,16 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
             updateActionsForLargeLandscape(menu);
         } else {
+            trashItem.setVisible(false);
+
             menu.findItem(R.id.menu_search).setVisible(true);
             menu.findItem(R.id.menu_share).setVisible(false);
             menu.findItem(R.id.menu_info).setVisible(false);
             menu.findItem(R.id.menu_checklist).setVisible(false);
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
-            trashItem.setVisible(false);
             menu.findItem(R.id.menu_empty_trash).setVisible(false);
+
             menu.setGroupVisible(R.id.group_1, false);
             menu.setGroupVisible(R.id.group_2, false);
             menu.setGroupVisible(R.id.group_3, false);
@@ -959,6 +961,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             menu.findItem(R.id.menu_markdown_preview).setVisible(mCurrentNote.isMarkdownEnabled());
             menu.findItem(R.id.menu_sidebar).setVisible(true);
             menu.findItem(R.id.menu_info).setVisible(true);
+
             menu.setGroupVisible(R.id.group_1, true);
             menu.setGroupVisible(R.id.group_2, true);
             menu.setGroupVisible(R.id.group_3, true);
@@ -967,6 +970,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
             menu.findItem(R.id.menu_info).setVisible(false);
+
             menu.setGroupVisible(R.id.group_1, false);
             menu.setGroupVisible(R.id.group_2, false);
             menu.setGroupVisible(R.id.group_3, false);

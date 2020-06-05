@@ -49,4 +49,246 @@
         <item>22</item>
     </string-array>
 
+    <string-array name="array_sort_dictionary">
+        <item>date</item>
+        <item>name</item>
+        <item>type</item>
+    </string-array>
+
+    <string-array name="array_sort_photos">
+        <item>date</item>
+        <item>name</item>
+    </string-array>
+
+    <string-array name="array_export_modes">
+        <item>Plaintext</item>
+        <item>Html</item>
+        <item>Photo</item>
+        <item>Zip</item>
+        <item>Password</item>
+    </string-array>
+
+    <string-array name="metronome_sounds">
+        <item>Basic</item>
+        <item>Sticks</item>
+        <item>Claps</item>
+        <item>Drums</item>
+        <item>Synth</item>
+        <item>Machine</item>
+    </string-array>
+
+    <string-array name="beats_array">
+        <item tools:ignore="TypographyFractions">1/4</item>
+        <item>2/4</item>
+        <item tools:ignore="TypographyFractions">3/4</item>
+        <item>4/4</item>
+        <item>5/4</item>
+        <item>5/8</item>
+        <item>6/8</item>
+        <item>7/8</item>
+        <item>9/8</item>
+        <item>12/8</item>
+    </string-array>
+
+    <string-array name="keyword_types">
+        <item>Title</item>
+        <item>Word</item>
+    </string-array>
+
+    <string-array name="array_musical_titles">
+        <item>[Intro]</item>
+        <item>[Verse]</item>
+        <item>[Pre-Chorus]</item>
+        <item>[Chorus]</item>
+        <item>[Solo]</item>
+        <item>[Bridge]</item>
+        <item>[Outro]</item>
+        <item>[Instrumental]</item>
+    </string-array>
+
+    <string-array name="array_musical_words">
+        <item>Tempo</item>
+        <item>Capo</item>
+    </string-array>
+
+    <string-array name="array_musical_instruments">
+        <item>Guitar</item>
+        <item>Piano</item>
+        <item>Ukulele</item>
+    </string-array>
+
+    <string-array name="array_musical_columns">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="array_musical_chords">
+        <item>Cb</item>
+        <item>Cb7</item>
+        <item>Cbmaj7</item>
+        <item>Cbm</item>
+        <item>Cbm7</item>
+        <item>Cbsus4</item>
+        <item>C</item>
+        <item>C7</item>
+        <item>Cmaj7</item>
+        <item>Cm</item>
+        <item>Cm7</item>
+        <item>Csus4</item>
+        <item>C#</item>
+        <item>C#7</item>
+        <item>C#maj7</item>
+        <item>C#m</item>
+        <item>C#m7</item>
+        <item>C#sus4</item>
+        <item>Db</item>
+        <item>Db7</item>
+        <item>Dbmaj7</item>
+        <item>Dbm</item>
+        <item>Dbm7</item>
+        <item>Dbsus4</item>
+        <item>D</item>
+        <item>D7</item>
+        <item>Dmaj7</item>
+        <item>Dm</item>
+        <item>Dm7</item>
+        <item>Dsus4</item>
+        <item>D#</item>
+        <item>D#7</item>
+        <item>D#maj7</item>
+        <item>D#m</item>
+        <item>D#m7</item>
+        <item>D#sus4</item>
+        <item>Eb</item>
+        <item>Eb7</item>
+        <item>Ebmaj7</item>
+        <item>Ebm</item>
+        <item>Ebm7</item>
+        <item>Ebsus4</item>
+        <item>E</item>
+        <item>E7</item>
+        <item>Emaj7</item>
+        <item>Em</item>
+        <item>Em7</item>
+        <item>Esus4</item>
+        <item>E#</item>
+        <item>E#7</item>
+        <item>E#maj7</item>
+        <item>E#m</item>
+        <item>E#m7</item>
+        <item>E#sus4</item>
+        <item>Fb</item>
+        <item>Fb7</item>
+        <item>Fbmaj7</item>
+        <item>Fbm</item>
+        <item>Fbm7</item>
+        <item>Fbsus4</item>
+        <item>F</item>
+        <item>F7</item>
+        <item>Fmaj7</item>
+        <item>Fm</item>
+        <item>Fm7</item>
+        <item>Fsus4</item>
+        <item>F#</item>
+        <item>F#7</item>
+        <item>F#maj7</item>
+        <item>F#m</item>
+        <item>F#m7</item>
+        <item>F#sus4</item>
+        <item>Gb</item>
+        <item>Gb7</item>
+        <item>Gbmaj7</item>
+        <item>Gbm</item>
+        <item>Gbm7</item>
+        <item>Gbsus4</item>
+        <item>G</item>
+        <item>G7</item>
+        <item>Gmaj7</item>
+        <item>Gm</item>
+        <item>Gm7</item>
+        <item>Gsus4</item>
+        <item>G#</item>
+        <item>G#7</item>
+        <item>G#maj7</item>
+        <item>G#m</item>
+        <item>G#m7</item>
+        <item>G#sus4</item>
+        <item>Ab</item>
+        <item>Ab7</item>
+        <item>Abmaj7</item>
+        <item>Abm</item>
+        <item>Abm7</item>
+        <item>Absus4</item>
+        <item>A</item>
+        <item>A7</item>
+        <item>Amaj7</item>
+        <item>Am</item>
+        <item>Am7</item>
+        <item>Asus4</item>
+        <item>A#</item>
+        <item>A#7</item>
+        <item>A#maj7</item>
+        <item>A#m</item>
+        <item>A#m7</item>
+        <item>A#sus4</item>
+        <item>Bb</item>
+        <item>Bb7</item>
+        <item>Bbmaj7</item>
+        <item>Bbm</item>
+        <item>Bbm7</item>
+        <item>Bbsus4</item>
+        <item>B</item>
+        <item>B7</item>
+        <item>Bmaj7</item>
+        <item>Bm</item>
+        <item>Bm7</item>
+        <item>Bsus4</item>
+        <item>B#</item>
+        <item>B#7</item>
+        <item>B#maj7</item>
+        <item>B#m</item>
+        <item>B#m7</item>
+        <item>B#sus4</item>
+    </string-array>
+
+    <string-array name="array_musical_chords_replace">
+        <item>Cb</item>
+        <item>B</item>
+        <item>B#</item>
+        <item>C</item>
+        <item>Db</item>
+        <item>C#</item>
+        <item>D#</item>
+        <item>Eb</item>
+        <item>Fb</item>
+        <item>E</item>
+        <item>E#</item>
+        <item>F</item>
+        <item>Gb</item>
+        <item>F#</item>
+        <item>G#</item>
+        <item>Ab</item>
+        <item>A#</item>
+        <item>Bb</item>
+    </string-array>
+
+    <string-array name="array_musical_notes_order">
+        <item>C</item>
+        <item>C#</item>
+        <item>D</item>
+        <item>Eb</item>
+        <item>E</item>
+        <item>F</item>
+        <item>F#</item>
+        <item>G</item>
+        <item>Ab</item>
+        <item>A</item>
+        <item>Bb</item>
+        <item>B</item>
+    </string-array>
+
 </resources>

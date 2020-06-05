@@ -27,20 +27,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.theost.wavenote.models.Note.SPACE;
+
 public class SyntaxHighlighter {
 
-    private static final int TITLE_SPACE_LENGTH = 24;
-    private static final String SPACE = " ";
     private static boolean isHighlightChanged = false;
+    private static final int TITLE_SPACE_LENGTH = 24;
+
     private static ArrayList<String> noteChords;
     private static List<String> keyTitles;
     private static List<String> keyWords;
+
     private static int backTextColor;
     private static int frontTextColor;
 
     @SuppressLint("ResourceAsColor")
     public static void updateSyntaxHighlight(Context context, EditText mContentEditText, String foregroundColor, boolean detectChords) {
-        if (Note.isNeedResourcesUpdate()) updateResources(context);
+        if (Note.isIsNeedResourceUpdate()) updateResources(context);
 
         Spannable noteContent = mContentEditText.getText();
         frontTextColor = Color.parseColor(foregroundColor);
@@ -185,7 +188,7 @@ public class SyntaxHighlighter {
             keyWords.add(words.getString(0));
         }
 
-        Note.setNeedResourcesUpdate(false);
+        Note.setIsNeedResourceUpdate(false);
     }
 
 }

@@ -10,6 +10,9 @@
     android:orientation="horizontal"
     android:paddingTop="0dp"
     android:paddingBottom="@dimen/custom_space"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.textfield.TextInputLayout

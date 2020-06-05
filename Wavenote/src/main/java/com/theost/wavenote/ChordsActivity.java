@@ -36,25 +36,34 @@ import java.util.List;
 
 public class ChordsActivity extends ThemedAppCompatActivity {
 
-    private final String[] CHORDS_REPLACEMENT = {"Cb", "B", "B#", "C", "Db", "C#", "D#", "Eb", "Fb", "E", "E#", "F", "Gb", "F#", "G#", "Ab", "A#", "Bb"};
-    private final String[] NOTES_ORDER = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"};
-    private final String[] COLUMNS = {"1", "2", "3", "4", "5", "6"};
-    private final int DEFAULT_INSTRUMENT = 0;
-    private String[] mInstrumentsList;
+    private int DEFAULT_COLUMN = 4;
+
     private List<Drawable> mChordsDrawable;
     private List<String> mChordsReplace;
-    private List<String> mNotesOrder;
+    private List<String> mNotesList;
     private List<String> mChordsList;
+
+    private String[] mChordReplacement;
+    private String[] mNotesOrder;
+    private String[] mInstrumentList;
+    private String[] mColumnList;
+    private String activeInstrument;
+
+    private boolean isAllChords;
+
+    private final int DEFAULT_INSTRUMENT = 0;
+    private final int COLUMN_COUNT = 6;
+
+    private int itemsInline;
+    private int itemWidth;
+
     private AutoCompleteTextView mInstrumentInputView;
     private AutoCompleteTextView mColumnsInputView;
     private RecyclerView mChordsRecyclerView;
     private ChordAdapter adapter;
-    private String activeInstrument;
-    private boolean isAllChords;
-    private int itemsInline;
-    private int itemWidth;
 
     @SuppressLint({"ResourceType", "SetTextI18n"})
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemeUtils.setTheme(this);
@@ -81,22 +90,27 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         isAllChords = getIntent().getBooleanExtra("isAllChords", false);
         mChordsList = getIntent().getStringArrayListExtra("chords");
 
-        mInstrumentsList = getResources().getStringArray(R.array.array_musical_instruments);
+        mInstrumentList = getResources().getStringArray(R.array.array_musical_instruments);
+        mColumnList = getResources().getStringArray(R.array.array_musical_columns);
+
+        mChordReplacement = getResources().getStringArray(R.array.array_musical_chords_replace);
+        mNotesOrder = getResources().getStringArray(R.array.array_musical_notes_order);
 
         activeInstrument = getIntent().getStringExtra("activeInstrument");
         if (activeInstrument == null) {
-            String savedInstrument = Note.getActiveInstrument();
+            String savedInstrument = Note.getNoteActiveInstrument();
             if (savedInstrument == null) {
-                activeInstrument = mInstrumentsList[DEFAULT_INSTRUMENT];
+                activeInstrument = mInstrumentList[DEFAULT_INSTRUMENT];
             } else {
                 activeInstrument = savedInstrument;
             }
         }
 
-        itemsInline = Note.getActiveTabColumns();
+        itemsInline = Note.getNoteActiveColumns();
+        if (itemsInline == 0) itemsInline = DEFAULT_COLUMN;
 
-        mChordsReplace = Arrays.asList(CHORDS_REPLACEMENT);
-        mNotesOrder = Arrays.asList(NOTES_ORDER);
+        mChordsReplace = Arrays.asList(mChordReplacement);
+        mNotesList = Arrays.asList(mNotesOrder);
 
         mChordsRecyclerView = findViewById(R.id.chord_view);
         mChordsRecyclerView.setHasFixedSize(false);
@@ -110,9 +124,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         }
 
         mInstrumentInputView = findViewById(R.id.instrument);
+        ViewUtils.removeFocus(mInstrumentInputView);
         mInstrumentInputView.setText(activeInstrument);
         ViewUtils.disbaleInput(mInstrumentInputView);
-        ViewUtils.updateDropdown(this, mInstrumentInputView, mInstrumentsList);
+        ViewUtils.updateDropdown(this, mInstrumentInputView, mInstrumentList);
+        ViewUtils.restoreFocus(mInstrumentInputView);
 
         if (isAllChords) {
             TextInputLayout mInstrumentLayout = findViewById(R.id.instrument_layout);
@@ -122,9 +138,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         if (mChordsList.size() < itemsInline) itemsInline = mChordsList.size();
 
         mColumnsInputView = findViewById(R.id.columns);
+        ViewUtils.removeFocus(mColumnsInputView);
         mColumnsInputView.setText(Integer.toString(itemsInline));
         ViewUtils.disbaleInput(mColumnsInputView);
-        ViewUtils.updateDropdown(this, mColumnsInputView, COLUMNS);
+        ViewUtils.updateDropdown(this, mColumnsInputView, mColumnList);
+        ViewUtils.restoreFocus(mColumnsInputView);
 
         mColumnsInputView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -141,7 +159,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                 int tmpItemsInline = Integer.parseInt(s.toString());
                 if (tmpItemsInline != itemsInline) {
                     itemsInline = tmpItemsInline;
-                    Note.setActiveTabColumns(itemsInline);
+                    Note.setNoteActiveColumns(itemsInline);
                     updateItemSize();
                 }
             }
@@ -162,7 +180,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                 String tmpInstrument = s.toString();
                 if (!(tmpInstrument.equals(activeInstrument))) {
                     activeInstrument = tmpInstrument;
-                    Note.setActiveInstrument(activeInstrument);
+                    Note.setNoteActiveInstrument(activeInstrument);
                     updateDrawables();
                 }
             }
@@ -245,13 +263,13 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                     end = chord.substring(1);
                 }
             }
-            int index = mNotesOrder.indexOf(chord.substring(0, chordEnd)) + direction;
+            int index = mNotesList.indexOf(chord.substring(0, chordEnd)) + direction;
             if (index < 0) {
-                index += mNotesOrder.size();
-            } else if (index >= mNotesOrder.size()) {
-                index -= mNotesOrder.size();
+                index += mNotesList.size();
+            } else if (index >= mNotesList.size()) {
+                index -= mNotesList.size();
             }
-            mChordsList.set(i, mNotesOrder.get(index) + end);
+            mChordsList.set(i, mNotesList.get(index) + end);
         }
         updateDrawables();
     }

@@ -3,7 +3,6 @@ package com.theost.wavenote.utils;
 import android.content.Context;
 import android.text.InputType;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
@@ -17,6 +16,12 @@ public class ViewUtils {
         view.dismissDropDown();
     }
 
+    public static void disbaleInput(EditText view) {
+        view.setInputType(InputType.TYPE_NULL);
+        view.setCursorVisible(false);
+        view.setKeyListener(null);
+    }
+
     public static void restoreFocus(View view) {
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
@@ -25,12 +30,6 @@ public class ViewUtils {
     public static void removeFocus(View view) {
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
-    }
-
-    public static void disbaleInput(EditText view) {
-        view.setInputType(InputType.TYPE_NULL);
-        view.setCursorVisible(false);
-        view.setKeyListener(null);
     }
 
 }

@@ -31,7 +31,6 @@ public class Note extends BucketObject {
     public static final String PINNED_TAG = "pinned";
     public static final String PREVIEW_TAG = "preview";
     public static final String PUBLISHED_TAG = "published";
-    public static final String NEW_LINE = "\n";
     public static final String CONTENT_PROPERTY = "content";
     public static final String TAGS_PROPERTY = "tags";
     public static final String SYSTEM_TAGS_PROPERTY = "systemTags";
@@ -48,26 +47,35 @@ public class Note extends BucketObject {
     public static final String MATCHED_TITLE_INDEX_NAME = "matchedTitle";
     public static final String MATCHED_CONTENT_INDEX_NAME = "matchedContent";
     public static final String PUBLISH_URL = "http://simp.ly/publish/";
-    public static Integer SELECTED_COLOR = -1;
-    public static String TEXT_COLOR_AC = "#36393e";
-    public static String TEXT_COLOR_DI = "#fafafa";
-    public static String PHOTO_SORT_MODE = "date";
-    public static String ACTIVE_INSTRUMENT;
-    public static int ACTIVE_TAB_COLUMNS = 4;
-    public static boolean TEXT_STYLE_BOLD = false;
-    public static boolean TEXT_STYLE_ITALIC = false;
-    public static boolean TEXT_STYLE_STROKE = false;
-    public static boolean TEXT_STYLE_CODE = false;
-    public static boolean TEXT_STYLE_UNDERLINE = false;
-    public static boolean TEXT_STYLE_STRIKETHROUGH = false;
-    public static boolean NEED_RESOURCES_UPDATE = true;
+    public static final String NEW_LINE = "\n";
+    public static final String SPACE = " ";
+
     private static final int MAX_PREVIEW_CHARS = 300;
-    public static String ACTIVE_METRONOME_SOUND;
+
     public static final String[] FULL_TEXT_INDEXES = new String[]{Note.TITLE_INDEX_NAME, Note.CONTENT_PROPERTY};
     private static final Spannable BLANK_CONTENT = new SpannableString("");
-    private static final String SPACE = " ";
+
     protected String mContentPreview = null;
     protected String mTitle = null;
+
+    public static boolean isTextStyleBold = false;
+    public static boolean isTextStyleItalic = false;
+    public static boolean isTextStyleStroke = false;
+    public static boolean isTextStyleCode = false;
+    public static boolean isTextStyleUnderline = false;
+    public static boolean isTextStyleStrikethrough = false;
+
+    public static boolean isNeedResourceUpdate = true;
+
+    public static String themedTextActiveColor = "#36393e";
+    public static String themedTextInactiveColor = "#fafafa";
+    public static String notePhotosSort = "date";
+
+    public static int activeStyleColor = -1;
+
+    public static String activeMetronomeSound;
+    public static String noteActiveInstrument;
+    public static int noteActiveColumns;
 
     public Note(String key) {
         super(key, new JSONObject());
@@ -182,117 +190,117 @@ public class Note extends BucketObject {
         }
     }
 
-    public static String getActiveInstrument() {
-        return ACTIVE_INSTRUMENT;
+    public static String getNoteActiveInstrument() {
+        return noteActiveInstrument;
     }
 
-    public static void setActiveInstrument(String activeInstrument) {
-        ACTIVE_INSTRUMENT = activeInstrument;
+    public static void setNoteActiveInstrument(String noteActiveInstrument) {
+        Note.noteActiveInstrument = noteActiveInstrument;
     }
 
-    public static int getActiveTabColumns() {
-        return ACTIVE_TAB_COLUMNS;
+    public static int getNoteActiveColumns() {
+        return noteActiveColumns;
     }
 
-    public static void setActiveTabColumns(int activeTabColumns) {
-        ACTIVE_TAB_COLUMNS = activeTabColumns;
+    public static void setNoteActiveColumns(int noteActiveColumns) {
+        Note.noteActiveColumns = noteActiveColumns;
     }
 
     public static String getActiveMetronomeSound() {
-        return ACTIVE_METRONOME_SOUND;
+        return activeMetronomeSound;
     }
 
     public static void setActiveMetronomeSound(String activeMetronomeSound) {
-        ACTIVE_METRONOME_SOUND = activeMetronomeSound;
+        Note.activeMetronomeSound = activeMetronomeSound;
     }
 
-    public static boolean isNeedResourcesUpdate() {
-        return NEED_RESOURCES_UPDATE;
+    public static boolean isIsNeedResourceUpdate() {
+        return isNeedResourceUpdate;
     }
 
-    public static void setNeedResourcesUpdate(boolean update) {
-        NEED_RESOURCES_UPDATE = update;
+    public static void setIsNeedResourceUpdate(boolean update) {
+        isNeedResourceUpdate = update;
     }
 
-    public static String getPhotoSortMode() {
-        return PHOTO_SORT_MODE;
+    public static String getNotePhotosSort() {
+        return notePhotosSort;
     }
 
-    public static void setPhotoSortMode(String mode) {
-        PHOTO_SORT_MODE = mode;
+    public static void setNotePhotosSort(String mode) {
+        notePhotosSort = mode;
     }
 
-    public static boolean isTextStyleBold() { return TEXT_STYLE_BOLD;}
+    public static boolean isIsTextStyleBold() { return isTextStyleBold;}
 
-    public static boolean isTextStyleItalic() {
-        return TEXT_STYLE_ITALIC;
+    public static boolean isIsTextStyleItalic() {
+        return isTextStyleItalic;
     }
 
-    public static boolean isTextStyleStroke() {
-        return TEXT_STYLE_STROKE;
+    public static boolean isIsTextStyleStroke() {
+        return isTextStyleStroke;
     }
 
-    public static boolean isTextStyleCode() {
-        return TEXT_STYLE_CODE;
+    public static boolean isIsTextStyleCode() {
+        return isTextStyleCode;
     }
 
-    public static boolean isTextStyleUnderline() {
-        return TEXT_STYLE_UNDERLINE;
+    public static boolean isIsTextStyleUnderline() {
+        return isTextStyleUnderline;
     }
 
-    public static boolean isTextStyleStrikethrough() {
-        return TEXT_STYLE_STRIKETHROUGH;
+    public static boolean isIsTextStyleStrikethrough() {
+        return isTextStyleStrikethrough;
     }
 
     public boolean[] getTextStyle() {
-        return new boolean[]{TEXT_STYLE_BOLD, TEXT_STYLE_ITALIC, TEXT_STYLE_CODE, TEXT_STYLE_UNDERLINE,
-        TEXT_STYLE_STRIKETHROUGH, TEXT_STYLE_STROKE};
+        return new boolean[]{isTextStyleBold, isTextStyleItalic, isTextStyleCode, isTextStyleUnderline,
+                isTextStyleStrikethrough, isTextStyleStroke};
     }
 
-    public static void setTextStyleBold(boolean checked) {
-        TEXT_STYLE_BOLD = checked;
+    public static void setIsTextStyleBold(boolean checked) {
+        isTextStyleBold = checked;
     }
 
-    public static void setTextStyleItalic(boolean checked) {
-        TEXT_STYLE_ITALIC = checked;
+    public static void setIsTextStyleItalic(boolean checked) {
+        isTextStyleItalic = checked;
     }
 
-    public static void setTextStyleStroke(boolean checked) {
-        TEXT_STYLE_STROKE = checked;
+    public static void setIsTextStyleStroke(boolean checked) {
+        isTextStyleStroke = checked;
     }
 
-    public static void setTextStyleCode(boolean checked) {
-        TEXT_STYLE_CODE = checked;
+    public static void setIsTextStyleCode(boolean checked) {
+        isTextStyleCode = checked;
     }
 
-    public static void setTextStyleUnderline(boolean checked) {
-        TEXT_STYLE_UNDERLINE = checked;
+    public static void setIsTextStyleUnderline(boolean checked) {
+        isTextStyleUnderline = checked;
     }
 
-    public static void setTextStyleStrikethrough(boolean checked) {
-        TEXT_STYLE_STRIKETHROUGH = checked;
+    public static void setIsTextStyleStrikethrough(boolean checked) {
+        isTextStyleStrikethrough = checked;
     }
 
-    public Integer getSelectedColor() {
-        return SELECTED_COLOR;
+    public Integer getActiveStyleColor() {
+        return activeStyleColor;
     }
 
-    public void setSelectedColor(Integer selectedColor) {
-        Note.SELECTED_COLOR = selectedColor;
+    public void setActiveStyleColor(Integer selectedColor) {
+        Note.activeStyleColor = selectedColor;
     }
 
     public void setThemeText(String colorLight, String colorDark, boolean isLight) {
         if (isLight) {
-            TEXT_COLOR_AC = colorLight;
-            TEXT_COLOR_DI = colorDark;
+            themedTextActiveColor = colorLight;
+            themedTextInactiveColor = colorDark;
         } else {
-            TEXT_COLOR_AC = colorDark;
-            TEXT_COLOR_DI = colorLight;
+            themedTextActiveColor = colorDark;
+            themedTextInactiveColor = colorLight;
         }
     }
 
     public String getActiveColor() {
-        return TEXT_COLOR_AC;
+        return themedTextActiveColor;
     }
 
     public String getTitle() {
@@ -308,7 +316,7 @@ public class Note extends BucketObject {
             return BLANK_CONTENT;
         }
         String strContent = (String) obj;
-        return (Spannable) HtmlCompat.fromHtml(strContent.replaceAll(TEXT_COLOR_DI, TEXT_COLOR_AC));
+        return (Spannable) HtmlCompat.fromHtml(strContent.replaceAll(themedTextInactiveColor, themedTextActiveColor));
     }
 
     public void setContent(Spannable content) {

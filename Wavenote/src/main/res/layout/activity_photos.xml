@@ -89,8 +89,9 @@
                         android:text="@string/guitar"
                         android:textAllCaps="false"
                         android:textSize="15sp"
-                        app:strokeColor="@color/blue"
+                        android:textColor="?attr/colorAccent"
                         app:strokeWidth="2dp"
+                        app:strokeColor="?attr/colorAccent"
                         tools:ignore="PrivateResource" />
 
                     <com.google.android.material.button.MaterialButton
@@ -108,8 +109,9 @@
                         android:text="@string/piano"
                         android:textAllCaps="false"
                         android:textSize="15sp"
-                        app:strokeColor="@color/blue"
+                        android:textColor="?attr/colorAccent"
                         app:strokeWidth="2dp"
+                        app:strokeColor="?attr/colorAccent"
                         tools:ignore="PrivateResource" />
 
                     <com.google.android.material.button.MaterialButton
@@ -125,8 +127,9 @@
                         android:text="@string/ukulele"
                         android:textAllCaps="false"
                         android:textSize="15sp"
-                        app:strokeColor="@color/blue"
+                        android:textColor="?attr/colorAccent"
                         app:strokeWidth="2dp"
+                        app:strokeColor="?attr/colorAccent"
                         tools:ignore="PrivateResource" />
 
                 </LinearLayout>

@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.theost.wavenote.R;
+
 import org.wordpress.passcodelock.AppLockManager;
 
 public class DisplayUtils {
@@ -116,4 +119,16 @@ public class DisplayUtils {
         if (v != null) v.setGravity(Gravity.CENTER);
         toast.show();
     }
+
+    public static MaterialDialog showLoadingDialog(Context context, int titleId, int contentId) {
+        MaterialDialog loadingDialog = new MaterialDialog.Builder(context)
+                .title(titleId)
+                .content(contentId)
+                .canceledOnTouchOutside(false)
+                .progress(true, 0)
+                .progressIndeterminateStyle(true).build();
+        loadingDialog.show();
+        return loadingDialog;
+    }
+
 }

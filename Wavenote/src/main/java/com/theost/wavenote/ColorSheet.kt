@@ -81,19 +81,19 @@ class ColorSheet : BottomSheetDialogFragment() {
             sheetCorners = resources.getDimension(R.dimen.default_dialog_radius)
         }
 
-        text_bold.isChecked = Note.isTextStyleBold()
-        text_italic.isChecked =  Note.isTextStyleItalic()
-        text_code.isChecked =  Note.isTextStyleCode()
-        text_stroke.isChecked = Note.isTextStyleStroke()
-        text_underline.isChecked =  Note.isTextStyleUnderline()
-        text_strikethrough.isChecked =  Note.isTextStyleStrikethrough()
+        text_bold.isChecked = Note.isIsTextStyleBold()
+        text_italic.isChecked =  Note.isIsTextStyleItalic()
+        text_code.isChecked =  Note.isIsTextStyleCode()
+        text_stroke.isChecked = Note.isIsTextStyleStroke()
+        text_underline.isChecked =  Note.isIsTextStyleUnderline()
+        text_strikethrough.isChecked =  Note.isIsTextStyleStrikethrough()
 
-        text_bold.setOnClickListener { Note.setTextStyleBold(text_bold.isChecked) }
-        text_italic.setOnClickListener { Note.setTextStyleItalic(text_italic.isChecked) }
-        text_code.setOnClickListener { Note.setTextStyleCode(text_code.isChecked) }
-        text_stroke.setOnClickListener { Note.setTextStyleStroke(text_stroke.isChecked) }
-        text_underline.setOnClickListener { Note.setTextStyleUnderline(text_underline.isChecked) }
-        text_strikethrough.setOnClickListener { Note.setTextStyleStrikethrough(text_strikethrough.isChecked) }
+        text_bold.setOnClickListener { Note.setIsTextStyleBold(text_bold.isChecked) }
+        text_italic.setOnClickListener { Note.setIsTextStyleItalic(text_italic.isChecked) }
+        text_code.setOnClickListener { Note.setIsTextStyleCode(text_code.isChecked) }
+        text_stroke.setOnClickListener { Note.setIsTextStyleStroke(text_stroke.isChecked) }
+        text_underline.setOnClickListener { Note.setIsTextStyleUnderline(text_underline.isChecked) }
+        text_strikethrough.setOnClickListener { Note.setIsTextStyleStrikethrough(text_strikethrough.isChecked) }
 
         val gradientDrawable = GradientDrawable().apply {
             if (ColorSheetTheme.inferTheme(requireContext()) == ColorSheetTheme.LIGHT) {

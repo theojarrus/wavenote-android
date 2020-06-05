@@ -79,8 +79,8 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             Bitmap imageBitmap;
-            File file = FileUtils.createNoteFile(getContext(), noteId, "photo");
-            if (file == null) {
+            File imageFile = FileUtils.createNoteFile(getContext(), noteId, "photo");
+            if (imageFile == null) {
                 dismiss();
                 return;
             }
@@ -91,14 +91,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
                 Uri imageUri = data.getData();
                 imageBitmap = getBitmap(imageUri);
             }
-            try {
-                FileUtils.createPhotoFile(imageBitmap, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-                DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.file_error));
-                dismiss();
-            }
-            mActivity.insertPhoto(file.getPath());
+            mActivity.importPhoto(imageFile, imageBitmap);
         }
         dismiss();
     }

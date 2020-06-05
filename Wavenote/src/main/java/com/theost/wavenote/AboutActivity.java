@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -14,8 +15,18 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         Toolbar toolbar = findViewById(R.id.toolbar);
+
+        int appColor = getResources().getColor(R.color.blue);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+            toolbar.setBackgroundColor(appColor);
+            getWindow().setNavigationBarColor(appColor);
+            getWindow().getDecorView().setBackgroundColor(appColor);
+        }
+
         setSupportActionBar(toolbar);
         setTitle("");
+
+        this.setTaskDescription(new ActivityManager.TaskDescription(null, null, appColor));
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

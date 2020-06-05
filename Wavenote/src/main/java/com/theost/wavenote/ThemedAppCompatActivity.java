@@ -21,8 +21,7 @@ abstract public class ThemedAppCompatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(mThemeId);
 
-        ActivityManager.TaskDescription taskDescription = new ActivityManager.TaskDescription(null, null, getWindowColor());
-        this.setTaskDescription(taskDescription);
+        this.setTaskDescription(new ActivityManager.TaskDescription(null, null, getWindowColor()));
     }
 
     protected int getWindowColor() {

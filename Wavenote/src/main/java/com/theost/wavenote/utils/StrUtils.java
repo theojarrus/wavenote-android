@@ -133,11 +133,12 @@ public class StrUtils {
     }
 
     // Write string x times
-    public static String repeat(String val, int count){
+    public static String repeat(String val, int count) {
         StringBuilder buf = new StringBuilder(val.length() * count);
         while (count-- > 0) {
             buf.append(val);
         }
         return buf.toString();
     }
+
 }

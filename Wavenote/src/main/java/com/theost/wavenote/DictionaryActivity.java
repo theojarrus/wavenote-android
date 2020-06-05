@@ -39,9 +39,9 @@ import java.util.List;
 
 public class DictionaryActivity extends ThemedAppCompatActivity {
 
-    private final String[] SORT_TYPES = {"date", "name", "type"};
-    private String[] keywordTypes;
     private int[] keywordColors;
+    private String[] sortModes;
+    private String[] keywordTypes;
     private KeywordAdapter adapter;
     private List<Keyword> mKeywordList;
     private LinearLayout emptyView;
@@ -78,8 +78,10 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         
         keywordColors = DictionaryUtils.getKeywordColors(this);
         keywordTypes = DictionaryUtils.getKeywordTypes(this);
+
+        sortModes = getResources().getStringArray(R.array.array_sort_dictionary);
         
-        activeSortType = SORT_TYPES[0];
+        activeSortType = sortModes[0];
         mKeywordRecyclerView = findViewById(R.id.keywords_list);
         localDatabase = new DatabaseHelper(this);
         
@@ -88,7 +90,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         mKeywordRecyclerView.setAdapter(adapter);
 
         sortKeywords(false);
-        Note.setNeedResourcesUpdate(true);
+        Note.setIsNeedResourceUpdate(true);
     }
 
     @Override
@@ -263,15 +265,15 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private void sortKeywords(boolean isModeChanged) {
         if (adapter.getItemCount() == 0) return;
         if (isModeChanged) {
-            int index = Arrays.asList(SORT_TYPES).indexOf(activeSortType) + 1;
-            if (index == SORT_TYPES.length) index = 0;
-            activeSortType = SORT_TYPES[index];
+            int index = Arrays.asList(sortModes).indexOf(activeSortType) + 1;
+            if (index == sortModes.length) index = 0;
+            activeSortType = sortModes[index];
         }
-        if (activeSortType.equals(SORT_TYPES[0])) {
+        if (activeSortType.equals(sortModes[0])) {
             adapter.sortByDate();
-        } else if (activeSortType.equals(SORT_TYPES[1])) {
+        } else if (activeSortType.equals(sortModes[1])) {
             adapter.sortByName();
-        } else if (activeSortType.equals(SORT_TYPES[2])) {
+        } else if (activeSortType.equals(sortModes[2])) {
             adapter.sortByType();
         }
     }

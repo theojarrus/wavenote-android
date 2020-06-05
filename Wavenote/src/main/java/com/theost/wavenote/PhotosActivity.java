@@ -2,7 +2,9 @@ package com.theost.wavenote;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DatabaseHelper;
@@ -30,6 +33,7 @@ import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,7 +43,10 @@ import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 
 public class PhotosActivity extends ThemedAppCompatActivity {
 
-    private final String[] SORT_TYPES = {"date", "name"};
+    private ImportPhotosThread importPhotosThread;
+
+    private boolean isImporting;
+
     private PhotoBottomSheetDialog mPhotoBottomSheet;
     private RecyclerView mPhotoRecyclerView;
     private List<Photo> mPhotoList;
@@ -47,10 +54,16 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private LinearLayout emptyView;
     private LinearLayout mMaterialTitle;
 
+    private MaterialDialog loadingDialog;
+
+    private String[] sortModes;
+
+    private String importImagePath;
+    private String noteId;
+
     private DatabaseHelper localDatabase;
     private MenuItem mRemoveItem;
     private MenuItem mSortItem;
-    private String noteId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +97,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
 
         mPhotoBottomSheet = new PhotoBottomSheetDialog(this);
+
+        sortModes = getResources().getStringArray(R.array.array_sort_photos);
 
         mPhotoRecyclerView = findViewById(R.id.photos_list);
         mMaterialTitle = findViewById(R.id.materials_title);
@@ -191,8 +206,11 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
         String date = DateTimeUtils.getDateTextString(this, Calendar.getInstance());
         boolean isInserted = localDatabase.insertImageData(noteId, "", uri, date);
-        if (!isInserted)
+        if (!isInserted) {
             DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            File imageFile = new File(uri);
+            if (imageFile.exists()) imageFile.delete();
+        }
 
         updateData();
         sortPhotos(false);
@@ -240,13 +258,13 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private void sortPhotos(boolean isModeChanged) {
         if (adapter.getItemCount() == 0) return;
         if (isModeChanged) {
-            int index = Arrays.asList(SORT_TYPES).indexOf(Note.getPhotoSortMode()) + 1;
-            if (index == SORT_TYPES.length) index = 0;
-            Note.setPhotoSortMode(SORT_TYPES[index]);
+            int index = Arrays.asList(sortModes).indexOf(Note.getNotePhotosSort()) + 1;
+            if (index == sortModes.length) index = 0;
+            Note.setNotePhotosSort(sortModes[index]);
         }
-        if (Note.getPhotoSortMode().equals(SORT_TYPES[0])) {
+        if (Note.getNotePhotosSort().equals(sortModes[0])) {
             adapter.sortByDate();
-        } else if (Note.getPhotoSortMode().equals(SORT_TYPES[1])) {
+        } else if (Note.getNotePhotosSort().equals(sortModes[1])) {
             adapter.sortByName();
         }
     }
@@ -257,6 +275,51 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         intent.putExtra("chords", SyntaxHighlighter.getAllChords(this));
         intent.putExtra("activeInstrument", ((Button) view).getText().toString());
         startActivity(intent);
+    }
+
+    public void importPhoto(File imageFile, Bitmap imageBitmap) {
+        importImagePath = imageFile.getPath();
+        importPhotosThread = new ImportPhotosThread(imageFile, imageBitmap);
+        importPhotosThread.start();
+        showLoadingDialog();
+    }
+
+    private void showLoadingDialog() {
+        loadingDialog = DisplayUtils.showLoadingDialog(this, R.string.import_note, R.string.importing);
+    }
+
+    private Handler mImportHandler = new Handler(msg -> {
+        importPhotosThread.interrupt();
+        if (msg.what == 0) {
+            insertPhoto(importImagePath);
+            importImagePath = null;
+        } else {
+            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+        }
+        loadingDialog.dismiss();
+        return true;
+    });
+
+    private class ImportPhotosThread extends Thread {
+        File imageFile;
+        Bitmap imageBitmap;
+
+        private ImportPhotosThread(File imageFile, Bitmap imageBitmap) {
+            this.imageFile = imageFile;
+            this.imageBitmap = imageBitmap;
+        }
+
+        public void run() {
+            isImporting = true;
+            try {
+                FileUtils.createPhotoFile(imageBitmap, imageFile);
+                mImportHandler.sendEmptyMessage(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+                mImportHandler.sendEmptyMessage(-1);
+            }
+            isImporting = false;
+        }
     }
 
 }

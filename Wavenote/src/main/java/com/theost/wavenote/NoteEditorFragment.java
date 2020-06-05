@@ -124,68 +124,82 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_MATCH_OFFSETS = "match_offsets";
     public static final String STATE_NOTE_ID = "state_note_id";
+
+    private final Runnable mAutoSaveRunnable = this::saveAndSyncNote;
+
     private static final int AUTOSAVE_DELAY_MILLIS = 2000;
     private static final int MAX_REVISIONS = 30;
     private static final int PUBLISH_TIMEOUT = 20000;
     private static final int HISTORY_TIMEOUT = 10000;
-    private StringBuilder resultDialogMessage;
-    private MaterialDialog loadingDialog;
-    private String resultDialogPath;
-    private boolean isExporting;
+
     private char[] exportZipPassword = null;
+
+    private int[] keywordColors;
+    private int[] styleColors;
+
+    private int keywordMaxLength;
+    private int mCurrentCursorPosition;
+
     private boolean isThemeLight = false;
-    private Note mNote;
-    private final Runnable mAutoSaveRunnable = this::saveAndSyncNote;
-    private Bucket<Note> mNotesBucket;
-    private ExportThread exportThread;
-    private View mRootView;
-    private View mTagPadding;
-    private WavenoteEditText mContentEditText;
-    private ChipGroup mTagChips;
-    private TagsMultiAutoCompleteTextView mTagInput;
-    private Handler mAutoSaveHandler;
-    private Handler mPublishTimeoutHandler;
-    private Handler mHistoryTimeoutHandler;
-    private MaterialDialog mExportDialog;
-    private MaterialDialog mPasswordDialog;
-    private MaterialDialog mResultDialog;
-    private LinearLayout mPlaceholderView;
-    private CursorAdapter mAutocompleteAdapter;
+    private boolean isExporting = false;
+
     private boolean mIsLoadingNote;
     private boolean mIsMarkdownEnabled;
     private boolean mIsPreviewEnabled;
     private boolean mShouldScrollToSearchMatch;
+    private boolean mIsPaused;
+    private boolean mIsFromWidget;
+
+    private CursorAdapter mAutocompleteAdapter;
+    private StringBuilder resultDialogMessage;
+    private String resultDialogPath;
+    private String mMatchOffsets;
+    private String mLinkText;
+    private String mLinkUrl;
+    private String lightColor;
+    private String darkColor;
+
+    private Note mNote;
+    private Bucket<Note> mNotesBucket;
+
+    private TagsMultiAutoCompleteTextView mTagInput;
+    private WavenoteEditText mContentEditText;
+    private LinearLayout mPlaceholderView;
+    private ChipGroup mTagChips;
+    private View mRootView;
+    private View mTagPadding;
     private ActionMode mActionMode;
     private MenuItem mCopyMenuItem;
     private MenuItem mShareMenuItem;
     private MenuItem mViewLinkMenuItem;
-    private String mLinkUrl;
-    private String mLinkText;
-    private MatchOffsetHighlighter mHighlighter;
     private Drawable mCallIcon;
     private Drawable mCopyIcon;
     private Drawable mEmailIcon;
     private Drawable mMapIcon;
     private Drawable mShareIcon;
     private Drawable mBrowserIcon;
-    private MatchOffsetHighlighter.SpanFactory mMatchHighlighter;
-    private String mMatchOffsets;
-    private int mCurrentCursorPosition;
+
+    private Handler mAutoSaveHandler;
+    private Handler mPublishTimeoutHandler;
+    private Handler mHistoryTimeoutHandler;
+
+    private ExportThread exportThread;
+
+    private MaterialDialog mExportDialog;
+    private MaterialDialog mPasswordDialog;
+    private MaterialDialog loadingDialog;
+    private MaterialDialog mResultDialog;
     private HistoryBottomSheetDialog mHistoryBottomSheet;
-    private boolean mIsPaused;
-    private boolean mIsFromWidget;
-    private Function1 listener;
+    private MatchOffsetHighlighter mHighlighter;
+    private MatchOffsetHighlighter.SpanFactory mMatchHighlighter;
+
     private ColorSheet colorSheet;
-    private int[] styleColors;
-    private String lightColor;
-    private String darkColor;
+    private Function1 listener;
 
     private DatabaseHelper localDatabase;
     private EditText mAddKeywordEditText;
     private RadioGroup mAddKeywordType;
     private String[] keywordTypes;
-    private int[] keywordColors;
-    private int keywordMaxLength;
 
     // Hides the history bottom sheet if no revisions are loaded
     private final Runnable mHistoryTimeoutRunnable = new Runnable() {
@@ -458,7 +472,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             final void invoke(int color) {
-                mNote.setSelectedColor(color);
+                mNote.setActiveStyleColor(color);
             }
         });
 
@@ -750,20 +764,21 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             // Disable actions when note is in Trash or markdown view is shown on large device.
             if (mNote.isDeleted() || (mMarkdown != null && mMarkdown.getVisibility() == View.VISIBLE)) {
                 infoItem.setEnabled(false);
+                sheetItem.setEnabled(false);
+                photoItem.setEnabled(false);
+                audioItem.setEnabled(false);
+                sheetItem.setEnabled(false);
+                photoItem.setEnabled(false);
+                audioItem.setEnabled(false);
                 shareItem.setEnabled(false);
+                exportItem.setEnabled(false);
                 historyItem.setEnabled(false);
                 publishItem.setEnabled(false);
                 copyLinkItem.setEnabled(false);
                 checklistItem.setEnabled(false);
                 colorItemView.setEnabled(false);
-                sheetItem.setEnabled(false);
-                photoItem.setEnabled(false);
-                audioItem.setEnabled(false);
-                exportItem.setEnabled(false);
-                sheetItem.setEnabled(false);
-                photoItem.setEnabled(false);
-                audioItem.setEnabled(false);
                 colorItemView.setEnabled(false);
+
                 DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);  // 0.3 is 30% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 0.3);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 0.3);
@@ -771,28 +786,30 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 DrawableUtils.setMenuItemAlpha(audioItem, 0.3);
                 mContentEditText.setFocusable(false); // Disable NoteEditor if in Trash
             } else {
-                infoItem.setEnabled(true);
                 pinItem.setEnabled(true);
+                infoItem.setEnabled(true);
+                sheetItem.setEnabled(true);
+                photoItem.setEnabled(true);
+                audioItem.setEnabled(true);
+                sheetItem.setEnabled(true);
+                photoItem.setEnabled(true);
+                audioItem.setEnabled(true);
                 shareItem.setEnabled(true);
+                exportItem.setEnabled(true);
                 historyItem.setEnabled(true);
                 publishItem.setEnabled(true);
-                copyLinkItem.setEnabled(mNote.isPublished());
                 markdownItem.setEnabled(true);
                 checklistItem.setEnabled(true);
                 colorItemView.setEnabled(true);
-                sheetItem.setEnabled(true);
-                photoItem.setEnabled(true);
-                audioItem.setEnabled(true);
-                exportItem.setEnabled(true);
-                sheetItem.setEnabled(true);
-                photoItem.setEnabled(true);
-                audioItem.setEnabled(true);
                 colorItemView.setEnabled(true);
+
                 DrawableUtils.setMenuItemAlpha(checklistItem, 1.0);  // 1.0 is 100% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(photoItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(audioItem, 1.0);
+
+                copyLinkItem.setEnabled(mNote.isPublished());
                 mContentEditText.setFocusable(true); // Enable NoteEditor if not in Trash
             }
 
@@ -870,7 +887,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         boolean isInserted = localDatabase.insertDictionaryData(keyword, type);
         if (isInserted) {
             DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.created));
-            Note.setNeedResourcesUpdate(true);
+            Note.setIsNeedResourceUpdate(true);
             syntaxHighlightEditorContent();
         } else {
             DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.database_error));
@@ -920,13 +937,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void showLoadingDialog() {
-        loadingDialog = new MaterialDialog.Builder(getContext())
-                .title(R.string.export)
-                .content(R.string.exporting)
-                .canceledOnTouchOutside(false)
-                .progress(true, 0)
-                .progressIndeterminateStyle(true).build();
-        loadingDialog.show();
+        loadingDialog = DisplayUtils.showLoadingDialog(getContext(), R.string.export, R.string.exporting);
     }
 
     private void showResultDialog() {
@@ -981,9 +992,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private Handler mExportHandler = new Handler(msg -> {
+        exportThread.interrupt();
         if (msg.what == 0)
             showResultDialog();
-        exportThread.interrupt();
         return true;
     });
 
@@ -1024,7 +1035,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     case "html":
                         try {
                             File dirTextNew = new File(dirNew + FileUtils.TEXT_DIR);
-                            FileUtils.createFile(dirTextNew, noteName + ".htm", HtmlCompat.toHtml(mContentEditText.getText()));
+                            FileUtils.createFile(dirTextNew, noteName + ".htm", HtmlCompat.toHtml(mContentEditText.getText()).trim());
                             successList.add(mode);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -1737,11 +1748,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void changeTextColor() {
-        SyntaxHighlighter.changeTextStyle(mContentEditText, mNote.getTextStyle(), mNote.getSelectedColor(), mNote.getActiveColor());
+        SyntaxHighlighter.changeTextStyle(mContentEditText, mNote.getTextStyle(), mNote.getActiveStyleColor(), mNote.getActiveColor());
     }
 
     private void pickTextColor() {
-        colorSheet.colorPicker(styleColors, mNote.getSelectedColor(), true, listener);
+        colorSheet.colorPicker(styleColors, mNote.getActiveStyleColor(), true, listener);
         this.colorSheet.show(getParentFragmentManager());
     }
 

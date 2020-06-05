@@ -294,10 +294,10 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private void updateOrientation(int orientation) {
         int padding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.custom_space));
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mPlayLayout.setPadding(padding, 0, 0,0);
+            mPlayLayout.setPadding(padding, 0, 0, 0);
             mActionsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT){
-            mPlayLayout.setPadding(0, padding, 0,0);
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mPlayLayout.setPadding(0, padding, 0, 0);
             mActionsLayout.setOrientation(LinearLayout.VERTICAL);
         }
     }
@@ -601,6 +601,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private Handler mImportHandler = new Handler(msg -> {
+        importSamplesThread.interrupt();
         boolean isCreated = false;
         if (msg.what == 0) {
             // created
@@ -617,7 +618,6 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             // exist error
             DisplayUtils.showToast(this, getResources().getString(R.string.exist_error));
         }
-        importSamplesThread.interrupt();
         creationResult(isCreated);
         return true;
     });
@@ -649,39 +649,39 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             if (audioParams[1] != AudioConfig.AUDIO_SAMPLE_RATE)
                 mImportHandler.sendEmptyMessage(1);
 
-            switch ((int) audioParams[0]) {
-                case 1:
-                    monoBytes = audioBytes;
-                    stereoBytes = AudioUtils.convertToStereo(audioBytes);
-                    break;
-                case 2:
-                    monoBytes = AudioUtils.convertToMono(audioBytes);
-                    stereoBytes = audioBytes;
-                    break;
-                default:
-                    mImportHandler.sendEmptyMessage(2);
-                    return;
-            }
-
-            File[] sampleFiles = FileUtils.getSampleFiles(context, soundName, soundType); // mono, stereo
-
-            if (sampleFiles[0] == null || sampleFiles[1] == null) {
-                mImportHandler.sendEmptyMessage(3);
-                return;
-            }
-
-            byte[] monoHeader = AudioUtils.createWaveFileHeader(audioParams[3], 1, audioParams[1], (int) (long) audioParams[2]);
-            byte[] stereoHeader = AudioUtils.createWaveFileHeader(audioParams[3] * 2, 2, audioParams[1], (int) (long) audioParams[2]);
-
-            byte[] monoStream = new byte[monoHeader.length + monoBytes.length];
-            System.arraycopy(monoHeader, 0, monoStream, 0, monoHeader.length);
-            System.arraycopy(monoBytes, 0, monoStream, monoHeader.length, monoBytes.length);
-
-            byte[] stereoStream = new byte[stereoHeader.length + stereoBytes.length];
-            System.arraycopy(stereoHeader, 0, stereoStream, 0, stereoHeader.length);
-            System.arraycopy(stereoBytes, 0, stereoStream, stereoHeader.length, stereoBytes.length);
 
             try {
+                switch ((int) audioParams[0]) {
+                    case 1:
+                        monoBytes = audioBytes;
+                        stereoBytes = AudioUtils.convertToStereo(audioBytes);
+                        break;
+                    case 2:
+                        monoBytes = AudioUtils.convertToMono(audioBytes);
+                        stereoBytes = audioBytes;
+                        break;
+                    default:
+                        mImportHandler.sendEmptyMessage(2);
+                        return;
+                }
+
+                File[] sampleFiles = FileUtils.getSampleFiles(context, soundName, soundType); // mono, stereo
+                if (sampleFiles[0] == null || sampleFiles[1] == null) {
+                    mImportHandler.sendEmptyMessage(3);
+                    return;
+                }
+
+                byte[] monoHeader = AudioUtils.createWaveFileHeader(audioParams[3], 1, audioParams[1], (int) audioParams[2]);
+                byte[] stereoHeader = AudioUtils.createWaveFileHeader(audioParams[3] * 2, 2, audioParams[1], (int) audioParams[2]);
+
+                byte[] monoStream = new byte[monoHeader.length + monoBytes.length];
+                System.arraycopy(monoHeader, 0, monoStream, 0, monoHeader.length);
+                System.arraycopy(monoBytes, 0, monoStream, monoHeader.length, monoBytes.length);
+
+                byte[] stereoStream = new byte[stereoHeader.length + stereoBytes.length];
+                System.arraycopy(stereoHeader, 0, stereoStream, 0, stereoHeader.length);
+                System.arraycopy(stereoBytes, 0, stereoStream, stereoHeader.length, stereoBytes.length);
+
                 sampleFiles[0].createNewFile();
                 sampleFiles[1].createNewFile();
                 FileUtils.createWavFile(sampleFiles[0], monoStream);
@@ -764,13 +764,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private void showLoadingDialog() {
-        loadingDialog = new MaterialDialog.Builder(this)
-                .title(R.string.import_note)
-                .content(R.string.importing)
-                .canceledOnTouchOutside(false)
-                .progress(true, 0)
-                .progressIndeterminateStyle(true).build();
-        loadingDialog.show();
+        loadingDialog = DisplayUtils.showLoadingDialog(this, R.string.import_note, R.string.importing);
     }
 
     private void showImportDialog() {
