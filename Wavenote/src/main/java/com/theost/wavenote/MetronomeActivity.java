@@ -606,7 +606,6 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private Handler mImportHandler = new Handler(msg -> {
-        importSamplesThread.interrupt();
         boolean isCreated = false;
         if (msg.what == 0) {
             // created

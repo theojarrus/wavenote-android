@@ -261,7 +261,7 @@
     <string name="select_beat">Выберите размер</string>
     <string name="remove">Удалить</string>
     <string name="add_sound">Добавить звук</string>
-    <string name="exist_error">Файл с таким именем уже существует</string>
+    <string name="exist_error">Уже существует</string>
     <string name="imported">Импортировано</string>
     <string name="sample_error">Аудио может воспроизводится некорректно, потому что sample rate файла не</string>
     <string name="choose">Выбрать</string>
@@ -269,12 +269,13 @@
     <string name="strong">Сильный</string>
     <string name="weak">Слабый</string>
     <string name="convert_error">Ошибка конвертирования</string>
-    <string name="wait_a_bit">Подождите немного</string>
+    <string name="wait_a_bit">Подождите немного…</string>
     <string name="exporting">Экспорт… Это может занять некоторе время</string>
     <string name="importing">Импорт… Это может занять некоторе время</string>
     <string name="error_network_required">Необходимо интернет подключение. Пожалуйста, проверьте соединение и попробуйте снова</string>
     <string name="stylize">Стилизовать</string>
     <string name="add_to_dictionary">Добавить в словарь</string>
     <string name="title">Заголовок</string>
+    <string name="loading">Загрузка</string>
 
 </resources>

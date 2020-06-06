@@ -992,7 +992,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private Handler mExportHandler = new Handler(msg -> {
-        exportThread.interrupt();
         if (msg.what == 0)
             showResultDialog();
         return true;

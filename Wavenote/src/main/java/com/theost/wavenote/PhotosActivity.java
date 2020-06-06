@@ -289,7 +289,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     }
 
     private Handler mImportHandler = new Handler(msg -> {
-        importPhotosThread.interrupt();
         if (msg.what == 0) {
             insertPhoto(importImagePath);
             importImagePath = null;

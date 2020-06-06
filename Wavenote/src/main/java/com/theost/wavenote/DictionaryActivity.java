@@ -44,6 +44,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private String[] keywordTypes;
     private KeywordAdapter adapter;
     private List<Keyword> mKeywordList;
+    private List<String> mWordList;
     private LinearLayout emptyView;
     private EditText mAddKeywordEditText;
     private RadioGroup mAddKeywordType;
@@ -117,7 +118,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
                 restoreData();
                 return true;
             case R.id.menu_remove:
-                removeKeyword(null);
+                removeKeyword(null, null);
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -128,7 +129,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     public void checkEmptyView() {
-        if (adapter.getItemCount() == 0) {
+        if (adapter == null || adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
             mSortItem.setEnabled(false);
             DrawableUtils.setMenuItemAlpha(mSortItem, 0.3);
@@ -189,18 +190,21 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private void updateData() {
         Cursor mKeywordData = localDatabase.getAllDictionaryData();
         if (mKeywordData == null) return;
+        mWordList = new ArrayList<>();
         mKeywordList = new ArrayList<>();
         while (mKeywordData.moveToNext()) {
             String id = mKeywordData.getString(0);
             String word = mKeywordData.getString(1);
             String type = mKeywordData.getString(2);
             Keyword keyword = new Keyword(id, word, type);
+            mWordList.add(word);
             mKeywordList.add(keyword);
         }
         if (adapter != null) adapter.updateData(mKeywordList);
     }
 
     private void restoreData() {
+        removeKeyword(null, null);
         String[] resourceTitles = this.getResources().getStringArray(R.array.array_musical_titles);
         String[] resourceWords = this.getResources().getStringArray(R.array.array_musical_words);
         for (String j : resourceTitles) localDatabase.insertDictionaryData(j, keywordTypes[0]);
@@ -212,6 +216,10 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
 
     private void insertKeyword(String keyword) {
         if (keyword.equals("") || mAddKeywordType.getCheckedRadioButtonId() == -1) return;
+        if (mWordList.contains(keyword)) {
+            DisplayUtils.showToast(this, getResources().getString(R.string.exist_error));
+            return;
+        }
         String type;
         switch (mAddKeywordType.getCheckedRadioButtonId()) {
             case R.id.type_title:
@@ -243,17 +251,20 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         return true;
     }
 
-    public boolean removeKeyword(String id) {
+    public boolean removeKeyword(String id, String keyword) {
         if (adapter.getItemCount() == 0) return false;
         boolean isRemoved;
         if (id == null) {
             isRemoved = localDatabase.removeDictionaryData(DatabaseHelper.COL_0);
             if (isRemoved) {
+                mWordList = new ArrayList<>();
                 adapter.clearData();
                 checkEmptyView();
             }
         } else {
             isRemoved = localDatabase.removeDictionaryData(id);
+            if (isRemoved)
+                mWordList.remove(keyword);
         }
         if (!isRemoved) {
             DisplayUtils.showToast(this, getResources().getString(R.string.database_error));

@@ -60,7 +60,7 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHold
         holder.mTrashButton.setOnClickListener(view -> {
             Drawable drawable = holder.mTrashButton.getDrawable();
             DrawableUtils.startAnimatedVectorDrawable(drawable);
-            if (((DictionaryActivity) context).removeKeyword(mData.get(position).getId())) {
+            if (((DictionaryActivity) context).removeKeyword(mData.get(position).getId(), mData.get(position).getWord())) {
                 mData.remove(position);
                 notifyDataSetChanged();
                 ((DictionaryActivity) context).checkEmptyView();

@@ -273,6 +273,8 @@
     <string name="imported">Imported</string>
     <string name="strong">Strong</string>
     <string name="weak">Weak</string>
+    <string name="wait_a_bit">Wait a bit…</string>
+    <string name="loading">Loading</string>
 
     <!-- Color Sheet -->
     <string name="text_style">Style</string>
@@ -284,11 +286,10 @@
     <string name="text_code">Code</string>
 
     <!-- Errors -->
-    <string name="wait_a_bit">Wait a bit</string>
     <string name="convert_error">Conversion error</string>
     <string name="photo_found_error">Photos not found</string>
     <string name="database_error">Database request error</string>
-    <string name="exist_error">File with this name already exist</string>
+    <string name="exist_error">Already exist</string>
     <string name="android_error">Deprecated Android version</string>
     <string name="export_error">Some problems with exporting</string>
     <string name="exporting_error">Wait a bit, already exporting</string>
