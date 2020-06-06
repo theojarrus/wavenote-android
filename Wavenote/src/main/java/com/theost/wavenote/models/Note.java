@@ -72,9 +72,11 @@ public class Note extends BucketObject {
     public static String notePhotosSort = "date";
 
     public static int activeStyleColor = -1;
-
+    
     public static String activeMetronomeSound;
     public static String noteActiveInstrument;
+
+    public static short activeMetronomeSpeed;
     public static int noteActiveColumns;
 
     public Note(String key) {
@@ -212,6 +214,14 @@ public class Note extends BucketObject {
 
     public static void setActiveMetronomeSound(String activeMetronomeSound) {
         Note.activeMetronomeSound = activeMetronomeSound;
+    }
+
+    public static short getActiveMetronomeSpeed() {
+        return activeMetronomeSpeed;
+    }
+
+    public static void setActiveMetronomeSpeed(short activeMetronomeSpeed) {
+        Note.activeMetronomeSpeed = activeMetronomeSpeed;
     }
 
     public static boolean isIsNeedResourceUpdate() {

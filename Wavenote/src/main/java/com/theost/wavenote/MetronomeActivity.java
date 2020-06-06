@@ -72,14 +72,16 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private static final int FILE_REQUEST = 0;
     private static final int DEFAULT_SOUND = 1;
 
+    private static final int MAX_SOUND_NAME = 10;
+
     private static final int MS_IN_MINUTE = 60000;
     private static final int TAP_COUNT = 2;
+
     private static final double TAP_RATIO = 1.2;
 
+    public static final short DEFAULT_SPEED = 120;
     public static final short MIN_SPEED = 20;
     public static final short MAX_SPEED = 300;
-
-    private static final int MAX_SOUND_NAME = 10;
 
     private int tapStart = 0;
 
@@ -166,11 +168,13 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
 
         isBeatSetting = getIntent().getBooleanExtra("isBeatSetting", false);
-        currentSpeed = getIntent().getShortExtra(BundleKeys.RESULT_SPEED, (short) 120);
+        currentSpeed = getIntent().getShortExtra(BundleKeys.RESULT_SPEED, Note.getActiveMetronomeSpeed());
         currentBeat = getIntent().getStringExtra(BundleKeys.RESULT_BEAT);
         currentTone = getIntent().getStringExtra(BundleKeys.RESULT_TUNE);
         currentBeat = StrUtils.isEmpty(currentBeat) ? DEFAULT_BEAT : currentBeat;
         currentTone = StrUtils.isEmpty(currentTone) ? DEFAULT_TONE : currentTone;
+
+        if (currentSpeed == 0) currentSpeed = DEFAULT_SPEED;
 
         mSpeedTextView.setText(String.valueOf(currentSpeed));
         mBeatTextView.setText(currentBeat);
@@ -439,6 +443,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private void refreshSpeed() {
+        Note.setActiveMetronomeSpeed(currentSpeed);
         mSpeedTextView.setText(String.valueOf(currentSpeed));
         mSpeedBar.setProgress(currentSpeed);
         beatPlayHandler.removeMessages(R.integer.REFRESH_BEAT_DATA);
