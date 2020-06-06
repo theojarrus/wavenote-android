@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.theost.wavenote.models.Note
+import com.theost.wavenote.utils.ColorAdapter
 import com.theost.wavenote.utils.ColorSheetTheme
 import com.theost.wavenote.utils.resolveColor
 import kotlinx.android.synthetic.main.color_sheet.*

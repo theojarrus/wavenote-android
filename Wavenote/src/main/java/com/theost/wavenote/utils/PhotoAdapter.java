@@ -1,8 +1,6 @@
 package com.theost.wavenote.utils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,11 +76,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         });
 
         holder.mTrashButton.setOnClickListener(view -> {
-            Drawable drawable = holder.mTrashButton.getDrawable();
-            DrawableUtils.startAnimatedVectorDrawable(drawable);
             if (((PhotosActivity) context).removePhoto(mData.get(position).getId())) {
                 mData.remove(position);
-                notifyDataSetChanged();
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
                 ((PhotosActivity) context).checkEmptyView();
             }
         });
@@ -93,7 +90,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         return mData.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         EditText mNameEditText;
         ImageView mPhotoView;
         TextView mDateTextView;
@@ -115,24 +112,24 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     public void updateData(List<Photo> data) {
         this.mData = data;
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void clearData() {
         mData.clear();
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void sortByDate() {
         Comparator<Photo> comparator = (k1, k2) -> (Integer.parseInt(k2.getId()) - Integer.parseInt(k1.getId()));
             Collections.sort(mData, comparator);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void sortByName() {
         Comparator<Photo> comparator = (p1, p2) -> p1.getName().compareTo(p2.getName());
         Collections.sort(mData, comparator);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
 }

@@ -17,9 +17,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/padding_medium"
         android:fillViewport="true"
+        android:paddingTop="@dimen/padding_medium"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -31,7 +30,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/keywords_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"

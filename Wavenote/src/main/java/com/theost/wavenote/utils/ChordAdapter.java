@@ -45,7 +45,7 @@ public class ChordAdapter extends RecyclerView.Adapter<ChordAdapter.ViewHolder> 
         return mData.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mChordImageView;
 
         ViewHolder(View itemView) {

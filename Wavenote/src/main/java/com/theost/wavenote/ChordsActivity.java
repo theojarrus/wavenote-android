@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -113,9 +112,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mNotesList = Arrays.asList(mNotesOrder);
 
         mChordsRecyclerView = findViewById(R.id.chord_view);
-        mChordsRecyclerView.setHasFixedSize(false);
+        mChordsRecyclerView.setHasFixedSize(true);
         mChordsRecyclerView.setNestedScrollingEnabled(false);
-        ViewCompat.setNestedScrollingEnabled(mChordsRecyclerView, false);
+        mChordsRecyclerView.setDrawingCacheEnabled(true);
+        mChordsRecyclerView.setItemViewCacheSize(20);
+        mChordsRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         if (mChordsList.size() == 0) {
             mChordsRecyclerView.setVisibility(View.GONE);
@@ -189,6 +190,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         updateItemSize();
         updateDrawables();
         adapter = new ChordAdapter(this, mChordsDrawable, itemWidth);
+        adapter.hasStableIds();
         mChordsRecyclerView.setAdapter(adapter);
     }
 

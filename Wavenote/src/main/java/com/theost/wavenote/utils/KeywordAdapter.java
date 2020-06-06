@@ -1,14 +1,9 @@
 package com.theost.wavenote.utils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +20,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHolder> {
+
+    private final static int FADE_DURATION = 1500;
 
     private List<Keyword> mData;
     private Context context;
@@ -53,16 +50,14 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHold
             holder.mTypeTextView.clearFocus();
             if (((DictionaryActivity) context).renameKeyword(mData.get(position).getId(), type)) {
                 mData.get(position).setType(type);
-                notifyDataSetChanged();
             }
         });
 
         holder.mTrashButton.setOnClickListener(view -> {
-            Drawable drawable = holder.mTrashButton.getDrawable();
-            DrawableUtils.startAnimatedVectorDrawable(drawable);
             if (((DictionaryActivity) context).removeKeyword(mData.get(position).getId(), mData.get(position).getWord())) {
                 mData.remove(position);
-                notifyDataSetChanged();
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
                 ((DictionaryActivity) context).checkEmptyView();
             }
         });
@@ -89,30 +84,30 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHold
 
     public void updateData(List<Keyword> data) {
         this.mData = data;
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void clearData() {
         mData.clear();
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void sortByDate() {
         Comparator<Keyword> comparator = (k1, k2) -> (Integer.parseInt(k2.getId()) - Integer.parseInt(k1.getId()));
         Collections.sort(mData, comparator);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void sortByName() {
         Comparator<Keyword> comparator = (k1, k2) -> k1.getWord().compareTo(k2.getWord());
         Collections.sort(mData, comparator);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public void sortByType() {
         Comparator<Keyword> comparator = (k1, k2) -> k1.getType().compareTo(k2.getType());
         Collections.sort(mData, comparator);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
 }

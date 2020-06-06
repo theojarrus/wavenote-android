@@ -1,4 +1,4 @@
-package com.theost.wavenote
+package com.theost.wavenote.utils
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
@@ -8,9 +8,9 @@ import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.theost.wavenote.utils.isColorDark
-import com.theost.wavenote.utils.resolveColor
-import com.theost.wavenote.utils.resolveColorAttr
+import com.theost.wavenote.ColorPickerListener
+import com.theost.wavenote.ColorSheet
+import com.theost.wavenote.R
 import kotlinx.android.synthetic.main.color_item.view.colorSelected
 import kotlinx.android.synthetic.main.color_item.view.colorSelectedCircle
 
