@@ -49,6 +49,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private List<Keyword> mKeywordList;
     private List<String> mWordList;
     private LinearLayout emptyView;
+    private LinearLayout mSortLayout;
     private EditText mAddKeywordEditText;
     private RadioGroup mAddKeywordType;
     private DatabaseHelper localDatabase;
@@ -93,7 +94,9 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
 
         mKeywordRecyclerView = findViewById(R.id.keywords_list);
         localDatabase = new DatabaseHelper(this);
-        
+
+        mSortLayout = findViewById(R.id.sort_layout);
+
         updateData();
         adapter = new DictionaryAdapter(this, mKeywordList);
         mKeywordRecyclerView.setAdapter(adapter);
@@ -191,11 +194,13 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     public boolean checkEmptyView() {
         if (adapter == null || adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
-            mKeywordRecyclerView.setVisibility(View.GONE);
+            mKeywordRecyclerView.setVisibility(View.INVISIBLE);
+            mSortLayout.setVisibility(View.INVISIBLE);
             emptyView.setVisibility(View.VISIBLE);
             return false;
         } else {
             mKeywordRecyclerView.setVisibility(View.VISIBLE);
+            mSortLayout.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             mRemoveItem.setEnabled(true);
             return true;

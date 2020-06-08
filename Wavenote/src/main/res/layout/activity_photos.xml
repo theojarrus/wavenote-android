@@ -145,6 +145,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -181,7 +182,7 @@
                     android:layout_marginTop="-1dp"
                     android:background="@color/dividerColor" />
 
-                <include layout="@layout/search_sort"/>
+                <include layout="@layout/search_sort" />
 
                 <View
                     android:layout_width="match_parent"

@@ -14,7 +14,16 @@
         layout="@layout/empty_view"
         android:visibility="gone" />
 
-    <include layout="@layout/search_sort"/>
+    <LinearLayout
+        android:id="@+id/sort_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <include layout="@layout/search_sort" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -31,9 +40,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/padding_medium"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding_medium">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/keywords_list"
@@ -43,9 +52,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:ignore="MissingConstraints"
-                tools:listitem="@layout/dictionary_item"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                tools:listitem="@layout/dictionary_item" />
 
         </LinearLayout>
 
