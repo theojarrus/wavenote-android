@@ -1,10 +1,13 @@
 package com.theost.wavenote;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,9 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +31,6 @@ import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DateTimeUtils;
 import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PhotoAdapter;
@@ -35,7 +40,6 @@ import com.theost.wavenote.utils.ThemeUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -53,17 +57,22 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private PhotoAdapter adapter;
     private LinearLayout emptyView;
     private LinearLayout mMaterialTitle;
+    private RelativeLayout mSortLayoutContent;
+    private ObjectAnimator mSortDirectionAnimation;
+
+    private ImageView mSortDirection;
+    private TextView mSortOrder;
 
     private MaterialDialog loadingDialog;
-
-    private String[] sortModes;
 
     private String importImagePath;
     private String noteId;
 
+    private boolean mIsSortDown;
+    private boolean mIsSortReverse;
+
     private DatabaseHelper localDatabase;
     private MenuItem mRemoveItem;
-    private MenuItem mSortItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,25 +89,24 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if (getIntent().getBooleanExtra("chordsBlockEnabled", false))
-            findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
-
         emptyView = findViewById(android.R.id.empty);
         ImageView mEmptyViewImage = emptyView.findViewById(R.id.image);
         TextView mEmptyViewText = emptyView.findViewById(R.id.text);
         mEmptyViewImage.setImageResource(R.drawable.m_insert_photo_black_24dp);
         mEmptyViewText.setText(R.string.empty_photos);
 
-        noteId = getIntent().getStringExtra("noteId");
+        if (noteId == null) noteId = getIntent().getStringExtra("noteId");
         if (noteId.equals("theory")) {
             setTitle(R.string.theory);
+            findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
         } else {
             setTitle(R.string.photos);
         }
 
         mPhotoBottomSheet = new PhotoBottomSheetDialog(this);
 
-        sortModes = getResources().getStringArray(R.array.array_sort_photos);
+        if (Note.getPhotoActiveSortMode() == 0)
+            Note.setPhotoActiveSortMode(R.id.sort_by_date);
 
         mPhotoRecyclerView = findViewById(R.id.photos_list);
         mMaterialTitle = findViewById(R.id.materials_title);
@@ -109,7 +117,62 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         adapter = new PhotoAdapter(this, mPhotoList);
         mPhotoRecyclerView.setAdapter(adapter);
 
-        sortPhotos(false);
+        mSortLayoutContent = findViewById(R.id.sort_content);
+        mSortOrder = findViewById(R.id.sort_order);
+
+        PopupMenu popup = new PopupMenu(mSortOrder.getContext(), mSortOrder, Gravity.START);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.items_sort, popup.getMenu());
+        popup.getMenu().findItem(R.id.sort_by_type).setVisible(false);
+
+        mSortOrder.setText((popup.getMenu().findItem(Note.getPhotoActiveSortMode())).getTitle());
+
+        mSortLayoutContent.setOnClickListener(v -> {
+            popup.setOnMenuItemClickListener(item -> {
+                // Do nothing when same sort is selected.
+                if (mSortOrder.getText().equals(item.getTitle()))
+                    return false;
+                mSortOrder.setText(item.getTitle());
+                Note.setPhotoActiveSortMode(item.getItemId());
+                sortItems();
+                return true;
+            });
+            popup.show();
+        });
+
+        mIsSortReverse = Note.isPhotoSortDirRev();
+
+        mSortDirection = findViewById(R.id.sort_direction);
+        ImageView sortDirectionSwitch = findViewById(R.id.sort_direction_switch);
+        sortDirectionSwitch.setImageResource(R.drawable.ic_sort_order_24dp);
+        sortDirectionSwitch.setOnClickListener(v -> {
+            if (Note.isPhotoSortDirRev()) {
+                Note.setPhotoSortDirRev(false);
+                if (mIsSortReverse) {
+                    mSortDirectionAnimation.start();
+                } else {
+                    mSortDirectionAnimation.reverse();
+                }
+            } else {
+                Note.setPhotoSortDirRev(true);
+                if (!mIsSortReverse) {
+                    mSortDirectionAnimation.start();
+                } else {
+                    mSortDirectionAnimation.reverse();
+                }
+            }
+            sortItems();
+        });
+
+        sortDirectionSwitch.setOnLongClickListener(v -> {
+            if (v.isHapticFeedbackEnabled()) {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            }
+            Toast.makeText(this, this.getString(R.string.sort_search_reverse_order), Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
+        setSortDirection();
     }
 
     @Override
@@ -117,10 +180,9 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.items_list, menu);
         mRemoveItem = menu.findItem(R.id.menu_remove);
-        mSortItem = menu.findItem(R.id.menu_sort);
         menu.findItem(R.id.menu_restore).setVisible(false);
         MenuCompat.setGroupDividerEnabled(menu, true);
-        checkEmptyView();
+        if (checkEmptyView()) sortItems();
         return true;
     }
 
@@ -130,9 +192,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             case R.id.menu_add:
                 if (PermissionUtils.requestPermissions(this))
                     showPhotoSheet();
-                return true;
-            case R.id.menu_sort:
-                sortPhotos(true);
                 return true;
             case R.id.menu_remove:
                 removePhoto(null);
@@ -145,25 +204,35 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
     }
 
-    public void checkEmptyView() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (data.getBooleanExtra("isNeedUpdate", false)) {
+                mPhotoRecyclerView.setAdapter(adapter);
+            }
+        }
+    }
+
+    public boolean checkEmptyView() {
         if (adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
-            mSortItem.setEnabled(false);
-            DrawableUtils.setMenuItemAlpha(mSortItem, 0.3);
+            mSortLayoutContent.setVisibility(View.GONE);
             if (noteId.equals("theory")) {
                 mMaterialTitle.setVisibility(View.GONE);
-                return;
+                return false;
             }
             mPhotoRecyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
+            return false;
         } else {
             mPhotoRecyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             mRemoveItem.setEnabled(true);
-            mSortItem.setEnabled(true);
-            DrawableUtils.setMenuItemAlpha(mSortItem, 1.0);
+            mSortLayoutContent.setVisibility(View.VISIBLE);
             if (noteId.equals("theory"))
                 mMaterialTitle.setVisibility(View.VISIBLE);
+            return true;
         }
     }
 
@@ -213,14 +282,15 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
 
         updateData();
-        sortPhotos(false);
-        checkEmptyView();
+        if (checkEmptyView()) sortItems();
     }
 
     public void renamePhoto(String id, String name) {
         boolean isRenamed = localDatabase.renameImageData(id, name);
         if (!isRenamed) {
             DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+        } else {
+            sortItems();
         }
     }
 
@@ -255,17 +325,34 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         return true;
     }
 
-    private void sortPhotos(boolean isModeChanged) {
-        if (adapter.getItemCount() == 0) return;
-        if (isModeChanged) {
-            int index = Arrays.asList(sortModes).indexOf(Note.getNotePhotosSort()) + 1;
-            if (index == sortModes.length) index = 0;
-            Note.setNotePhotosSort(sortModes[index]);
+    private void setSortDirection() {
+
+        if (Note.isPhotoSortDirRev()) {
+            mSortDirection.setContentDescription(getString(R.string.description_up));
+            mSortDirection.setImageResource(R.drawable.ic_arrow_up_16dp);
+            mIsSortDown = false;
+        } else {
+            mSortDirection.setContentDescription(getString(R.string.description_down));
+            mSortDirection.setImageResource(R.drawable.ic_arrow_down_16dp);
+            mIsSortDown = true;
         }
-        if (Note.getNotePhotosSort().equals(sortModes[0])) {
-            adapter.sortByDate();
-        } else if (Note.getNotePhotosSort().equals(sortModes[1])) {
-            adapter.sortByName();
+
+        mSortDirectionAnimation = ObjectAnimator.ofFloat(
+                mSortDirection,
+                View.ROTATION,
+                0f,
+                mIsSortDown ? -180f : 180f
+        ).setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+    }
+
+    private void sortItems() {
+        switch (Note.getPhotoActiveSortMode()) {
+            case R.id.sort_by_date:
+                adapter.sortByDate(Note.isPhotoSortDirRev());
+                break;
+            case R.id.sort_by_name:
+                adapter.sortByName(Note.isPhotoSortDirRev());
+                break;
         }
     }
 
@@ -275,6 +362,14 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         intent.putExtra("chords", SyntaxHighlighter.getAllChords(this));
         intent.putExtra("activeInstrument", ((Button) view).getText().toString());
         startActivity(intent);
+    }
+
+    public void startSliderActivity(int position) {
+        Intent intent = new Intent(this, SliderActivity.class);
+        intent.putParcelableArrayListExtra("photoList", (ArrayList) mPhotoList);
+        intent.putExtra("position", position);
+        intent.putExtra("noteId", noteId);
+        startActivityForResult(intent, 0);
     }
 
     public void importPhoto(File imageFile, Bitmap imageBitmap) {

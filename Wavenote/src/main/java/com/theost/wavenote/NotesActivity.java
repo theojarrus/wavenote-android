@@ -407,7 +407,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 supportInvalidateOptionsMenu();
                 if (mIsTheoryClicked) {
                     Intent intent = new Intent(NotesActivity.this, PhotosActivity.class);
-                    intent.putExtra("chordsBlockEnabled", true);
                     intent.putExtra("noteId", "theory");
                     startActivity(intent);
                     mIsTheoryClicked = false;

@@ -1,6 +1,5 @@
 package com.theost.wavenote.utils;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +18,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHolder> {
+public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.ViewHolder> {
 
     private final static int FADE_DURATION = 1500;
 
     private List<Keyword> mData;
-    private Context context;
+    private DictionaryActivity mActivity;
     private LayoutInflater mInflater;
 
-    public KeywordAdapter(Context context, List<Keyword> data) {
-        this.mInflater = LayoutInflater.from(context);
-        this.context = context;
+    public DictionaryAdapter(DictionaryActivity activity, List<Keyword> data) {
+        this.mInflater = LayoutInflater.from(activity);
+        this.mActivity = activity;
         this.mData = data;
     }
 
@@ -48,17 +47,17 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHold
         holder.mTypeTextView.setOnItemClickListener((parent, view, position1, id) -> {
             String type = holder.mTypeTextView.getText().toString();
             holder.mTypeTextView.clearFocus();
-            if (((DictionaryActivity) context).renameKeyword(mData.get(position).getId(), type)) {
+            if (mActivity.renameKeyword(mData.get(position).getId(), type)) {
                 mData.get(position).setType(type);
             }
         });
 
         holder.mTrashButton.setOnClickListener(view -> {
-            if (((DictionaryActivity) context).removeKeyword(mData.get(position).getId(), mData.get(position).getWord())) {
+            if (mActivity.removeKeyword(mData.get(position).getId(), mData.get(position).getWord())) {
                 mData.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
-                ((DictionaryActivity) context).checkEmptyView();
+                mActivity.checkEmptyView();
             }
         });
     }
@@ -78,7 +77,7 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHold
             mWordEditText = itemView.findViewById(R.id.keyword_name);
             mTypeTextView = itemView.findViewById(R.id.keyword_type);
             mTrashButton = itemView.findViewById(R.id.keyword_trash);
-            ((DictionaryActivity) context).disableDictionaryInputs(mWordEditText, mTypeTextView);
+            mActivity.disableDictionaryInputs(mWordEditText, mTypeTextView);
         }
     }
 
@@ -92,20 +91,35 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.ViewHold
         notifyItemRangeChanged(0, mData.size());
     }
 
-    public void sortByDate() {
-        Comparator<Keyword> comparator = (k1, k2) -> (Integer.parseInt(k2.getId()) - Integer.parseInt(k1.getId()));
+    public void sortByDate(boolean isSortReversed) {
+        Comparator<Keyword> comparator;
+        if (!isSortReversed) {
+            comparator = (k1, k2) -> (Integer.parseInt(k2.getId()) - Integer.parseInt(k1.getId()));
+        } else {
+            comparator = (k1, k2) -> Integer.parseInt(k1.getId()) - (Integer.parseInt(k2.getId()));
+        }
         Collections.sort(mData, comparator);
         notifyItemRangeChanged(0, mData.size());
     }
 
-    public void sortByName() {
-        Comparator<Keyword> comparator = (k1, k2) -> k1.getWord().compareTo(k2.getWord());
+    public void sortByName(boolean isSortReversed) {
+        Comparator<Keyword> comparator;
+        if (!isSortReversed) {
+            comparator = (k1, k2) -> k1.getWord().toLowerCase().compareTo(k2.getWord().toLowerCase());
+        } else {
+            comparator = (k1, k2) -> k2.getWord().toLowerCase().compareTo(k1.getWord().toLowerCase());
+        }
         Collections.sort(mData, comparator);
         notifyItemRangeChanged(0, mData.size());
     }
 
-    public void sortByType() {
-        Comparator<Keyword> comparator = (k1, k2) -> k1.getType().compareTo(k2.getType());
+    public void sortByType(boolean isSortReversed) {
+        Comparator<Keyword> comparator;
+        if (!isSortReversed) {
+            comparator = (k1, k2) -> k1.getType().compareTo(k2.getType());
+        } else {
+            comparator = (k1, k2) -> k2.getType().compareTo(k1.getType());
+        }
         Collections.sort(mData, comparator);
         notifyItemRangeChanged(0, mData.size());
     }

@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,14 +66,28 @@
 
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/photo_trash"
-                    android:layout_width="@dimen/custom_icon_size"
-                    android:layout_height="@dimen/custom_icon_size"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/description_delete_item"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/av_trash_empty_blue_24dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/photo_fullscreen"
+                        android:layout_width="@dimen/custom_icon_size"
+                        android:layout_height="@dimen/custom_icon_size"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/photos"
+                        android:visibility="visible"
+                        android:src="@drawable/av_fullscreen" />
+
+                    <ImageButton
+                        android:id="@+id/photo_trash"
+                        android:layout_width="@dimen/custom_icon_size"
+                        android:layout_height="@dimen/custom_icon_size"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/description_delete_item"
+                        android:src="@drawable/av_trash_empty_blue_24dp" />
+
+                </LinearLayout>
 
             </RelativeLayout>
 
@@ -108,18 +128,13 @@
 
     </LinearLayout>
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <ImageView
         android:id="@+id/photo_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/mu_a7_guitar" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="-1dp"
-        android:background="@color/dividerColor" />
+        android:src="@drawable/mu_a7_guitar"
+        android:contentDescription="@string/photos" />
 
 </LinearLayout>

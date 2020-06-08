@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AlwaysShowAction">
+
+    <item
+        android:id="@+id/menu_rotate_left"
+        android:enabled="true"
+        android:icon="@drawable/ic_rotate_left"
+        android:title="@string/rotate_to_left"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_rotate_right"
+        android:enabled="true"
+        android:icon="@drawable/ic_rotate_right"
+        android:title="@string/rotate_to_right"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_flip_vertical"
+        android:enabled="true"
+        android:icon="@drawable/ic_flip_vertical"
+        android:title="@string/flip_vertical"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/menu_flip_horizontal"
+        android:enabled="true"
+        android:icon="@drawable/ic_flip_horizontal"
+        android:title="@string/flip_horizontal"
+        app:showAsAction="always" />
+
+</menu>

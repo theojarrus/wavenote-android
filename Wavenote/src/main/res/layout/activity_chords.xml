@@ -39,7 +39,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/instrument_layout"
-                    style="@style/WaveStyle.BasicAutocompleteLayout.Outlined"
+                    style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -63,7 +63,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/WaveStyle.BasicAutocompleteLayout.Outlined"
+                    style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -96,13 +96,13 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/chord_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"

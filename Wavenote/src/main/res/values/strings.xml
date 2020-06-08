@@ -297,13 +297,13 @@
     <string name="sample_error">Audio may sound incorrect, because file sample rate is not</string>
     <string name="error_network_required">A network connection is required. Please, check your connection and try again</string>
 
-    <!-- Musical -->
     <string name="dictionary">Dictionary</string>
     <string name="dictionary_summary">Edit keywords list</string>
     <string name="add">Add</string>
     <string name="keyword">Keyword</string>
     <string name="reset">Reset</string>
     <string name="type">Type</string>
+    <string name="date">Date</string>
     <string name="remove">Remove</string>
     <string name="remove_all">Remove All</string>
     <string name="name">Name</string>
@@ -338,16 +338,15 @@
     <string name="loop" translatable="false">Loop</string>
     <string name="tap" translatable="false">Tap</string>
     <string name="adjust_record">Adjust record</string>
-    <string name="default_beat" translatable="false">C 4/4</string>
-    <string name="default_bpm" translatable="false">= 120</string>
     <string name="mix" translatable="false">Mix</string>
     <string name="set">Set</string>
-    <string name="default_beat_1" translatable="false">C</string>
-    <string name="default_beat_2" translatable="false">4/4</string>
-    <string name="default_bpm_c" translatable="false">120</string>
     <string name="select_tone">Select Tone</string>
     <string name="select_beat">Select Beat</string>
     <string name="stylize">Stylize</string>
     <string name="add_to_dictionary">Add to Dictionary</string>
+    <string name="flip_vertical">Flip Vertical</string>
+    <string name="flip_horizontal">Flip Horizontal</string>
+    <string name="rotate_to_left">Rotate to Left</string>
+    <string name="rotate_to_right">Rotate to Right</string>
 
 </resources>

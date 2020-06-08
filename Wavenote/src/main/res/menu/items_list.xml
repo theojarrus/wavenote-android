@@ -14,13 +14,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_sort"
-        android:enabled="true"
-        android:icon="@drawable/av_sort_24dp"
-        android:title="@string/sort_order"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/menu_restore"
         android:enabled="true"
         android:title="@string/restore"

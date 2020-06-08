@@ -6,13 +6,14 @@
     <color name="blue">@color/blue_50</color>
     <color name="purple">#e7c8dd</color>
     <color name="blue_dark">@color/blue_60</color>
-    <color name="blue_light">@color/blue_0</color>
+    <color name="blue_light">@color/blue_40</color>
     <color name="gray">@color/gray_50</color>
     <color name="green">@color/green_50</color>
     <color name="red">@color/red_50</color>
     <color name="yellow">@color/yellow_20</color>
     <color name="black">#36393e</color>
     <color name="white">#fafafa</color>
+    <color name="transparent">#30000000</color>
 
     <!-- ELEVATION -->
     <color name="background_dark_0">#121416</color>

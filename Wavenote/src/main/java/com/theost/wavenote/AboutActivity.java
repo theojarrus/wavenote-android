@@ -16,11 +16,14 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        int appColor = getResources().getColor(R.color.blue);
+        int appColor;
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+            appColor = getResources().getColor(R.color.blue);
             toolbar.setBackgroundColor(appColor);
             getWindow().setNavigationBarColor(appColor);
             getWindow().getDecorView().setBackgroundColor(appColor);
+        } else {
+            appColor = getResources().getColor(R.color.blue, getTheme());
         }
 
         setSupportActionBar(toolbar);

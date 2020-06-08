@@ -253,8 +253,8 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/m_audiotrack_black_18dp"
                     android:gravity="center"
-                    android:text="@string/default_bpm"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:text="120" />
 
                 <TextView
                     android:id="@+id/tv_tune_and_beat"
@@ -262,9 +262,9 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/custom_padding_small"
                     android:paddingEnd="@dimen/custom_padding_small"
-                    android:text="@string/default_beat"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="4/4" />
             </LinearLayout>
 
             <View

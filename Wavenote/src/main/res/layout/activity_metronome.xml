@@ -33,17 +33,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/custom_space"
-                    android:text="@string/default_beat_1"
                     android:textSize="40sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="C" />
 
                 <TextView
                     android:id="@+id/metronome_beat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/default_beat_2"
                     android:textSize="40sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="4/4" />
 
             </LinearLayout>
 
@@ -61,7 +61,7 @@
                     android:layout_gravity="center_vertical"
                     android:adjustViewBounds="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/default_bpm"
+                    android:contentDescription="@string/tap"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_remove_circle_outline_36dp" />
 
@@ -71,9 +71,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:minWidth="80dp"
-                    android:text="@string/default_bpm_c"
                     android:textColor="?attr/hintTextColor"
-                    android:textSize="32sp" />
+                    android:textSize="32sp"
+                    tools:text="120" />
 
                 <ImageButton
                     android:id="@+id/metronome_speed_up"
@@ -82,7 +82,7 @@
                     android:layout_gravity="center_vertical"
                     android:adjustViewBounds="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/default_bpm"
+                    android:contentDescription="@string/tap"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_add_circle_outline_36dp" />
 
@@ -105,9 +105,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_extra_extra_large"
+                android:orientation="vertical"
                 android:paddingStart="@dimen/custom_space"
-                android:paddingEnd="@dimen/custom_space"
-                android:orientation="vertical">
+                android:paddingEnd="@dimen/custom_space">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,7 +116,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/sounds_layout"
-                        style="@style/WaveStyle.BasicAutocompleteLayout.Outlined"
+                        style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
                         android:layout_width="120dp"
                         android:layout_height="match_parent"
                         android:clickable="true"

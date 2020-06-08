@@ -17,6 +17,11 @@
 
     <integer name="custom_space">15</integer> <!-- value of custom_space dimen -->
     <integer name="dialog_input_max">20</integer>
+    <integer name="padding_medium">14</integer>
+
+    <!-- System -->
+    <integer name="status_bar_height">24</integer>
+    <integer name="navigation_bar_height">48</integer>
 
     <integer name="RECEIVE_RECORDING_DATA">0x1</integer>
     <integer name="LOAD_DATA_SUCCESS">0x2</integer>

@@ -277,5 +277,10 @@
     <string name="add_to_dictionary">Добавить в словарь</string>
     <string name="title">Заголовок</string>
     <string name="loading">Загрузка</string>
+    <string name="flip_vertical">Отразить по вертикали</string>
+    <string name="flip_horizontal">Отразить по горизонтали</string>
+    <string name="rotate_to_left">Повернуть влево</string>
+    <string name="rotate_to_right">Повернуть вправо</string>
+    <string name="date">Дата</string>
 
 </resources>

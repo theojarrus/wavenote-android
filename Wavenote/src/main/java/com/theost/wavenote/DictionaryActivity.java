@@ -1,9 +1,12 @@
 package com.theost.wavenote;
 
+import android.animation.ObjectAnimator;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,9 +16,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,21 +34,18 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DictionaryUtils;
 import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.utils.DrawableUtils;
-import com.theost.wavenote.utils.KeywordAdapter;
+import com.theost.wavenote.utils.DictionaryAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DictionaryActivity extends ThemedAppCompatActivity {
 
     private int[] keywordColors;
-    private String[] sortModes;
     private String[] keywordTypes;
-    private KeywordAdapter adapter;
+    private DictionaryAdapter adapter;
     private List<Keyword> mKeywordList;
     private List<String> mWordList;
     private LinearLayout emptyView;
@@ -52,7 +55,13 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private RecyclerView mKeywordRecyclerView;
     private String activeSortType;
     private MenuItem mRemoveItem;
-    private MenuItem mSortItem;
+
+    private RelativeLayout mSortLayoutContent;
+    private ObjectAnimator mSortDirectionAnimation;
+    private ImageView mSortDirection;
+    private TextView mSortOrder;
+    private boolean mIsSortDown;
+    private boolean mIsSortReverse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,8 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        Note.setIsNeedResourceUpdate(true);
+
         emptyView = findViewById(android.R.id.empty);
         ImageView mEmptyViewImage = emptyView.findViewById(R.id.image);
         TextView mEmptyViewText = emptyView.findViewById(R.id.text);
@@ -80,18 +91,71 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         keywordColors = DictionaryUtils.getKeywordColors(this);
         keywordTypes = DictionaryUtils.getKeywordTypes(this);
 
-        sortModes = getResources().getStringArray(R.array.array_sort_dictionary);
-        
-        activeSortType = sortModes[0];
         mKeywordRecyclerView = findViewById(R.id.keywords_list);
         localDatabase = new DatabaseHelper(this);
         
         updateData();
-        adapter = new KeywordAdapter(this, mKeywordList);
+        adapter = new DictionaryAdapter(this, mKeywordList);
         mKeywordRecyclerView.setAdapter(adapter);
 
-        sortKeywords(false);
-        Note.setIsNeedResourceUpdate(true);
+        if (Note.getDictionaryActiveSortMode() == 0)
+            Note.setDictionaryActiveSortMode(R.id.sort_by_date);
+
+        mSortLayoutContent = findViewById(R.id.sort_content);
+        mSortOrder = findViewById(R.id.sort_order);
+
+        PopupMenu popup = new PopupMenu(mSortOrder.getContext(), mSortOrder, Gravity.START);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.items_sort, popup.getMenu());
+
+        mSortOrder.setText((popup.getMenu().findItem(Note.getDictionaryActiveSortMode())).getTitle());
+
+        mSortLayoutContent.setOnClickListener(v -> {
+            popup.setOnMenuItemClickListener(item -> {
+                // Do nothing when same sort is selected.
+                if (mSortOrder.getText().equals(item.getTitle()))
+                    return false;
+                mSortOrder.setText(item.getTitle());
+                Note.setDictionaryActiveSortMode(item.getItemId());
+                sortItems();
+                return true;
+            });
+            popup.show();
+        });
+
+        mIsSortReverse = Note.isDictionarySortDirRev();
+
+        mSortDirection = findViewById(R.id.sort_direction);
+        ImageView sortDirectionSwitch = findViewById(R.id.sort_direction_switch);
+        sortDirectionSwitch.setImageResource(R.drawable.ic_sort_order_24dp);
+        sortDirectionSwitch.setOnClickListener(v -> {
+            if (Note.isDictionarySortDirRev()) {
+                Note.setDictionarySortDirRev(false);
+                if (mIsSortReverse) {
+                    mSortDirectionAnimation.start();
+                } else {
+                    mSortDirectionAnimation.reverse();
+                }
+            } else {
+                Note.setDictionarySortDirRev(true);
+                if (!mIsSortReverse) {
+                    mSortDirectionAnimation.start();
+                } else {
+                    mSortDirectionAnimation.reverse();
+                }
+            }
+            sortItems();
+        });
+
+        sortDirectionSwitch.setOnLongClickListener(v -> {
+            if (v.isHapticFeedbackEnabled()) {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            }
+            Toast.makeText(this, this.getString(R.string.sort_search_reverse_order), Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
+        setSortDirection();
     }
 
     @Override
@@ -99,9 +163,8 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.items_list, menu);
         mRemoveItem = menu.findItem(R.id.menu_remove);
-        mSortItem = menu.findItem(R.id.menu_sort);
         MenuCompat.setGroupDividerEnabled(menu, true);
-        checkEmptyView();
+        if (checkEmptyView()) sortItems();
         return true;
     }
 
@@ -110,9 +173,6 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_add:
                 showKeywordDialog();
-                return true;
-            case R.id.menu_sort:
-                sortKeywords(true);
                 return true;
             case R.id.menu_restore:
                 restoreData();
@@ -128,19 +188,17 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         }
     }
 
-    public void checkEmptyView() {
+    public boolean checkEmptyView() {
         if (adapter == null || adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
-            mSortItem.setEnabled(false);
-            DrawableUtils.setMenuItemAlpha(mSortItem, 0.3);
             mKeywordRecyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
+            return false;
         } else {
             mKeywordRecyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             mRemoveItem.setEnabled(true);
-            mSortItem.setEnabled(true);
-            DrawableUtils.setMenuItemAlpha(mSortItem, 1.0);
+            return true;
         }
     }
 
@@ -197,7 +255,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             String word = mKeywordData.getString(1);
             String type = mKeywordData.getString(2);
             Keyword keyword = new Keyword(id, word, type);
-            mWordList.add(word);
+            mWordList.add(word.toLowerCase());
             mKeywordList.add(keyword);
         }
         if (adapter != null) adapter.updateData(mKeywordList);
@@ -210,13 +268,12 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         for (String j : resourceTitles) localDatabase.insertDictionaryData(j, keywordTypes[0]);
         for (String i : resourceWords) localDatabase.insertDictionaryData(i, keywordTypes[1]);
         updateData();
-        sortKeywords(false);
-        checkEmptyView();
+        if (checkEmptyView()) sortItems();
     }
 
     private void insertKeyword(String keyword) {
         if (keyword.equals("") || mAddKeywordType.getCheckedRadioButtonId() == -1) return;
-        if (mWordList.contains(keyword)) {
+        if (mWordList.contains(keyword.toLowerCase())) {
             DisplayUtils.showToast(this, getResources().getString(R.string.exist_error));
             return;
         }
@@ -238,8 +295,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             DisplayUtils.showToast(this, this.getResources().getString(R.string.database_error));
         }
         updateData();
-        sortKeywords(false);
-        checkEmptyView();
+        if (checkEmptyView()) sortItems();
     }
 
     public boolean renameKeyword(String id, String type) {
@@ -264,7 +320,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         } else {
             isRemoved = localDatabase.removeDictionaryData(id);
             if (isRemoved)
-                mWordList.remove(keyword);
+                mWordList.remove(keyword.toLowerCase());
         }
         if (!isRemoved) {
             DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
@@ -273,19 +329,37 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         return true;
     }
 
-    private void sortKeywords(boolean isModeChanged) {
-        if (adapter.getItemCount() == 0) return;
-        if (isModeChanged) {
-            int index = Arrays.asList(sortModes).indexOf(activeSortType) + 1;
-            if (index == sortModes.length) index = 0;
-            activeSortType = sortModes[index];
+    private void setSortDirection() {
+
+        if (Note.isDictionarySortDirRev()) {
+            mSortDirection.setContentDescription(getString(R.string.description_up));
+            mSortDirection.setImageResource(R.drawable.ic_arrow_up_16dp);
+            mIsSortDown = false;
+        } else {
+            mSortDirection.setContentDescription(getString(R.string.description_down));
+            mSortDirection.setImageResource(R.drawable.ic_arrow_down_16dp);
+            mIsSortDown = true;
         }
-        if (activeSortType.equals(sortModes[0])) {
-            adapter.sortByDate();
-        } else if (activeSortType.equals(sortModes[1])) {
-            adapter.sortByName();
-        } else if (activeSortType.equals(sortModes[2])) {
-            adapter.sortByType();
+
+        mSortDirectionAnimation = ObjectAnimator.ofFloat(
+                mSortDirection,
+                View.ROTATION,
+                0f,
+                mIsSortDown ? -180f : 180f
+        ).setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+    }
+
+    private void sortItems() {
+        switch (Note.getDictionaryActiveSortMode()) {
+            case R.id.sort_by_date:
+                adapter.sortByDate(Note.isDictionarySortDirRev());
+                break;
+            case R.id.sort_by_name:
+                adapter.sortByName(Note.isDictionarySortDirRev());
+                break;
+            case R.id.sort_by_type:
+                adapter.sortByType(Note.isDictionarySortDirRev());
+                break;
         }
     }
 

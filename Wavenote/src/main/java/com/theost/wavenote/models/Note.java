@@ -58,26 +58,32 @@ public class Note extends BucketObject {
     protected String mContentPreview = null;
     protected String mTitle = null;
 
-    public static boolean isTextStyleBold = false;
-    public static boolean isTextStyleItalic = false;
-    public static boolean isTextStyleStroke = false;
-    public static boolean isTextStyleCode = false;
-    public static boolean isTextStyleUnderline = false;
-    public static boolean isTextStyleStrikethrough = false;
+    private static boolean isTextStyleBold = false;
+    private static boolean isTextStyleItalic = false;
+    private static boolean isTextStyleStroke = false;
+    private static boolean isTextStyleCode = false;
+    private static boolean isTextStyleUnderline = false;
+    private static boolean isTextStyleStrikethrough = false;
 
-    public static boolean isNeedResourceUpdate = true;
+    private static boolean isNeedResourceUpdate = true;
 
-    public static String themedTextActiveColor = "#36393e";
-    public static String themedTextInactiveColor = "#fafafa";
-    public static String notePhotosSort = "date";
+    private static boolean photoSortDirRev = false;
+    private static boolean dictionarySortDirRev = false;
 
-    public static int activeStyleColor = -1;
-    
-    public static String activeMetronomeSound;
-    public static String noteActiveInstrument;
+    private static String themedTextActiveColor = "#36393e";
+    private static String themedTextInactiveColor = "#fafafa";
 
-    public static short activeMetronomeSpeed;
-    public static int noteActiveColumns;
+    private static int activeStyleColor = -1;
+
+
+    private static String activeMetronomeSound;
+    private static String noteActiveInstrument;
+
+    private static int photoActiveSortMode;
+    private static int dictionaryActiveSortMode;
+
+    private static short activeMetronomeSpeed;
+    private static int noteActiveColumns;
 
     public Note(String key) {
         super(key, new JSONObject());
@@ -232,12 +238,36 @@ public class Note extends BucketObject {
         isNeedResourceUpdate = update;
     }
 
-    public static String getNotePhotosSort() {
-        return notePhotosSort;
+    public static int getPhotoActiveSortMode() {
+        return photoActiveSortMode;
     }
 
-    public static void setNotePhotosSort(String mode) {
-        notePhotosSort = mode;
+    public static void setPhotoActiveSortMode(int mode) {
+        photoActiveSortMode = mode;
+    }
+
+    public static boolean isPhotoSortDirRev() {
+        return photoSortDirRev;
+    }
+
+    public static void setPhotoSortDirRev(boolean isReversed) {
+        photoSortDirRev = isReversed;
+    }
+
+    public static int getDictionaryActiveSortMode() {
+        return dictionaryActiveSortMode;
+    }
+
+    public static void setDictionaryActiveSortMode(int mode) {
+        dictionaryActiveSortMode = mode;
+    }
+
+    public static boolean isDictionarySortDirRev() {
+        return dictionarySortDirRev;
+    }
+
+    public static void setDictionarySortDirRev(boolean isReversed) {
+        dictionarySortDirRev = isReversed;
     }
 
     public static boolean isIsTextStyleBold() { return isTextStyleBold;}

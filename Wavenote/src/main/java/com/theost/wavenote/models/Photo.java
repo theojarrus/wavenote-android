@@ -7,8 +7,9 @@ import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Photo {
+public class Photo implements Serializable {
 
     String id;
     String name;
@@ -32,6 +33,10 @@ public class Photo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     public Bitmap getBitmap(Context context) {

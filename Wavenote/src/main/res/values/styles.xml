@@ -59,6 +59,23 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="Slider.Theme.Wavestyle" parent="Base.Theme.Wavestyle">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="toolbarIconColor">@color/white</item>
+        <item name="android:colorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="toolbarColor">@color/transparent</item>
+        <item name="elevation">0dp</item>
+    </style>
+
     <style name="Action.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:contentDescription">@string/more_options</item>
     </style>
@@ -182,13 +199,13 @@
     </style>
 
     <style name="Theme.Wavestyle.About" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:navigationBarColor">@color/blue_60</item>
+        <item name="android:navigationBarColor">@color/blue</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:windowBackground">@color/blue_60</item>
+        <item name="android:windowBackground">@color/blue</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="toolbarColor">@color/blue_60</item>
+        <item name="toolbarColor">@color/blue</item>
     </style>
 
     <style name="Theme.Wavestyle.Passcode" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
@@ -264,13 +281,13 @@
         <item name="android:navigationBarColor">@color/dialogDarkPrimary</item>
     </style>
 
-    <style name="WaveStyle.InputLayoutStyle.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="Wavestyle.InputLayoutStyle.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">?attr/colorAccent</item>
         <item name="android:textColor">@color/text_title_disabled</item>
         <item name="boxBackgroundColor">@null</item>
     </style>
 
-    <style name="WaveStyle.BasicAutocompleteLayout.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+    <style name="Wavestyle.BasicAutocompleteLayout.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="boxStrokeColor">?attr/colorAccent</item>
         <item name="iconTintColor">?attr/colorAccent</item>
         <item name="android:textColor">@color/text_title_disabled</item>

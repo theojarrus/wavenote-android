@@ -53,10 +53,10 @@
                         android:layout_marginEnd="@dimen/custom_space"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="@string/chords"
                         android:paddingTop="@dimen/custom_space"
                         android:paddingBottom="@dimen/custom_space"
-                        android:textColorHint="?attr/noteEditorTextColor"
+                        android:text="@string/chords"
+                        android:textColor="?attr/noteEditorTextColor"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -88,10 +88,10 @@
                         android:orientation="vertical"
                         android:text="@string/guitar"
                         android:textAllCaps="false"
-                        android:textSize="15sp"
                         android:textColor="?attr/colorAccent"
-                        app:strokeWidth="2dp"
+                        android:textSize="15sp"
                         app:strokeColor="?attr/colorAccent"
+                        app:strokeWidth="2dp"
                         tools:ignore="PrivateResource" />
 
                     <com.google.android.material.button.MaterialButton
@@ -108,10 +108,10 @@
                         android:orientation="vertical"
                         android:text="@string/piano"
                         android:textAllCaps="false"
-                        android:textSize="15sp"
                         android:textColor="?attr/colorAccent"
-                        app:strokeWidth="2dp"
+                        android:textSize="15sp"
                         app:strokeColor="?attr/colorAccent"
+                        app:strokeWidth="2dp"
                         tools:ignore="PrivateResource" />
 
                     <com.google.android.material.button.MaterialButton
@@ -126,10 +126,10 @@
                         android:orientation="vertical"
                         android:text="@string/ukulele"
                         android:textAllCaps="false"
-                        android:textSize="15sp"
                         android:textColor="?attr/colorAccent"
-                        app:strokeWidth="2dp"
+                        android:textSize="15sp"
                         app:strokeColor="?attr/colorAccent"
+                        app:strokeWidth="2dp"
                         tools:ignore="PrivateResource" />
 
                 </LinearLayout>
@@ -166,10 +166,10 @@
                         android:layout_marginEnd="@dimen/custom_space"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="@string/materials"
                         android:paddingTop="@dimen/custom_space"
                         android:paddingBottom="@dimen/custom_space"
-                        android:textColorHint="?attr/noteEditorTextColor"
+                        android:text="@string/materials"
+                        android:textColor="?attr/noteEditorTextColor"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -181,10 +181,18 @@
                     android:layout_marginTop="-1dp"
                     android:background="@color/dividerColor" />
 
+                <include layout="@layout/search_sort"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/dividerColor" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/photos_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:clickable="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
