@@ -221,7 +221,7 @@
     <string name="text_italic">Курсив</string>
     <string name="text_underline">Подчёркнутый</string>
     <string name="text_strikethrough">Зачёркнутый</string>
-    <string name="text_code">Код</string>
+    <string name="text_mono">Моно</string>
     <string name="dictionary">Словарь</string>
     <string name="dictionary_summary">Редактировать ключевые слова</string>
     <string name="add">Добавить</string>
@@ -282,5 +282,8 @@
     <string name="rotate_to_left">Повернуть влево</string>
     <string name="rotate_to_right">Повернуть вправо</string>
     <string name="date">Дата</string>
+    <string name="confirm_delete_all">Вы действительно хотите удалить все записи?</string>
+    <string name="link_error">Некорректная ссылка</string>
+    <string name="get">Получить</string>
 
 </resources>

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +41,7 @@ import com.theost.wavenote.utils.ThemeUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -194,7 +197,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
                     showPhotoSheet();
                 return true;
             case R.id.menu_remove:
-                removePhoto(null);
+                showRemoveDialog();
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -243,6 +246,16 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private void showPhotoSheet() {
         mPhotoBottomSheet.show(getSupportFragmentManager());
     }
+
+    private void showRemoveDialog() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.remove_all)
+                .content(R.string.confirm_delete_all)
+                .positiveText(R.string.yes)
+                .onPositive((dialog, which) -> removePhoto(null))
+                .negativeText(R.string.no).show();
+    }
+
 
     private void updateData() {
         Cursor mImageData = localDatabase.getImageData(noteId);
@@ -372,9 +385,9 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
-    public void importPhoto(File imageFile, Bitmap imageBitmap) {
+    public void importPhoto(File imageFile, Bitmap imageBitmap, String imageLink) {
         importImagePath = imageFile.getPath();
-        importPhotosThread = new ImportPhotosThread(imageFile, imageBitmap);
+        importPhotosThread = new ImportPhotosThread(imageFile, imageBitmap, imageLink);
         importPhotosThread.start();
         showLoadingDialog();
     }
@@ -387,8 +400,10 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         if (msg.what == 0) {
             insertPhoto(importImagePath);
             importImagePath = null;
-        } else {
+        } else if (msg.what == 1) {
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+        } else if (msg.what == 2) {
+            DisplayUtils.showToast(this, getResources().getString(R.string.link_error));
         }
         loadingDialog.dismiss();
         return true;
@@ -397,20 +412,37 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private class ImportPhotosThread extends Thread {
         File imageFile;
         Bitmap imageBitmap;
+        String imageLink;
 
-        private ImportPhotosThread(File imageFile, Bitmap imageBitmap) {
+        private ImportPhotosThread(File imageFile, Bitmap imageBitmap, String imageLink) {
             this.imageFile = imageFile;
             this.imageBitmap = imageBitmap;
+            this.imageLink = imageLink;
         }
 
         public void run() {
             isImporting = true;
-            try {
-                FileUtils.createPhotoFile(imageBitmap, imageFile);
-                mImportHandler.sendEmptyMessage(0);
-            } catch (IOException e) {
-                e.printStackTrace();
-                mImportHandler.sendEmptyMessage(-1);
+            if (imageLink != null) {
+                try {
+                    if (URLUtil.isValidUrl(imageLink)) {
+                        URL imageUrl = new URL(imageLink);
+                        imageBitmap = BitmapFactory.decodeStream(imageUrl.openStream());
+                    } else {
+                        mImportHandler.sendEmptyMessage(2);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mImportHandler.sendEmptyMessage(2);
+                }
+            }
+            if (imageBitmap != null) {
+                try {
+                    FileUtils.createPhotoFile(imageBitmap, imageFile);
+                    mImportHandler.sendEmptyMessage(0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mImportHandler.sendEmptyMessage(1);
+                }
             }
             isImporting = false;
         }

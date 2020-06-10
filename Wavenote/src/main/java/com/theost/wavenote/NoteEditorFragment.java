@@ -452,7 +452,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             public void onDestroyActionMode(android.view.ActionMode mode) {}
         });
 
-        keywordColors = DictionaryUtils.getKeywordColors(getContext());
+        keywordColors = DictionaryUtils.getDialogColors(getContext());
         keywordTypes = DictionaryUtils.getKeywordTypes(getContext());
 
         colorSheet = new ColorSheet();
@@ -900,7 +900,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (keywordTypes == null)
             keywordTypes = DictionaryUtils.getKeywordTypes(getContext());
         if (keywordColors == null)
-            keywordColors = DictionaryUtils.getKeywordColors(getContext());
+            keywordColors = DictionaryUtils.getDialogColors(getContext());
         if (keywordMaxLength == 0)
             keywordMaxLength = DictionaryUtils.getKeywordMaxLength(getContext());
     }

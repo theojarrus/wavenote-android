@@ -276,6 +276,8 @@
     <string name="wait_a_bit">Wait a bit…</string>
     <string name="loading">Loading</string>
 
+    <string name="confirm_delete_all">Are you sure you want to delete all data?</string>
+
     <!-- Color Sheet -->
     <string name="text_style">Style</string>
     <string name="text_bold">Bold</string>
@@ -283,9 +285,11 @@
     <string name="text_italic">Italic</string>
     <string name="text_underline">Underline</string>
     <string name="text_strikethrough">Strikethrough</string>
-    <string name="text_code">Code</string>
+    <string name="text_mono">Mono</string>
 
     <!-- Errors -->
+    <string name="file_error">Invalid file</string>
+    <string name="link_error">Invalid link</string>
     <string name="convert_error">Conversion error</string>
     <string name="photo_found_error">Photos not found</string>
     <string name="database_error">Database request error</string>
@@ -322,7 +326,6 @@
     <string name="add_photo_gallery">Gallery</string>
     <string name="add_photo">Add photo</string>
     <string name="photo_error">Couldn\'t load image</string>
-    <string name="file_error">Invalid file</string>
     <string name="dialog_success">Success</string>
     <string name="dialog_failure">Failed</string>
     <string name="export_succesful">Successful exported</string>
@@ -340,6 +343,7 @@
     <string name="adjust_record">Adjust record</string>
     <string name="mix" translatable="false">Mix</string>
     <string name="set">Set</string>
+    <string name="get">Get</string>
     <string name="select_tone">Select Tone</string>
     <string name="select_beat">Select Beat</string>
     <string name="stylize">Stylize</string>

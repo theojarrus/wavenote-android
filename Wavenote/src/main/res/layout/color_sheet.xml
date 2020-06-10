@@ -113,11 +113,11 @@
                 style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
 
             <CheckBox
-                android:id="@+id/text_code"
+                android:id="@+id/text_mono"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/blue"
-                android:text="@string/text_code"
+                android:text="@string/text_mono"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"

@@ -84,14 +84,14 @@ class ColorSheet : BottomSheetDialogFragment() {
 
         text_bold.isChecked = Note.isIsTextStyleBold()
         text_italic.isChecked =  Note.isIsTextStyleItalic()
-        text_code.isChecked =  Note.isIsTextStyleCode()
+        text_mono.isChecked =  Note.isIsTextStyleMono()
         text_stroke.isChecked = Note.isIsTextStyleStroke()
         text_underline.isChecked =  Note.isIsTextStyleUnderline()
         text_strikethrough.isChecked =  Note.isIsTextStyleStrikethrough()
 
         text_bold.setOnClickListener { Note.setIsTextStyleBold(text_bold.isChecked) }
         text_italic.setOnClickListener { Note.setIsTextStyleItalic(text_italic.isChecked) }
-        text_code.setOnClickListener { Note.setIsTextStyleCode(text_code.isChecked) }
+        text_mono.setOnClickListener { Note.setIsTextStyleMono(text_mono.isChecked) }
         text_stroke.setOnClickListener { Note.setIsTextStyleStroke(text_stroke.isChecked) }
         text_underline.setOnClickListener { Note.setIsTextStyleUnderline(text_underline.isChecked) }
         text_strikethrough.setOnClickListener { Note.setIsTextStyleStrikethrough(text_strikethrough.isChecked) }
@@ -144,8 +144,8 @@ class ColorSheet : BottomSheetDialogFragment() {
     /**
      * Config color picker
      *
-     * @param colors: Array of colors to show in color picker
-     * @param selectedColor: Pass in the selected color from colors list, default value is null. You can pass [ColorSheet.NO_COLOR]
+     * @param colors: Array of dialogColors to show in color picker
+     * @param selectedColor: Pass in the selected color from dialogColors list, default value is null. You can pass [ColorSheet.NO_COLOR]
      * to select noColorOption in the sheet.
      * @param noColorOption: Gives a option to set the [selectedColor] to [NO_COLOR]
      * @param listener: [ColorPickerListener]

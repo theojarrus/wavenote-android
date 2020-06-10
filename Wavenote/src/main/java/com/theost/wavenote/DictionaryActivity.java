@@ -89,7 +89,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         mEmptyViewImage.setImageResource(R.drawable.av_theory_24dp);
         mEmptyViewText.setText(R.string.empty_dictionary);
         
-        keywordColors = DictionaryUtils.getKeywordColors(this);
+        keywordColors = DictionaryUtils.getDialogColors(this);
         keywordTypes = DictionaryUtils.getKeywordTypes(this);
 
         mKeywordRecyclerView = findViewById(R.id.keywords_list);
@@ -181,7 +181,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
                 restoreData();
                 return true;
             case R.id.menu_remove:
-                removeKeyword(null, null);
+                showRemoveDialog();
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -211,6 +211,15 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         ViewUtils.disbaleInput(editText);
         ViewUtils.disbaleInput(autoCompleteTextView);
         ViewUtils.updateDropdown(this, autoCompleteTextView, keywordTypes);
+    }
+
+    private void showRemoveDialog() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.remove_all)
+                .content(R.string.confirm_delete_all)
+                .positiveText(R.string.yes)
+                .onPositive((dialog, which) -> removeKeyword(null, null))
+                .negativeText(R.string.no).show();
     }
 
     private void showKeywordDialog() {
@@ -313,7 +322,6 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     public boolean removeKeyword(String id, String keyword) {
-        if (adapter.getItemCount() == 0) return false;
         boolean isRemoved;
         if (id == null) {
             isRemoved = localDatabase.removeDictionaryData(DatabaseHelper.COL_0);

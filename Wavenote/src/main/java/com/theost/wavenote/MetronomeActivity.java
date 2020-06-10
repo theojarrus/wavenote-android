@@ -14,7 +14,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -40,6 +38,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AudioUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DictionaryUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.widgets.PCMAnalyser;
 import com.theost.wavenote.configs.AudioConfig;
@@ -123,8 +122,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private EditText mAddSoundEditText;
     private MenuItem mRemoveItem;
 
-    private int colorEnabled;
-    private int colorDisabled;
+    int[] dialogColors;
 
     @BindView(R.id.metronome_beat)
     TextView mBeatTextView;
@@ -406,10 +404,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private void updateColors() {
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        colorEnabled = ContextCompat.getColor(this, typedValue.resourceId);
-        colorDisabled = ContextCompat.getColor(this, R.color.gray_20);
+        dialogColors = DictionaryUtils.getDialogColors(this);
     }
 
     private void initToneList() {
@@ -777,7 +772,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 .customView(R.layout.add_dialog, false)
                 .title(R.string.add_sound)
                 .positiveText(R.string.set)
-                .positiveColor(colorDisabled)
+                .positiveColor(dialogColors[0])
                 .onPositive((dialog, which) -> {
                     String name = mAddSoundEditText.getText().toString().trim();
                     if (!name.equals("")) {
@@ -788,7 +783,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 .negativeText(R.string.cancel)
                 .build();
         MDButton addButton = soundDialog.getActionButton(DialogAction.POSITIVE);
-        if (!soundName.equals("")) addButton.setTextColor(colorEnabled);
+        if (!soundName.equals("")) addButton.setTextColor(dialogColors[1]);
         TextInputLayout mAddSoundLayout = soundDialog.getCustomView().findViewById(R.id.dialog_layout);
         mAddSoundLayout.setCounterMaxLength(MAX_SOUND_NAME);
         mAddSoundEditText = soundDialog.getCustomView().findViewById(R.id.dialog_input);
@@ -799,9 +794,9 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             @Override
             public void afterTextChanged(Editable arg0) {
                 if (mAddSoundEditText.getText().length() == 0) {
-                    addButton.setTextColor(colorDisabled);
+                    addButton.setTextColor(dialogColors[0]);
                 } else {
-                    addButton.setTextColor(colorEnabled);
+                    addButton.setTextColor(dialogColors[1]);
                 }
             }
 

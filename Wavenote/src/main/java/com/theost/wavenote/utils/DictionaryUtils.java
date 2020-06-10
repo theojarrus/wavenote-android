@@ -12,7 +12,7 @@ public class DictionaryUtils {
         return context.getResources().getStringArray(R.array.keyword_types);
     }
 
-    public static int[] getKeywordColors(Context context) {
+    public static int[] getDialogColors(Context context) {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
         int colorDisabled = ContextCompat.getColor(context, R.color.gray_20);

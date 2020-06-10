@@ -61,7 +61,7 @@ public class Note extends BucketObject {
     private static boolean isTextStyleBold = false;
     private static boolean isTextStyleItalic = false;
     private static boolean isTextStyleStroke = false;
-    private static boolean isTextStyleCode = false;
+    private static boolean isTextStyleMono = false;
     private static boolean isTextStyleUnderline = false;
     private static boolean isTextStyleStrikethrough = false;
 
@@ -70,8 +70,8 @@ public class Note extends BucketObject {
     private static boolean photoSortDirRev = false;
     private static boolean dictionarySortDirRev = false;
 
-    private static String themedTextActiveColor = "#36393e";
-    private static String themedTextInactiveColor = "#fafafa";
+    private static String themedTextActiveColor = "#000000";
+    private static String themedTextInactiveColor = "#ffffff";
 
     private static int activeStyleColor = -1;
 
@@ -280,8 +280,8 @@ public class Note extends BucketObject {
         return isTextStyleStroke;
     }
 
-    public static boolean isIsTextStyleCode() {
-        return isTextStyleCode;
+    public static boolean isIsTextStyleMono() {
+        return isTextStyleMono;
     }
 
     public static boolean isIsTextStyleUnderline() {
@@ -293,7 +293,7 @@ public class Note extends BucketObject {
     }
 
     public boolean[] getTextStyle() {
-        return new boolean[]{isTextStyleBold, isTextStyleItalic, isTextStyleCode, isTextStyleUnderline,
+        return new boolean[]{isTextStyleBold, isTextStyleItalic, isTextStyleMono, isTextStyleUnderline,
                 isTextStyleStrikethrough, isTextStyleStroke};
     }
 
@@ -309,8 +309,8 @@ public class Note extends BucketObject {
         isTextStyleStroke = checked;
     }
 
-    public static void setIsTextStyleCode(boolean checked) {
-        isTextStyleCode = checked;
+    public static void setIsTextStyleMono(boolean checked) {
+        isTextStyleMono = checked;
     }
 
     public static void setIsTextStyleUnderline(boolean checked) {
