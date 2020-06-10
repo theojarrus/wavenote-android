@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.theost.wavenote.R;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class ChordAdapter extends RecyclerView.Adapter<ChordAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Drawable drawable = mData.get(position);
-        holder.mChordImageView.setImageDrawable(drawable);
+        Glide.with(holder.mChordImageView).load(drawable).into(holder.mChordImageView);
         holder.mChordImageView.getLayoutParams().width = mItemSize;
     }
 

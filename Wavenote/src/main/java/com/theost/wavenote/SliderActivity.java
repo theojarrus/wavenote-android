@@ -2,6 +2,7 @@ package com.theost.wavenote;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -57,8 +58,8 @@ public class SliderActivity extends ThemedAppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setPadding(0, DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.status_bar_height)), 0, 0);
+
+        updateOrientation(getResources().getConfiguration().orientation);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,14 +71,6 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
         viewPager = findViewById(R.id.view_pager);
         adapter = new SliderAdapter(this, mPhotoList);
-
-        int dataPadding = DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.padding_medium));
-
-        int navHeight = DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.navigation_bar_height));
-
-        findViewById(R.id.slider_data).setPadding(dataPadding, dataPadding, dataPadding, navHeight + dataPadding);
 
         mSliderData = findViewById(R.id.slider_data);
 
@@ -141,6 +134,33 @@ public class SliderActivity extends ThemedAppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateOrientation(newConfig.orientation);
+    }
+
+    private void updateOrientation(int orientation) {
+        int dataPadding = DisplayUtils.dpToPx(this,
+                getResources().getInteger(R.integer.padding_medium));
+        int navHeight = DisplayUtils.dpToPx(this,
+                getResources().getInteger(R.integer.navigation_bar_height));
+        int rightPadding = 0;
+        int bottomPadding = 0;
+        int toolbarPadding = 0;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rightPadding = navHeight + dataPadding;
+            bottomPadding = dataPadding;
+            toolbarPadding = navHeight;
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rightPadding = dataPadding;
+            bottomPadding = navHeight + dataPadding;
+        }
+        findViewById(R.id.slider_data).setPadding(dataPadding, dataPadding, rightPadding, bottomPadding);
+        toolbar.setPadding(0,DisplayUtils.dpToPx(this,
+                getResources().getInteger(R.integer.status_bar_height)), toolbarPadding,0);
     }
 
     public void updateToolbar() {

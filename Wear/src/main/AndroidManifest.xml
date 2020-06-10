@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.theost.wavenote" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.theost.wavenote">
 
     <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-sdk tools:overrideLibrary="androidx.wear"/> <!-- For Lollipop -->
 
     <application
         android:allowBackup="true"

@@ -117,6 +117,8 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.2.0'
     implementation 'me.relex:photodraweeview:2.0.0'
     implementation 'com.github.fedor-jedi:zoomy:1.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Google Support
     //noinspection GradleDependency

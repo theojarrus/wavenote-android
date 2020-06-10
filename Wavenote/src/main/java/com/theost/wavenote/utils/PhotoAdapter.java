@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ablanco.zoomy.Zoomy;
+import com.bumptech.glide.Glide;
 import com.theost.wavenote.PhotosActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Photo;
@@ -45,8 +46,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mNameEditText.setText(mData.get(position).getName());
-        holder.mPhotoView.setImageBitmap(mData.get(position).getBitmap(mActivity));
         holder.mDateTextView.setText(mData.get(position).getDate());
+
+        Glide.with(mActivity).load(mData.get(position).getBitmap(mActivity)).into(holder.mPhotoView);
 
         InputMethodManager keyboard = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
