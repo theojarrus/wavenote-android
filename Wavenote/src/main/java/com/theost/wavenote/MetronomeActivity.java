@@ -38,7 +38,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AudioUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
-import com.theost.wavenote.utils.DictionaryUtils;
+import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.widgets.PCMAnalyser;
 import com.theost.wavenote.configs.AudioConfig;
@@ -404,7 +404,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private void updateColors() {
-        dialogColors = DictionaryUtils.getDialogColors(this);
+        dialogColors = ResUtils.getDialogColors(this);
     }
 
     private void initToneList() {

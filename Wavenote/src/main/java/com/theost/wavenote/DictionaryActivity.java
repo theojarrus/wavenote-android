@@ -32,7 +32,7 @@ import com.afollestad.materialdialogs.internal.MDButton;
 import com.theost.wavenote.models.Keyword;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
-import com.theost.wavenote.utils.DictionaryUtils;
+import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DictionaryAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
@@ -89,8 +89,8 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         mEmptyViewImage.setImageResource(R.drawable.av_theory_24dp);
         mEmptyViewText.setText(R.string.empty_dictionary);
         
-        keywordColors = DictionaryUtils.getDialogColors(this);
-        keywordTypes = DictionaryUtils.getKeywordTypes(this);
+        keywordColors = ResUtils.getDialogColors(this);
+        keywordTypes = ResUtils.getKeywordTypes(this);
 
         mKeywordRecyclerView = findViewById(R.id.keywords_list);
         localDatabase = new DatabaseHelper(this);

@@ -27,7 +27,7 @@ import com.afollestad.materialdialogs.internal.MDButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputLayout;
-import com.theost.wavenote.utils.DictionaryUtils;
+import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.FileUtils;
 
 import java.io.File;
@@ -121,7 +121,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     private void showLinkDialog() {
         dismiss();
-        int[] dialogColors = DictionaryUtils.getDialogColors(getContext());
+        int[] dialogColors = ResUtils.getDialogColors(getContext());
         MaterialDialog linkDialog = new MaterialDialog.Builder(getContext())
                 .customView(R.layout.add_dialog, false)
                 .title(R.string.link)
