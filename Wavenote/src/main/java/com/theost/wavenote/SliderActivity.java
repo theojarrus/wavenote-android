@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
@@ -26,6 +29,7 @@ import com.theost.wavenote.widgets.MultiTouchViewPager;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,18 +38,26 @@ public class SliderActivity extends ThemedAppCompatActivity {
     public static final String ARG_PHOTOS = "photos_data";
     public static final String ARG_POSITION = "position";
 
-    private static final int ROTATE_LEFT = -90;
-    private static final int ROTATE_RIGHT = 90;
+    private static final String ROTATE_MODE = "rotate";
+    private static final String FLIP_MODE = "flip";
+
+    private static final int ROTATE_ANGLE = 90;
+    private static final int ROTATE_LEFT = -1;
+    private static final int ROTATE_RIGHT = 1;
 
     private boolean isToolbarEnabled = true;
     private boolean isModified = false;
 
+    private boolean isEditing = false;
+
+    MaterialDialog loadingDialog;
+
     private LinearLayout mSliderData;
     private TextView mNameTextView;
     private TextView mDateTextView;
-    Toolbar toolbar;
+    private Toolbar toolbar;
 
-    MultiTouchViewPager viewPager;
+    private MultiTouchViewPager viewPager;
     private SliderAdapter adapter;
 
     private List<Photo> mPhotoList;
@@ -92,7 +104,8 @@ public class SliderActivity extends ThemedAppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
         setPage(position);
@@ -162,8 +175,8 @@ public class SliderActivity extends ThemedAppCompatActivity {
             bottomPadding = navHeight + dataPadding;
         }
         findViewById(R.id.slider_data).setPadding(dataPadding, dataPadding, rightPadding, bottomPadding);
-        toolbar.setPadding(0,DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.status_bar_height)), toolbarPadding,0);
+        toolbar.setPadding(0, DisplayUtils.dpToPx(this,
+                getResources().getInteger(R.integer.status_bar_height)), toolbarPadding, 0);
     }
 
     public void updateToolbar() {
@@ -193,22 +206,11 @@ public class SliderActivity extends ThemedAppCompatActivity {
     }
 
     private void rotateBitmap(int direction) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(direction);
-        Photo photo = mPhotoList.get(viewPager.getCurrentItem());
-        Bitmap imageBitmap = photo.getBitmap(this);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth(), imageBitmap.getHeight(), true);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
-        updateBitmap(rotatedBitmap, new File(photo.getUri()));
+        new TransformImageTask(this, ROTATE_MODE, ROTATE_ANGLE, direction).execute();
     }
 
     private void flipBitmap(int x, int y) {
-        Matrix matrix = new Matrix();
-        matrix.preScale(x * 1.0f, y * 1.0f);
-        Photo photo = mPhotoList.get(viewPager.getCurrentItem());
-        Bitmap imageBitmap = photo.getBitmap(this);
-        Bitmap flipedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
-        updateBitmap(flipedBitmap, new File(photo.getUri()));
+        new TransformImageTask(this, FLIP_MODE, x, y).execute();
     }
 
     private void updateBitmap(Bitmap bitmap, File file) {
@@ -222,6 +224,72 @@ public class SliderActivity extends ThemedAppCompatActivity {
             e.printStackTrace();
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
         }
+    }
+
+    private static class TransformImageTask extends AsyncTask<Void, Void, Boolean> {
+
+        private WeakReference<SliderActivity> activityReference;
+
+        private String mode;
+        private int param1;
+        private int param2;
+
+        private Bitmap editedBitmap;
+        private Photo photo;
+
+        public TransformImageTask(SliderActivity activity, String mode, int param1, int param2) {
+            activityReference = new WeakReference<>(activity);
+            this.mode = mode;
+            this.param1 = param1;
+            this.param2 = param2;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            SliderActivity mActivity = activityReference.get();
+            photo = mActivity.mPhotoList.get(mActivity.viewPager.getCurrentItem());
+            new CountDownTimer(200, 1000) {
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    if (mActivity.isEditing)
+                        mActivity.loadingDialog = DisplayUtils.showLoadingDialog(
+                                mActivity, R.string.edit, R.string.editing);
+                }
+            }.start();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            SliderActivity mActivity = activityReference.get();
+            mActivity.isEditing = true;
+            Bitmap imageBitmap = photo.getBitmap(mActivity);
+            Matrix matrix = new Matrix();
+            switch (mode) {
+                case ROTATE_MODE:
+                    matrix.postRotate(param1 * param2);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth(), imageBitmap.getHeight(), true);
+                    editedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+                    break;
+                case FLIP_MODE:
+                    matrix.preScale(param1 * 1.0f, param2 * 1.0f);
+                    editedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+                    break;
+            }
+            mActivity.isEditing = false;
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            SliderActivity mActivity = activityReference.get();
+            if (mActivity.loadingDialog != null) mActivity.loadingDialog.dismiss();
+            mActivity.updateBitmap(editedBitmap, new File(photo.getUri()));
+            super.onPostExecute(aBoolean);
+        }
+
     }
 
 }

@@ -331,6 +331,7 @@
     <string name="export_succesful">Successful exported</string>
     <string name="exporting">Exporting… It could take a some time.</string>
     <string name="importing">Importing… It could take a some time.</string>
+    <string name="editing">Editing… It could take a some time.</string>
     <string name="add_photo_storage">Files</string>
     <string name="add_keyword">Add Keyword</string>
     <string name="add_sound">Add Sound</string>

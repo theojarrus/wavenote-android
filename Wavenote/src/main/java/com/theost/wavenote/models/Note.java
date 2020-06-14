@@ -351,19 +351,19 @@ public class Note extends BucketObject {
     }
 
     public Spannable getContent() {
-        Object obj = getProperty(CONTENT_PROPERTY);
-        if (obj == null) {
+        String content = (String) getProperty(CONTENT_PROPERTY);
+        if (content == null) {
             return BLANK_CONTENT;
         }
-        String strContent = (String) obj;
-        return (Spannable) HtmlCompat.fromHtml(strContent.replaceAll(themedTextInactiveColor, themedTextActiveColor));
+        if (content.contains(themedTextInactiveColor))
+            content = ((String) content).replaceAll(themedTextInactiveColor, themedTextActiveColor);
+        return (Spannable) HtmlCompat.fromHtml(content);
     }
 
     public void setContent(Spannable content) {
         mTitle = null;
         mContentPreview = null;
-        String strContent = HtmlCompat.toHtml(content).replaceAll("<img .*?>","- [ ]");
-        setProperty(CONTENT_PROPERTY, strContent);
+        setProperty(CONTENT_PROPERTY, HtmlCompat.toHtml(content).replaceAll("<img .*?>","- [ ]"));
     }
 
     public String getContentPreview() {

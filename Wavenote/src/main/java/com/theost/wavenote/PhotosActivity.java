@@ -54,8 +54,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public static final String ARG_NOTE_ID = "note_id";
     public static final String ARG_UPDATE = "need_update";
 
-    private ImportPhotosThread importPhotosThread;
-
     private boolean isImporting;
 
     private PhotoBottomSheetDialog mPhotoBottomSheet;
@@ -274,6 +272,9 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             if (photo.getBitmap(this) != null) {
                 mPhotoList.add(photo);
             } else {
+                File imageFile = new File(photo.getUri());
+                if (imageFile.exists())
+                    imageFile.delete();
                 DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
                 boolean isRemoved = localDatabase.removeImageData(id);
                 if (!isRemoved) {
@@ -391,8 +392,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     public void importPhoto(File imageFile, Bitmap imageBitmap, String imageLink) {
         importImagePath = imageFile.getPath();
-        importPhotosThread = new ImportPhotosThread(imageFile, imageBitmap, imageLink);
-        importPhotosThread.start();
+        new ImportPhotosThread(imageFile, imageBitmap, imageLink).start();
         showLoadingDialog();
     }
 

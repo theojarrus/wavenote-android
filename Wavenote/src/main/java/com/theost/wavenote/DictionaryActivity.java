@@ -194,6 +194,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     public boolean checkEmptyView() {
         if (adapter == null || adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
+            mKeywordRecyclerView.setHasFixedSize(false);
             mKeywordRecyclerView.setVisibility(View.INVISIBLE);
             mSortLayout.setVisibility(View.INVISIBLE);
             emptyView.setVisibility(View.VISIBLE);
@@ -272,6 +273,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             mWordList.add(word.toLowerCase());
             mKeywordList.add(keyword);
         }
+        mKeywordRecyclerView.setHasFixedSize(false);
         if (adapter != null) adapter.updateData(mKeywordList);
     }
 
@@ -322,6 +324,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     }
 
     public boolean removeKeyword(String id, String keyword) {
+        mKeywordRecyclerView.setHasFixedSize(true);
         boolean isRemoved;
         if (id == null) {
             isRemoved = localDatabase.removeDictionaryData(DatabaseHelper.COL_0);

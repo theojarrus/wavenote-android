@@ -285,5 +285,6 @@
     <string name="confirm_delete_all">Вы действительно хотите удалить все записи?</string>
     <string name="link_error">Некорректная ссылка</string>
     <string name="get">Получить</string>
+    <string name="editing">Редактирование… Это может занять некоторе время</string>
 
 </resources>

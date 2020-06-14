@@ -183,8 +183,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private Handler mPublishTimeoutHandler;
     private Handler mHistoryTimeoutHandler;
 
-    private ExportThread exportThread;
-
     private MaterialDialog mExportDialog;
     private MaterialDialog mPasswordDialog;
     private MaterialDialog loadingDialog;
@@ -987,8 +985,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void exportNote(CharSequence[] modes) {
         showLoadingDialog();
-        exportThread = new ExportThread(modes);
-        exportThread.start();
+        new ExportThread(modes).start();
     }
 
     private Handler mExportHandler = new Handler(msg -> {

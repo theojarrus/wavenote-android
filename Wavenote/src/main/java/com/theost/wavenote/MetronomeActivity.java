@@ -108,7 +108,6 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     HashMap<String, Integer> customSounds;
     String[] soundData;
 
-    private ImportSamplesThread importSamplesThread;
     private boolean isImporting;
 
     private DatabaseHelper localDatabase;
@@ -560,8 +559,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private void importSound(InputStream wavInput) throws IOException {
         tmpFile = FileUtils.createTempFile(this, wavInput, FileUtils.SAMPLE_FORMAT);
-        importSamplesThread = new ImportSamplesThread(this, tmpFile);
-        importSamplesThread.start();
+        new ImportSamplesThread(this, tmpFile).start();
         showLoadingDialog();
     }
 
