@@ -407,7 +407,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 supportInvalidateOptionsMenu();
                 if (mIsTheoryClicked) {
                     Intent intent = new Intent(NotesActivity.this, PhotosActivity.class);
-                    intent.putExtra("noteId", "theory");
+                    intent.putExtra(PhotosActivity.ARG_NOTE_ID, PhotosActivity.THEORY_PREFIX);
                     startActivity(intent);
                     mIsTheoryClicked = false;
                 } else if (mIsMetronomeClicked) {

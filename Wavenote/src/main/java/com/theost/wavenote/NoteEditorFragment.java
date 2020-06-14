@@ -1141,19 +1141,19 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void startPhotosActivity() {
         Intent intent = new Intent(getActivity(), PhotosActivity.class);
-        intent.putExtra("noteId", mNote.getSimperiumKey());
+        intent.putExtra(PhotosActivity.ARG_NOTE_ID, mNote.getSimperiumKey());
         startActivity(intent);
     }
 
     private void startChordsActivity() {
         Intent intent = new Intent(getActivity(), ChordsActivity.class);
-        intent.putExtra("chords", SyntaxHighlighter.getNoteChords(getContext(), mContentEditText.getText().toString()));
+        intent.putExtra(ChordsActivity.ARG_CHORDS, SyntaxHighlighter.getNoteChords(getContext(), mContentEditText.getText().toString()));
         startActivity(intent);
     }
 
     private void startAudioActivity() {
         Intent intent = new Intent(getActivity(), AudioActivity.class);
-        intent.putExtra("noteId", mNote.getSimperiumKey());
+        intent.putExtra(PhotosActivity.ARG_NOTE_ID, mNote.getSimperiumKey());
         startActivity(intent);
     }
 

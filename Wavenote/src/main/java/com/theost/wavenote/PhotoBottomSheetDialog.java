@@ -3,7 +3,6 @@ package com.theost.wavenote;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,11 +31,13 @@ import com.theost.wavenote.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import static android.app.Activity.RESULT_OK;
 
 public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
+
+    private static final String ARG_IMAGE_LINK = "image_link";
+    private static final String DOCUMENT_TYPE = "photo";
 
     private static final String TAG = InfoBottomSheetDialog.class.getSimpleName();
     private static final int CAMERA_REQUEST = 0;
@@ -95,7 +96,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         if (resultCode == RESULT_OK) {
             Bitmap imageBitmap = null;
             String imageLink = null;
-            File imageFile = FileUtils.createNoteFile(mActivity, noteId, "photo");
+            File imageFile = FileUtils.createNoteFile(mActivity, noteId, DOCUMENT_TYPE);
             if (imageFile == null) {
                 dismiss();
                 return;
@@ -107,7 +108,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
                 Uri imageUri = data.getData();
                 imageBitmap = getBitmap(imageUri);
             } else if (requestCode == LINK_REQUEST) {
-                imageLink = data.getStringExtra("imageLink");
+                imageLink = data.getStringExtra(ARG_IMAGE_LINK);
             }
             if ((imageBitmap != null && imageLink == null) || (imageBitmap == null && imageLink != null))
                 mActivity.importPhoto(imageFile, imageBitmap, imageLink);
@@ -161,7 +162,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
     private void addPhotoLink(String imageLink) {
         if (imageLink.equals("")) return;
         Intent intent = new Intent();
-        intent.putExtra("imageLink", imageLink);
+        intent.putExtra(ARG_IMAGE_LINK, imageLink);
         onActivityResult(LINK_REQUEST, RESULT_OK, intent);
     }
 

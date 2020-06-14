@@ -50,6 +50,10 @@ import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 
 public class PhotosActivity extends ThemedAppCompatActivity {
 
+    public static final String THEORY_PREFIX = "theory";
+    public static final String ARG_NOTE_ID = "note_id";
+    public static final String ARG_UPDATE = "need_update";
+
     private ImportPhotosThread importPhotosThread;
 
     private boolean isImporting;
@@ -98,8 +102,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         mEmptyViewImage.setImageResource(R.drawable.m_insert_photo_black_24dp);
         mEmptyViewText.setText(R.string.empty_photos);
 
-        if (noteId == null) noteId = getIntent().getStringExtra("noteId");
-        if (noteId.equals("theory")) {
+        if (noteId == null) noteId = getIntent().getStringExtra(ARG_NOTE_ID);
+        if (noteId.equals(THEORY_PREFIX)) {
             setTitle(R.string.theory);
             findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
         } else {
@@ -211,7 +215,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (data.getBooleanExtra("isNeedUpdate", false)) {
+            if (data.getBooleanExtra(ARG_UPDATE, false)) {
                 mPhotoRecyclerView.setAdapter(adapter);
             }
         }
@@ -221,7 +225,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         if (adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
             mSortLayoutContent.setVisibility(View.GONE);
-            if (noteId.equals("theory")) {
+            if (noteId.equals(THEORY_PREFIX)) {
                 mMaterialTitle.setVisibility(View.GONE);
                 return false;
             }
@@ -233,7 +237,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             emptyView.setVisibility(View.GONE);
             mRemoveItem.setEnabled(true);
             mSortLayoutContent.setVisibility(View.VISIBLE);
-            if (noteId.equals("theory"))
+            if (noteId.equals(THEORY_PREFIX))
                 mMaterialTitle.setVisibility(View.VISIBLE);
             return true;
         }
@@ -371,17 +375,17 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     public void startChordsActivity(View view) {
         Intent intent = new Intent(this, ChordsActivity.class);
-        intent.putExtra("isAllChords", true);
-        intent.putExtra("chords", SyntaxHighlighter.getAllChords(this));
-        intent.putExtra("activeInstrument", ((Button) view).getText().toString());
+        intent.putExtra(ChordsActivity.ARG_ALL_CHORDS, true);
+        intent.putExtra(ChordsActivity.ARG_CHORDS, SyntaxHighlighter.getAllChords(this));
+        intent.putExtra(ChordsActivity.ARG_INSTRUMENT, ((Button) view).getText().toString());
         startActivity(intent);
     }
 
     public void startSliderActivity(int position) {
         Intent intent = new Intent(this, SliderActivity.class);
-        intent.putParcelableArrayListExtra("photoList", (ArrayList) mPhotoList);
-        intent.putExtra("position", position);
-        intent.putExtra("noteId", noteId);
+        intent.putParcelableArrayListExtra(SliderActivity.ARG_PHOTOS, (ArrayList) mPhotoList);
+        intent.putExtra(SliderActivity.ARG_POSITION, position);
+        intent.putExtra(ARG_NOTE_ID, noteId);
         startActivityForResult(intent, 0);
     }
 

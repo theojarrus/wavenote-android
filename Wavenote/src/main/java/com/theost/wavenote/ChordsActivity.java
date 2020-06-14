@@ -35,6 +35,10 @@ import java.util.List;
 
 public class ChordsActivity extends ThemedAppCompatActivity {
 
+    public static final String ARG_INSTRUMENT = "instrument";
+    public static final String ARG_ALL_CHORDS = "all_chords";
+    public static final String ARG_CHORDS = "chords";
+
     private int DEFAULT_COLUMN = 4;
 
     private List<Drawable> mChordsDrawable;
@@ -86,8 +90,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mEmptyViewImage.setImageResource(R.drawable.m_audiotrack_black_24dp);
         mEmptyViewText.setText(R.string.empty_chords);
 
-        isAllChords = getIntent().getBooleanExtra("isAllChords", false);
-        mChordsList = getIntent().getStringArrayListExtra("chords");
+        isAllChords = getIntent().getBooleanExtra(ARG_ALL_CHORDS, false);
+        mChordsList = getIntent().getStringArrayListExtra(ARG_CHORDS);
 
         mInstrumentList = getResources().getStringArray(R.array.array_musical_instruments);
         mColumnList = getResources().getStringArray(R.array.array_musical_columns);
@@ -95,7 +99,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mChordReplacement = getResources().getStringArray(R.array.array_musical_chords_replace);
         mNotesOrder = getResources().getStringArray(R.array.array_musical_notes_order);
 
-        activeInstrument = getIntent().getStringExtra("activeInstrument");
+        activeInstrument = getIntent().getStringExtra(ARG_INSTRUMENT);
         if (activeInstrument == null) {
             String savedInstrument = Note.getNoteActiveInstrument();
             if (savedInstrument == null) {

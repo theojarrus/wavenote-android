@@ -31,6 +31,9 @@ import java.util.List;
 
 public class SliderActivity extends ThemedAppCompatActivity {
 
+    public static final String ARG_PHOTOS = "photos_data";
+    public static final String ARG_POSITION = "position";
+
     private static final int ROTATE_LEFT = -90;
     private static final int ROTATE_RIGHT = 90;
 
@@ -65,9 +68,9 @@ public class SliderActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mPhotoList = (ArrayList) getIntent().getParcelableArrayListExtra("photoList");
-        int position = getIntent().getIntExtra("position", 0);
-        noteId = getIntent().getStringExtra("noteId");
+        mPhotoList = (ArrayList) getIntent().getParcelableArrayListExtra(ARG_PHOTOS);
+        int position = getIntent().getIntExtra(ARG_POSITION, 0);
+        noteId = getIntent().getStringExtra(PhotosActivity.ARG_NOTE_ID);
 
         viewPager = findViewById(R.id.view_pager);
         adapter = new SliderAdapter(this, mPhotoList);
@@ -106,7 +109,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = getIntent();
-        intent.putExtra("isNeedUpdate", isModified);
+        intent.putExtra(PhotosActivity.ARG_UPDATE, isModified);
         if (getParent() == null) {
             setResult(Activity.RESULT_OK, intent);
         } else {
