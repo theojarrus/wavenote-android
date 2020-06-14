@@ -6,7 +6,7 @@ import android.util.TypedValue;
 import androidx.core.content.ContextCompat;
 import com.theost.wavenote.R;
 
-public class DictionaryUtils {
+public class ResUtils {
 
     public static String[] getKeywordTypes(Context context) {
         return context.getResources().getStringArray(R.array.keyword_types);

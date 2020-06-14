@@ -70,7 +70,7 @@ import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.AutoBullet;
 import com.theost.wavenote.utils.ContextUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
-import com.theost.wavenote.utils.DictionaryUtils;
+import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
@@ -452,8 +452,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             public void onDestroyActionMode(android.view.ActionMode mode) {}
         });
 
-        keywordColors = DictionaryUtils.getDialogColors(getContext());
-        keywordTypes = DictionaryUtils.getKeywordTypes(getContext());
+        keywordColors = ResUtils.getDialogColors(getContext());
+        keywordTypes = ResUtils.getKeywordTypes(getContext());
 
         colorSheet = new ColorSheet();
         colorSheet.cornerRadius(8);
@@ -898,11 +898,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (localDatabase == null)
             localDatabase = new DatabaseHelper(getContext());
         if (keywordTypes == null)
-            keywordTypes = DictionaryUtils.getKeywordTypes(getContext());
+            keywordTypes = ResUtils.getKeywordTypes(getContext());
         if (keywordColors == null)
-            keywordColors = DictionaryUtils.getDialogColors(getContext());
+            keywordColors = ResUtils.getDialogColors(getContext());
         if (keywordMaxLength == 0)
-            keywordMaxLength = DictionaryUtils.getKeywordMaxLength(getContext());
+            keywordMaxLength = ResUtils.getKeywordMaxLength(getContext());
     }
 
     private void showExportDialog() {
@@ -1562,6 +1562,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 mNote = mNotesBucket.get(mNote.getSimperiumKey());
                 mIsPreviewEnabled = mNote.isPreviewEnabled();
             }
+
+            mContentEditText.clearComposingText();
 
             Spannable content = mContentEditText.getPlainTextContent();
             String tagString = getNoteTagsString();

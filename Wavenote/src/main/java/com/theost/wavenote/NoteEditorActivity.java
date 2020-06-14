@@ -38,8 +38,6 @@ import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ON
 import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
 import static com.theost.wavenote.utils.MatchOffsetHighlighter.MATCH_INDEX_COUNT;
 import static com.theost.wavenote.utils.MatchOffsetHighlighter.MATCH_INDEX_START;
-import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
-import static com.theost.wavenote.utils.WidgetUtils.KEY_WIDGET_CLICK;
 
 public class NoteEditorActivity extends ThemedAppCompatActivity {
     private static final String STATE_MATCHES_INDEX = "MATCHES_INDEX";
