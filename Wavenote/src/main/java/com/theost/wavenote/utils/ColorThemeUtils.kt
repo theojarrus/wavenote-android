@@ -21,13 +21,13 @@ import androidx.annotation.StyleRes
 import com.theost.wavenote.R
 import android.R.attr as androidAttr
 
-internal enum class ColorSheetTheme(@StyleRes val styleRes: Int) {
+internal enum class ColorThemeUtils(@StyleRes val styleRes: Int) {
 
     LIGHT(R.style.BaseTheme_ColorSheet_Light),
     DARK(R.style.BaseTheme_ColorSheet_Dark);
 
     companion object {
-        fun inferTheme(context: Context): ColorSheetTheme {
+        fun inferTheme(context: Context): ColorThemeUtils {
             val isPrimaryDark = resolveColorAttr(
                 context = context,
                 attrRes = androidAttr.textColorPrimary

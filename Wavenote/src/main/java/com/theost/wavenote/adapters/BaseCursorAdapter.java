@@ -1,4 +1,4 @@
-package com.theost.wavenote.utils;
+package com.theost.wavenote.adapters;
 
 import android.database.Cursor;
 
@@ -62,7 +62,7 @@ public abstract class BaseCursorAdapter<V extends RecyclerView.ViewHolder> exten
     }
 
     public boolean hasItem(int position) {
-        return mDataValid && mCursor.moveToPosition(position);
+        return !mDataValid || !mCursor.moveToPosition(position);
     }
 
     public void swapCursor(Cursor newCursor) {

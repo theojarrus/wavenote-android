@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.theost.wavenote.models.Note;
-import com.theost.wavenote.utils.ChordAdapter;
+import com.theost.wavenote.adapters.ChordAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 

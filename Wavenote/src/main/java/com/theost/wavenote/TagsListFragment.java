@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
-import com.theost.wavenote.utils.BaseCursorAdapter;
+import com.theost.wavenote.adapters.BaseCursorAdapter;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.HtmlCompat;
@@ -338,7 +338,7 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
                 ImageButton deleteButton = itemView.findViewById(R.id.tag_trash);
 
                 deleteButton.setOnClickListener(view -> {
-                    if (!isAdded() || !hasItem(getAdapterPosition())) {
+                    if (!isAdded() || hasItem(getAdapterPosition())) {
                         return;
                     }
 
@@ -370,7 +370,7 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
 
             @Override
             public void onClick(View view) {
-                if (!isAdded() || !hasItem(getAdapterPosition())) {
+                if (!isAdded() || hasItem(getAdapterPosition())) {
                     return;
                 }
                 final Tag tag = ((Bucket.ObjectCursor<Tag>) getItem(getAdapterPosition())).getObject();

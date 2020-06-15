@@ -127,13 +127,16 @@
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:colorBackground">?attr/mainBackgroundColor</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
         <item name="colorAccent">@color/item_blue_light</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/blue_dark</item>
+        <item name="bottomSheetStyle">@style/Theme.Wavestyle.Modal</item>
+    </style>
+
+    <style name="Theme.Wavestyle.Modal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialog.Label" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
@@ -256,7 +259,7 @@
     </style>
 
     <!-- Color Sheet -->
-    <style name="BaseTheme.ColorSheet.Light" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <style name="BaseTheme.ColorSheet.Light" parent="Theme.Wavestyle.BottomSheetDialog">
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -268,7 +271,7 @@
         <item name="dialogPrimaryVariant">@color/dialogPrimaryVariant</item>
     </style>
 
-    <style name="BaseTheme.ColorSheet.Dark" parent="Theme.MaterialComponents.BottomSheetDialog">
+    <style name="BaseTheme.ColorSheet.Dark" parent="Theme.Wavestyle.BottomSheetDialog">
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

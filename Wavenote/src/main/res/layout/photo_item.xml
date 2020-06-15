@@ -118,6 +118,14 @@
                 android:layout_height="wrap_content"
                 tools:text="Jan 13, 2020, 17:30" />
 
+            <ImageButton
+                android:id="@+id/photo_share"
+                android:layout_width="@dimen/custom_icon_size"
+                android:layout_height="@dimen/custom_icon_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/share"
+                android:src="@drawable/av_share_blue_20dp" />
+
         </LinearLayout>
 
         <View

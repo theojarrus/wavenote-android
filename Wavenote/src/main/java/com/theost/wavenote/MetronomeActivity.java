@@ -156,7 +156,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        updateOrientation(getResources().getConfiguration().orientation);
+        updateOrientation();
 
         setTitle(R.string.metronome);
 
@@ -289,15 +289,15 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        updateOrientation(newConfig.orientation);
+        updateOrientation();
     }
 
-    private void updateOrientation(int orientation) {
+    private void updateOrientation() {
         int padding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.custom_space));
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (DisplayUtils.isLandscape(this)) {
             mPlayLayout.setPadding(padding, 0, 0, 0);
             mActionsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+        } else {
             mPlayLayout.setPadding(0, padding, 0, 0);
             mActionsLayout.setOrientation(LinearLayout.VERTICAL);
         }

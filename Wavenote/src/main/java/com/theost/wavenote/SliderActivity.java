@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.utils.SliderAdapter;
+import com.theost.wavenote.adapters.SliderAdapter;
 import com.theost.wavenote.widgets.MultiTouchViewPager;
 
 import java.io.File;
@@ -36,7 +37,7 @@ import java.util.List;
 public class SliderActivity extends ThemedAppCompatActivity {
 
     public static final String ARG_PHOTOS = "photos_data";
-    public static final String ARG_POSITION = "position";
+    public static final String ARG_POSITION = "currentPosition";
 
     private static final String ROTATE_MODE = "rotate";
     private static final String FLIP_MODE = "flip";
@@ -50,11 +51,13 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
     private boolean isEditing = false;
 
-    MaterialDialog loadingDialog;
+    private MaterialDialog loadingDialog;
+    private int currentPosition;
 
     private LinearLayout mSliderData;
     private TextView mNameTextView;
     private TextView mDateTextView;
+    private ImageButton mShareButton;
     private Toolbar toolbar;
 
     private MultiTouchViewPager viewPager;
@@ -73,24 +76,28 @@ public class SliderActivity extends ThemedAppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setPadding(0, DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.status_bar_height)), 0, 0);
 
-        updateOrientation(getResources().getConfiguration().orientation);
+        mSliderData = findViewById(R.id.slider_data);
+
+        updateOrientation();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         mPhotoList = (ArrayList) getIntent().getParcelableArrayListExtra(ARG_PHOTOS);
-        int position = getIntent().getIntExtra(ARG_POSITION, 0);
+        currentPosition = getIntent().getIntExtra(ARG_POSITION, 0);
         noteId = getIntent().getStringExtra(PhotosActivity.ARG_NOTE_ID);
 
         viewPager = findViewById(R.id.view_pager);
         adapter = new SliderAdapter(this, mPhotoList);
 
-        mSliderData = findViewById(R.id.slider_data);
-
         mNameTextView = findViewById(R.id.slide_name);
         mDateTextView = findViewById(R.id.slide_date);
+
+        mShareButton = findViewById(R.id.slide_share);
+        mShareButton.setOnClickListener(v -> showShareBottomSheet());
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -100,7 +107,8 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                setPageData(position);
+                currentPosition = position;
+                updatePageData();
             }
 
             @Override
@@ -108,7 +116,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
             }
         });
 
-        setPage(position);
+        updatePage();
     }
 
     @Override
@@ -155,28 +163,20 @@ public class SliderActivity extends ThemedAppCompatActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        updateOrientation(newConfig.orientation);
+        updateOrientation();
     }
 
-    private void updateOrientation(int orientation) {
-        int dataPadding = DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.padding_medium));
-        int navHeight = DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.navigation_bar_height));
-        int rightPadding = 0;
-        int bottomPadding = 0;
-        int toolbarPadding = 0;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rightPadding = navHeight + dataPadding;
-            bottomPadding = dataPadding;
-            toolbarPadding = navHeight;
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            rightPadding = dataPadding;
-            bottomPadding = navHeight + dataPadding;
+    private void updateOrientation() {
+        int screenWidth = DisplayUtils.getScreenWidth();
+        int mediumPadding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.padding_medium));
+        int navHeight = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.navigation_bar_height));
+        int bottomPadding = mediumPadding;
+        if (!DisplayUtils.isLandscape(this)) {
+            bottomPadding += navHeight;
         }
-        findViewById(R.id.slider_data).setPadding(dataPadding, dataPadding, rightPadding, bottomPadding);
-        toolbar.setPadding(0, DisplayUtils.dpToPx(this,
-                getResources().getInteger(R.integer.status_bar_height)), toolbarPadding, 0);
+        mSliderData.setPadding(mediumPadding, mediumPadding, mediumPadding, bottomPadding);
+        mSliderData.getLayoutParams().width = screenWidth;
+        toolbar.getLayoutParams().width = screenWidth;
     }
 
     public void updateToolbar() {
@@ -194,15 +194,22 @@ public class SliderActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private void setPage(int position) {
-        setPageData(position);
-        viewPager.setCurrentItem(position);
+    private void updatePage() {
+        updatePageData();
+        viewPager.setCurrentItem(currentPosition);
     }
 
-    private void setPageData(int position) {
-        setTitle(position + 1 + " " + getResources().getString(R.string.of) + " " + adapter.getCount());
-        mNameTextView.setText(mPhotoList.get(position).getName());
-        mDateTextView.setText(mPhotoList.get(position).getDate());
+    private void updatePageData() {
+        setTitle(currentPosition + 1 + " " + getResources().getString(R.string.of) + " " + adapter.getCount());
+        String photoName = mPhotoList.get(currentPosition).getName();
+        if (photoName.equals(""))
+            photoName = getResources().getString(R.string.photos);
+        mNameTextView.setText(photoName);
+        mDateTextView.setText(mPhotoList.get(currentPosition).getDate());
+    }
+
+    private void showShareBottomSheet() {
+        DisplayUtils.showImageShareBottomSheet(this, mPhotoList.get(currentPosition));
     }
 
     private void rotateBitmap(int direction) {
@@ -217,13 +224,26 @@ public class SliderActivity extends ThemedAppCompatActivity {
         try {
             FileUtils.createPhotoFile(bitmap, file);
             isModified = true;
-            int position = viewPager.getCurrentItem();
+            currentPosition = viewPager.getCurrentItem();
             viewPager.setAdapter(adapter);
-            setPage(position);
+            updatePage();
         } catch (IOException e) {
             e.printStackTrace();
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
         }
+    }
+
+    private void showLoadingDialog() {
+        SliderActivity context = this;
+        new CountDownTimer(200, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (isEditing)
+                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.edit, R.string.editing);
+            }
+        }.start();
     }
 
     private static class TransformImageTask extends AsyncTask<Void, Void, Boolean> {
@@ -248,16 +268,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
         protected void onPreExecute() {
             SliderActivity mActivity = activityReference.get();
             photo = mActivity.mPhotoList.get(mActivity.viewPager.getCurrentItem());
-            new CountDownTimer(200, 1000) {
-                public void onTick(long millisUntilFinished) {
-                }
-
-                public void onFinish() {
-                    if (mActivity.isEditing)
-                        mActivity.loadingDialog = DisplayUtils.showLoadingDialog(
-                                mActivity, R.string.edit, R.string.editing);
-                }
-            }.start();
+            mActivity.showLoadingDialog();
             super.onPreExecute();
         }
 

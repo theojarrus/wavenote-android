@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import com.theost.wavenote.adapters.NoFilterArrayAdapter;
+
 import java.util.Arrays;
 
 public class ViewUtils {

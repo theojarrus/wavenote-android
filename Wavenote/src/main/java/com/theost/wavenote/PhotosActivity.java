@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
@@ -35,7 +36,7 @@ import com.theost.wavenote.utils.DateTimeUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.PermissionUtils;
-import com.theost.wavenote.utils.PhotoAdapter;
+import com.theost.wavenote.adapters.PhotoAdapter;
 import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
@@ -396,8 +397,21 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         showLoadingDialog();
     }
 
+    public void showShareBottomSheet(int position) {
+        DisplayUtils.showImageShareBottomSheet(this, mPhotoList.get(position));
+    }
+
     private void showLoadingDialog() {
-        loadingDialog = DisplayUtils.showLoadingDialog(this, R.string.import_note, R.string.importing);
+        PhotosActivity context = this;
+        new CountDownTimer(300, 300) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (isImporting)
+                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_note, R.string.importing);
+            }
+        }.start();
     }
 
     private Handler mImportHandler = new Handler(msg -> {
@@ -409,7 +423,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         } else if (msg.what == 2) {
             DisplayUtils.showToast(this, getResources().getString(R.string.link_error));
         }
-        loadingDialog.dismiss();
+        if (loadingDialog != null) loadingDialog.dismiss();
         return true;
     });
 
@@ -427,17 +441,19 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         public void run() {
             isImporting = true;
             if (imageLink != null) {
+                boolean isDownloaded = false;
                 try {
                     if (URLUtil.isValidUrl(imageLink)) {
                         URL imageUrl = new URL(imageLink);
                         imageBitmap = BitmapFactory.decodeStream(imageUrl.openStream());
-                    } else {
-                        mImportHandler.sendEmptyMessage(2);
+                        if (imageBitmap != null)
+                            isDownloaded = true;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    mImportHandler.sendEmptyMessage(2);
                 }
+                if (!isDownloaded)
+                    mImportHandler.sendEmptyMessage(2);
             }
             if (imageBitmap != null) {
                 try {

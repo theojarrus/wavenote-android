@@ -1,4 +1,4 @@
-package com.theost.wavenote.utils;
+package com.theost.wavenote.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +12,7 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.simperium.client.Bucket;
 import com.simperium.client.Query;
+import com.theost.wavenote.utils.StrUtils;
 
 public class TagsAdapter extends BaseAdapter {
     public static final int DEFAULT_ITEM_POSITION = 0;

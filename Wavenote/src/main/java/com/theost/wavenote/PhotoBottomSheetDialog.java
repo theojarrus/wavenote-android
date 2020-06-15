@@ -58,9 +58,6 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         @SuppressLint("InflateParams") View photoView = inflater.inflate(R.layout.bottom_sheet_photo, null, false);
 
-        View dialogSheetClose = photoView.findViewById(R.id.colorSheetClose);
-        dialogSheetClose.setOnClickListener(v -> dismiss());
-
         TextView mLinkButton = photoView.findViewById(R.id.add_photo_link);
         mLinkButton.setOnClickListener(v -> showLinkDialog());
         TextView mCameraButton = photoView.findViewById(R.id.add_photo_camera);
@@ -135,7 +132,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         TextInputLayout mAddLinkLayout = linkDialog.getCustomView().findViewById(R.id.dialog_layout);
         mAddLinkLayout.setCounterEnabled(false);
         mAddLinkEditText = linkDialog.getCustomView().findViewById(R.id.dialog_input);
-        mAddLinkEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
+        mAddLinkEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1000)});
         mAddLinkEditText.setText("");
         mAddLinkEditText.requestFocus();
         mAddLinkEditText.addTextChangedListener(new TextWatcher() {

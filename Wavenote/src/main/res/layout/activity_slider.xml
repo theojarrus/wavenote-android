@@ -23,6 +23,11 @@
         android:padding="@dimen/padding_medium"
         android:orientation="horizontal">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <TextView
             android:id="@+id/slide_name"
             android:layout_width="wrap_content"
@@ -31,17 +36,29 @@
             android:textStyle="bold"
             tools:text="Name"/>
 
+        <TextView
+            android:id="@+id/slide_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            tools:text="Jan 27, 2020, 13:37"/>
+
+        </LinearLayout>
+
         <View
             android:layout_width="0dp"
             android:layout_height="1px"
             android:layout_weight="1"/>
 
-        <TextView
-            android:id="@+id/slide_date"
+        <ImageButton
+            android:id="@+id/slide_share"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/gray_20"
-            tools:text="Jan 27, 2020, 13:37"/>
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/padding_small"
+            android:paddingRight="@dimen/padding_small"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/description_delete_item"
+            android:src="@drawable/ic_share_24dp" />
 
     </LinearLayout>
 

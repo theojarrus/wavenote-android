@@ -1,4 +1,4 @@
-package com.theost.wavenote.utils;
+package com.theost.wavenote.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

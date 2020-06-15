@@ -263,7 +263,7 @@
 
     <!-- FEATURES -->
     <string name="music_studio">Music Studio</string>
-    <string name="photos">Photos</string>
+    <string name="photos">Photo</string>
     <string name="text_color">Text Color</string>
     <string name="export">Export</string>
     <string name="import_note">Import</string>

@@ -13,7 +13,7 @@
     <color name="yellow">@color/yellow_20</color>
     <color name="black">#36393e</color>
     <color name="white">#fafafa</color>
-    <color name="transparent">#30000000</color>
+    <color name="transparent">#80000000</color>
 
     <!-- ELEVATION -->
     <color name="background_dark_0">#121416</color>

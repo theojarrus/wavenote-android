@@ -2,135 +2,126 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/bottom_sheet_title_size"
         android:clipChildren="true"
         android:clipToPadding="true"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/colorSheetClose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:src="@drawable/ic_close"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-
         <com.theost.wavenote.widgets.ColorSheetTitle
             android:id="@+id/sheetTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:paddingStart="16dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="16dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_extra_extra_large"
+            android:paddingEnd="@dimen/padding_extra_extra_large"
             android:text="@string/share"
             android:textAlignment="center"
+            android:textSize="@dimen/bottom_sheet_title_text"
             app:layout_constraintVertical_bias="0"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintStart_toEndOf="@id/colorSheetClose"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
+        android:id="@+id/list_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="-1dp"
-        android:background="@color/dividerColor" />
+        android:background="@color/dividerColor"
+        android:visibility="invisible" />
 
     <LinearLayout
         android:id="@+id/share_custom_buttons"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingTop="@dimen/padding_extra_large"
-        android:paddingBottom="@dimen/padding_extra_large"
-        android:paddingStart="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_small">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <com.theost.wavenote.widgets.RobotoRegularTextView
-            android:id="@+id/share_collaborate_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawablePadding="@dimen/padding_small"
-            android:drawableTop="@drawable/ic_share_collaborate_48dp"
-            android:gravity="center_horizontal"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="@string/collaborate"
-            style="@style/Theme.Wavestyle.BottomSheetDialogText">
-        </com.theost.wavenote.widgets.RobotoRegularTextView>
+            android:paddingStart="@dimen/padding_small"
+            android:paddingTop="@dimen/padding_extra_large"
+            android:paddingEnd="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_extra_large">
 
-        <com.theost.wavenote.widgets.RobotoRegularTextView
-            android:id="@+id/share_publish_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawablePadding="@dimen/padding_small"
-            android:drawableTop="@drawable/ic_share_publish_48dp"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="@string/publish"
-            style="@style/Theme.Wavestyle.BottomSheetDialogText">
-        </com.theost.wavenote.widgets.RobotoRegularTextView>
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/share_collaborate_button"
+                style="@style/Theme.Wavestyle.BottomSheetDialogText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableTop="@drawable/ic_share_collaborate_48dp"
+                android:drawablePadding="@dimen/padding_small"
+                android:gravity="center_horizontal"
+                android:text="@string/collaborate" />
 
-        <com.theost.wavenote.widgets.RobotoRegularTextView
-            android:id="@+id/share_unpublish_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawablePadding="@dimen/padding_small"
-            android:drawableTop="@drawable/ic_share_unpublish_48dp"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="@string/unpublish"
-            style="@style/Theme.Wavestyle.BottomSheetDialogText">
-        </com.theost.wavenote.widgets.RobotoRegularTextView>
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/share_publish_button"
+                style="@style/Theme.Wavestyle.BottomSheetDialogText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableTop="@drawable/ic_share_publish_48dp"
+                android:drawablePadding="@dimen/padding_small"
+                android:gravity="center_horizontal"
+                android:text="@string/publish" />
 
-        <com.theost.wavenote.widgets.RobotoRegularTextView
-            android:id="@+id/share_wp_post"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawablePadding="@dimen/padding_small"
-            android:drawableTop="@drawable/ic_share_wordpress_48dp"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="@string/wordpress_post"
-            style="@style/Theme.Wavestyle.BottomSheetDialogText">
-        </com.theost.wavenote.widgets.RobotoRegularTextView>
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/share_unpublish_button"
+                style="@style/Theme.Wavestyle.BottomSheetDialogText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableTop="@drawable/ic_share_unpublish_48dp"
+                android:drawablePadding="@dimen/padding_small"
+                android:gravity="center_horizontal"
+                android:text="@string/unpublish" />
+
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/share_wp_post"
+                style="@style/Theme.Wavestyle.BottomSheetDialogText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableTop="@drawable/ic_share_wordpress_48dp"
+                android:drawablePadding="@dimen/padding_small"
+                android:gravity="center_horizontal"
+                android:text="@string/wordpress_post" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="-1dp"
+            android:background="@color/dividerColor" />
 
     </LinearLayout>
-    
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="-1dp"
-        android:background="@color/dividerColor" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/share_button_recycler_view"
+        style="@style/Theme.Wavestyle.BottomSheetDialogText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        style="@style/Theme.Wavestyle.BottomSheetDialogText" />
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
 
     <View
         android:layout_width="match_parent"

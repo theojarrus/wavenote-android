@@ -1,6 +1,5 @@
 package com.theost.wavenote
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +13,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.theost.wavenote.models.Note
-import com.theost.wavenote.utils.ColorAdapter
-import com.theost.wavenote.utils.ColorSheetTheme
-import com.theost.wavenote.utils.resolveColor
-import kotlinx.android.synthetic.main.color_sheet.*
+import com.theost.wavenote.adapters.ColorAdapter
+import com.theost.wavenote.utils.ColorThemeUtils
+import kotlinx.android.synthetic.main.bottom_sheet_color.*
 import com.google.android.material.R as materialR
 
 /**
@@ -36,13 +34,12 @@ class ColorSheet : BottomSheetDialogFragment() {
         const val NO_COLOR = -1
     }
 
-    private var sheetCorners: Float = 0f
     private var colorAdapter: ColorAdapter? = null
 
     private var chk_text: CheckBox? = null
 
     override fun getTheme(): Int {
-        return ColorSheetTheme.inferTheme(requireContext()).styleRes
+        return ColorThemeUtils.inferTheme(requireContext()).styleRes
     }
 
     override fun onCreateView(
@@ -51,7 +48,7 @@ class ColorSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         if (savedInstanceState != null) dismiss()
-        return inflater.inflate(R.layout.color_sheet, container, false)
+        return inflater.inflate(R.layout.bottom_sheet_color, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,10 +75,6 @@ class ColorSheet : BottomSheetDialogFragment() {
             }
         })
 
-        if (sheetCorners == 0f) {
-            sheetCorners = resources.getDimension(R.dimen.default_dialog_radius)
-        }
-
         text_bold.isChecked = Note.isIsTextStyleBold()
         text_italic.isChecked =  Note.isIsTextStyleItalic()
         text_mono.isChecked =  Note.isIsTextStyleMono()
@@ -96,49 +89,14 @@ class ColorSheet : BottomSheetDialogFragment() {
         text_underline.setOnClickListener { Note.setIsTextStyleUnderline(text_underline.isChecked) }
         text_strikethrough.setOnClickListener { Note.setIsTextStyleStrikethrough(text_strikethrough.isChecked) }
 
-        val gradientDrawable = GradientDrawable().apply {
-            if (ColorSheetTheme.inferTheme(requireContext()) == ColorSheetTheme.LIGHT) {
-                setColor(resolveColor(requireContext(), colorRes = R.color.dialogPrimary))
-            } else {
-                setColor(resolveColor(requireContext(), colorRes = R.color.dialogDarkPrimary))
-            }
-
-            cornerRadii =
-                floatArrayOf(sheetCorners, sheetCorners, sheetCorners, sheetCorners, 0f, 0f, 0f, 0f)
-        }
-        view.background = gradientDrawable
-
         if (colorAdapter != null) {
             colorSheetList.adapter = colorAdapter
-        }
-
-        colorSheetClose.setOnClickListener {
-            dismiss()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         colorAdapter = null
-    }
-
-    /**
-     * Set corner radius of sheet top left and right corners.
-     *
-     * @param radius: Takes a float value
-     */
-    fun cornerRadius(radius: Float): ColorSheet {
-        this.sheetCorners = radius
-        return this
-    }
-
-    /**
-     * Set corner radius of sheet top left and right corners.
-     *
-     * @param radius: Takes a float value
-     */
-    fun cornerRadius(radius: Int): ColorSheet {
-        return cornerRadius(radius.toFloat())
     }
 
     /**

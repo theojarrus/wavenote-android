@@ -1,4 +1,4 @@
-package com.theost.wavenote.utils;
+package com.theost.wavenote.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,6 +20,7 @@ import com.theost.wavenote.PhotosActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Photo;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -100,6 +101,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 mActivity.checkEmptyView();
             }
         });
+
+        holder.mShareButton.setOnClickListener(view -> mActivity.showShareBottomSheet(position));
     }
 
     @Override
@@ -115,6 +118,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         ImageButton mCancelButton;
         ImageButton mFullscreenButton;
         ImageButton mTrashButton;
+        ImageButton mShareButton;
         String photoName;
 
         ViewHolder(View itemView) {
@@ -126,6 +130,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             mCancelButton = itemView.findViewById(R.id.photo_name_cancel);
             mFullscreenButton = itemView.findViewById(R.id.photo_fullscreen);
             mTrashButton = itemView.findViewById(R.id.photo_trash);
+            mShareButton = itemView.findViewById(R.id.photo_share);
         }
     }
 
@@ -140,6 +145,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     }
 
     public void sortByDate(boolean isSortReversed) {
+        List<Photo> oldData = new ArrayList<>(mData);
         Comparator<Photo> comparator;
         if (!isSortReversed) {
             comparator = (k1, k2) -> (Integer.parseInt(k2.getId()) - Integer.parseInt(k1.getId()));
@@ -147,10 +153,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             comparator = (k1, k2) -> Integer.parseInt(k1.getId()) - (Integer.parseInt(k2.getId()));
         }
         Collections.sort(mData, comparator);
-        notifyItemRangeChanged(0, mData.size());
+        if (!mData.equals(oldData))
+            notifyItemRangeChanged(0, mData.size());
     }
 
     public void sortByName(boolean isSortReversed) {
+        List<Photo> oldData = new ArrayList<>(mData);
         Comparator<Photo> comparator;
         if (!isSortReversed) {
             comparator = (p1, p2) -> p1.getName().compareTo(p2.getName());
@@ -158,7 +166,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             comparator = (p1, p2) -> p2.getName().compareTo(p1.getName());
         }
         Collections.sort(mData, comparator);
-        notifyItemRangeChanged(0, mData.size());
+        if (!mData.equals(oldData))
+            notifyItemRangeChanged(0, mData.size());
     }
 
 }

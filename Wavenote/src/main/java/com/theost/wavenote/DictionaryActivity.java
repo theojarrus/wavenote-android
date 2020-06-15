@@ -34,7 +34,7 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.utils.DictionaryAdapter;
+import com.theost.wavenote.adapters.DictionaryAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 

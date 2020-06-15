@@ -38,12 +38,12 @@
 
         <activity android:name="com.theost.wavenote.PhotosActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Photos"
+            android:label="Photo"
             android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
 
         <activity android:name="com.theost.wavenote.SliderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Photos"
+            android:label="Photo"
             android:parentActivityName="com.theost.wavenote.PhotosActivity"/>
 
         <activity android:name="com.theost.wavenote.ChordsActivity"

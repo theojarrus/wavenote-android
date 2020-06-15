@@ -1,6 +1,5 @@
-package com.theost.wavenote.utils;
+package com.theost.wavenote.adapters;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.view.View;

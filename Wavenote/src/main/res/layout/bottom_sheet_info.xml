@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:paddingTop="@dimen/padding_small"
     android:theme="@style/Theme.Wavestyle.BottomSheetDialog">
 
     <com.theost.wavenote.widgets.RobotoRegularTextView

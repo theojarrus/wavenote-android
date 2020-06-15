@@ -54,7 +54,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import net.lingala.zip4j.*;
@@ -113,7 +112,6 @@ import static com.theost.wavenote.utils.SearchTokenizer.SPACE;
 public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note>,
         TextWatcher, OnTagAddedListener, View.OnFocusChangeListener,
         WavenoteEditText.OnSelectionChangedListener,
-        ShareBottomSheetDialog.ShareSheetListener,
         HistoryBottomSheetDialog.HistorySheetListener,
         WavenoteEditText.OnCheckboxToggledListener {
 
@@ -216,7 +214,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
     };
     private InfoBottomSheetDialog mInfoBottomSheet;
-    private ShareBottomSheetDialog mShareBottomSheet;
     // Contextual action bar for dealing with links
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
         // Called when the action mode is created; startActionMode() was called
@@ -335,7 +332,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mInfoBottomSheet = new InfoBottomSheetDialog(this);
-        mShareBottomSheet = new ShareBottomSheetDialog(this, this);
         mHistoryBottomSheet = new HistoryBottomSheetDialog(this, this);
 
         Wavenote currentApp = (Wavenote) requireActivity().getApplication();
@@ -454,7 +450,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         keywordTypes = ResUtils.getKeywordTypes(getContext());
 
         colorSheet = new ColorSheet();
-        colorSheet.cornerRadius(8);
 
         styleColors = getResources().getIntArray(R.array.colorsheet_colors);
         lightColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_light)).substring(2).toUpperCase();
@@ -1460,59 +1455,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         return tags.toString();
     }
 
-    /**
-     * Share bottom sheet callbacks
-     */
-
-    @Override
-    public void onSharePublishClicked() {
-        publishNote();
-        if (mShareBottomSheet != null) {
-            mShareBottomSheet.dismiss();
-        }
-    }
-
-    @Override
-    public void onShareUnpublishClicked() {
-        unpublishNote();
-        if (mShareBottomSheet != null) {
-            mShareBottomSheet.dismiss();
-        }
-    }
-
-    @Override
-    public void onWordPressPostClicked() {
-        if (mShareBottomSheet != null) {
-            mShareBottomSheet.dismiss();
-        }
-
-        if (getFragmentManager() == null) {
-            return;
-        }
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(WordPressDialogFragment.DIALOG_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        WordPressDialogFragment wpDialogFragment = new WordPressDialogFragment();
-        wpDialogFragment.setNote(mNote);
-        wpDialogFragment.show(ft, WordPressDialogFragment.DIALOG_TAG);
-    }
-
-    @Override
-    public void onShareCollaborateClicked() {
-        Toast.makeText(getActivity(), R.string.collaborate_message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onShareDismissed() {
-
-    }
-
 
     /**
      * History bottom sheet listeners
@@ -1764,9 +1706,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void showShareSheet() {
-        if (isAdded() && mShareBottomSheet != null && !mShareBottomSheet.isAdded()) {
-            mShareBottomSheet.show(getParentFragmentManager(), mNote);
-        }
+        DisplayUtils.showTextShareBottomSheet(getContext(), mContentEditText.getText());
     }
 
     private void showInfoSheet() {

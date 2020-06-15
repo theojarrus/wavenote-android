@@ -56,8 +56,10 @@
     <dimen name="text_suggestion">16sp</dimen>
     <dimen name="text_widget">12sp</dimen>
 
-    <!-- Color Sheet -->
-    <dimen name="default_dialog_radius">4dp</dimen>
+    <!-- Bottom Sheet -->
+    <dimen name="default_dialog_radius">14dp</dimen>
+    <dimen name="bottom_sheet_title_text">19sp</dimen>
+    <dimen name="bottom_sheet_title_size">64dp</dimen>
 
     <!-- Custom -->
     <dimen name="mtrl_textinput_box_stroke_width_default" tools:override="true">2dp</dimen>
