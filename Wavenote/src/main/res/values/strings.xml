@@ -121,16 +121,14 @@
 
     <!-- About screen -->
     <string name="about">About Wavenote</string>
-    <string name="about_somewords">Wavenote is made with love by Theo and the folks at Automattic. Source code available on GitHub.</string>
+    <string name="about_somewords">Wavenote is made with love by Theo and the folks at Automattic. Source code available on GitHub</string>
     <string name="about_play_store">Google Play Store</string>
     <string name="rate_us">Rate App</string>
     <string name="no_browser_available">\"Unable to open website. No browser available.\"</string>
-    <string name="support_on_patreon">Support on Patreon</string>
-    <string name="telegram" translatable="false">Telegram</string>
-    <string name="about_telegram_handle" translatable="false">\@fedorjedi</string>
+    <string name="donate_developer">Buy Developer a Coffee</string>
     <string name="instagram" translatable="false">Instagram</string>
-    <string name="about_instagram_handle" translatable="false">\@fedor.jedi</string>
-    <string name="about_patreon_handle" translatable="false">\@theojedi</string>
+    <string name="about_instagram_handle" translatable="false">\@theo.jedi</string>
+    <string name="about_donate_handle" translatable="false">\@theojedi</string>
 
     <!-- Unsynced note warnings -->
     <string name="unsynced_notes">Unsynced notes detected</string>
@@ -169,6 +167,7 @@
     <string name="loading_note">Loading note&#8230;</string>
     <string name="loading_notes">Loading notes&#8230;</string>
     <string name="note_not_found">Note not found</string>
+    <string name="notes_not_found">Notes not found</string>
     <string name="select_note">Select Note</string>
     <string name="log_in_add_widget">Log in to add this widget</string>
     <string name="log_in_use_widget">Log in to use widget</string>
@@ -263,11 +262,12 @@
 
     <!-- FEATURES -->
     <string name="music_studio">Music Studio</string>
-    <string name="photos">Photo</string>
     <string name="text_color">Text Color</string>
     <string name="export">Export</string>
-    <string name="import_note">Import</string>
+    <string name="import_text">Import</string>
+    <string name="data">Data</string>
     <string name="choose">Choose</string>
+    <string name="choose_samples">Choose samples</string>
     <string name="choose_beat">Choose %s beat file</string>
     <string name="choose_folder">Choose folder</string>
     <string name="imported">Imported</string>
@@ -275,8 +275,29 @@
     <string name="weak">Weak</string>
     <string name="wait_a_bit">Wait a bit…</string>
     <string name="loading">Loading</string>
+    <string name="hint_password">Password (not required)</string>
+    <string name="import_notes">Import Notes</string>
+    <string name="export_notes">Export Notes</string>
+    <string name="encrypted">Encrypted</string>
 
     <string name="confirm_delete_all">Are you sure you want to delete all data?</string>
+    <string name="import_notification">To import zip archives and media files, do not change the structure of files after export</string>
+
+    <string name="import_json" translatable="false">Wavenote</string>
+    <string name="import_plaintext" translatable="false">Plaintext</string>
+    <string name="import_multiple">Multiple</string>
+    <string name="import_single">Single</string>
+
+    <string name="note">Note</string>
+
+    <string name="photo">Photo</string>
+    <string name="text">Text</string>
+    <string name="html" translatable="false">Html</string>
+    <string name="json">Json (for import)</string>
+    <string name="zip">Zip archive</string>
+
+    <!-- Developer Options -->
+    <string name="developer_options">Developer options</string>
 
     <!-- Color Sheet -->
     <string name="text_style">Style</string>
@@ -291,11 +312,9 @@
     <string name="file_error">Invalid file</string>
     <string name="link_error">Invalid link</string>
     <string name="convert_error">Conversion error</string>
-    <string name="photo_found_error">Photos not found</string>
     <string name="database_error">Database request error</string>
     <string name="exist_error">Already exist</string>
     <string name="android_error">Deprecated Android version</string>
-    <string name="export_error">Some problems with exporting</string>
     <string name="exporting_error">Wait a bit, already exporting</string>
     <string name="feature_error">This feature will be available in the next version</string>
     <string name="sample_error">Audio may sound incorrect, because file sample rate is not</string>
@@ -328,9 +347,13 @@
     <string name="photo_error">Couldn\'t load image</string>
     <string name="dialog_success">Success</string>
     <string name="dialog_failure">Failed</string>
-    <string name="export_succesful">Successful exported</string>
+    <string name="import_succesful">Done! %d notes imported successfully</string>
+    <string name="import_failure">%d notes imported with some errors</string>
+    <string name="export_succesful">Successfully exported</string>
+    <string name="export_failure">Some errors with exporting</string>
     <string name="exporting">Exporting… It could take a some time.</string>
     <string name="importing">Importing… It could take a some time.</string>
+    <string name="extracting">Extracting… It could take a some time.</string>
     <string name="editing">Editing… It could take a some time.</string>
     <string name="add_photo_storage">Files</string>
     <string name="add_keyword">Add Keyword</string>
@@ -343,7 +366,6 @@
     <string name="tap" translatable="false">Tap</string>
     <string name="adjust_record">Adjust record</string>
     <string name="mix" translatable="false">Mix</string>
-    <string name="set">Set</string>
     <string name="get">Get</string>
     <string name="select_tone">Select Tone</string>
     <string name="select_beat">Select Beat</string>

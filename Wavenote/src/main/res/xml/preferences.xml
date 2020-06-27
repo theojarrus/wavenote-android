@@ -83,11 +83,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/export">
+        android:title="@string/data">
         <Preference
             android:title="@string/directory"
             android:key="pref_key_export_dir"
             android:summary="@string/path"/>
+        <Preference
+            android:title="@string/import_notes"
+            android:key="pref_key_import_notes"/>
+        <Preference
+            android:title="@string/export_notes"
+            android:key="pref_key_export_notes"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -102,6 +108,10 @@
             android:key="pref_key_about"
             android:persistent="false"
             android:title="@string/about"/>
+        <Preference
+            android:key="pref_key_developer"
+            android:persistent="false"
+            android:title="@string/developer_options"/>
         <Preference
             android:key="pref_key_build"
             android:persistent="false"

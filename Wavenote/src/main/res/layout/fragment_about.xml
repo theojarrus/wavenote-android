@@ -50,45 +50,6 @@
         </View>
 
         <LinearLayout
-            android:id="@+id/about_instagram"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_medium">
-
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/instagram"
-                android:textSize="22sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
-
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_instagram_handle"
-                android:textSize="15sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
-
-        </LinearLayout>
-
-        <View
-            android:background="@color/white"
-            android:layout_height="1px"
-            android:layout_width="match_parent">
-        </View>
-
-
-
-        <LinearLayout
             android:id="@+id/about_donate"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
@@ -104,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/support_on_patreon"
+                android:text="@string/donate_developer"
                 android:textSize="22sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 
@@ -113,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_patreon_handle"
+                android:text="@string/about_donate_handle"
                 android:textSize="15sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 
@@ -151,6 +112,43 @@
                 android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
                 android:text="@string/about_play_store"
+                android:textSize="15sp">
+            </com.theost.wavenote.widgets.RobotoLightTextView>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/white"
+            android:layout_height="1px"
+            android:layout_width="match_parent">
+        </View>
+
+        <LinearLayout
+            android:id="@+id/about_instagram"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_medium">
+
+            <com.theost.wavenote.widgets.RobotoLightTextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/padding_large"
+                android:paddingStart="@dimen/padding_large"
+                android:text="@string/instagram"
+                android:textSize="22sp">
+            </com.theost.wavenote.widgets.RobotoLightTextView>
+
+            <com.theost.wavenote.widgets.RobotoLightTextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/padding_large"
+                android:paddingStart="@dimen/padding_large"
+                android:text="@string/about_instagram_handle"
                 android:textSize="15sp">
             </com.theost.wavenote.widgets.RobotoLightTextView>
 

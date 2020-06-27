@@ -94,12 +94,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 mActivity.startSliderActivity(position));
 
         holder.mTrashButton.setOnClickListener(view -> {
-            if (mActivity.removePhoto(mData.get(position).getId())) {
-                mData.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, getItemCount());
-                mActivity.checkEmptyView();
-            }
+            mActivity.removePhoto(mData.get(position).getId());
+            mData.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, getItemCount());
+            if (mData.size() == 0) notifyDataSetChanged();
+            mActivity.updateEmptyView();
         });
 
         holder.mShareButton.setOnClickListener(view -> mActivity.showShareBottomSheet(position));
@@ -134,14 +134,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         }
     }
 
-    public void updateData(List<Photo> data) {
-        this.mData = data;
+    public void updateData(List<Photo> data, int position) {
+        mData = data;
         notifyItemRangeChanged(0, mData.size());
     }
 
     public void clearData() {
         mData.clear();
-        notifyItemRangeChanged(0, mData.size());
+        notifyDataSetChanged();
     }
 
     public void sortByDate(boolean isSortReversed) {

@@ -73,11 +73,10 @@ public class Note extends BucketObject {
     private static String themedTextActiveColor = "#000000";
     private static String themedTextInactiveColor = "#ffffff";
 
-    private static int activeStyleColor = -1;
-
-
     private static String activeMetronomeSound;
     private static String noteActiveInstrument;
+
+    private static int activeStyleColor;
 
     private static int photoActiveSortMode;
     private static int dictionaryActiveSortMode;
@@ -321,12 +320,12 @@ public class Note extends BucketObject {
         isTextStyleStrikethrough = checked;
     }
 
-    public Integer getActiveStyleColor() {
+    public static int getActiveStyleColor() {
         return activeStyleColor;
     }
 
-    public void setActiveStyleColor(Integer selectedColor) {
-        Note.activeStyleColor = selectedColor;
+    public static void setActiveStyleColor(int selectedColor) {
+        activeStyleColor = selectedColor;
     }
 
     public void setThemeText(String colorLight, String colorDark, boolean isLight) {
@@ -356,7 +355,7 @@ public class Note extends BucketObject {
             return BLANK_CONTENT;
         }
         if (content.contains(themedTextInactiveColor))
-            content = ((String) content).replaceAll(themedTextInactiveColor, themedTextActiveColor);
+            content = content.replaceAll(themedTextInactiveColor, themedTextActiveColor);
         return (Spannable) HtmlCompat.fromHtml(content);
     }
 

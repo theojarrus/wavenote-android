@@ -141,4 +141,16 @@ public class StrUtils {
         return buf.toString();
     }
 
+    public static String formatFilename(String name) {
+        return name.replaceAll("[\\\\/:*?\"<>|]", "_");
+    }
+
+    public static String getFileName(String name) {
+        return name.substring(0, name.lastIndexOf("."));
+    }
+
+    public static String getFileExtention(String name) {
+        return name.substring(name.lastIndexOf("."));
+    }
+
 }

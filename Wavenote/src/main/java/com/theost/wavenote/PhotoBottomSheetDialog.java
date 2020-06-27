@@ -122,7 +122,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         int[] dialogColors = ResUtils.getDialogColors(getContext());
         MaterialDialog linkDialog = new MaterialDialog.Builder(getContext())
                 .customView(R.layout.add_dialog, false)
-                .title(R.string.link)
+                .title(R.string.add_photo)
                 .positiveText(R.string.get)
                 .positiveColor(dialogColors[0])
                 .onPositive((dialog, which) -> addPhotoLink(mAddLinkEditText.getText().toString().trim()))
@@ -134,6 +134,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         mAddLinkEditText = linkDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddLinkEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1000)});
         mAddLinkEditText.setText("");
+        mAddLinkEditText.setHint(R.string.link);
         mAddLinkEditText.requestFocus();
         mAddLinkEditText.addTextChangedListener(new TextWatcher() {
             @Override

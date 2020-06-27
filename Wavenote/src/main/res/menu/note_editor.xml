@@ -22,7 +22,7 @@
     <item
         android:id="@+id/menu_photos"
         android:icon="@drawable/m_insert_photo_black_24dp"
-        android:title="@string/photos"
+        android:title="@string/photo"
         app:showAsAction="always" />
 
     <item

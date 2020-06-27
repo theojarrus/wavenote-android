@@ -3,6 +3,7 @@ package com.theost.wavenote;
 import android.animation.ObjectAnimator;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -32,6 +33,7 @@ import com.afollestad.materialdialogs.internal.MDButton;
 import com.theost.wavenote.models.Keyword;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.adapters.DictionaryAdapter;
@@ -88,7 +90,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         TextView mEmptyViewText = emptyView.findViewById(R.id.text);
         mEmptyViewImage.setImageResource(R.drawable.av_theory_24dp);
         mEmptyViewText.setText(R.string.empty_dictionary);
-        
+
         keywordColors = ResUtils.getDialogColors(this);
         keywordTypes = ResUtils.getKeywordTypes(this);
 
@@ -97,7 +99,8 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
 
         mSortLayout = findViewById(R.id.sort_layout);
 
-        updateData();
+        mKeywordList = new ArrayList<>();
+
         adapter = new DictionaryAdapter(this, mKeywordList);
         mKeywordRecyclerView.setAdapter(adapter);
 
@@ -167,7 +170,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         inflater.inflate(R.menu.items_list, menu);
         mRemoveItem = menu.findItem(R.id.menu_remove);
         MenuCompat.setGroupDividerEnabled(menu, true);
-        if (checkEmptyView()) sortItems();
+        updateData();
         return true;
     }
 
@@ -191,7 +194,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         }
     }
 
-    public boolean checkEmptyView() {
+    public boolean updateEmptyView() {
         if (adapter == null || adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
             mKeywordRecyclerView.setHasFixedSize(false);
@@ -227,7 +230,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         MaterialDialog keywordDialog = new MaterialDialog.Builder(this)
                 .customView(R.layout.add_dialog, false)
                 .title(R.string.add_keyword)
-                .positiveText(R.string.import_note)
+                .positiveText(R.string.import_text)
                 .positiveColor(keywordColors[0])
                 .onPositive((dialog, which) -> insertKeyword(mAddKeywordEditText.getText().toString()))
                 .negativeText(R.string.cancel).build();
@@ -236,6 +239,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         mAddKeywordType.setVisibility(View.VISIBLE);
         mAddKeywordEditText = keywordDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddKeywordEditText.setText("");
+        mAddKeywordEditText.setHint(R.string.word);
         mAddKeywordEditText.requestFocus();
         mAddKeywordEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -260,31 +264,45 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         keywordDialog.show();
     }
 
-    private void updateData() {
-        Cursor mKeywordData = localDatabase.getAllDictionaryData();
-        if (mKeywordData == null) return;
-        mWordList = new ArrayList<>();
-        mKeywordList = new ArrayList<>();
-        while (mKeywordData.moveToNext()) {
-            String id = mKeywordData.getString(0);
-            String word = mKeywordData.getString(1);
-            String type = mKeywordData.getString(2);
-            Keyword keyword = new Keyword(id, word, type);
-            mWordList.add(word.toLowerCase());
-            mKeywordList.add(keyword);
-        }
+    private void updateAdapter() {
         mKeywordRecyclerView.setHasFixedSize(false);
-        if (adapter != null) adapter.updateData(mKeywordList);
+        adapter.updateData(mKeywordList);
+        if (updateEmptyView()) sortItems();
     }
 
-    private void restoreData() {
-        removeKeyword(null, null);
-        String[] resourceTitles = this.getResources().getStringArray(R.array.array_musical_titles);
-        String[] resourceWords = this.getResources().getStringArray(R.array.array_musical_words);
-        for (String j : resourceTitles) localDatabase.insertDictionaryData(j, keywordTypes[0]);
-        for (String i : resourceWords) localDatabase.insertDictionaryData(i, keywordTypes[1]);
+    private void updateData() {
+        new UpdateDataThread().start();
+    }
+
+    private Handler mUpdateHandler = new Handler(msg -> {
+        updateAdapter();
+        return true;
+    });
+
+    private class UpdateDataThread extends Thread {
+        public void run() {
+            mWordList = new ArrayList<>();
+            mKeywordList = new ArrayList<>();
+            Cursor mKeywordData = localDatabase.getAllDictionaryData();
+            if (mKeywordData == null || mKeywordData.getCount() == 0) {
+                mSortLayout.setVisibility(View.INVISIBLE);
+            } else {
+                while (mKeywordData.moveToNext()) {
+                    String id = mKeywordData.getString(0);
+                    String word = mKeywordData.getString(1);
+                    String type = mKeywordData.getString(2);
+                    Keyword keyword = new Keyword(id, word, type);
+                    mWordList.add(word.toLowerCase());
+                    mKeywordList.add(keyword);
+                }
+            }
+            mUpdateHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+        }
+    }
+
+    public void restoreData() {
+        ResUtils.restoreDictionary(this);
         updateData();
-        if (checkEmptyView()) sortItems();
     }
 
     private void insertKeyword(String keyword) {
@@ -305,13 +323,10 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
                 return;
         }
         boolean isInserted = localDatabase.insertDictionaryData(keyword, type);
-        if (isInserted) {
-            DisplayUtils.showToast(this, this.getResources().getString(R.string.created));
-        } else {
+        if (!isInserted) {
             DisplayUtils.showToast(this, this.getResources().getString(R.string.database_error));
         }
         updateData();
-        if (checkEmptyView()) sortItems();
     }
 
     public boolean renameKeyword(String id, String type) {
@@ -331,7 +346,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             if (isRemoved) {
                 mWordList = new ArrayList<>();
                 adapter.clearData();
-                checkEmptyView();
+                updateEmptyView();
             }
         } else {
             isRemoved = localDatabase.removeDictionaryData(id);

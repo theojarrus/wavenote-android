@@ -157,6 +157,7 @@ public class DisplayUtils {
         MaterialDialog loadingDialog = new MaterialDialog.Builder(context)
                 .title(titleId)
                 .content(contentId)
+                .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .progress(true, 0)
                 .progressIndeterminateStyle(true).build();

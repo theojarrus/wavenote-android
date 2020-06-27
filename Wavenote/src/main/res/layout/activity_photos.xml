@@ -148,55 +148,55 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/materials_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:orientation="horizontal"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/custom_space"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:paddingTop="@dimen/custom_space"
-                        android:paddingBottom="@dimen/custom_space"
-                        android:text="@string/materials"
-                        android:textColor="?attr/noteEditorTextColor"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="-1dp"
-                    android:background="@color/dividerColor" />
-
-                <LinearLayout
                     android:id="@+id/sort_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:id="@+id/materials_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:visibility="invisible">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/custom_space"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:paddingTop="@dimen/custom_space"
+                            android:paddingBottom="@dimen/custom_space"
+                            android:text="@string/materials"
+                            android:textColor="?attr/noteEditorTextColor"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="-1dp"
+                        android:background="@color/dividerColor" />
+
                     <include layout="@layout/search_sort" />
 
-                </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="-1dp"
+                        android:background="@color/dividerColor" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="-1dp"
-                    android:background="@color/dividerColor" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/photos_list"

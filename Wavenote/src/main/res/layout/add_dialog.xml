@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
-            android:hint="@string/word"
+            android:hint="@string/text"
             android:inputType="text"
             android:maxLength="@integer/dialog_input_max" />
 

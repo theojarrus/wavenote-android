@@ -7,12 +7,14 @@ import android.database.Cursor;
 import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +40,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AudioUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.ExportUtils;
+import com.theost.wavenote.utils.ImportUtils;
+import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.widgets.PCMAnalyser;
@@ -56,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +76,9 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private static final int STATUS_PLAYING = 2;
     private static final int FILE_REQUEST = 0;
     private static final int DEFAULT_SOUND = 1;
+
+    private static final int MODE_EXPORT = 1;
+    private static final int MODE_REMOVE = -1;
 
     private static final int MAX_SOUND_NAME = 10;
 
@@ -90,6 +99,8 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private static String soundName = "";
     private static String soundType;
 
+    private String exportPassword;
+
     private AudioTrack audioTrack;
     private byte[] beatStrongBytes;
     private byte[] beetWeakBytes;
@@ -101,14 +112,19 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private short currentSpeed;
     private String currentBeat;
     private String currentTone;
+    private String exportPath;
+    private String resultDialogMessage;
     private List<String> toneList = new ArrayList<>();
     private List<Double> tapList = new ArrayList<>();
 
+    HashMap<String, String> soundList;
     List<String> resourceSounds;
     HashMap<String, Integer> customSounds;
+    HashMap<String, Boolean> resultMap;
     String[] soundData;
 
     private boolean isImporting;
+    private boolean isExporting;
 
     private DatabaseHelper localDatabase;
     private File tmpFile;
@@ -119,6 +135,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private MaterialDialog loadingDialog;
     private EditText mAddSoundEditText;
+    private MenuItem mExportItem;
     private MenuItem mRemoveItem;
 
     int[] dialogColors;
@@ -256,6 +273,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.metronome_bar, menu);
+        mExportItem = menu.findItem(R.id.menu_export);
         mRemoveItem = menu.findItem(R.id.menu_remove);
         MenuCompat.setGroupDividerEnabled(menu, true);
         refreshMenuItems();
@@ -266,17 +284,16 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_import:
-                if (PermissionUtils.requestPermissions(this)) {
-                    if (!isImporting) {
-                        showImportDialog();
-                    } else {
-                        DisplayUtils.showToast(this, getResources()
-                                .getString(R.string.wait_a_bit));
-                    }
-                }
+                if (PermissionUtils.requestPermissions(this))
+                    showImportDialog();
                 return true;
             case R.id.menu_remove:
-                showRemoveDialog();
+                if (PermissionUtils.requestPermissions(this))
+                    createDialog(MODE_REMOVE);
+                return true;
+            case R.id.menu_export:
+                if (PermissionUtils.requestPermissions(this))
+                    createDialog(MODE_EXPORT);
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -416,8 +433,10 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private void refreshMenuItems() {
         if (customSounds.size() == 0) {
+            mExportItem.setEnabled(false);
             mRemoveItem.setEnabled(false);
         } else {
+            mExportItem.setEnabled(true);
             mRemoveItem.setEnabled(true);
         }
     }
@@ -520,7 +539,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             }
         }
 
-        if (mRemoveItem != null) refreshMenuItems();
+        if (mRemoveItem != null && mExportItem != null) refreshMenuItems();
 
         updatedData.addAll(resourceSounds);
         updatedData.addAll(customSounds.keySet());
@@ -546,7 +565,13 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private void removeSounds(HashMap<String, String> soundList) {
+    private void exportSounds() {
+        exportPath = PrefUtils.getStringPref(this, PrefUtils.PREF_EXPORT_DIR);
+        new ExportSampleThread(this, soundList.keySet()).start();
+        showLoadingDialog();
+    }
+
+    private void removeSounds() {
         List<Boolean> isRemoved = new ArrayList<>();
         for (String i : soundList.keySet()) {
             isRemoved.add(localDatabase.removeMetronomeData(soundList.get(i)));
@@ -587,32 +612,56 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         if (isCreated) {
             if (soundType.equals(BEAT_STRONG)) {
                 soundType = BEAT_WEAK;
-                loadingDialog.dismiss();
+                if (loadingDialog != null) loadingDialog.dismiss();
                 showBeatDialog(); // start after strong for weak beat
             } else if (soundType.equals(BEAT_WEAK)) {
                 insertSound(); // load sound in database
-                loadingDialog.dismiss();
+                if (loadingDialog != null) loadingDialog.dismiss();
             }
         } else {
             clearImport();
         }
     }
 
+    private Handler mExportHandler = new Handler(msg -> {
+        if (loadingDialog != null) loadingDialog.dismiss();
+        showResultDialog();
+        return true;
+    });
+
+    private class ExportSampleThread extends Thread {
+
+        MetronomeActivity context;
+        Set<String> soundList;
+
+        private ExportSampleThread(MetronomeActivity context, Set<String> soundList) {
+            this.context = context;
+            this.soundList = soundList;
+        }
+
+        @Override
+        public void run() {
+            isExporting = true;
+            File exportDir = new File(exportPath + FileUtils.METRONOME_DIR);
+            if (!exportDir.exists()) exportDir.mkdirs();
+            resultMap = ExportUtils.exportSounds(context, exportDir, soundList, exportPassword);
+            resultDialogMessage = ExportUtils.getResultMessage(context, resultMap);
+            mExportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+            isExporting = false;
+        }
+    }
+
     private Handler mImportHandler = new Handler(msg -> {
         boolean isCreated = false;
-        if (msg.what == 0) {
-            // created
+        if (msg.what == ImportUtils.RESULT_OK) {
             isCreated = true;
-        } else if (msg.what == 1) {
-            // sample error
+        } else if (msg.what == ImportUtils.SAMPLE_ERROR) {
             DisplayUtils.showToast(this, (getResources()
                     .getString(R.string.sample_error) + " " + AudioConfig.AUDIO_SAMPLE_RATE));
-            return true;
-        } else if (msg.what == 2) {
-            // file error
+            return false;
+        } else if (msg.what == ImportUtils.FILE_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
-        } else if (msg.what == 3) {
-            // exist error
+        } else if (msg.what == ImportUtils.EXIST_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.exist_error));
         }
         creationResult(isCreated);
@@ -639,12 +688,12 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             long[] audioParams = AudioUtils.getAudioParams(audioFile.getAbsolutePath()); // channelCount, sampleRate, bitRate, audioSize
 
             if (audioBytes == null) {
-                mImportHandler.sendEmptyMessage(2);
+                mImportHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
                 return;
             }
 
             if (audioParams[1] != AudioConfig.AUDIO_SAMPLE_RATE)
-                mImportHandler.sendEmptyMessage(1);
+                mImportHandler.sendEmptyMessage(ImportUtils.SAMPLE_ERROR);
 
 
             try {
@@ -658,13 +707,13 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                         stereoBytes = audioBytes;
                         break;
                     default:
-                        mImportHandler.sendEmptyMessage(2);
+                        mImportHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
                         return;
                 }
 
                 File[] sampleFiles = FileUtils.getSampleFiles(context, soundName, soundType); // mono, stereo
                 if (sampleFiles[0] == null || sampleFiles[1] == null) {
-                    mImportHandler.sendEmptyMessage(3);
+                    mImportHandler.sendEmptyMessage(ImportUtils.EXIST_ERROR);
                     return;
                 }
 
@@ -683,12 +732,11 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 sampleFiles[1].createNewFile();
                 FileUtils.createWavFile(sampleFiles[0], monoStream);
                 FileUtils.createWavFile(sampleFiles[1], stereoStream);
-                mImportHandler.sendEmptyMessage(0);
+                mImportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
             } catch (IOException e) {
                 e.printStackTrace();
-                mImportHandler.sendEmptyMessage(2);
+                mImportHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
             }
-
             isImporting = false;
         }
 
@@ -731,7 +779,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
         String message = String.format(getResources().getString(R.string.choose_beat), beat);
         new MaterialDialog.Builder(this)
-                .title(R.string.import_note)
+                .title(R.string.import_text)
                 .content(message)
                 .positiveText(R.string.choose)
                 .onPositive((dialog, which) -> pickFile())
@@ -742,26 +790,82 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 .show();
     }
 
-    private void showRemoveDialog() {
+    private void showResultDialog() {
         new MaterialDialog.Builder(this)
-                .title(R.string.remove)
-                .positiveText(R.string.remove)
-                .negativeText(R.string.cancel)
-                .items(customSounds.keySet())
-                .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
-                    HashMap<String, String> soundList = new HashMap<>();
-                    for (CharSequence i : text) {
-                        String item = i.toString();
-                        soundList.put(item, customSounds.get(item).toString());
-                    }
-                    removeSounds(soundList);
-                    return true;
-                })
+                .title(R.string.export)
+                .content(resultDialogMessage)
+                .positiveText(android.R.string.ok)
                 .show();
+        DisplayUtils.showToast(this, getResources().getString(R.string.path) + ": " + exportPath);
+    }
+
+    private void createDialog(int mode) {
+        if (isImporting || isExporting) {
+            DisplayUtils.showToast(this, getResources()
+                    .getString(R.string.wait_a_bit));
+        } else {
+            soundList = new HashMap<>();
+            exportPassword = null;
+            List<String> listItems = new ArrayList<>(customSounds.keySet());
+            if (mode == MODE_EXPORT)
+                listItems.add(getResources().getString(R.string.zip));
+            new MaterialDialog.Builder(this)
+                    .title(R.string.choose_samples)
+                    .positiveText(R.string.choose)
+                    .negativeText(R.string.cancel)
+                    .items(listItems)
+                    .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+                        boolean createZip = false;
+                        for (CharSequence i : text) {
+                            String item = i.toString();
+                            Object key = customSounds.get(item);
+                            if (key == null) {
+                                String zipMode = getResources().getString(R.string.zip);
+                                if (i.equals(zipMode)) {
+                                    createZip = true;
+                                }
+                                continue;
+                            }
+                            soundList.put(item, key.toString());
+                        }
+                        if (mode == MODE_EXPORT) {
+                            if (createZip) {
+                                showPasswordDialog();
+                            } else {
+                                exportSounds();
+                            }
+                        } else if (mode == MODE_REMOVE) {
+                            removeSounds();
+                        }
+                        return true;
+                    }).show();
+        }
+    }
+
+    private void showPasswordDialog() {
+        exportPassword = "";
+        new MaterialDialog.Builder(this)
+                .title(R.string.export)
+                .positiveText(R.string.export)
+                .negativeText(R.string.cancel)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                .input(R.string.hint_password, 0, (dialog, input) -> {
+                    exportPassword = input.toString().trim();
+                    exportSounds();
+                }).show();
     }
 
     private void showLoadingDialog() {
-        loadingDialog = DisplayUtils.showLoadingDialog(this, R.string.import_note, R.string.importing);
+        MetronomeActivity context = this;
+        new CountDownTimer(200, 200) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (isImporting || isExporting)
+                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_text, R.string.importing);
+            }
+        }.start();
     }
 
     private void showImportDialog() {
@@ -769,12 +873,12 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         MaterialDialog soundDialog = new MaterialDialog.Builder(this)
                 .customView(R.layout.add_dialog, false)
                 .title(R.string.add_sound)
-                .positiveText(R.string.set)
+                .positiveText(R.string.import_text)
                 .positiveColor(dialogColors[0])
                 .onPositive((dialog, which) -> {
                     String name = mAddSoundEditText.getText().toString().trim();
                     if (!name.equals("")) {
-                        soundName = name;
+                        soundName = StrUtils.formatFilename(name);
                         showBeatDialog();
                     }
                 })
@@ -787,6 +891,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         mAddSoundEditText = soundDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddSoundEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_SOUND_NAME)});
         mAddSoundEditText.setText(soundName);
+        mAddSoundEditText.setHint(R.string.name);
         mAddSoundEditText.requestFocus();
         mAddSoundEditText.addTextChangedListener(new TextWatcher() {
             @Override

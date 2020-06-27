@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -14,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,14 +33,13 @@ import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DateTimeUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.adapters.PhotoAdapter;
 import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -55,6 +52,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public static final String ARG_NOTE_ID = "note_id";
     public static final String ARG_UPDATE = "need_update";
 
+    private int positionStart = 0;
+
     private boolean isImporting;
 
     private PhotoBottomSheetDialog mPhotoBottomSheet;
@@ -63,6 +62,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private PhotoAdapter adapter;
     private LinearLayout emptyView;
     private LinearLayout mMaterialTitle;
+    private LinearLayout mSortLayout;
     private RelativeLayout mSortLayoutContent;
     private ObjectAnimator mSortDirectionAnimation;
 
@@ -71,7 +71,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     private MaterialDialog loadingDialog;
 
-    private String importImagePath;
+    private String imageImportPath;
     private String noteId;
 
     private boolean mIsSortDown;
@@ -79,6 +79,10 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     private DatabaseHelper localDatabase;
     private MenuItem mRemoveItem;
+
+    private File imageImportFile;
+    private Bitmap imageImportBitmap;
+    private String imageImportLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,12 +105,15 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         mEmptyViewImage.setImageResource(R.drawable.m_insert_photo_black_24dp);
         mEmptyViewText.setText(R.string.empty_photos);
 
+        mMaterialTitle = findViewById(R.id.materials_title);
+
         if (noteId == null) noteId = getIntent().getStringExtra(ARG_NOTE_ID);
         if (noteId.equals(THEORY_PREFIX)) {
             setTitle(R.string.theory);
             findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
         } else {
-            setTitle(R.string.photos);
+            setTitle(R.string.photo);
+            mMaterialTitle.setVisibility(View.GONE);
         }
 
         mPhotoBottomSheet = new PhotoBottomSheetDialog(this);
@@ -115,15 +122,15 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             Note.setPhotoActiveSortMode(R.id.sort_by_date);
 
         mPhotoRecyclerView = findViewById(R.id.photos_list);
-        mMaterialTitle = findViewById(R.id.materials_title);
 
         localDatabase = new DatabaseHelper(this);
 
-        updateData();
+        mPhotoList = new ArrayList<>();
+
         adapter = new PhotoAdapter(this, mPhotoList);
         mPhotoRecyclerView.setAdapter(adapter);
 
-        mSortLayoutContent = findViewById(R.id.sort_content);
+        mSortLayout = findViewById(R.id.sort_layout);
         mSortOrder = findViewById(R.id.sort_order);
 
         PopupMenu popup = new PopupMenu(mSortOrder.getContext(), mSortOrder, Gravity.START);
@@ -133,6 +140,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
         mSortOrder.setText((popup.getMenu().findItem(Note.getPhotoActiveSortMode())).getTitle());
 
+        mSortLayoutContent = findViewById(R.id.sort_content);
         mSortLayoutContent.setOnClickListener(v -> {
             popup.setOnMenuItemClickListener(item -> {
                 // Do nothing when same sort is selected.
@@ -188,7 +196,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         mRemoveItem = menu.findItem(R.id.menu_remove);
         menu.findItem(R.id.menu_restore).setVisible(false);
         MenuCompat.setGroupDividerEnabled(menu, true);
-        if (checkEmptyView()) sortItems();
+        updateData();
         return true;
     }
 
@@ -220,12 +228,12 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
     }
 
-    public boolean checkEmptyView() {
-        if (adapter.getItemCount() == 0) {
+    public boolean updateEmptyView() {
+        if (adapter == null || adapter.getItemCount() == 0) {
             mRemoveItem.setEnabled(false);
-            mSortLayoutContent.setVisibility(View.GONE);
+            mSortLayout.setVisibility(View.INVISIBLE);
             if (noteId.equals(THEORY_PREFIX)) {
-                mMaterialTitle.setVisibility(View.GONE);
+                mMaterialTitle.setVisibility(View.INVISIBLE);
                 return false;
             }
             mPhotoRecyclerView.setVisibility(View.GONE);
@@ -235,7 +243,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             mPhotoRecyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             mRemoveItem.setEnabled(true);
-            mSortLayoutContent.setVisibility(View.VISIBLE);
+            mSortLayout.setVisibility(View.VISIBLE);
             if (noteId.equals(THEORY_PREFIX))
                 mMaterialTitle.setVisibility(View.VISIBLE);
             return true;
@@ -247,7 +255,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     }
 
     private void showPhotoSheet() {
-        mPhotoBottomSheet.show(getSupportFragmentManager());
+        if (!mPhotoBottomSheet.isAdded()) mPhotoBottomSheet.show(getSupportFragmentManager());
     }
 
     private void showRemoveDialog() {
@@ -259,10 +267,38 @@ public class PhotosActivity extends ThemedAppCompatActivity {
                 .negativeText(R.string.no).show();
     }
 
-
     private void updateData() {
-        Cursor mImageData = localDatabase.getImageData(noteId);
-        if (mImageData == null) return;
+        new UpdateDataThread().start();
+    }
+
+    private void updateAdapter() {
+        adapter.updateData(mPhotoList, positionStart);
+        if (updateEmptyView()) sortItems();
+        if (loadingDialog != null) loadingDialog.dismiss();
+    }
+
+    private Handler mUpdateHandler = new Handler(msg -> {
+        if (msg.what == ImportUtils.RESULT_OK) {
+            updateAdapter();
+        } else if (msg.what == ImportUtils.DATABASE_ERROR) {
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+        }
+        return true;
+    });
+
+    private class UpdateDataThread extends Thread {
+        public void run() {
+            Cursor mImageData = localDatabase.getImageData(noteId);
+            if (mImageData == null || mImageData.getCount() == 0) {
+                mSortLayout.setVisibility(View.INVISIBLE);
+            } else {
+                updatePhotos(mImageData);
+            }
+            mUpdateHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+        }
+    }
+
+    private void updatePhotos(Cursor mImageData) {
         mPhotoList = new ArrayList<>();
         while (mImageData.moveToNext()) {
             String id = mImageData.getString(0);
@@ -274,34 +310,24 @@ public class PhotosActivity extends ThemedAppCompatActivity {
                 mPhotoList.add(photo);
             } else {
                 File imageFile = new File(photo.getUri());
-                if (imageFile.exists())
-                    imageFile.delete();
-                DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
-                boolean isRemoved = localDatabase.removeImageData(id);
-                if (!isRemoved) {
-                    DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
-                }
+                if (imageFile.exists()) imageFile.delete();
+                localDatabase.removeImageData(id);
+                mUpdateHandler.sendEmptyMessage(ImportUtils.DATABASE_ERROR);
             }
         }
-        if (adapter != null) adapter.updateData(mPhotoList);
     }
 
-    public void insertPhoto(String uri) {
-        if (uri == null) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.photo_error));
-            return;
-        }
+    private int insertPhoto() {
+        if (imageImportPath == null)
+            return ImportUtils.URI_ERROR;
 
         String date = DateTimeUtils.getDateTextString(this, Calendar.getInstance());
-        boolean isInserted = localDatabase.insertImageData(noteId, "", uri, date);
+        boolean isInserted = localDatabase.insertImageData(noteId, "", imageImportPath, date);
         if (!isInserted) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
-            File imageFile = new File(uri);
-            if (imageFile.exists()) imageFile.delete();
+            if (imageImportFile.exists()) imageImportFile.delete();
+            return ImportUtils.DATABASE_ERROR;
         }
-
-        updateData();
-        if (checkEmptyView()) sortItems();
+        return ImportUtils.RESULT_OK;
     }
 
     public void renamePhoto(String id, String name) {
@@ -313,35 +339,27 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
     }
 
-    public boolean removePhoto(String id) {
-        if (adapter.getItemCount() == 0) return false;
-        boolean isRemovedFile = false;
-        boolean isRemoved = false;
+    public void removePhoto(String id) {
+        if (adapter.getItemCount() == 0) return;
         if (id == null) {
-            isRemovedFile = FileUtils.removeFiles(new File(this.getCacheDir() + NOTES_DIR + noteId));
-            if (isRemovedFile) {
-                isRemoved = localDatabase.removeAllImageData(noteId);
-                if (isRemoved) {
-                    adapter.clearData();
-                    checkEmptyView();
+            adapter.clearData();
+            updateEmptyView();
+        }
+        File cacheDir = getCacheDir();
+        new Thread() {
+            @Override
+            public void run() {
+                if (id == null) {
+                    FileUtils.removeDirectory(new File(cacheDir + NOTES_DIR + noteId));
+                    localDatabase.removeAllImageData(noteId);
+                } else {
+                    String path = localDatabase.getImageUri(id);
+                    File file = new File(path);
+                    if (file.exists()) file.delete();
+                    localDatabase.removeImageData(id);
                 }
             }
-        } else {
-            String path = localDatabase.getImageUri(id);
-            if (path != null)
-                isRemovedFile = FileUtils.removeFile(path);
-            if (isRemovedFile) {
-                isRemoved = localDatabase.removeImageData(id);
-            }
-        }
-        if (!isRemovedFile) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
-            return false;
-        } else if (!isRemoved) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
-            return false;
-        }
-        return true;
+        }.start();
     }
 
     private void setSortDirection() {
@@ -392,9 +410,19 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     }
 
     public void importPhoto(File imageFile, Bitmap imageBitmap, String imageLink) {
-        importImagePath = imageFile.getPath();
-        new ImportPhotosThread(imageFile, imageBitmap, imageLink).start();
+        imageImportFile = imageFile;
+        imageImportBitmap = imageBitmap;
+        imageImportLink = imageLink;
+        imageImportPath = imageFile.getPath();
+        new ImportPhotosThread().start();
         showLoadingDialog();
+    }
+
+    private void clearImportData() {
+        imageImportPath = null;
+        imageImportFile = null;
+        imageImportBitmap = null;
+        imageImportLink = null;
     }
 
     public void showShareBottomSheet(int position) {
@@ -409,63 +437,57 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
             public void onFinish() {
                 if (isImporting)
-                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_note, R.string.importing);
+                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_text, R.string.importing);
             }
         }.start();
     }
 
     private Handler mImportHandler = new Handler(msg -> {
-        if (msg.what == 0) {
-            insertPhoto(importImagePath);
-            importImagePath = null;
-        } else if (msg.what == 1) {
+        isImporting = false;
+
+        if (msg.what == ImportUtils.RESULT_OK) {
+            positionStart = mPhotoList.size();
+            updateData();
+        } else if (msg.what == ImportUtils.FILE_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
-        } else if (msg.what == 2) {
+        } else if (msg.what == ImportUtils.LINK_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.link_error));
+        } else if (msg.what == ImportUtils.DATABASE_ERROR) {
+            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+        } else if (msg.what == ImportUtils.URI_ERROR) {
+            DisplayUtils.showToast(this, getResources().getString(R.string.photo_error));
         }
-        if (loadingDialog != null) loadingDialog.dismiss();
+        clearImportData();
         return true;
     });
 
     private class ImportPhotosThread extends Thread {
-        File imageFile;
-        Bitmap imageBitmap;
-        String imageLink;
-
-        private ImportPhotosThread(File imageFile, Bitmap imageBitmap, String imageLink) {
-            this.imageFile = imageFile;
-            this.imageBitmap = imageBitmap;
-            this.imageLink = imageLink;
-        }
 
         public void run() {
             isImporting = true;
-            if (imageLink != null) {
-                boolean isDownloaded = false;
-                try {
-                    if (URLUtil.isValidUrl(imageLink)) {
-                        URL imageUrl = new URL(imageLink);
-                        imageBitmap = BitmapFactory.decodeStream(imageUrl.openStream());
-                        if (imageBitmap != null)
-                            isDownloaded = true;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (!isDownloaded)
-                    mImportHandler.sendEmptyMessage(2);
+
+            if (imageImportBitmap == null)
+                imageImportBitmap = ImportUtils.getLinkImage(imageImportLink);
+            if (imageImportBitmap == null) {
+                mImportHandler.sendEmptyMessage(ImportUtils.LINK_ERROR);
+                return;
             }
-            if (imageBitmap != null) {
-                try {
-                    FileUtils.createPhotoFile(imageBitmap, imageFile);
-                    mImportHandler.sendEmptyMessage(0);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mImportHandler.sendEmptyMessage(1);
-                }
+
+            int fileResultCode = ImportUtils.importPhoto(imageImportFile, imageImportBitmap);
+            if (fileResultCode != ImportUtils.RESULT_OK) {
+                mImportHandler.sendEmptyMessage(fileResultCode);
+                return;
             }
-            isImporting = false;
+
+            int dataResultCode = insertPhoto();
+            if (dataResultCode != ImportUtils.RESULT_OK) {
+                mImportHandler.sendEmptyMessage(dataResultCode);
+                return;
+            }
+
+            mImportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
         }
+
     }
 
 }

@@ -50,11 +50,21 @@
     </string-array>
 
     <string-array name="array_export_modes">
-        <item>Plaintext</item>
-        <item>Html</item>
-        <item>Photo</item>
-        <item>Zip</item>
-        <item>Password</item>
+        <item>@string/json</item>
+        <item>@string/html</item>
+        <item>@string/text</item>
+        <item>@string/photo</item>
+        <item>@string/zip</item>
+    </string-array>
+
+    <string-array name="import_types">
+        <item>@string/import_json</item>
+        <item>@string/import_plaintext</item>
+    </string-array>
+
+    <string-array name="import_modes">
+        <item>@string/import_single</item>
+        <item>@string/import_multiple</item>
     </string-array>
 
     <string-array name="metronome_sounds">

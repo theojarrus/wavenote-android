@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         app:contentInsetStart="@dimen/toolbar_title_keyline"
         app:popupTheme="?attr/toolbarPopupTheme"
-        app:theme="@style/Widget.AppCompat.SearchView.ActionBar"
+        android:theme="@style/Widget.AppCompat.SearchView.ActionBar"
         style="@style/ToolbarTheme">
     </androidx.appcompat.widget.Toolbar>
 

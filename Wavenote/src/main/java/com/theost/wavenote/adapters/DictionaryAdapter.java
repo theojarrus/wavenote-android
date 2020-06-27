@@ -20,8 +20,6 @@ import java.util.List;
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.ViewHolder> {
 
-    private final static int FADE_DURATION = 1500;
-
     private List<Keyword> mData;
     private DictionaryActivity mActivity;
     private LayoutInflater mInflater;
@@ -53,11 +51,13 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
         });
 
         holder.mTrashButton.setOnClickListener(view -> {
-            if (mActivity.removeKeyword(mData.get(position).getId(), mData.get(position).getWord())) {
+            boolean isRemoved = mActivity.removeKeyword(mData.get(position).getId(), mData.get(position).getWord());
+            if (isRemoved) {
                 mData.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
-                mActivity.checkEmptyView();
+                if (mData.size() == 0) notifyDataSetChanged();
+                mActivity.updateEmptyView();
             }
         });
     }
@@ -88,7 +88,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
 
     public void clearData() {
         mData.clear();
-        notifyItemRangeChanged(0, mData.size());
+        notifyDataSetChanged();
     }
 
     public void sortByDate(boolean isSortReversed) {

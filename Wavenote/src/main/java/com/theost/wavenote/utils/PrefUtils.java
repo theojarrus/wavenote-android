@@ -53,8 +53,8 @@ public class PrefUtils {
     // boolean, set on first launch
     public static final String PREF_FIRST_LAUNCH = "pref_key_first_launch";
 
-    // boolean, determines export dir path
-    public static final String PREF_EXPORT_DIR = "pref_key_export_dir";
+    // boolean, determines note list style
+    public static final String PREF_CONDENSED = "pref_key_condensed_note_list";
 
     // boolean, set to require an account to access the app
     public static final String PREF_ACCOUNT_REQUIRED = "pref_key_account_required";
@@ -65,11 +65,14 @@ public class PrefUtils {
     // boolean, allow notes to preview markdown
     public static final String PREF_MARKDOWN_ENABLED = "pref_key_markdown_enabled";
 
+    // boolean, determines if the theme was ever changed
+    public static final String PREF_THEME_MODIFIED = "pref_theme_modified";
+
     // string. determines theme to use
     public static final String PREF_THEME = "pref_key_theme";
 
-    // boolean, determines if the theme was ever changed
-    public static final String PREF_THEME_MODIFIED = "pref_theme_modified";
+    // string. determines build version
+    public static final String PREF_BUILD = "pref_key_build";
 
     // string. WordPress.com access token
     public static final String PREF_WP_TOKEN = "pref_key_wp_token";
@@ -79,6 +82,24 @@ public class PrefUtils {
 
     // string. Store notes linked to note widget instances.
     public static final String PREF_NOTE_WIDGET_NOTE = "pref_key_note_widget_";
+
+    // string. determines export dir path
+    public static final String PREF_EXPORT_DIR = "pref_key_export_dir";
+
+    // button for import
+    public static final String PREF_IMPORT_NOTES = "pref_key_import_notes";
+
+    // button for export
+    public static final String PREF_EXPORT_NOTES = "pref_key_export_notes";
+
+    // boolean, determines authenticate
+    public static final String PREF_AUTHENTICATE = "pref_key_authenticate";
+
+    // button for dictionary
+    public static final String PREF_DICTIONARY = "pref_key_dictionary";
+
+    // button for about activity
+    public static final String PREF_ABOUT = "pref_key_about";
 
     public static final int ALPHABETICAL_ASCENDING = 4;
     public static final int ALPHABETICAL_DESCENDING = 5;

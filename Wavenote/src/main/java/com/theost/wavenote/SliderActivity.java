@@ -86,7 +86,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mPhotoList = (ArrayList) getIntent().getParcelableArrayListExtra(ARG_PHOTOS);
+        mPhotoList = new ArrayList<>(getIntent().getParcelableArrayListExtra(ARG_PHOTOS));
         currentPosition = getIntent().getIntExtra(ARG_POSITION, 0);
         noteId = getIntent().getStringExtra(PhotosActivity.ARG_NOTE_ID);
 
@@ -203,7 +203,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
         setTitle(currentPosition + 1 + " " + getResources().getString(R.string.of) + " " + adapter.getCount());
         String photoName = mPhotoList.get(currentPosition).getName();
         if (photoName.equals(""))
-            photoName = getResources().getString(R.string.photos);
+            photoName = getResources().getString(R.string.photo);
         mNameTextView.setText(photoName);
         mDateTextView.setText(mPhotoList.get(currentPosition).getDate());
     }
@@ -235,7 +235,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
     private void showLoadingDialog() {
         SliderActivity context = this;
-        new CountDownTimer(200, 1000) {
+        new CountDownTimer(200, 200) {
             public void onTick(long millisUntilFinished) {
             }
 

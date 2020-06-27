@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -44,5 +45,13 @@ public class DateTimeUtils {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormat.format(date.getTime());
+    }
+
+    public static Calendar getDateCalendar(String json) throws ParseException {
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
+        Calendar date = Calendar.getInstance();
+        date.setTime(dateFormat.parse(json));
+        return date;
     }
 }

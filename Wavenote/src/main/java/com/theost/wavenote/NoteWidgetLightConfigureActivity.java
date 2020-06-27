@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -32,7 +31,6 @@ import com.simperium.client.Bucket;
 import com.simperium.client.Bucket.ObjectCursor;
 import com.simperium.client.Query;
 import com.simperium.client.User;
-import com.theost.wavenote.utils.WidgetUtils;
 
 public class NoteWidgetLightConfigureActivity extends AppCompatActivity {
     private AppWidgetManager mWidgetManager;

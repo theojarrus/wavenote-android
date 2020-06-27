@@ -80,7 +80,7 @@
     <string name="log_in_use_widget">Войдите, чтобы использовать виджет</string>
     <string name="log_in_add_widget">Войдите, чтобы добавить виджет</string>
     <string name="select_note">Выбрать уведомление</string>
-    <string name="note_not_found">Уведомление не найдено</string>
+    <string name="note_not_found">Заметка не найдена</string>
     <string name="loading_note">Загрузка уведомления…</string>
     <string name="passcode_summary">Нельзя делать снимки экрана, если включена блокировка с помощью пароля</string>
     <string name="all_notes">Все заметки</string>
@@ -121,7 +121,7 @@
     <string name="publish_error">Не удалось создать ссылку…</string>
     <string name="unpublish">Удалить общедоступную ссылку</string>
     <string name="no_browser_available">\"Не удалось открыть веб-сайт. Браузер недоступен\".</string>
-    <string name="rate_us">Оцените приложение</string>
+    <string name="rate_us">Оценить приложение</string>
     <string name="about_play_store">Магазин Google Play</string>
     <string name="about">О приложении Wavenote</string>
     <string name="markdown_show">Показать Markdown</string>
@@ -133,7 +133,7 @@
     <string name="error_history">Не удалось загрузить историю.</string>
     <string name="history">История</string>
     <string name="restore">Восстановить</string>
-    <string name="edit">Правка</string>
+    <string name="edit">Редактирование</string>
     <string name="tags">Метки</string>
     <string name="noted">Записано</string>
     <string name="font_size_extra_large">Очень большой</string>
@@ -202,8 +202,8 @@
     <string name="tag_hint">Добавить метку…</string>
     <string name="detect_chords">Найти аккорды</string>
     <string name="detect_keywords">Найти ключевые слова</string>
-    <string name="about_somewords">Приложение Wavenote создано с любовью Theo и разработчиками Automattic. Исходный код доступен на GitHub.</string>
-    <string name="support_on_patreon">Поддержать на Patreon</string>
+    <string name="about_somewords">Приложение Wavenote создано с любовью Theo и разработчиками Automattic. Исходный код доступен на GitHub</string>
+    <string name="donate_developer">Купить разработчику кофе</string>
     <string name="theory">Теория</string>
     <string name="empty_photos">Добавьте ваше первое фото</string>
     <string name="empty_dictionary">Добавьте ваше первое ключевое слово</string>
@@ -211,10 +211,10 @@
     <string name="empty_chords">Не найдено аккордов</string>
     <string name="simperium_dialog_message_password_login">Пароль должен быть не менее %1$d символов, и не может содержать символы новой строки, пробелы и символы табуляции.</string>
     <string name="music_studio">Студия</string>
-    <string name="photos">Фото</string>
+    <string name="photo">Фото</string>
     <string name="text_color">Цвет текста</string>
     <string name="export">Экспорт</string>
-    <string name="import_note">Импорт</string>
+    <string name="import_text">Импорт</string>
     <string name="text_style">Стиль</string>
     <string name="text_bold">Жирный</string>
     <string name="text_stroke">Контур</string>
@@ -250,12 +250,10 @@
     <string name="choose_folder">Выбрать папку</string>
     <string name="dialog_success">Успешно</string>
     <string name="dialog_failure">Ошибка</string>
-    <string name="export_error">Возникли проблемы с экспортом</string>
+    <string name="export_failure">Возникли проблемы с экспортом</string>
     <string name="exporting_error">Подождите немного, уже экспортируется</string>
     <string name="export_succesful">Успешно экспортировано</string>
     <string name="adjust_record">Калибровать</string>
-    <string name="set">Применить</string>
-    <string name="photo_found_error">Фото не найдены</string>
     <string name="metronome">Метроном</string>
     <string name="select_tone">Выберите тон</string>
     <string name="select_beat">Выберите размер</string>
@@ -286,5 +284,23 @@
     <string name="link_error">Некорректная ссылка</string>
     <string name="get">Получить</string>
     <string name="editing">Редактирование… Это может занять некоторе время</string>
+    <string name="text">Текст</string>
+    <string name="json">Json (для импорта)</string>
+    <string name="zip">Zip-архив</string>
+    <string name="note">Заметка</string>
+    <string name="hint_password">Пароль (необязательно)</string>
+    <string name="choose_samples">Выберите сэмплы</string>
+    <string name="data">Данные</string>
+    <string name="import_notes">Импорт заметок</string>
+    <string name="export_notes">Экспорт заметок</string>
+    <string name="import_notification">Для корректного импорта zip-архивов и медиа-файлов не меняйте структуру файлов после экспорта</string>
+    <string name="import_single">Одна</string>
+    <string name="import_multiple">Несколько</string>
+    <string name="encrypted">Зашифровано</string>
+    <string name="extracting">Извлечение… Это может занять некоторе время</string>
+    <string name="developer_options">Для разработчиков</string>
+    <string name="notes_not_found">Заметки не найдены</string>
+    <string name="import_succesful">Готово! Успешно импортировано: %d</string>
+    <string name="import_failure">Импортировано с ошибками: %d</string>
 
 </resources>

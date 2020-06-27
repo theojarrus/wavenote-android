@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.adapters.ChordAdapter;
+import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 
@@ -130,10 +132,10 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
         mInstrumentInputView = findViewById(R.id.instrument);
         ViewUtils.removeFocus(mInstrumentInputView);
+        mInstrumentInputView.clearFocus();
         mInstrumentInputView.setText(activeInstrument);
         ViewUtils.disbaleInput(mInstrumentInputView);
         ViewUtils.updateDropdown(this, mInstrumentInputView, mInstrumentList);
-        ViewUtils.restoreFocus(mInstrumentInputView);
 
         if (isAllChords) {
             TextInputLayout mInstrumentLayout = findViewById(R.id.instrument_layout);
@@ -143,11 +145,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         if (mChordsList.size() < itemsInline) itemsInline = mChordsList.size();
 
         mColumnsInputView = findViewById(R.id.columns);
+        mColumnsInputView.clearFocus();
         ViewUtils.removeFocus(mColumnsInputView);
         mColumnsInputView.setText(Integer.toString(itemsInline));
         ViewUtils.disbaleInput(mColumnsInputView);
         ViewUtils.updateDropdown(this, mColumnsInputView, mColumnList);
-        ViewUtils.restoreFocus(mColumnsInputView);
 
         mColumnsInputView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -191,6 +193,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             }
         });
 
+        ViewUtils.restoreFocus(mInstrumentInputView);
+        ViewUtils.restoreFocus(mColumnsInputView);
+
+        mChordsDrawable = new ArrayList<>();
+
         updateItemSize();
         updateDrawables();
         adapter = new ChordAdapter(this, mChordsDrawable, itemWidth);
@@ -230,7 +237,15 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         updateItemSize();
     }
 
+    private void updateAdapter() {
+        if (adapter != null) adapter.updateItemDrawable(mChordsDrawable);
+    }
+
     private void updateDrawables() {
+        new UpdateDrawablesThread().start();
+    }
+
+    private void loadDrawables() {
         mChordsDrawable = new ArrayList<>();
         for (String i : mChordsList) {
             if ((i.length() > 1) && ((i.substring(1, 2).equals("#")) || (i.substring(1, 2).equals("b")))) {
@@ -245,7 +260,20 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             int id = getResources().getIdentifier(("mu_" + i.replace("#", "s") + "_" + activeInstrument).toLowerCase(), "drawable", this.getPackageName());
             mChordsDrawable.add(ContextCompat.getDrawable(this, id));
         }
-        if (adapter != null) adapter.updateItemDrawable(mChordsDrawable);
+    }
+
+    private Handler mUpdateHandler = new Handler(msg -> {
+        if (msg.what == ImportUtils.RESULT_OK) {
+            updateAdapter();
+        }
+        return true;
+    });
+
+    private class UpdateDrawablesThread extends Thread {
+        public void run() {
+            loadDrawables();
+            mUpdateHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+        }
     }
 
     private void updateItemSize() {

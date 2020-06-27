@@ -9,7 +9,7 @@
     <item
         android:id="@+id/menu_import"
         android:enabled="true"
-        android:title="@string/import_note"
+        android:title="@string/import_text"
         app:showAsAction="never" />
 
     <item

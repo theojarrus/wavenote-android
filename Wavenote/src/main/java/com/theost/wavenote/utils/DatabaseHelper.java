@@ -51,6 +51,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
+    }
+
     public boolean insertImageData(String noteId, String name, String uri, String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -102,16 +108,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean removeImageData(String id) {
+    public void removeImageData(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         long result = db.delete(NAME_IMAGES_TABLE, COL_0 + "=" + id, null);
-        return result != -1;
     }
 
-    public boolean removeAllImageData(String noteId) {
+    public void removeAllImageData(String noteId) {
         SQLiteDatabase db = this.getReadableDatabase();
         long result = db.delete(NAME_IMAGES_TABLE, COL_1_IMAGES + "='" + noteId + "'", null);
-        return result != -1;
     }
 
     public boolean insertDictionaryData(String keyword, String type) {

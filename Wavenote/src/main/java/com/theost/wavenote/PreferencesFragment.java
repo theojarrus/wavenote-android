@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.text.InputType;
 
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -15,18 +18,33 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
+import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Preferences;
 import com.theost.wavenote.utils.CrashUtils;
+import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.ExportUtils;
+import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.ImportUtils;
+import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PrefUtils;
+import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.WidgetUtils;
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.User;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,9 +53,33 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         Simperium.OnUserCreatedListener {
 
     private static final String WEB_APP_URL = "https://app.simplenote.com";
-    private static final int REQUEST_DIR = 0;
+    private static final int IMPORT_REQUEST = 0;
+    private static final int EXPORT_REQUEST = 1;
 
     private Bucket<Preferences> mPreferencesBucket;
+    private Bucket<Note> mNotesBucket;
+
+    private CharSequence[] exportModes;
+    private MaterialDialog mPasswordDialog;
+    private MaterialDialog loadingDialog;
+    private String resultDialogMessage;
+    private String exportPassword;
+    private String exportPath;
+
+    private String[] importExtensions;
+    private String importMode;
+    private String importQuantity;
+    private String importPassword;
+    private File extractedDirectory;
+    private File importFile;
+
+    private int importCount;
+
+    private boolean isImportZip;
+
+    private boolean isImporting;
+    private boolean isExporting;
+    private boolean isUnzipping;
 
     public PreferencesFragment() {
         // Required empty public constructor
@@ -52,11 +94,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Preference authenticatePreference = findPreference("pref_key_authenticate");
+        Preference authenticatePreference = findPreference(PrefUtils.PREF_AUTHENTICATE);
         Wavenote currentApp = (Wavenote) getActivity().getApplication();
         Simperium simperium = currentApp.getSimperium();
         simperium.setUserStatusChangeListener(this);
         simperium.setOnUserCreatedListener(this);
+        mNotesBucket = currentApp.getNotesBucket();
         mPreferencesBucket = currentApp.getPreferencesBucket();
         mPreferencesBucket.start();
 
@@ -82,13 +125,30 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             return true;
         });
 
-        findPreference("pref_key_dictionary").setOnPreferenceClickListener(preference -> {
+        findPreference(PrefUtils.PREF_DICTIONARY).setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), DictionaryActivity.class));
             return true;
         });
 
-        findPreference("pref_key_about").setOnPreferenceClickListener(preference -> {
+        findPreference(PrefUtils.PREF_ABOUT).setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), AboutActivity.class));
+            return true;
+        });
+
+        findPreference(PrefUtils.PREF_EXPORT_DIR).setOnPreferenceClickListener(preference -> {
+            if (PermissionUtils.requestPermissions(getActivity())) showFolderDialog();
+            return true;
+        });
+
+        findPreference(PrefUtils.PREF_IMPORT_NOTES).setOnPreferenceClickListener(preference -> {
+            if (PermissionUtils.requestPermissions(getActivity()) && !isExporting && !isImporting && !isUnzipping)
+                showImportDialog();
+            return true;
+        });
+
+        findPreference(PrefUtils.PREF_EXPORT_NOTES).setOnPreferenceClickListener(preference -> {
+            if (PermissionUtils.requestPermissions(getActivity()) && !isExporting && !isImporting && !isUnzipping)
+                showExportDialog();
             return true;
         });
 
@@ -118,10 +178,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             return true;
         });
 
-        Preference versionPref = findPreference("pref_key_build");
+        updateExportDir();
+
+        Preference versionPref = findPreference(PrefUtils.PREF_BUILD);
         versionPref.setSummary(PrefUtils.versionInfo());
 
-        SwitchPreferenceCompat switchPreference = findPreference("pref_key_condensed_note_list");
+        SwitchPreferenceCompat switchPreference = findPreference(PrefUtils.PREF_CONDENSED);
         switchPreference.setOnPreferenceChangeListener((preference, o) -> true);
 
     }
@@ -185,7 +247,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         if (isAdded() && status == User.Status.AUTHORIZED) {
             // User signed in
             getActivity().runOnUiThread(() -> {
-                Preference authenticatePreference = findPreference("pref_key_authenticate");
+                Preference authenticatePreference = findPreference(PrefUtils.PREF_AUTHENTICATE);
                 authenticatePreference.setTitle(R.string.log_out);
             });
 
@@ -235,4 +297,297 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             }
         }
     }
+
+    private void updateExportDir() {
+        exportPath = PrefUtils.getStringPref(getContext(), PrefUtils.PREF_EXPORT_DIR);
+        findPreference(PrefUtils.PREF_EXPORT_DIR).setSummary(exportPath);
+    }
+
+    public void changeExportFolder(File folder) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+        editor.putString(PrefUtils.PREF_EXPORT_DIR, folder.getAbsolutePath());
+        editor.apply();
+        updateExportDir();
+    }
+
+    private void showFolderDialog() {
+        new FolderChooserDialog.Builder(getActivity())
+                .initialPath(exportPath)
+                .chooseButton(R.string.choose_folder)
+                .show(getActivity());
+    }
+
+    private void showLoadingDialog(int titleId, int contentId) {
+        new CountDownTimer(200, 200) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (isExporting || isImporting || isUnzipping)
+                    loadingDialog = DisplayUtils.showLoadingDialog(getContext(), titleId, contentId);
+            }
+        }.start();
+    }
+
+    private void showResultDialog(int request) {
+        int title = 0;
+        if (request == IMPORT_REQUEST) {
+            title = R.string.import_notes;
+        } else if (request == EXPORT_REQUEST) {
+            title = R.string.export_notes;
+            DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.path) + ": " + exportPath);
+        }
+        new MaterialDialog.Builder(getContext())
+                .title(title)
+                .content(resultDialogMessage)
+                .positiveText(android.R.string.ok)
+                .show();
+    }
+
+    private void showImportDialog() {
+        importMode = null;
+        importQuantity = null;
+        importExtensions = new String[]{FileUtils.ZIP_FORMAT, null};
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.import_notes)
+                .content(R.string.import_notification)
+                .positiveText(R.string.import_text)
+                .onPositive((dialog, which) -> showChoiceDialog())
+                .negativeText(R.string.cancel).show();
+    }
+
+    private void showChoiceDialog() {
+        int choiceItems;
+        if (importMode == null) {
+            choiceItems = R.array.import_types;
+        } else {
+            choiceItems = R.array.import_modes;
+        }
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.import_notes)
+                .items(choiceItems)
+                .itemsCallback((dialog, view, which, text) -> {
+                    String selected = text.toString();
+                    if (selected.equals(getResources().getString(R.string.import_plaintext))) {
+                        importMode = selected;
+                        importQuantity = getResources().getString(R.string.import_single);
+                        importExtensions[1] = FileUtils.TEXT_FORMAT;
+                    }
+                    if (importMode == null) {
+                        importMode = selected;
+                        showChoiceDialog();
+                    } else {
+                        if (importQuantity == null) {
+                            importQuantity = selected;
+                            importExtensions[1] = FileUtils.JSON_FORMAT;
+                        }
+                        showFileDialog();
+                    }
+                })
+                .show();
+    }
+
+    public void selectImportFile(File file) {
+        importFile = file;
+        isImportZip = StrUtils.getFileExtention(file.getName()).equals(FileUtils.ZIP_FORMAT);
+        if (isImportZip) {
+            extractZip();
+        } else {
+            importNotes();
+        }
+    }
+
+    private void showFileDialog() {
+        new FileChooserDialog.Builder(getActivity())
+                .initialPath(exportPath)
+                .extensionsFilter(importExtensions)
+                .show(getActivity());
+    }
+
+    private void extractZip() {
+        new ExtractZipThread().start();
+        showLoadingDialog(R.string.import_text, R.string.extracting);
+    }
+
+    private Handler mExtractHandler = new Handler(msg -> {
+        if (loadingDialog != null) loadingDialog.dismiss();
+        if (msg.what == ImportUtils.RESULT_OK) {
+            importNotes();
+        } else {
+            if (msg.what == ImportUtils.FILE_ERROR) {
+                DisplayUtils.showToast(getContext(), getResources().getString(R.string.file_error));
+            } else if (msg.what == ImportUtils.PASSWORD_ERROR) {
+                showPasswordDialog(IMPORT_REQUEST);
+            }
+        }
+        return true;
+    });
+
+    private class ExtractZipThread extends Thread {
+        @Override
+        public void run() {
+            isUnzipping = true;
+            boolean isExtracted = false;
+            try {
+                ZipFile zipFile = null;
+                if (new ZipFile(importFile).isEncrypted()) {
+                    if (importPassword != null)
+                        zipFile = new ZipFile(importFile, importPassword.toCharArray());
+                    if (importPassword == null || !FileUtils.verifyZip(zipFile)) {
+                        isUnzipping = false;
+                        mExtractHandler.sendEmptyMessage(ImportUtils.PASSWORD_ERROR);
+                        return;
+                    }
+                } else {
+                    zipFile = new ZipFile(importFile);
+                }
+                extractedDirectory = new File(importFile.getParent(), StrUtils.getFileName(importFile.getName()));
+                if (extractedDirectory.exists()) FileUtils.removeDirectory(extractedDirectory);
+                zipFile.extractAll(importFile.getParent());
+                importFile = extractedDirectory;
+                isExtracted = true;
+            } catch (ZipException e) {
+                e.printStackTrace();
+            }
+            if (!isExtracted) {
+                mExtractHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
+            } else {
+                mExtractHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+            }
+            isUnzipping = false;
+        }
+    }
+
+    private void importNotes() {
+        new ImportThread().start();
+        showLoadingDialog(R.string.import_notes, R.string.wait_a_bit);
+    }
+
+    private Handler mImportHandler = new Handler(msg -> {
+        if (loadingDialog != null) loadingDialog.dismiss();
+        if (msg.what == ImportUtils.RESULT_OK) {
+            resultDialogMessage = String.format(getResources().getString(R.string.import_succesful), importCount);
+        } else {
+            resultDialogMessage = String.format(getResources().getString(R.string.import_failure), importCount);
+        }
+        showResultDialog(IMPORT_REQUEST);
+        return true;
+    });
+
+    private class ImportThread extends Thread {
+        @Override
+        public void run() {
+            isImporting = true;
+
+            int[] importResult = {ImportUtils.FILE_ERROR, 0};
+
+            if (importMode.equals(getResources().getString(R.string.import_plaintext))) {
+                importResult = ImportUtils.importPlaintext(getContext(), mNotesBucket, importFile);
+            } else if (importMode.equals(getResources().getString(R.string.import_json))) {
+                importResult = ImportUtils.importJson(getContext(), mNotesBucket, importFile, importQuantity);
+            }
+
+            importCount = importResult[1];
+
+            if (isImportZip) FileUtils.removeDirectory(extractedDirectory);
+
+            if (importResult[0] == ImportUtils.RESULT_OK) {
+                mImportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+            } else {
+                mImportHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
+            }
+
+            isImporting = false;
+        }
+    }
+
+    private void showExportDialog() {
+        List<String> exportModes = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.array_export_modes)));
+        File exportDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR);
+        if (mNotesBucket.count() != 0) {
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.export_notes)
+                    .positiveText(R.string.export)
+                    .negativeText(R.string.cancel)
+                    .items(exportModes)
+                    .itemsCallbackMultiChoice(null, (dialog, which, modes) -> {
+                        if (modes.length != 0) {
+                            this.exportModes = modes;
+                            if (Arrays.toString(modes).contains(getContext().getResources().getString(R.string.zip))) {
+                                showPasswordDialog(EXPORT_REQUEST);
+                            } else {
+                                exportNotes();
+                            }
+                        }
+                        return true;
+                    }).show();
+        } else {
+            DisplayUtils.showToast(getContext(), getResources().getString(R.string.notes_not_found));
+        }
+    }
+
+    private void showPasswordDialog(int requestCode) {
+        CharSequence prefill = "";
+        CharSequence inputText = "";
+        int title = 0;
+        int positiveText = 0;
+        if (requestCode == IMPORT_REQUEST) {
+            prefill = importPassword;
+            importPassword = "";
+            title = R.string.encrypted;
+            positiveText = R.string.import_text;
+            inputText = getResources().getString(R.string.simperium_hint_password);
+        } else if (requestCode == EXPORT_REQUEST) {
+            exportPassword = "";
+            title = R.string.export_notes;
+            positiveText = R.string.export;
+            inputText = getResources().getString(R.string.hint_password);
+        }
+        new MaterialDialog.Builder(getContext())
+                .title(title)
+                .positiveText(positiveText)
+                .negativeText(R.string.cancel)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                .input(inputText, prefill, (dialog, input) -> {
+                    if (requestCode == IMPORT_REQUEST) {
+                        this.importPassword = input.toString().trim();
+                        extractZip();
+                    } else if (requestCode == EXPORT_REQUEST) {
+                        this.exportPassword = input.toString().trim();
+                        exportNotes();
+                    }
+                }).show();
+    }
+
+    private void exportNotes() {
+        showLoadingDialog(R.string.export, R.string.exporting);
+        new ExportThread().start();
+    }
+
+    private Handler mExportHandler = new Handler(msg -> {
+        if (loadingDialog != null) loadingDialog.dismiss();
+        if (msg.what == ImportUtils.RESULT_OK) {
+            resultDialogMessage = getResources().getString(R.string.export_succesful);
+        } else {
+            resultDialogMessage = getResources().getString(R.string.export_failure);
+        }
+        showResultDialog(EXPORT_REQUEST);
+        return true;
+    });
+
+    private class ExportThread extends Thread {
+        @Override
+        public void run() {
+            isExporting = true;
+            exportPath = PrefUtils.getStringPref(getContext(), PrefUtils.PREF_EXPORT_DIR);
+            boolean isExported = ExportUtils.exportNotes(getActivity(), exportPath + FileUtils.NOTES_DIR, new ArrayList<>(Arrays.asList(exportModes)), exportPassword);
+            if (isExported) {
+                mExportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+            } else {
+                mExportHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
+            }
+            isExporting = false;
+        }
+    }
+
 }

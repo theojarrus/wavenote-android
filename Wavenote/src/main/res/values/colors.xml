@@ -152,8 +152,10 @@
 
     <!-- Color Sheet -->
 
+    <color name="colorsheet_default">#6AB3D0</color>
+
     <array name="colorsheet_colors">
-        <item>#6AB3D0</item>
+        <item>@color/colorsheet_default</item>
         <item>#E7C8DD</item>
         <item>#67597A</item>
         <item>#5D4E60</item>

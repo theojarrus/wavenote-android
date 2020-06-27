@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
@@ -56,11 +57,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
-import net.lingala.zip4j.*;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.model.enums.EncryptionMethod;
-
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
@@ -69,11 +65,11 @@ import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.AutoBullet;
 import com.theost.wavenote.utils.ContextUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.utils.HtmlCompat;
 import com.theost.wavenote.utils.MatchOffsetHighlighter;
 import com.theost.wavenote.utils.NetworkUtils;
 import com.theost.wavenote.utils.NoteUtils;
@@ -88,6 +84,7 @@ import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView.OnTagAddedListene
 import com.theost.wavenote.utils.TextHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.WidgetUtils;
+import com.theost.wavenote.utils.ExportUtils;
 import com.theost.wavenote.widgets.WavenoteEditText;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -97,11 +94,12 @@ import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import kotlin.Unit;
@@ -130,8 +128,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private static final int PUBLISH_TIMEOUT = 20000;
     private static final int HISTORY_TIMEOUT = 10000;
 
-    private char[] exportZipPassword = null;
-
     private int[] keywordColors;
     private int[] styleColors;
 
@@ -149,8 +145,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private boolean mIsFromWidget;
 
     private CursorAdapter mAutocompleteAdapter;
-    private StringBuilder resultDialogMessage;
-    private String resultDialogPath;
+    private String resultDialogMessage;
+    private String exportPassword;
+    private String exportPath;
     private String mMatchOffsets;
     private String mLinkText;
     private String mLinkUrl;
@@ -196,6 +193,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private EditText mAddKeywordEditText;
     private RadioGroup mAddKeywordType;
     private String[] keywordTypes;
+
+    private CharSequence[] exportModes;
 
     // Hides the history bottom sheet if no revisions are loaded
     private final Runnable mHistoryTimeoutRunnable = new Runnable() {
@@ -443,7 +442,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             @Override
-            public void onDestroyActionMode(android.view.ActionMode mode) {}
+            public void onDestroyActionMode(android.view.ActionMode mode) {
+            }
         });
 
         keywordColors = ResUtils.getDialogColors(getContext());
@@ -452,6 +452,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         colorSheet = new ColorSheet();
 
         styleColors = getResources().getIntArray(R.array.colorsheet_colors);
+        if (Note.getActiveStyleColor() == 0) Note.setActiveStyleColor(styleColors[0]);
         lightColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_light)).substring(2).toUpperCase();
         darkColor = "#" + Integer.toHexString(ContextCompat.getColor(requireContext(), R.color.background_dark)).substring(2).toUpperCase();
         if (ThemeUtils.isLightTheme(requireContext())) {
@@ -465,7 +466,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             final void invoke(int color) {
-                mNote.setActiveStyleColor(color);
+                Note.setActiveStyleColor(color);
             }
         });
 
@@ -831,7 +832,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         MaterialDialog keywordDialog = new MaterialDialog.Builder(getContext())
                 .customView(R.layout.add_dialog, false)
                 .title(R.string.add_keyword)
-                .positiveText(R.string.import_note)
+                .positiveText(R.string.import_text)
                 .positiveColor(keywordColors[1])
                 .onPositive((dialog, which) -> insertKeyword(mAddKeywordEditText.getText().toString()))
                 .negativeText(R.string.cancel).build();
@@ -840,6 +841,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mAddKeywordType.setVisibility(View.VISIBLE);
         mAddKeywordEditText = keywordDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddKeywordEditText.setText(selectedText);
+        mAddKeywordEditText.setHint(R.string.word);
         mAddKeywordEditText.requestFocus();
         mAddKeywordEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -899,188 +901,82 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void showExportDialog() {
+        List<String> exportModes = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.array_export_modes)));
+        File photoDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.PHOTOS_DIR);
+        if (!photoDir.exists() || photoDir.list().length == 0)
+            exportModes.remove(getResources().getString(R.string.photo));
+
         new MaterialDialog.Builder(getContext())
                 .title(R.string.export)
                 .positiveText(R.string.export)
                 .negativeText(R.string.cancel)
-                .items(R.array.array_export_modes)
-                .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
-                    if (Arrays.toString(text).contains("Password")) {
-                        if (Arrays.toString(text).contains("Zip") && text.length > 2) {
-                            showPasswordDialog(text);
+                .items(exportModes)
+                .itemsCallbackMultiChoice(null, (dialog, which, modes) -> {
+                    if (modes.length > 0) {
+                        this.exportModes = modes;
+                        if (Arrays.toString(modes).contains(getContext().getResources().getString(R.string.zip))) {
+                            showPasswordDialog();
+                        } else {
+                            exportNote();
                         }
-                    } else if ((Arrays.toString(text).contains("Zip") && text.length > 1) ||
-                            (!Arrays.toString(text).contains("Zip") && text.length > 0)) {
-                        exportNote(text);
                     }
                     return true;
                 }).show();
     }
 
-    private void showPasswordDialog(CharSequence[] modes) {
+    private void showPasswordDialog() {
+        exportPassword = "";
         new MaterialDialog.Builder(getContext())
                 .title(R.string.export)
-                .positiveText(R.string.set)
+                .positiveText(R.string.export)
                 .negativeText(R.string.cancel)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                .input(R.string.simperium_hint_password, 0, (dialog, input) -> {
-                    exportZipPassword = input.toString().trim().toCharArray();
-                    exportNote(Arrays.copyOfRange(modes, 0, modes.length - 1));
+                .input(R.string.hint_password, 0, (dialog, input) -> {
+                    this.exportPassword = input.toString().trim();
+                    exportNote();
                 }).show();
     }
 
     private void showLoadingDialog() {
-        loadingDialog = DisplayUtils.showLoadingDialog(getContext(), R.string.export, R.string.exporting);
+        new CountDownTimer(200, 200) {
+            public void onTick(long millisUntilFinished) {}
+
+            public void onFinish() {
+                if (isExporting)
+                    loadingDialog = DisplayUtils.showLoadingDialog(getContext(), R.string.export, R.string.exporting);
+            }
+        }.start();
     }
 
     private void showResultDialog() {
-        loadingDialog.dismiss();
-        if (!(resultDialogMessage == null)) {
-            new MaterialDialog.Builder(getContext())
-                    .title(R.string.export)
-                    .content(resultDialogMessage)
-                    .positiveText(android.R.string.ok)
-                    .show();
-            DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.path) + ": " + resultDialogPath);
-        } else {
-            getContext().getResources().getString(R.string.feature_error);
-        }
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.export)
+                .content(resultDialogMessage)
+                .positiveText(android.R.string.ok)
+                .show();
+        DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.path) + ": " + exportPath);
     }
 
-    private void updateResult(ArrayList<String> succesList, ArrayList<String> errorList, String path) {
-        resultDialogMessage = new StringBuilder();
-        resultDialogPath = path;
-
-        if (errorList.size() == 0 && succesList.size() == 0) {
-            resultDialogMessage = null;
-            return;
-        }
-
-        if (errorList.size() > 0) {
-            resultDialogMessage.append(getContext().getResources().getString(R.string.export_error)).append(": ");
-            for (String i : errorList) {
-                resultDialogMessage.append(i.toLowerCase());
-                if (errorList.indexOf(i) != errorList.size() - 1) {
-                    resultDialogMessage.append(", ");
-                } else if (succesList.size() > 0) {
-                    resultDialogMessage.append("\n\n");
-                }
-            }
-        }
-
-        if (succesList.size() > 0) {
-            resultDialogMessage.append(getContext().getResources().getString(R.string.export_succesful)).append(": ");
-            for (String j : succesList) {
-                resultDialogMessage.append(j.toLowerCase());
-                if (succesList.indexOf(j) != succesList.size() - 1)
-                    resultDialogMessage.append(", ");
-            }
-        }
-    }
-
-    private void exportNote(CharSequence[] modes) {
+    private void exportNote() {
         showLoadingDialog();
-        new ExportThread(modes).start();
+        new ExportThread().start();
     }
 
     private Handler mExportHandler = new Handler(msg -> {
-        if (msg.what == 0)
-            showResultDialog();
+        if (loadingDialog != null) loadingDialog.dismiss();
+        showResultDialog();
         return true;
     });
 
     private class ExportThread extends Thread {
-
-        CharSequence[] modes;
-
-        private ExportThread(CharSequence[] modes) {
-            this.modes = modes;
-        }
-
         @Override
         public void run() {
             isExporting = true;
-
-            ArrayList<String> successList = new ArrayList<>();
-            ArrayList<String> errorList = new ArrayList<>();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String exportDirPath = preferences.getString(PrefUtils.PREF_EXPORT_DIR, FileUtils.getDefaultDir(getContext()));
-            File dirRoot = new File(exportDirPath);
-            String noteName = mNote.getTitle();
-            if (noteName.equals("")) noteName = "Note - " + mNote.getSimperiumKey();
-            File dirOld = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey());
-            File dirNew = new File(exportDirPath + "/" + noteName);
-            for (CharSequence charSequence : modes) {
-                String mode = charSequence.toString().toLowerCase();
-                switch (mode) {
-                    case "plaintext":
-                        try {
-                            File dirTextNew = new File(dirNew + FileUtils.TEXT_DIR);
-                            FileUtils.createFile(dirTextNew, noteName + ".txt", mContentEditText.getText().toString());
-                            successList.add(mode);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            errorList.add(mode);
-                        }
-                        break;
-                    case "html":
-                        try {
-                            File dirTextNew = new File(dirNew + FileUtils.TEXT_DIR);
-                            FileUtils.createFile(dirTextNew, noteName + ".htm", HtmlCompat.toHtml(mContentEditText.getText()).trim());
-                            successList.add(mode);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            errorList.add(mode);
-                        }
-                        break;
-                    case "photo":
-                        File dirPhotoOld = new File(dirOld + FileUtils.PHOTOS_DIR);
-                        if (dirPhotoOld.exists() && dirPhotoOld.list().length != 0) {
-                            File dirPhotoNew = new File(dirNew + FileUtils.PHOTOS_DIR);
-                            try {
-                                ArrayList<Boolean> copiedFiles = new ArrayList<>();
-                                for (String j : dirPhotoOld.list()) {
-                                    copiedFiles.add(FileUtils.copyFile(dirPhotoOld, dirPhotoNew, j));
-                                }
-                                if (copiedFiles.indexOf(false) == -1) {
-                                    successList.add(mode);
-                                } else {
-                                    errorList.add(mode);
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                errorList.add(mode);
-                            }
-                        } else {
-                            errorList.add(getContext().getString(R.string.photo_found_error).toLowerCase());
-                        }
-                        break;
-                    case "zip":
-                        try {
-                            File file = new File(dirNew + ".zip");
-                            if (file.exists()) file.delete();
-                            if (exportZipPassword != null) {
-                                ZipParameters zipParameters = new ZipParameters();
-                                zipParameters.setEncryptFiles(true);
-                                zipParameters.setEncryptionMethod(EncryptionMethod.AES);
-                                ZipFile zipFile = new ZipFile(file, exportZipPassword);
-                                zipFile.addFolder(dirNew, zipParameters);
-                            } else {
-                                ZipFile zipFile = new ZipFile(file);
-                                zipFile.addFolder(dirNew);
-                            }
-                            FileUtils.removeFiles(dirNew);
-                            successList.add(mode);
-                        } catch (ZipException e) {
-                            e.printStackTrace();
-                            errorList.add(mode);
-                        }
-                        break;
-                }
-            }
-            updateResult(successList, errorList, exportDirPath);
+            exportPath = PrefUtils.getStringPref(getContext(), PrefUtils.PREF_EXPORT_DIR);
+            HashMap<String, Boolean> resultMap = ExportUtils.exportNote(getContext(), mNote, exportPath, new ArrayList<>(Arrays.asList(exportModes)), exportPassword);
+            resultDialogMessage = ExportUtils.getResultMessage(getContext(), resultMap);
+            mExportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
             isExporting = false;
-            mExportHandler.sendEmptyMessage(0);
         }
     }
 
@@ -1688,11 +1584,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void changeTextColor() {
-        SyntaxHighlighter.changeTextStyle(mContentEditText, mNote.getTextStyle(), mNote.getActiveStyleColor(), mNote.getActiveColor());
+        SyntaxHighlighter.changeTextStyle(mContentEditText, mNote.getTextStyle(), Note.getActiveStyleColor(), mNote.getActiveColor());
     }
 
     private void pickTextColor() {
-        colorSheet.colorPicker(styleColors, mNote.getActiveStyleColor(), true, listener);
+        colorSheet.colorPicker(styleColors, Note.getActiveStyleColor(), true, listener);
         this.colorSheet.show(getParentFragmentManager());
     }
 

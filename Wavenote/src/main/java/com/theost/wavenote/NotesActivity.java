@@ -44,6 +44,7 @@ import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.HtmlCompat;
 import com.theost.wavenote.utils.PrefUtils;
+import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.adapters.TagsAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
@@ -490,10 +491,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 // this won't happen because welcome-android is a valid name
             }
 
+            ResUtils.restoreDictionary(this);
+
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(PrefUtils.PREF_FIRST_LAUNCH, false);
             editor.putBoolean(PrefUtils.PREF_ACCOUNT_REQUIRED, true);
+            editor.putString(PrefUtils.PREF_EXPORT_DIR, FileUtils.getDefaultDir(this));
             editor.apply();
         }
     }
@@ -1386,7 +1390,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             Bucket.ObjectCursor cursor = query.execute();
 
             while (cursor.moveToNext()) {
-                FileUtils.removeFiles(new File(activity.getCacheDir() + NOTES_DIR + cursor.getSimperiumKey()));
+                FileUtils.removeDirectory(new File(activity.getCacheDir() + NOTES_DIR + cursor.getSimperiumKey()));
                 localDatabase.removeAllImageData(cursor.getSimperiumKey());
                 cursor.getObject().delete();
             }

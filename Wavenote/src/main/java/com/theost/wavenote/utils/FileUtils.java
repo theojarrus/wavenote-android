@@ -8,15 +8,24 @@ import android.os.Environment;
 import com.google.android.gms.common.util.IOUtils;
 import com.theost.wavenote.R;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
+
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class FileUtils {
 
@@ -29,7 +38,13 @@ public class FileUtils {
     public static final String PHOTOS_DIR = "/Photo/";
     public static final String AUDIO_DIR = "/Audio/";
     public static final String TEXT_DIR = "/Text/";
+    public static final String ACTIVE_DIR = "/Active/";
+    public static final String TRASHED_DIR = "/Trashed/";
 
+    public static final String TEXT_FORMAT = ".txt";
+    public static final String HTML_FORMAT = ".htm";
+    public static final String JSON_FORMAT = ".json";
+    public static final String ZIP_FORMAT = ".zip";
     public static final String PHOTO_FORMAT = ".jpg";
     public static final String AUDIO_FORMAT = ".mp3";
     public static final String SAMPLE_FORMAT = ".wav";
@@ -90,6 +105,19 @@ public class FileUtils {
         out.close();
     }
 
+    public static void createZip(File file, File directorySource) throws ZipException {
+        ZipFile zipFile = new ZipFile(file);
+        zipFile.addFolder(directorySource);
+    }
+
+    public static void createZipEncrypted(File file, File directorySource, String password) throws ZipException {
+        ZipParameters zipParameters = new ZipParameters();
+        zipParameters.setEncryptFiles(true);
+        zipParameters.setEncryptionMethod(EncryptionMethod.AES);
+        ZipFile zipFile = new ZipFile(file, password.toCharArray());
+        zipFile.addFolder(directorySource, zipParameters);
+    }
+
     public static File createTempFile(Context context, InputStream in, String format) throws IOException {
         File directory = new File(context.getCacheDir() + TEMP_DIR);
         if (!directory.exists()) directory.mkdirs();
@@ -100,13 +128,26 @@ public class FileUtils {
         return tempFile;
     }
 
-    public static boolean copyFile(File dirOld, File dirNew, String fileName) throws IOException {
-        if (!dirOld.exists()) return false;
-        if (!dirNew.exists()) dirNew.mkdirs();
-        File fileOld = new File(dirOld + "/" + fileName);
-        File fileNew = new File(dirNew + "/" + fileName);
-        writeFile(fileOld, fileNew);
+    public static boolean copyFile(File sourceFile, File directory, String fileName) throws IOException {
+        if (!sourceFile.exists()) return false;
+        if (!directory.exists()) directory.mkdirs();
+        File fileNew = new File(directory, fileName);
+        if (sourceFile.isDirectory())
+            sourceFile = new File(sourceFile, fileName);
+        writeFile(sourceFile, fileNew);
         return true;
+    }
+
+    public static String readFile(Context context, File file) throws IOException {
+        StringBuilder text = new StringBuilder();
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = br.readLine()) != null) {
+            text.append(line);
+            text.append('\n');
+        }
+        br.close();
+        return text.toString();
     }
 
     public static void writeFile(File fileOld, File fileNew) throws IOException {
@@ -120,25 +161,35 @@ public class FileUtils {
         }
     }
 
-    public static boolean removeFile(String path) {
-        File file = new File(path);
-        if (file.exists())
-            return file.delete();
-        return false;
+    public static void removeDirectory(File directory) {
+        if (directory.exists() && directory.isDirectory()) {
+            String[] files = directory.list();
+            if (files != null && files.length != 0) {
+                for (String i : files) {
+                    File file = new File(directory.getPath() + "/" + i);
+                    if (file.isDirectory()) removeDirectory(file);
+                    file.delete();
+                }
+            }
+            directory.delete();
+        }
     }
 
-    public static boolean removeFiles(File notedir) {
-        if (notedir.exists() && notedir.isDirectory()) {
-            String[] subdirs = notedir.list();
-            for (String i : subdirs) {
-                File dir = new File(notedir.getPath() + "/" + i);
-                String[] files = dir.list();
-                for (String file : files) new File(dir + "/", file).delete();
-                dir.delete();
+    public static boolean verifyZip(ZipFile zipFile) {
+        try {
+            List<FileHeader> fileHeaders = zipFile.getFileHeaders();
+            for (FileHeader fileHeader : fileHeaders) {
+                InputStream is = zipFile.getInputStream(fileHeader);
+                byte[] b = new byte[4 * 4096];
+                while (is.read(b) != -1) {
+                    //Do nothing as we just want to verify password
+                }
+                is.close();
             }
-            return notedir.delete();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
     public static String getDefaultDir(Context context) {

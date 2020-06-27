@@ -75,7 +75,7 @@
                         android:layout_width="@dimen/custom_icon_size"
                         android:layout_height="@dimen/custom_icon_size"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/photos"
+                        android:contentDescription="@string/photo"
                         android:visibility="visible"
                         android:src="@drawable/av_fullscreen" />
 
@@ -143,6 +143,6 @@
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:src="@drawable/mu_a7_guitar"
-        android:contentDescription="@string/photos" />
+        android:contentDescription="@string/photo" />
 
 </LinearLayout>
