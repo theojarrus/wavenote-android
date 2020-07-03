@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ablanco.zoomy.Zoomy;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.theost.wavenote.PhotosActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Photo;
@@ -49,7 +50,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         holder.mNameEditText.setText(mData.get(position).getName());
         holder.mDateTextView.setText(mData.get(position).getDate());
 
-        Glide.with(mActivity).load(mData.get(position).getBitmap(mActivity)).into(holder.mPhotoView);
+        Glide.with(mActivity).load(mData.get(position).getBitmap(mActivity))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.mPhotoView);
 
         InputMethodManager keyboard = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -96,10 +99,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         holder.mTrashButton.setOnClickListener(view -> {
             mActivity.removePhoto(mData.get(position).getId());
             mData.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, getItemCount());
-            if (mData.size() == 0) notifyDataSetChanged();
-            mActivity.updateEmptyView();
+            if (getItemCount() == 0) {
+                notifyDataSetChanged();
+                mActivity.updateEmptyView();
+            } else {
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
+            }
         });
 
         holder.mShareButton.setOnClickListener(view -> mActivity.showShareBottomSheet(position));
@@ -134,9 +140,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         }
     }
 
-    public void updateData(List<Photo> data, int position) {
+    public void updateData(List<Photo> data) {
         mData = data;
-        notifyItemRangeChanged(0, mData.size());
+        notifyItemRangeChanged(0, getItemCount());
     }
 
     public void clearData() {
@@ -154,7 +160,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         }
         Collections.sort(mData, comparator);
         if (!mData.equals(oldData))
-            notifyItemRangeChanged(0, mData.size());
+            notifyItemRangeChanged(0, getItemCount());
     }
 
     public void sortByName(boolean isSortReversed) {
@@ -167,7 +173,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         }
         Collections.sort(mData, comparator);
         if (!mData.equals(oldData))
-            notifyItemRangeChanged(0, mData.size());
+            notifyItemRangeChanged(0, getItemCount());
     }
 
 }

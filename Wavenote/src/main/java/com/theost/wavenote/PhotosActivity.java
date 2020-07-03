@@ -52,8 +52,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public static final String ARG_NOTE_ID = "note_id";
     public static final String ARG_UPDATE = "need_update";
 
-    private int positionStart = 0;
-
     private boolean isImporting;
 
     private PhotoBottomSheetDialog mPhotoBottomSheet;
@@ -272,7 +270,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     }
 
     private void updateAdapter() {
-        adapter.updateData(mPhotoList, positionStart);
+        adapter.updateData(mPhotoList);
         if (updateEmptyView()) sortItems();
         if (loadingDialog != null) loadingDialog.dismiss();
     }
@@ -340,7 +338,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     }
 
     public void removePhoto(String id) {
-        if (adapter.getItemCount() == 0) return;
         if (id == null) {
             adapter.clearData();
             updateEmptyView();
@@ -446,7 +443,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         isImporting = false;
 
         if (msg.what == ImportUtils.RESULT_OK) {
-            positionStart = mPhotoList.size();
             updateData();
         } else if (msg.what == ImportUtils.FILE_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
