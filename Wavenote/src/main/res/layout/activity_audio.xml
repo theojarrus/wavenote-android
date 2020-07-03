@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/custom_icon_size"
                 android:layout_weight="1"
-                android:background="@null"
+                android:background="@android:color/transparent"
                 android:textColor="@drawable/toggle_selector"
                 android:textOff="@string/metronome_en"
                 android:textOn="@string/metronome_en" />
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/custom_icon_size"
                 android:layout_weight="1"
-                android:background="@null"
+                android:background="@android:color/transparent"
                 android:textColor="@drawable/toggle_selector"
                 android:textOff="@string/countdown_en"
                 android:textOn="@string/countdown_en" />
@@ -58,7 +58,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -101,7 +101,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/custom_icon_size"
                     android:layout_weight="1"
-                    android:background="@null"
+                    android:background="@android:color/transparent"
                     android:textColor="@drawable/toggle_selector"
                     android:textOff="@string/mix"
                     android:textOn="@string/mix" />
@@ -141,7 +141,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/custom_icon_size"
                     android:layout_weight="1"
-                    android:background="@null"
+                    android:background="@android:color/transparent"
                     android:textColor="@drawable/toggle_selector"
                     android:textOff="@string/loop"
                     android:textOn="@string/loop" />
@@ -166,7 +166,7 @@
                     android:id="@+id/save"
                     android:layout_width="@dimen/custom_icon_size"
                     android:layout_height="@dimen/custom_icon_size"
-                    android:background="@null"
+                    android:background="@android:color/transparent"
                     android:contentDescription="@string/export"
                     android:src="@drawable/ma_save_24dp" />
 

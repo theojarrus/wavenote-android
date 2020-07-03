@@ -19,7 +19,7 @@
             android:id="@+id/wp_dialog_list_view"
             android:choiceMode="singleChoice"
             android:clipToPadding="false"
-            android:divider="@null"
+            android:divider="@android:color/transparent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_width="match_parent"
@@ -121,7 +121,8 @@
             android:layout_width="wrap_content"
             android:text="@string/copy"
             app:icon="@drawable/ic_copy_24dp"
-            style="@style/Button.Flat.Icon">
+            style="@style/Button.Flat.Icon"
+            tools:ignore="PrivateResource">
         </com.google.android.material.button.MaterialButton>
 
     </RelativeLayout>

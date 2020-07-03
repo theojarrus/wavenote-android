@@ -32,7 +32,7 @@
 
                 <com.theost.wavenote.widgets.WavenoteEditText
                     android:id="@+id/note_content"
-                    android:background="@null"
+                    android:background="@android:color/transparent"
                     android:gravity="top"
                     android:inputType="text|textMultiLine|textCapSentences|textNoSuggestions"
                     android:layout_height="match_parent"

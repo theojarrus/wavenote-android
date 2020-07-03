@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@android:id/text1"
-    android:checkMark="@null"
+    android:checkMark="@android:color/transparent"
     android:drawablePadding="@dimen/padding_medium"
     android:drawableStart="?android:attr/listChoiceIndicatorSingle"
     android:gravity="center_vertical"

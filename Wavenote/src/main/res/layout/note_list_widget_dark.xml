@@ -7,7 +7,8 @@
     android:background="@drawable/note_widget_background_dark"
     android:foreground="?android:attr/selectableItemBackgroundBorderless"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    tools:ignore="UnusedAttribute">
 
     <TextView
         android:id="@+id/widget_text"
@@ -27,7 +28,7 @@
         android:background="@android:color/transparent"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:divider="@null"
+        android:divider="@android:color/transparent"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/note_list_item_padding_bottom_button_widget"

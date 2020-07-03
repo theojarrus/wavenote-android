@@ -20,4 +20,11 @@
         android:title="@string/transpose_up"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/search"
+        android:enabled="true"
+        android:icon="@drawable/av_search_24dp"
+        android:title="@string/search_chords"
+        app:showAsAction="always" />
+
 </menu>

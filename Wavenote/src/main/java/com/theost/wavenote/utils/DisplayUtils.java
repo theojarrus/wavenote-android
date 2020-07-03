@@ -134,6 +134,11 @@ public class DisplayUtils {
      * Hides the keyboard for the given {@link View}.  Since no {@link InputMethodManager} flag is
      * used, the keyboard is forcibly hidden regardless of the circumstances.
      */
+    public static void showKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
     public static void hideKeyboard(@Nullable final View view) {
         if (view == null) {
             return;

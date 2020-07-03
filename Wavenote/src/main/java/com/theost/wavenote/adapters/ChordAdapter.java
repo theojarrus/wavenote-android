@@ -1,11 +1,13 @@
 package com.theost.wavenote.adapters;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,9 +38,11 @@ public class ChordAdapter extends RecyclerView.Adapter<ChordAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.mChordImageView.setAlpha(0.0f);
         Drawable drawable = mData.get(position);
         Glide.with(holder.mChordImageView).load(drawable).into(holder.mChordImageView);
         holder.mChordImageView.getLayoutParams().width = mItemSize;
+        holder.mChordImageView.animate().alpha(1.0f).setDuration(500);
     }
 
     @Override
@@ -56,12 +60,12 @@ public class ChordAdapter extends RecyclerView.Adapter<ChordAdapter.ViewHolder> 
     }
 
     public void updateItemSize(int size) {
-        this.mItemSize = size;
+        mItemSize = size;
         notifyDataSetChanged();
     }
 
     public void updateItemDrawable(List<Drawable> data) {
-        this.mData = data;
+        mData = data;
         notifyDataSetChanged();
     }
 

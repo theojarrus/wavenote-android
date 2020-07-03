@@ -32,6 +32,7 @@
     <string name="search_hint">Search notes or tags</string>
     <string name="search_tags">Search Tags</string>
     <string name="search_tags_hint">Search tags</string>
+    <string name="search_chords">Search Chords</string>
     <string name="notes">Notes</string>
     <string name="trash">Trash</string>
     <string name="untagged_notes">Untagged Notes</string>

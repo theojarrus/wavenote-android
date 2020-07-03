@@ -302,5 +302,6 @@
     <string name="notes_not_found">Заметки не найдены</string>
     <string name="import_succesful">Готово! Успешно импортировано: %d</string>
     <string name="import_failure">Импортировано с ошибками: %d</string>
+    <string name="search_chords">Поиск аккордов</string>
 
 </resources>

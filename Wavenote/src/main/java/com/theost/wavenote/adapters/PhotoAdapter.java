@@ -1,11 +1,9 @@
 package com.theost.wavenote.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.theost.wavenote.PhotosActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Photo;
+import com.theost.wavenote.utils.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,8 +53,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.mPhotoView);
 
-        InputMethodManager keyboard = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-
         holder.mNameEditText.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
                 holder.photoName = holder.mNameEditText.getText().toString();
@@ -83,14 +80,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         holder.mSaveButton.setOnClickListener(view -> {
             holder.photoName = holder.mNameEditText.getText().toString();
             holder.mNameEditText.clearFocus();
-            keyboard.hideSoftInputFromWindow(holder.itemView.getWindowToken(), 0);
+            DisplayUtils.hideKeyboard(holder.itemView);
             mData.get(position).setName(holder.photoName);
             mActivity.renamePhoto(mData.get(position).getId(), holder.photoName);
         });
 
         holder.mCancelButton.setOnClickListener(view -> {
             holder.mNameEditText.clearFocus();
-            keyboard.hideSoftInputFromWindow(holder.itemView.getWindowToken(), 0);
+            DisplayUtils.hideKeyboard(holder.itemView);
         });
 
         holder.mFullscreenButton.setOnClickListener(view ->

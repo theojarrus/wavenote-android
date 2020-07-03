@@ -31,10 +31,10 @@
 
                 <com.theost.wavenote.widgets.WavenoteEditText
                     android:id="@+id/note_content"
-                    android:background="@null"
+                    android:background="@android:color/transparent"
                     android:gravity="top"
                     android:inputType="textCapSentences|textNoSuggestions|textMultiLine|textAutoCorrect"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:lineSpacingExtra="@dimen/line_spacing"
                     android:lineSpacingMultiplier="1.0"

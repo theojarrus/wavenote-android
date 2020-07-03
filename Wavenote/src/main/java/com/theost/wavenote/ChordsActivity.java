@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -27,12 +28,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.adapters.ChordAdapter;
+import com.theost.wavenote.utils.AniUtils;
+import com.theost.wavenote.utils.ChordUtils;
+import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ChordsActivity extends ThemedAppCompatActivity {
@@ -44,11 +49,9 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private int DEFAULT_COLUMN = 4;
 
     private List<Drawable> mChordsDrawable;
-    private List<String> mChordsReplace;
     private List<String> mNotesList;
     private List<String> mChordsList;
-
-    private String[] mChordReplacement;
+    private List<String> mSearchList;
     private String[] mNotesOrder;
     private String[] mInstrumentList;
     private String[] mColumnList;
@@ -62,9 +65,14 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private int itemsInline;
     private int itemWidth;
 
+    private ChordsActivity mActivity;
+
     private AutoCompleteTextView mInstrumentInputView;
     private AutoCompleteTextView mColumnsInputView;
+    private AutoCompleteTextView mSearchInputView;
     private RecyclerView mChordsRecyclerView;
+    private LinearLayout mSearchLayout;
+    private MenuItem mSearchMenuItem;
     private ChordAdapter adapter;
 
     @SuppressLint({"ResourceType", "SetTextI18n"})
@@ -92,13 +100,14 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mEmptyViewImage.setImageResource(R.drawable.m_audiotrack_black_24dp);
         mEmptyViewText.setText(R.string.empty_chords);
 
+        mActivity = this;
+
         isAllChords = getIntent().getBooleanExtra(ARG_ALL_CHORDS, false);
         mChordsList = getIntent().getStringArrayListExtra(ARG_CHORDS);
 
         mInstrumentList = getResources().getStringArray(R.array.array_musical_instruments);
         mColumnList = getResources().getStringArray(R.array.array_musical_columns);
 
-        mChordReplacement = getResources().getStringArray(R.array.array_musical_chords_replace);
         mNotesOrder = getResources().getStringArray(R.array.array_musical_notes_order);
 
         activeInstrument = getIntent().getStringExtra(ARG_INSTRUMENT);
@@ -114,11 +123,10 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         itemsInline = Note.getNoteActiveColumns();
         if (itemsInline == 0) itemsInline = DEFAULT_COLUMN;
 
-        mChordsReplace = Arrays.asList(mChordReplacement);
         mNotesList = Arrays.asList(mNotesOrder);
 
         mChordsRecyclerView = findViewById(R.id.chord_view);
-        mChordsRecyclerView.setHasFixedSize(true);
+        mChordsRecyclerView.setHasFixedSize(false);
         mChordsRecyclerView.setNestedScrollingEnabled(false);
         mChordsRecyclerView.setDrawingCacheEnabled(true);
         mChordsRecyclerView.setItemViewCacheSize(20);
@@ -196,21 +204,51 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         ViewUtils.restoreFocus(mInstrumentInputView);
         ViewUtils.restoreFocus(mColumnsInputView);
 
+        mSearchLayout = findViewById(R.id.search_chords);
+        mSearchInputView = findViewById(R.id.search_items);
+        ViewUtils.updateFilterDropdown(this, mSearchInputView, getResources().getStringArray(R.array.array_musical_chords));
+        mSearchInputView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                mSearchInputView.dismissDropDown();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSearchInputView.dismissDropDown();
+                String request = s.toString();
+                updateSearch(request);
+            }
+        });
+
         mChordsDrawable = new ArrayList<>();
 
         updateItemSize();
         updateDrawables();
         adapter = new ChordAdapter(this, mChordsDrawable, itemWidth);
-        adapter.hasStableIds();
         mChordsRecyclerView.setAdapter(adapter);
+
+        LayoutTransition layoutTransition = ((LinearLayout) findViewById(R.id.chords_list)).getLayoutTransition();
+        layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if ((isAllChords) || (mChordsList.size() == 0)) return false;
+        if (mChordsList.size() == 0) return false;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.chords_list, menu);
+        mSearchMenuItem = menu.findItem(R.id.search);
         MenuCompat.setGroupDividerEnabled(menu, true);
+
+        if (isAllChords) {
+            menu.setGroupVisible(0, false);
+            mSearchMenuItem.setVisible(true);
+        }
+
         return true;
     }
 
@@ -222,6 +260,9 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                 return true;
             case R.id.menu_transposedown:
                 transposeChords(-1);
+                return true;
+            case R.id.search:
+                updateSearchData();
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -237,6 +278,37 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         updateItemSize();
     }
 
+    private void updateSearchData() {
+        if (mSearchLayout.getVisibility() == View.GONE) {
+            mSearchMenuItem.setIcon(R.drawable.av_close);
+            AniUtils.fadeIn(mSearchLayout);
+            mSearchList = new ArrayList<>(mChordsList);
+            mSearchInputView.requestFocus();
+            mSearchInputView.dismissDropDown();
+            DisplayUtils.showKeyboard(this, mSearchInputView);
+        } else {
+            mSearchMenuItem.setIcon(R.drawable.av_search_24dp);
+            mSearchLayout.setVisibility(View.GONE);
+            DisplayUtils.hideKeyboard(mSearchInputView);
+            if (!mChordsList.equals(mSearchList)) {
+                mChordsList = new ArrayList<>(mSearchList);
+                updateDrawables();
+            }
+        }
+    }
+
+    private void updateSearch(String request) {
+        mChordsList = new ArrayList<>(mSearchList);
+        request = ChordUtils.replaceChords(mActivity, new ArrayList<>(Collections.singletonList(request)), false).get(0);
+        for (int i = 0; i < mChordsList.size(); i++) {
+            if (!mChordsList.get(i).contains(request)) {
+                mChordsList.remove(i);
+                i -= 1;
+            }
+        }
+        updateDrawables();
+    }
+
     private void updateAdapter() {
         if (adapter != null) adapter.updateItemDrawable(mChordsDrawable);
     }
@@ -248,15 +320,6 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private void loadDrawables() {
         mChordsDrawable = new ArrayList<>();
         for (String i : mChordsList) {
-            if ((i.length() > 1) && ((i.substring(1, 2).equals("#")) || (i.substring(1, 2).equals("b")))) {
-                String key = i.substring(0, 2);
-                String end = "";
-                if (mChordsReplace.indexOf(key) % 2 == 0) {
-                    if (isAllChords) continue;
-                    if (i.length() > 2) end = i.substring(2);
-                    i = mChordsReplace.get(mChordsReplace.indexOf(key) + 1) + end;
-                }
-            }
             int id = getResources().getIdentifier(("mu_" + i.replace("#", "s") + "_" + activeInstrument).toLowerCase(), "drawable", this.getPackageName());
             mChordsDrawable.add(ContextCompat.getDrawable(this, id));
         }
@@ -271,6 +334,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
     private class UpdateDrawablesThread extends Thread {
         public void run() {
+            mChordsList = ChordUtils.replaceChords(mActivity, mChordsList, isAllChords);
             loadDrawables();
             mUpdateHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
         }
