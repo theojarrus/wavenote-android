@@ -602,6 +602,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         mHighlighter.stop();
+        mContentEditText.clearComposingText();
         saveNote();
     }
 
@@ -1058,6 +1059,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private void showInfo() {
         if (mNote != null) {
             mContentEditText.clearFocus();
+            mContentEditText.clearComposingText();
             saveNote();
             showInfoSheet();
         }
@@ -1086,6 +1088,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             ((NotesActivity) getActivity()).setMarkdownShowing(false);
         }
 
+        mContentEditText.clearComposingText();
         saveNote();
 
         // Set preference so that next new note will have markdown enabled.
@@ -1120,7 +1123,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
         mMatchOffsets = matchOffsets;
 
-
+        mContentEditText.clearComposingText();
         saveNote();
 
         new LoadNoteTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, noteID);
@@ -1398,8 +1401,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 mIsPreviewEnabled = mNote.isPreviewEnabled();
             }
 
-            mContentEditText.clearComposingText();
-
             Spannable content = mContentEditText.getPlainTextContent();
             String tagString = getNoteTagsString();
 
@@ -1615,6 +1616,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (isAdded() && mHistoryBottomSheet != null && !mHistoryBottomSheet.isAdded()) {
             // Request revisions for the current note
             mNotesBucket.getRevisions(mNote, MAX_REVISIONS, mHistoryBottomSheet.getRevisionsRequestCallbacks());
+            mContentEditText.clearComposingText();
             saveNote();
 
             mHistoryBottomSheet.show(getParentFragmentManager(), mNote);

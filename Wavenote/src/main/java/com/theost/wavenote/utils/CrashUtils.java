@@ -11,7 +11,6 @@ import com.automattic.android.tracks.CrashLogging.CrashLogging;
 import com.automattic.android.tracks.CrashLogging.CrashLoggingDataProvider;
 import com.automattic.android.tracks.TracksUser;
 import com.theost.wavenote.BuildConfig;
-import com.theost.wavenote.Wavenote;
 import com.simperium.client.User;
 
 import java.util.Locale;
