@@ -72,6 +72,8 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private static final String BEAT_STRONG = FileUtils.BEAT_STRONG;
     private static final String BEAT_WEAK = FileUtils.BEAT_WEAK;
 
+    public static final String BEAT_SETTING_ARG = "isBeatSetting";
+
     private static final int STATUS_PLAY_PREPARE = 1;
     private static final int STATUS_PLAYING = 2;
     private static final int FILE_REQUEST = 0;
@@ -146,7 +148,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     AutoCompleteTextView mSoundTextView;
     @BindView(R.id.metronome_speed_down)
     ImageButton mSpeedDownButton;
-    @BindView(R.id.tv_speed)
+    @BindView(R.id.beat_speed)
     TextView mSpeedTextView;
     @BindView(R.id.metronome_speed_up)
     ImageButton mSpeedUpButton;
@@ -181,7 +183,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        isBeatSetting = getIntent().getBooleanExtra("isBeatSetting", false);
+        isBeatSetting = getIntent().getBooleanExtra(BEAT_SETTING_ARG, false);
         currentSpeed = getIntent().getShortExtra(BundleKeys.RESULT_SPEED, Note.getActiveMetronomeSpeed());
         currentBeat = getIntent().getStringExtra(BundleKeys.RESULT_BEAT);
         currentTone = getIntent().getStringExtra(BundleKeys.RESULT_TUNE);
@@ -284,15 +286,15 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_import:
-                if (PermissionUtils.requestPermissions(this))
+                if (PermissionUtils.requestFilePermissions(this))
                     showImportDialog();
                 return true;
             case R.id.menu_remove:
-                if (PermissionUtils.requestPermissions(this))
+                if (PermissionUtils.requestFilePermissions(this))
                     createDialog(MODE_REMOVE);
                 return true;
             case R.id.menu_export:
-                if (PermissionUtils.requestPermissions(this))
+                if (PermissionUtils.requestFilePermissions(this))
                     createDialog(MODE_EXPORT);
                 return true;
             case android.R.id.home:

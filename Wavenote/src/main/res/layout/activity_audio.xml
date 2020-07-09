@@ -22,7 +22,7 @@
             android:orientation="horizontal">
 
             <ToggleButton
-                android:id="@+id/metronome"
+                android:id="@+id/metronome_toggle"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/custom_icon_size"
                 android:layout_weight="1"
@@ -35,10 +35,11 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="-1dp"
+                android:layout_marginBottom="1dp"
                 android:background="@color/dividerColor" />
 
             <ToggleButton
-                android:id="@+id/countdown"
+                android:id="@+id/countdown_toggle"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/custom_icon_size"
                 android:layout_weight="1"
@@ -66,19 +67,19 @@
 
             <LinearLayout
                 android:id="@+id/count_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/custom_icon_size"
+                android:layout_height="@dimen/custom_icon_size"
                 android:orientation="vertical"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/count"
-                    android:layout_width="@dimen/custom_icon_size"
-                    android:layout_height="@dimen/custom_icon_size"
+                    android:id="@+id/counter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/passcodelock_numpad_1"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    tools:text="1" />
 
             </LinearLayout>
 
@@ -94,10 +95,11 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="1dp"
                     android:background="@color/dividerColor" />
 
                 <ToggleButton
-                    android:id="@+id/mix"
+                    android:id="@+id/mix_toggle"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/custom_icon_size"
                     android:layout_weight="1"
@@ -110,34 +112,11 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="-1dp"
-                    android:background="@color/dividerColor" />
-
-                <ImageButton
-                    android:id="@+id/play"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/custom_icon_size"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:contentDescription="@string/play"
-                    android:src="@drawable/ma_play_24dp" />
-
-                <ImageButton
-                    android:id="@+id/stop"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/custom_icon_size"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:contentDescription="@string/stop"
-                    android:src="@drawable/ma_stop_24dp" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="1dp"
                     android:background="@color/dividerColor" />
 
                 <ToggleButton
-                    android:id="@+id/loop"
+                    android:id="@+id/loop_toggle"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/custom_icon_size"
                     android:layout_weight="1"
@@ -150,6 +129,22 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/dividerColor" />
+
+                <ImageButton
+                    android:id="@+id/reset"
+                    android:layout_width="@dimen/custom_icon_size"
+                    android:layout_height="@dimen/custom_icon_size"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/stop"
+                    android:src="@drawable/ma_reset_24dp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="1dp"
                     android:background="@color/dividerColor" />
 
             </LinearLayout>
@@ -180,10 +175,11 @@
             android:layout_marginTop="-1dp"
             android:background="@color/dividerColor" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:scrollbars="none"
             android:orientation="vertical">
 
             <androidx.core.widget.NestedScrollView
@@ -194,53 +190,86 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/empty_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="visible"
-                        tools:ignore="UseCompoundDrawables,UselessParent">
-
-                        <ImageView
-                            android:id="@+id/image"
-                            android:layout_width="@dimen/icon_empty"
-                            android:layout_height="@dimen/icon_empty"
-                            android:layout_marginTop="@dimen/padding_large"
-                            android:layout_marginBottom="@dimen/padding_large"
-                            android:adjustViewBounds="true"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/av_audio_24dp"
-                            android:tint="?attr/emptyImageColor" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/empty_audio" />
+                        android:id="@+id/layout_control"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                     </LinearLayout>
+
+                    <com.theost.wavenote.widgets.TrackGroupLayout
+                        android:id="@+id/layout_tracks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </com.theost.wavenote.widgets.TrackGroupLayout>
 
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:layout_alignParentBottom="true">
+
+                <RelativeLayout
+                    android:id="@+id/tint_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:background="?attr/colorAccent"
+                    android:visibility="invisible"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/adjust_tip"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="@dimen/padding_medium"
+                        android:text="@string/first_record_adjust_tip"
+                        android:textColor="@color/white" />
+
+                    <LinearLayout
+                        android:id="@+id/hide_tint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:paddingStart="@dimen/padding_large"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/ic_close"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="@string/adjust_record" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="-1dp"
             android:background="@color/dividerColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/custom_padding_small">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -248,18 +277,24 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_speed"
+                    android:id="@+id/beat_speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/custom_padding_small"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="@dimen/custom_padding_small"
+                    android:paddingBottom="@dimen/custom_padding_small"
                     android:drawableStart="@drawable/m_audiotrack_black_18dp"
                     android:gravity="center"
                     android:textSize="12sp"
                     tools:text="120" />
 
                 <TextView
-                    android:id="@+id/tv_tune_and_beat"
+                    android:id="@+id/tune_and_beat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/custom_padding_small"
+                    android:paddingBottom="@dimen/custom_padding_small"
                     android:paddingStart="@dimen/custom_padding_small"
                     android:paddingEnd="@dimen/custom_padding_small"
                     android:textSize="14sp"
@@ -273,10 +308,14 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/tv_adjust"
+                android:id="@+id/adjust_record"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/custom_padding_small"
+                android:paddingTop="@dimen/custom_padding_small"
+                android:paddingBottom="@dimen/custom_padding_small"
                 android:text="@string/adjust_record"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -284,7 +323,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="-1dp"
             android:background="@color/dividerColor" />
 
         <LinearLayout
@@ -294,19 +332,21 @@
             android:gravity="center">
 
             <ImageButton
-                android:id="@+id/add_track"
+                android:id="@+id/play_track"
                 android:layout_width="@dimen/custom_icon_size"
                 android:layout_height="@dimen/custom_icon_size"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cancel"
-                android:src="@drawable/av_add_track_24dp" />
+                android:contentDescription="@string/play"
+                android:src="@drawable/ma_play_24dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/record"
+                android:id="@+id/record_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/custom_space"
                 android:layout_marginBottom="@dimen/custom_space"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
                 android:src="@drawable/ma_rec_24dp"
                 app:backgroundTint="?attr/fabColor"
                 app:borderWidth="0dp"
@@ -314,10 +354,13 @@
                 app:pressedTranslationZ="12dp"
                 app:tint="?attr/fabIconColor" />
 
-            <View
-                android:id="@+id/invisible"
+            <ImageButton
+                android:id="@+id/add_track"
                 android:layout_width="@dimen/custom_icon_size"
-                android:layout_height="@dimen/custom_icon_size" />
+                android:layout_height="@dimen/custom_icon_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cancel"
+                android:src="@drawable/av_add_track_24dp" />
 
         </LinearLayout>
 

@@ -706,7 +706,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 shareNote();
                 return true;
             case R.id.menu_export:
-                if (PermissionUtils.requestPermissions(getActivity())) {
+                if (PermissionUtils.requestFilePermissions(getActivity())) {
                     if (!isExporting) {
                         showExportDialog();
                     } else {

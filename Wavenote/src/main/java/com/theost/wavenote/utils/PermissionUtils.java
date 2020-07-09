@@ -11,22 +11,21 @@ import java.util.List;
 
 public class PermissionUtils {
 
-    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+    public static final int REQUEST_PERMISSIONS = 1;
 
-    public static boolean requestPermissions(Activity activity) {
-        int storage = ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        List<String> listPermissionsNeeded = new ArrayList<>();
-
-        if (storage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(activity, listPermissionsNeeded.toArray(new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+    public static boolean requestFilePermissions(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
             return false;
         }
+        return true;
+    }
 
+    public static boolean requestAudioPermissions(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSIONS);
+            return false;
+        }
         return true;
     }
 

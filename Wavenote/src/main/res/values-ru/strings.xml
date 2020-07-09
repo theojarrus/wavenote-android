@@ -210,7 +210,6 @@
     <string name="empty_audio">Добавьте ваше первое аудио</string>
     <string name="empty_chords">Не найдено аккордов</string>
     <string name="simperium_dialog_message_password_login">Пароль должен быть не менее %1$d символов, и не может содержать символы новой строки, пробелы и символы табуляции.</string>
-    <string name="music_studio">Студия</string>
     <string name="photo">Фото</string>
     <string name="text_color">Цвет текста</string>
     <string name="export">Экспорт</string>
@@ -303,5 +302,18 @@
     <string name="import_succesful">Готово! Успешно импортировано: %d</string>
     <string name="import_failure">Импортировано с ошибками: %d</string>
     <string name="search_chords">Поиск аккордов</string>
+    <string name="studio">Студия</string>
+    <string name="first_record_adjust_tip">Пожалуйста, откалибруйте запись!</string>
+    <string name="confirm_delete_track">Вы действительно хотите удалить трек?</string>
+    <string name="exceed_max_support_track_count">Поддерживается только 7 каналов</string>
+    <string name="toast_no_record_track">Пожалуйста, добавьте новый трек перед записью</string>
+    <string name="toast_waiting_data_loading">Данные загружаются, подождите</string>
+    <string name="track_name">Имя трека</string>
+    <string name="adjust_success">Калибровка завершена!</string>
+    <string name="adjust_success_tip">Успешно! Можете возвращаться к записи</string>
+    <string name="adjust_delay_record_time_tip">Наденьте наушники, нажмите на кнопку, затем, следуя метроному, спойте \"Ла Ла Ла\"…</string>
+    <string name="adjust_record_reason">В синхронизации записи звука и проигрывания гарнитуры существует задержка во времени, поэтому требуется дополнительная настройка. Заметьте, что всякий раз, когда вы меняете новую гарнитуру, рекомендуется выполнить повторную калибровку</string>
+    <string name="adjust_failed">Повторите снова!</string>
+    <string name="adjust_failed_tip">Ошибка! Запустите калибровку еще раз</string>
 
 </resources>

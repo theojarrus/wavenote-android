@@ -202,7 +202,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                if (PermissionUtils.requestPermissions(this))
+                if (PermissionUtils.requestFilePermissions(this))
                     showPhotoSheet();
                 return true;
             case R.id.menu_remove:
@@ -320,11 +320,12 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             return ImportUtils.URI_ERROR;
 
         String date = DateTimeUtils.getDateTextString(this, Calendar.getInstance());
-        boolean isInserted = localDatabase.insertImageData(noteId, "", imageImportPath, date);
-        if (!isInserted) {
+        int photoId = localDatabase.insertImageData(noteId, "", imageImportPath, date);
+        if (photoId == -1) {
             if (imageImportFile.exists()) imageImportFile.delete();
             return ImportUtils.DATABASE_ERROR;
         }
+        mPhotoList.add(new Photo(String.valueOf(photoId), "", imageImportPath, date));
         return ImportUtils.RESULT_OK;
     }
 
@@ -428,7 +429,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     private void showLoadingDialog() {
         PhotosActivity context = this;
-        new CountDownTimer(300, 300) {
+        new CountDownTimer(400, 400) {
             public void onTick(long millisUntilFinished) {
             }
 
@@ -440,10 +441,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     }
 
     private Handler mImportHandler = new Handler(msg -> {
-        isImporting = false;
-
         if (msg.what == ImportUtils.RESULT_OK) {
-            updateData();
+            updateAdapter();
         } else if (msg.what == ImportUtils.FILE_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
         } else if (msg.what == ImportUtils.LINK_ERROR) {
@@ -476,12 +475,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             }
 
             int dataResultCode = insertPhoto();
-            if (dataResultCode != ImportUtils.RESULT_OK) {
-                mImportHandler.sendEmptyMessage(dataResultCode);
-                return;
-            }
-
-            mImportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+            mImportHandler.sendEmptyMessage(dataResultCode);
+            isImporting = false;
         }
 
     }

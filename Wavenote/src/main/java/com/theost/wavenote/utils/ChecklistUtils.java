@@ -43,7 +43,7 @@ public class ChecklistUtils {
         Matcher m = p.matcher(editable);
 
         int positionAdjustment = 0;
-        while(m.find()) {
+        while (m.find()) {
             int start = m.start() - positionAdjustment;
             int end = m.end() - positionAdjustment;
 
@@ -98,7 +98,7 @@ public class ChecklistUtils {
         Matcher m = p.matcher(editable);
 
         int positionAdjustment = 0;
-        while(m.find()) {
+        while (m.find()) {
             int start = m.start() - positionAdjustment;
             int end = m.end() - positionAdjustment;
 

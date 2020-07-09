@@ -155,7 +155,7 @@ repositories {
     maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
 }
 
-if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ) {
     android {
         signingConfigs {
             release {

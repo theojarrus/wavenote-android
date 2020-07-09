@@ -29,7 +29,7 @@ public class ChecklistsTest {
         Matcher m = p.matcher(checklistMarkdown);
 
         int count = 0;
-        while(m.find()) {
+        while (m.find()) {
             count++;
         }
 
@@ -39,7 +39,7 @@ public class ChecklistsTest {
         m = p.matcher(checklistMarkdown);
 
         count = 0;
-        while(m.find()) {
+        while (m.find()) {
             count++;
         }
 
@@ -54,7 +54,7 @@ public class ChecklistsTest {
         Matcher m = p.matcher(checklistMarkdown);
 
         int count = 0;
-        while(m.find()) {
+        while (m.find()) {
             count++;
         }
 

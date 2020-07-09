@@ -116,6 +116,11 @@
         <item>Ukulele</item>
     </string-array>
 
+    <string-array name="track_menu_array">
+        <item>Rename</item>
+        <item>Delete Track</item>
+    </string-array>
+
     <string-array name="array_musical_columns">
         <item>1</item>
         <item>2</item>

@@ -136,18 +136,18 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         });
 
         findPreference(PrefUtils.PREF_EXPORT_DIR).setOnPreferenceClickListener(preference -> {
-            if (PermissionUtils.requestPermissions(getActivity())) showFolderDialog();
+            if (PermissionUtils.requestFilePermissions(getActivity())) showFolderDialog();
             return true;
         });
 
         findPreference(PrefUtils.PREF_IMPORT_NOTES).setOnPreferenceClickListener(preference -> {
-            if (PermissionUtils.requestPermissions(getActivity()) && !isExporting && !isImporting && !isUnzipping)
+            if (PermissionUtils.requestFilePermissions(getActivity()) && !isExporting && !isImporting && !isUnzipping)
                 showImportDialog();
             return true;
         });
 
         findPreference(PrefUtils.PREF_EXPORT_NOTES).setOnPreferenceClickListener(preference -> {
-            if (PermissionUtils.requestPermissions(getActivity()) && !isExporting && !isImporting && !isUnzipping)
+            if (PermissionUtils.requestFilePermissions(getActivity()) && !isExporting && !isImporting && !isUnzipping)
                 showExportDialog();
             return true;
         });

@@ -48,7 +48,7 @@ repositories {
     }
 }
 
-if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ) {
     android {
         signingConfigs {
             release {

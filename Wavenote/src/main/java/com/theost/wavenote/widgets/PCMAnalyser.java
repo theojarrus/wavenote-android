@@ -80,7 +80,7 @@ public class PCMAnalyser {
                     }
                 }
 
-                value /= mChannelCount;//平均通道值
+                value /= mChannelCount;
                 if (gain < value) {
                     gain = value;
                 }
@@ -118,7 +118,7 @@ public class PCMAnalyser {
                     }
                 }
 
-                value /= mChannelCount;//平均通道值
+                value /= mChannelCount;
                 if (gain < value) {
                     gain = value;
                 }

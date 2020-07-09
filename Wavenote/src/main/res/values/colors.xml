@@ -183,4 +183,12 @@
     <color name="syntax_word">@color/purple</color>
     <color name="syntax_chord">#E91E63</color>
 
+    <!-- Audio -->
+
+    <color name="divider_track_color">@color/dividerColor</color>
+    <color name="wave_line_color_primary">@color/blue</color>
+    <color name="wave_middle_line_color">@color/dividerColor</color>
+    <color name="wave_play_line_color">@color/text_title_disabled</color>
+    <color name="wave_line_recording_color">@color/blue_20</color>
+
 </resources>

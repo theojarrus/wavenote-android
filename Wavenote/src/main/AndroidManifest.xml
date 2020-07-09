@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <uses-sdk tools:overrideLibrary="com.simperium"/> <!-- For Lollipop -->
 
@@ -53,8 +54,13 @@
 
         <activity android:name="com.theost.wavenote.AudioActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Audio"
+            android:label="Studio"
             android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
+
+        <activity android:name="com.theost.wavenote.AdjustRecordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Adjust"
+            android:parentActivityName="com.theost.wavenote.AudioActivity"/>
 
         <activity
             android:name="com.theost.wavenote.NoteEditorActivity"

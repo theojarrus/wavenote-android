@@ -262,7 +262,6 @@
     <string name="simperium_title">@string/app_name</string>
 
     <!-- FEATURES -->
-    <string name="music_studio">Music Studio</string>
     <string name="text_color">Text Color</string>
     <string name="export">Export</string>
     <string name="import_text">Import</string>
@@ -376,5 +375,22 @@
     <string name="flip_horizontal">Flip Horizontal</string>
     <string name="rotate_to_left">Rotate to Left</string>
     <string name="rotate_to_right">Rotate to Right</string>
+
+    <!-- Audio -->
+    <string name="studio">Studio</string>
+
+    <string name="confirm_delete_track">Are you sure you want to delete track?</string>
+    <string name="exceed_max_support_track_count">Most support 7 tracks</string>
+    <string name="toast_no_record_track">Please add a new track before recording</string>
+    <string name="toast_waiting_data_loading">Data loading，please wait a minute</string>
+    <string name="track_name">Track name</string>
+
+    <string name="adjust_success">Adjust Done!</string>
+    <string name="adjust_failed">Retry!</string>
+    <string name="adjust_success_tip">Success! You can back to do the recording now</string>
+    <string name="adjust_failed_tip">Failed! You need to try to adjust again</string>
+    <string name="adjust_delay_record_time_tip">Put on headset, click the button, follow the beat sound to sing La La La…</string>
+    <string name="adjust_record_reason">There is a time lag between the beginning of the synchronization of the sound and the beginning of the headset and recording, so a synchronization adjustment is required. Noted that whenever you change a new headset for recording, it is recommended to recalibrate, it would be better to synchronize the recording.</string>
+    <string name="first_record_adjust_tip">Please adjust record before your first start!</string>
 
 </resources>

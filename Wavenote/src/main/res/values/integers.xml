@@ -18,6 +18,7 @@
     <integer name="custom_space">15</integer> <!-- value of custom_space dimen -->
     <integer name="dialog_input_max">20</integer>
     <integer name="padding_medium">14</integer>
+    <integer name="track_header">56</integer>
 
     <!-- System -->
     <integer name="status_bar_height">24</integer>
@@ -33,5 +34,6 @@
     <integer name="EXPORT_AUDIO_FAIL">0x100</integer>
     <integer name="REFRESH_BEAT_DATA">0x101</integer>
     <integer name="ADJUST_RECORD_DISTANCE_DONE">0x111</integer>
+    <integer name="ADJUST_RECORD_DISTANCE_FAIL">0x112</integer>
 
 </resources>

@@ -26,7 +26,7 @@ def gitHash() {
     }
 }
 
-def gitDescribe(){
+def gitDescribe() {
     try {
         def code = new ByteArrayOutputStream()
         exec {

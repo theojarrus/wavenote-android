@@ -71,4 +71,7 @@
     <dimen name="custom_padding_small">10dp</dimen>
     <dimen name="custom_text_small">10sp</dimen>
 
+    <!-- Audio -->
+    <dimen name="track_height">60dp</dimen>
+
 </resources>

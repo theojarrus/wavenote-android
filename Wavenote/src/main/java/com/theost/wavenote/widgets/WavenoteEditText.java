@@ -220,7 +220,7 @@ public class WavenoteEditText extends AppCompatEditText {
         SpannableStringBuilder content = new SpannableStringBuilder(getText());
         CheckableSpan[] spans = content.getSpans(0, content.length(), CheckableSpan.class);
 
-        for(CheckableSpan span: spans) {
+        for (CheckableSpan span: spans) {
             int start = content.getSpanStart(span);
             int end = content.getSpanEnd(span);
             ((Editable) content).replace(

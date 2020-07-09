@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <ImageButton
+        android:id="@+id/play_beat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:background="?attr/colorAccent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ma_rec_24dp"
+        android:contentDescription="@string/adjust_record" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:paddingBottom="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/adjust_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/padding_large"
+            android:layout_marginBottom="@dimen/padding_large"
+            android:textColor="?attr/colorAccent"
+            android:visibility="invisible"
+            tools:text="@string/adjust_success" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_extra_extra_large"
+            android:layout_marginEnd="@dimen/padding_extra_extra_large"
+            android:layout_marginBottom="@dimen/padding_large"
+            android:text="@string/adjust_delay_record_time_tip"
+            android:textColor="?attr/noteEditorTextColor" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_extra_extra_large"
+            android:layout_marginEnd="@dimen/padding_extra_extra_large"
+            android:text="@string/adjust_record_reason"
+            android:textColor="?attr/hintTextColor"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
