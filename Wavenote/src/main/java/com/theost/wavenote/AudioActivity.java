@@ -232,7 +232,6 @@ public class AudioActivity extends ThemedAppCompatActivity {
             track.setId(trackData.getInt(0));
             track.setName(trackData.getString(2));
             track.setFileName(trackData.getString(3));
-            track.setCreateTime(new Date(trackData.getInt(4)));
             trackList.add(track);
         }
         mCountTextView.setText(String.valueOf(trackList.size()));
@@ -546,7 +545,6 @@ public class AudioActivity extends ThemedAppCompatActivity {
         Date creationDate = new Date();
 
         Track track = new Track();
-        track.setCreateTime(creationDate);
         track.setName(trackName);
         track.setFileName(fileName);
 

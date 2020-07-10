@@ -7,13 +7,11 @@ public class Track {
     private int id;
     private String name;
     private String fileName;
-    private Date createTime;
 
     public Track(int id, String name, String fileName, Date createTime) {
         this.id = id;
         this.name = name;
         this.fileName = fileName;
-        this.createTime = createTime;
     }
 
     public Track() { }
@@ -32,14 +30,6 @@ public class Track {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public String getFileName() {
