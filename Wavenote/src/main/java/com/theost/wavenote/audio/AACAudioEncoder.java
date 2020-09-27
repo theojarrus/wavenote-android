@@ -75,12 +75,12 @@ class AACAudioEncoder extends AudioEncoder {
                         }
 
                         if (readRawAudioEOS) {
-                            audioEncoder.queueInputBuffer(inputBufIndex, 0, 0,0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                            audioEncoder.queueInputBuffer(inputBufIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                             sawInputEOS = true;
                         } else {
                             inputBuffer.put(rawInputBytes, 0, readRawAudioCount);
                             rawAudioSize += readRawAudioCount;
-                            audioEncoder.queueInputBuffer(inputBufIndex, 0,readRawAudioCount, audioTimeUs, 0);
+                            audioEncoder.queueInputBuffer(inputBufIndex, 0, readRawAudioCount, audioTimeUs, 0);
                             audioTimeUs = (long) (1000000 * (rawAudioSize / 2.0) / audioBytesPerSample);
                         }
                     }
@@ -99,7 +99,7 @@ class AACAudioEncoder extends AudioEncoder {
                     if (outBufferInfo.size != 0) {
                         ByteBuffer outBuffer = audioOutputBuffers[outputBufIndex];
                         outBuffer.position(outBufferInfo.offset);
-                        outBuffer.limit(outBufferInfo.offset+ outBufferInfo.size);
+                        outBuffer.limit(outBufferInfo.offset + outBufferInfo.size);
                         Log.i(TAG,
                                 String.format(
                                         " writing audio sample : size=%s , presentationTimeUs=%s",
@@ -138,7 +138,7 @@ class AACAudioEncoder extends AudioEncoder {
                 }
             }
 
-            Log.i(TAG,"acc encode done");
+            Log.i(TAG, "acc encode done");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -170,7 +170,7 @@ class AACAudioEncoder extends AudioEncoder {
     /**
      * Add ADTS header at the beginning of each and every AAC packet. This is
      * needed as MediaCodec encoder generates a packet of raw AAC data.
-     *
+     * <p>
      * Note the packetLen must count in the ADTS header itself.
      **/
     private void addADTStoPacket(byte[] packet, int packetLen) {

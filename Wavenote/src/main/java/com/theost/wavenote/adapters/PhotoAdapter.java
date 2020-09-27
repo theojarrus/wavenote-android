@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ablanco.zoomy.Zoomy;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.theost.wavenote.PhotosActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Photo;
@@ -51,6 +52,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
         Glide.with(mActivity).load(mData.get(position).getBitmap(mActivity))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(Target.SIZE_ORIGINAL)
                 .into(holder.mPhotoView);
 
         holder.mNameEditText.setOnFocusChangeListener((view, hasFocus) -> {

@@ -47,7 +47,7 @@ public class SliderAdapter extends PagerAdapter {
 
     @NonNull
     @Override
-    public Object instantiateItem(ViewGroup viewGroup, int position) {
+    public Object instantiateItem(@NonNull ViewGroup viewGroup, int position) {
         Fresco.initialize(viewGroup.getContext());
         PhotoDraweeView photoDraweeView = new PhotoDraweeView(viewGroup.getContext());
         PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();

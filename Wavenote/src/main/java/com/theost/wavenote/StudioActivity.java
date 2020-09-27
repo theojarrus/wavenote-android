@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioTrack;
@@ -31,6 +32,7 @@ import com.theost.wavenote.audio.MusicRecorder;
 import com.theost.wavenote.configs.AudioConfig;
 import com.theost.wavenote.configs.BundleKeys;
 import com.theost.wavenote.configs.SpConfig;
+import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Track;
 import com.theost.wavenote.utils.ArrayUtils;
 import com.theost.wavenote.utils.AudioUtils;
@@ -39,7 +41,7 @@ import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.IOUtils;
 import com.theost.wavenote.utils.PermissionUtils;
-import com.theost.wavenote.utils.PrefUtils;
+import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.widgets.PCMAnalyser;
 import com.theost.wavenote.widgets.TrackGroupLayout;
@@ -59,13 +61,9 @@ import java.util.UUID;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+public class StudioActivity extends ThemedAppCompatActivity {
 
-public class AudioActivity extends ThemedAppCompatActivity {
-
-    public static final String ARG_NOTE_ID = "note_id";
+    private static final String ARG_NOTE_ID = "note_id";
 
     private static final int STATUS_RECORD_PREPARE = 1;
     private static final int STATUS_RECORD_RECORDING = 2;
@@ -87,34 +85,22 @@ public class AudioActivity extends ThemedAppCompatActivity {
     private static final int WAVE_SPACE_WIDTH = 3;
 
     private DatabaseHelper localDatabase;
-    private AudioActivity mActivity;
+    private StudioActivity mActivity;
 
-    @BindView(R.id.tint_layout)
-    RelativeLayout adjustTintLayout;
-    @BindView(R.id.metronome_toggle)
-    ToggleButton mMetronomeToggle;
-    @BindView(R.id.loop_toggle)
-    ToggleButton mLoopToggle;
-    @BindView(R.id.beat_speed)
-    TextView mSpeedTextView;
-    @BindView(R.id.tune_and_beat)
-    TextView mTuneBeatTextView;
-    @BindView(R.id.layout_control)
-    LinearLayout layoutControl;
-    @BindView(R.id.layout_tracks)
-    TrackGroupLayout layoutTracks;
-    @BindView(R.id.record_track)
-    FloatingActionButton mRecordButton;
-    @BindView(R.id.add_track)
-    ImageButton mAddButton;
-    @BindView(R.id.play_track)
-    ImageButton mPlayButton;
-    @BindView(R.id.reset)
-    ImageButton mStopButton;
-    @BindView(R.id.save)
-    ImageButton mSaveButton;
-    @BindView(R.id.counter)
-    TextView mCountTextView;
+    private MenuItem manageMenuItem;
+
+    private RelativeLayout adjustTintLayout;
+    private ToggleButton mMetronomeToggle;
+    private ToggleButton mLoopToggle;
+    private TextView mSpeedTextView;
+    private TextView mTuneBeatTextView;
+    private LinearLayout layoutControl;
+    private TrackGroupLayout layoutTracks;
+    private FloatingActionButton mRecordButton;
+    private ImageButton mAddButton;
+    private ImageButton mPlayButton;
+    private ImageButton mStopButton;
+    private ImageButton mSaveButton;
 
     private ArrayList<TrackHolder> trackHolderList = new ArrayList<>();
     private TrackHolder recordingTrackHolder;
@@ -134,6 +120,9 @@ public class AudioActivity extends ThemedAppCompatActivity {
     private String currentTune;
     private short currentSpeed;
 
+    private String audioName;
+    private String metronomeSound;
+
     private boolean isLoopPlay;
     private boolean stopBeatPlay;
     private boolean stopPlay;
@@ -141,7 +130,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
     private int bytesPerFrame;
 
     private boolean stopUpdatePlayFrame;
-    private boolean isExporting;
+    private boolean isRendering;
 
     List<Track> trackList;
     private String noteId;
@@ -155,8 +144,8 @@ public class AudioActivity extends ThemedAppCompatActivity {
         ThemeUtils.setTheme(this);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_audio);
-        ButterKnife.bind(this);
+        setContentView(R.layout.activity_studio);
+
         mActivity = this;
         setTitle(R.string.studio);
 
@@ -167,6 +156,35 @@ public class AudioActivity extends ThemedAppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        if (checkPermission()) onBackPressed();
+
+        adjustTintLayout = findViewById(R.id.tint_layout);
+        mMetronomeToggle = findViewById(R.id.metronome_toggle);
+        mLoopToggle = findViewById(R.id.loop_toggle);
+        mSpeedTextView = findViewById(R.id.beat_speed);
+        mTuneBeatTextView = findViewById(R.id.tune_and_beat);
+        layoutControl = findViewById(R.id.layout_control);
+        layoutTracks = findViewById(R.id.layout_tracks);
+        mRecordButton = findViewById(R.id.record_track);
+        mAddButton = findViewById(R.id.add_track);
+        mPlayButton = findViewById(R.id.play_track);
+        mStopButton = findViewById(R.id.reset);
+        mSaveButton = findViewById(R.id.save);
+
+        mMetronomeToggle.setOnClickListener(v -> onBeatSoundClick());
+        mSpeedTextView.setOnClickListener(v -> onBeatSettingClick());
+        mTuneBeatTextView.setOnClickListener(v -> onBeatSettingClick());
+        mLoopToggle.setOnClickListener(v -> onRepeatClick());
+        mSaveButton.setOnClickListener(v -> onSaveClick());
+        mPlayButton.setOnClickListener(v -> onPlayClick());
+        mRecordButton.setOnClickListener(v -> onRecordClick());
+        mStopButton.setOnClickListener(v -> onResetClick());
+        mAddButton.setOnClickListener(v -> onAddTrackClick());
+
+        findViewById(R.id.hide_tint).setOnClickListener(v -> onHideTintClick());
+        findViewById(R.id.adjust_tip).setOnClickListener(v -> onAdjustClick());
+        findViewById(R.id.adjust_record).setOnClickListener(v -> onAdjustClick());
 
         noteId = getIntent().getStringExtra(ARG_NOTE_ID);
 
@@ -202,8 +220,9 @@ public class AudioActivity extends ThemedAppCompatActivity {
             }
         });
 
+        updateMetronome();
         updateAdjustTip();
-        if (PermissionUtils.requestAudioPermissions(this)) loadProjectData();
+        loadProjectData();
     }
 
     private void updateNoteData() {
@@ -234,16 +253,30 @@ public class AudioActivity extends ThemedAppCompatActivity {
             track.setFileName(trackData.getString(3));
             trackList.add(track);
         }
-        mCountTextView.setText(String.valueOf(trackList.size()));
+    }
+
+    private void updateMetronome() {
+        String newSound = Note.getActiveMetronomeSound();
+        if ((newSound != null) && (!newSound.equals(metronomeSound))) metronomeSound = newSound;
+        if (metronomeSound == null)
+            metronomeSound = getResources().getStringArray(R.array.metronome_sounds)[MetronomeActivity.DEFAULT_SOUND];
     }
 
     private void updateAdjustTip() {
-        int asd = SpConfig.sp(this).getRecordAdjustLen();
         if (SpConfig.sp(this).getRecordAdjustLen() == 0) {
             adjustTintLayout.setVisibility(View.VISIBLE);
         } else {
             adjustTintLayout.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private boolean checkPermission() {
+        boolean isPermissionDenied = false;
+        if (!PermissionUtils.requestFilePermissions(this)) isPermissionDenied = true;
+        if (!PermissionUtils.requestAudioPermissions(this)) isPermissionDenied = true;
+        if (isPermissionDenied)
+            DisplayUtils.showToast(this, getResources().getString(R.string.error_permission));
+        return isPermissionDenied;
     }
 
     @Override
@@ -252,15 +285,16 @@ public class AudioActivity extends ThemedAppCompatActivity {
         inflater.inflate(R.menu.audio_list, menu);
         menu.setGroupEnabled(0, false);
         MenuCompat.setGroupDividerEnabled(menu, true);
+        manageMenuItem = menu.findItem(R.id.menu_manage);
+        updateManage();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_remove:
-                return true;
-            case R.id.menu_import:
+            case R.id.menu_manage:
+                showManageDialog();
                 return true;
             case android.R.id.home:
                 invalidateOptionsMenu();
@@ -270,8 +304,55 @@ public class AudioActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.add_track)
-    void onAddTrackClick() {
+    private void showManageDialog() {
+        String[] audioList = getAudioList();
+        new MaterialDialog.Builder(this)
+                .title(R.string.tracks)
+                .positiveText(R.string.remove)
+                .negativeText(R.string.cancel)
+                .items(audioList)
+                .itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+                    removeAudio(text);
+                    return true;
+                }).show();
+    }
+
+    private Handler mRemoveHandler = new Handler(msg -> {
+        updateManage();
+        return true;
+    });
+
+    private void removeAudio(CharSequence[] files) {
+        new Thread() {
+            @Override
+            public void run() {
+                File audioDir = getAudioDir();
+                for (CharSequence i : files)
+                    new File(audioDir, i.toString()).delete();
+                mRemoveHandler.sendEmptyMessage(RESULT_OK);
+            }
+        }.start();
+    }
+
+    private void updateManage() {
+        manageMenuItem.setEnabled(!isAudioEmpty());
+    }
+
+    private boolean isAudioEmpty() {
+        return getAudioList().length == 0;
+    }
+
+    private String[] getAudioList() {
+        return getAudioDir().list();
+    }
+
+    private File getAudioDir() {
+        File dir = new File(getCacheDir() + FileUtils.NOTES_DIR + noteId + FileUtils.AUDIO_DIR);
+        if (!dir.exists()) dir.mkdirs();
+        return dir;
+    }
+
+    private void onAddTrackClick() {
 
         if (playStatus == STATUS_PLAYING
                 || recordStatus == STATUS_RECORD_RECORDING) {
@@ -294,11 +375,10 @@ public class AudioActivity extends ThemedAppCompatActivity {
                 }).build().show();
     }
 
-    @OnClick(R.id.record_track)
-    void onRecordClick() {
 
-        if (!PermissionUtils.requestFilePermissions(this)) return;
-        if (!PermissionUtils.requestAudioPermissions(this)) return;
+    private void onRecordClick() {
+
+        if (checkPermission()) return;
 
         if (recordingTrackHolder == null) {
             DisplayUtils.showToast(this, getResources().getString(R.string.toast_no_record_track));
@@ -326,8 +406,8 @@ public class AudioActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.play_track)
-    void onPlayClick() {
+
+    private void onPlayClick() {
         if (ArrayUtils.isNotEmpty(trackHolderList)) {
             if (playStatus == STATUS_PLAY_PREPARE) {
                 recordBarrier.reset();
@@ -341,8 +421,8 @@ public class AudioActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.reset)
-    void onResetClick() {
+
+    private void onResetClick() {
         if (playStatus == STATUS_PLAY_PREPARE) {
             resetPlay();
         } else if (playStatus == STATUS_PLAYING) {
@@ -355,13 +435,13 @@ public class AudioActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.loop_toggle)
-    void onRepeatClick() {
+
+    private void onRepeatClick() {
         isLoopPlay = mLoopToggle.isChecked();
     }
 
-    @OnClick({R.id.tune_and_beat, R.id.beat_speed})
-    void onBeatSettingClick() {
+
+    private void onBeatSettingClick() {
         Intent intent = new Intent(this, MetronomeActivity.class);
         intent.putExtra(MetronomeActivity.BEAT_SETTING_ARG, true);
         intent.putExtra(BundleKeys.RESULT_BEAT, currentBeat);
@@ -370,26 +450,37 @@ public class AudioActivity extends ThemedAppCompatActivity {
         startActivityForResult(intent, REQ_CODE_BEAT_SETTING);
     }
 
-    @OnClick(R.id.metronome_toggle)
-    void onBeatSoundClick() {
+    private void onBeatSoundClick() {
         stopBeatPlay = !mMetronomeToggle.isChecked();
     }
 
-    @OnClick({R.id.adjust_record, R.id.adjust_tip})
-    void onAdjustClick() {
+    private void onAdjustClick() {
         Intent intent = new Intent();
         intent.setClass(this, AdjustRecordActivity.class);
         startActivityForResult(intent, REQ_CODE_ADJUST_RECORD);
     }
 
-    @OnClick(R.id.hide_tint)
-    void onHideTintClick() {
+
+    private void onHideTintClick() {
         adjustTintLayout.setVisibility(View.INVISIBLE);
     }
 
-    @OnClick(R.id.save)
-    void onSaveClick() {
-        exportAudio();
+
+    private void onSaveClick() {
+        showRenderDialog();
+    }
+
+    private void showRenderDialog() {
+        audioName = "";
+        new MaterialDialog.Builder(this)
+                .title(R.string.render)
+                .positiveText(R.string.save)
+                .negativeText(R.string.cancel)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(R.string.name, 0, (dialog, input) -> {
+                    audioName = StrUtils.formatFilename(input.toString().trim());
+                    if (!audioName.equals("")) renderAudio();
+                }).show();
     }
 
     @Override
@@ -422,69 +513,69 @@ public class AudioActivity extends ThemedAppCompatActivity {
     }
 
     private void loadProjectData() {
-        if (PermissionUtils.requestFilePermissions(this)) {
-            new Thread() {
-                @Override
-                public void run() {
+        new Thread() {
+            @Override
+            public void run() {
 
-                    updateTrackData();
+                File audioDir = new File(getCacheDir() + FileUtils.NOTES_DIR + noteId + FileUtils.TRACKS_DIR);
+                if (!audioDir.exists()) audioDir.mkdirs();
 
-                    if (ArrayUtils.isNotEmpty(trackList)) {
+                updateTrackData();
 
-                        File audioDir = new File(getCacheDir() + FileUtils.AUDIO_DIR);
-                        if (!audioDir.exists()) audioDir.mkdirs();
-                        File tempDir = new File(getCacheDir() + FileUtils.TEMP_DIR);
-                        if (!tempDir.exists()) tempDir.mkdirs();
+                if (ArrayUtils.isNotEmpty(trackList)) {
 
-                        for (Track track : trackList) {
-                            TrackHolder trackHolder = new TrackHolder();
+                    for (Track track : trackList) {
+                        TrackHolder trackHolder = new TrackHolder();
 
-                            try {
-                                File audioFile = new File(getCacheDir() + FileUtils.AUDIO_DIR, track.getFileName());
-                                trackHolder.audioFile = audioFile;
-                                recordPcmAudioFile.readRawFile(audioFile);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-
-                            trackHolder.track = track;
-                            for (double frameGain : recordPcmAudioFile.getFrameGains()) {
-                                trackHolder.audioFrames.add(frameGain);
-                            }
-
-                            trackHolderList.add(trackHolder);
+                        try {
+                            File audioFile = new File(audioDir, track.getFileName());
+                            trackHolder.audioFile = audioFile;
+                            recordPcmAudioFile.readRawFile(audioFile);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
-                    }
 
-                    try {
-                        byte[][] beatsData = FileUtils.getStereoBeatResource(mActivity, "Sticks");
-                        beatStrongBytes = beatsData[0];
-                        beetWeakBytes = beatsData[1];
-                        refreshBeatData();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
+                        trackHolder.track = track;
+                        for (double frameGain : recordPcmAudioFile.getFrameGains()) {
+                            trackHolder.audioFrames.add(frameGain);
+                        }
+
+                        trackHolderList.add(trackHolder);
                     }
-                    playStatus = STATUS_PLAY_PREPARE;
-                    recordStatus = STATUS_RECORD_PREPARE;
-                    mAudioHandler.sendEmptyMessage(R.integer.LOAD_DATA_SUCCESS);
                 }
-            }.start();
+
+                loadMetronomeData();
+
+                playStatus = STATUS_PLAY_PREPARE;
+                recordStatus = STATUS_RECORD_PREPARE;
+                mAudioHandler.sendEmptyMessage(R.integer.LOAD_DATA_SUCCESS);
+            }
+        }.start();
+    }
+
+    private void loadMetronomeData() {
+        try {
+            byte[][] beatsData = FileUtils.getStereoBeatResource(mActivity, metronomeSound);
+            beatStrongBytes = beatsData[0];
+            beetWeakBytes = beatsData[1];
+            refreshBeatData();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
-    private void onExportAudioFail() {
-        loadingDialog.dismiss();
-        DisplayUtils.showToast(this, getResources().getString(R.string.export_failure));
+    private void onRenderAudioFail() {
+        DisplayUtils.showToast(this, getResources().getString(R.string.mix_failure));
     }
 
-    private void onExportAudioSuccess(String outputFilePath) {
-        loadingDialog.dismiss();
+    private void onRenderAudioSuccess(String outputFilePath) {
         new MaterialDialog.Builder(this)
-                .title(R.string.export)
-                .content(R.string.export_succesful)
+                .title(R.string.mix)
+                .content(R.string.mix_succesful)
                 .positiveText(android.R.string.ok)
                 .build()
                 .show();
+        updateManage();
     }
 
     private void onTrackScrollUp(int totalCostBytes) {
@@ -499,22 +590,22 @@ public class AudioActivity extends ThemedAppCompatActivity {
         stopUpdatePlayFrame = false;
     }
 
-    private void exportAudio() {
-        if (!isExporting && ArrayUtils.isNotEmpty(trackHolderList)) {
-            new ExportThread().start();
+    private void renderAudio() {
+        if (!isRendering && ArrayUtils.isNotEmpty(trackHolderList)) {
+            new RenderThread().start();
             showLoadingDialog();
         }
     }
 
     private void showLoadingDialog() {
-        AudioActivity context = this;
+        StudioActivity context = this;
         new CountDownTimer(200, 200) {
             public void onTick(long millisUntilFinished) {
             }
 
             public void onFinish() {
-                if (isExporting)
-                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.export, R.string.exporting);
+                if (isRendering)
+                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.render, R.string.rendering);
             }
         }.start();
     }
@@ -534,7 +625,8 @@ public class AudioActivity extends ThemedAppCompatActivity {
             }
             mSpeedTextView.setText(String.format("= %s", currentSpeed));
             mTuneBeatTextView.setText(String.format("%s  %s", currentTune, currentBeat));
-            refreshBeatData();
+            updateMetronome();
+            loadMetronomeData();
         } else if (requestCode == REQ_CODE_ADJUST_RECORD) {
             updateAdjustTip();
         }
@@ -556,7 +648,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
 
         track.setId(trackId);
 
-        TrackHolder newTrackHolder = new TrackHolder(new File(getCacheDir() + FileUtils.AUDIO_DIR, fileName));
+        TrackHolder newTrackHolder = new TrackHolder(new File(getCacheDir() + FileUtils.NOTES_DIR + noteId + FileUtils.TRACKS_DIR + fileName));
         newTrackHolder.track = track;
         addTrackViews(newTrackHolder, true);
 
@@ -593,7 +685,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
             }
         });
 
-        mCountTextView.setText(String.valueOf(Integer.parseInt(mCountTextView.getText().toString()) + 1));
+        updateButtons();
     }
 
     private void deleteTrack(Track track) {
@@ -613,7 +705,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
 
         layoutControl.removeViewAt(position);
         layoutTracks.removeViewAt(position);
-        mCountTextView.setText(String.valueOf(Integer.parseInt(mCountTextView.getText().toString()) - 1));
+        updateButtons();
     }
 
     private void updateTrack(Track track) {
@@ -623,6 +715,14 @@ public class AudioActivity extends ThemedAppCompatActivity {
             trackHolderList.get(position).mTrackNameTextView.setText(track.getName());
         } else {
             DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+        }
+    }
+
+    private void updateButtons() {
+        if (ArrayUtils.isEmpty(trackList)) {
+            disableViews(mPlayButton, mStopButton, mSaveButton);
+        } else {
+            enableViews(mPlayButton, mStopButton, mSaveButton);
         }
     }
 
@@ -705,6 +805,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
         trackHolder.setViews(btnSound, trackView, tvTrackName);
     }
 
+    @SuppressLint("WrongConstant")
     private void startPlay() {
         if (ArrayUtils.isNotEmpty(trackHolderList)) {
             int newChannelCount = recordStatus == STATUS_RECORD_RECORDING ? trackHolderList.size() : trackHolderList.size() + 1;
@@ -714,6 +815,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
                 musicAudioTrack.release();
                 musicAudioTrack = AudioUtils.createTrack(newChannelCount);
             }
+
             playStatus = STATUS_PLAYING;
             mPlayButton.setImageResource(R.drawable.ma_pause_24dp);
             stopPlay = false;
@@ -791,13 +893,14 @@ public class AudioActivity extends ThemedAppCompatActivity {
         boolean isSoundOn = true;
         InputStream audioStream;
 
-        TrackHolder() {}
+        TrackHolder() {
+        }
 
         TrackHolder(File audioFile) {
             this.audioFile = audioFile;
         }
 
-        void setViews(ImageView btnSound, TrackView trackView, TextView tvTrackName) {
+        private void setViews(ImageView btnSound, TrackView trackView, TextView tvTrackName) {
             this.mSoundToggle = btnSound;
             this.mTrackView = trackView;
             this.mTrackNameTextView = tvTrackName;
@@ -979,12 +1082,14 @@ public class AudioActivity extends ThemedAppCompatActivity {
     }
 
     private Handler mAudioHandler = new Handler(msg -> {
+        if (loadingDialog != null) loadingDialog.dismiss();
         switch (msg.what) {
             case R.integer.RECEIVE_RECORDING_DATA:
                 onReceiveRecordingData();
                 break;
             case R.integer.LOAD_DATA_SUCCESS:
                 onLoadTracksData();
+                updateButtons();
                 break;
             case R.integer.PLAY_AUDIO_FRAME:
                 onPlayFrame();
@@ -996,20 +1101,20 @@ public class AudioActivity extends ThemedAppCompatActivity {
                 onTrackScrollUp(msg.arg1);
                 break;
             case R.integer.EXPORT_AUDIO_SUCCESS:
-                onExportAudioSuccess(msg.obj.toString());
+                onRenderAudioSuccess(msg.obj.toString());
                 break;
             case R.integer.EXPORT_AUDIO_FAIL:
-                onExportAudioFail();
+                onRenderAudioFail();
                 break;
         }
         return true;
     });
 
-    private class ExportThread extends Thread {
+    private class RenderThread extends Thread {
 
         @Override
         public void run() {
-            isExporting = true;
+            isRendering = true;
 
             if (ArrayUtils.isEmpty(trackHolderList)) {
                 return;
@@ -1022,7 +1127,9 @@ public class AudioActivity extends ThemedAppCompatActivity {
             }
 
             try {
-                File tempMixAudioFile = new File(getCacheDir() + FileUtils.TEMP_DIR, UUID.randomUUID().toString());
+                File tempDir = new File(getCacheDir() + FileUtils.TEMP_DIR);
+                if (!tempDir.exists()) tempDir.mkdirs();
+                File tempMixAudioFile = new File(tempDir, UUID.randomUUID().toString());
                 final FileOutputStream mixTempOutStream = new FileOutputStream(tempMixAudioFile);
                 audioMixer.setOnAudioMixListener(new MultiAudioMixer.OnAudioMixListener() {
 
@@ -1044,11 +1151,13 @@ public class AudioActivity extends ThemedAppCompatActivity {
                 audioMixer.mixAudios(audioFiles, recordPcmAudioFile.bytesPerSample());
                 mixTempOutStream.close();
 
-                File outputFile = new File(PrefUtils.getStringPref(mActivity, PrefUtils.PREF_EXPORT_DIR) + FileUtils.AUDIO_DIR,
-                        noteId + FileUtils.AUDIO_FORMAT);
+                File outputDir = getAudioDir();
+                File outputFile = new File(outputDir, audioName + FileUtils.AUDIO_FORMAT);
                 int channelCount = trackHolderList.size();
                 AudioEncoder accEncoder = AudioEncoder.createAccEncoder(tempMixAudioFile, channelCount);
                 accEncoder.encodeToFile(outputFile);
+
+                tempMixAudioFile.delete();
 
                 Message successMsg = Message.obtain();
                 successMsg.what = R.integer.EXPORT_AUDIO_SUCCESS;
@@ -1059,7 +1168,7 @@ public class AudioActivity extends ThemedAppCompatActivity {
                 mAudioHandler.sendEmptyMessage(R.integer.EXPORT_AUDIO_FAIL);
             }
 
-            isExporting = false;
+            isRendering = false;
         }
     }
 

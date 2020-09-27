@@ -1,7 +1,6 @@
 package com.theost.wavenote;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -46,9 +45,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PreferencesFragment extends PreferenceFragmentCompat implements User.StatusChangeListener,
         Simperium.OnUserCreatedListener {
 
@@ -153,6 +149,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         });
 
         final ListPreference themePreference = findPreference(PrefUtils.PREF_THEME);
+        themePreference.setSummary(themePreference.getEntries()[Integer.parseInt(PrefUtils.getStringPref(getContext(), PrefUtils.PREF_THEME))]);
         themePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -170,6 +167,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         });
 
         final ListPreference sortPreference = findPreference(PrefUtils.PREF_SORT_ORDER);
+        sortPreference.setSummary(sortPreference.getEntries()[Integer.parseInt(PrefUtils.getStringPref(getContext(), PrefUtils.PREF_SORT_ORDER))]);
         sortPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             int index = Integer.parseInt(newValue.toString());
             CharSequence[] entries = sortPreference.getEntries();

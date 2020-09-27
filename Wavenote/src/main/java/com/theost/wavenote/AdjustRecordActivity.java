@@ -29,10 +29,6 @@ import java.util.Arrays;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
     private static final int STATUS_PLAY_PREPARE = 1;
@@ -40,10 +36,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
     private static final int ANALYZE_BEAT_LEN = 8;
 
-
-    @BindView(R.id.adjust_result)
     TextView mResultTextView;
-    @BindView(R.id.play_beat)
     ImageButton mPlayButton;
 
     private AudioTrack audioTrack;
@@ -67,7 +60,6 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adjust);
-        ButterKnife.bind(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,8 +70,13 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
         }
 
         setTitle(R.string.adjust_record);
+        setResult(RESULT_CANCELED);
 
-        audioTrack =  AudioUtils.createTrack(AudioConfig.BEAT_CHANNEL_COUNT);
+        mResultTextView = findViewById(R.id.adjust_result);
+        mPlayButton = findViewById(R.id.play_beat);
+        findViewById(R.id.play_beat).setOnClickListener(this::onStartPlayBeat);
+
+        audioTrack = AudioUtils.createTrack(AudioConfig.BEAT_CHANNEL_COUNT);
         pcmAudioFile = PCMAnalyser.createPCMAnalyser(AudioConfig.BEAT_CHANNEL_COUNT);
         audioRecord = AudioUtils.createAudioRecord();
         HandlerThread playBeatHandlerThread = new HandlerThread("PlayBeatHandlerThread");
@@ -88,7 +85,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
         loadBeatData();
     }
 
-    @OnClick(R.id.play_beat)
+
     void onStartPlayBeat(View v) {
         if (playStatus == STATUS_PLAY_PREPARE) {
             mResultTextView.setVisibility(View.INVISIBLE);
@@ -100,7 +97,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
             beatPlayHandler.sendEmptyMessage(R.integer.PLAY_BEAT);
             isFirstRecordWrite = true;
             isFirstPlayWrite = true;
-            playStatus= STATUS_PLAYING;
+            playStatus = STATUS_PLAYING;
             new AdjustThread().start();
         } else if (playStatus == STATUS_PLAYING) {
             stopPlay = true;
@@ -154,7 +151,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
                     playBeatBytes = pcmAudioFile.generateBeatBytes(beatStrongBytes, null, "1/4", 72);
                     readRecordBytesLen = playBeatBytes.length * ANALYZE_BEAT_LEN;
-                    errorRangeByteLen = (int)(pcmAudioFile.bytesPerSecond() / 1000.0 * 10);
+                    errorRangeByteLen = (int) (pcmAudioFile.bytesPerSecond() / 1000.0 * 10);
                     playStatus = STATUS_PLAY_PREPARE;
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -258,8 +255,8 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                     int sampleLen = ANALYZE_BEAT_LEN / 2;
                     int[] sampleValues = new int[sampleLen];
 
-                    for (int beginIndex = sampleLen / 2, i=0; i != sampleLen; i++) {
-                        sampleValues[i] = maxPositions[ i + beginIndex];
+                    for (int beginIndex = sampleLen / 2, i = 0; i != sampleLen; i++) {
+                        sampleValues[i] = maxPositions[i + beginIndex];
                         sampleTotalValue += sampleValues[i];
                     }
 

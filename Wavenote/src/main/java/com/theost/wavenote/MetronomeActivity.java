@@ -63,10 +63,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private static final String BEAT_STRONG = FileUtils.BEAT_STRONG;
@@ -77,7 +73,8 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private static final int STATUS_PLAY_PREPARE = 1;
     private static final int STATUS_PLAYING = 2;
     private static final int FILE_REQUEST = 0;
-    private static final int DEFAULT_SOUND = 1;
+
+    public static final int DEFAULT_SOUND = 1;
 
     private static final int MODE_EXPORT = 1;
     private static final int MODE_REMOVE = -1;
@@ -142,27 +139,16 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     int[] dialogColors;
 
-    @BindView(R.id.metronome_beat)
     TextView mBeatTextView;
-    @BindView(R.id.metronome_sound)
     AutoCompleteTextView mSoundTextView;
-    @BindView(R.id.metronome_speed_down)
     ImageButton mSpeedDownButton;
-    @BindView(R.id.beat_speed)
     TextView mSpeedTextView;
-    @BindView(R.id.metronome_speed_up)
     ImageButton mSpeedUpButton;
-    @BindView(R.id.metronome_speed_bar)
     SeekBar mSpeedBar;
-    @BindView(R.id.metronome_play)
     Button mPlayButton;
-    @BindView(R.id.metronome_tap)
     Button mTapButton;
-    @BindView(R.id.metronome_tune)
     TextView mTuneTextView;
-    @BindView(R.id.actions)
     LinearLayout mActionsLayout;
-    @BindView(R.id.play_action)
     LinearLayout mPlayLayout;
 
     @Override
@@ -170,18 +156,37 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         super.onCreate(savedInstanceState);
         ThemeUtils.setTheme(this);
         setContentView(R.layout.activity_metronome);
-        ButterKnife.bind(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        updateOrientation();
 
         setTitle(R.string.metronome);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        mBeatTextView = findViewById(R.id.metronome_beat);
+        mSoundTextView = findViewById(R.id.metronome_sound);
+        mSpeedDownButton = findViewById(R.id.metronome_speed_down);
+        mSpeedTextView = findViewById(R.id.beat_speed);
+        mSpeedUpButton = findViewById(R.id.metronome_speed_up);
+        mSpeedBar = findViewById(R.id.metronome_speed_bar);
+        mPlayButton = findViewById(R.id.metronome_play);
+        mTapButton = findViewById(R.id.metronome_tap);
+        mTuneTextView = findViewById(R.id.metronome_tune);
+        mActionsLayout = findViewById(R.id.actions);
+        mPlayLayout = findViewById(R.id.play_action);
+
+        findViewById(R.id.metronome_speed_down).setOnClickListener(this::onSpeedDownClick);
+        findViewById(R.id.metronome_speed_up).setOnClickListener(this::onSpeedUpClick);
+        findViewById(R.id.metronome_tune).setOnClickListener(this::onTuneClick);
+        findViewById(R.id.metronome_beat).setOnClickListener(this::onBeatClick);
+        findViewById(R.id.metronome_tap).setOnClickListener(this::onTapClick);
+        findViewById(R.id.metronome_play).setOnClickListener(this::onPlayClick);
+
+        updateOrientation();
 
         isBeatSetting = getIntent().getBooleanExtra(BEAT_SETTING_ARG, false);
         currentSpeed = getIntent().getShortExtra(BundleKeys.RESULT_SPEED, Note.getActiveMetronomeSpeed());
@@ -335,7 +340,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.metronome_play)
+
     void onPlayClick(View v) {
         if (playStatus == STATUS_PLAY_PREPARE) {
             mPlayButton.setText(R.string.stop);
@@ -353,7 +358,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.metronome_tap)
+
     void onTapClick(View v) {
         int tapEnd = (int) System.currentTimeMillis();
         double tapSpeed = MS_IN_MINUTE / (double) (tapEnd - tapStart);
@@ -371,7 +376,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.metronome_beat)
+
     void onBeatClick(View v) {
         new MaterialDialog.Builder(this)
                 .title(R.string.select_beat)
@@ -379,7 +384,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 .itemsCallback((dialog, view, which, text) -> refreshBeat(text.toString())).show();
     }
 
-    @OnClick(R.id.metronome_tune)
+
     void onTuneClick(View v) {
         new MaterialDialog.Builder(this)
                 .title(R.string.select_tone)
@@ -390,7 +395,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 }).show();
     }
 
-    @OnClick(R.id.metronome_speed_up)
+
     void onSpeedUpClick(View v) {
         if (currentSpeed != MAX_SPEED) {
             currentSpeed++;
@@ -398,7 +403,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @OnClick(R.id.metronome_speed_down)
+
     void onSpeedDownClick(View v) {
         if (currentSpeed != MIN_SPEED) {
             currentSpeed--;

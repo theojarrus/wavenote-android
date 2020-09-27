@@ -22,7 +22,7 @@ import java.util.Locale;
 public class AboutFragment extends Fragment {
 
     private static final String DEVELOPER_INSTAGRAM_URL = "http://instagram.com/theo.jedi";
-    private static final String DEVELOPER_SUPPORT_URL = "http://buymeacoffee.com/theojedi";
+    private static final String DEVELOPER_SUPPORT_URL = "http://patreon.com/theojedi";
     private static final String WAVENOTE_GITHUB_URL = "http://github.com/fedor-jedi/wavenote-android";
     private static final String PLAY_STORE_URL = "http://play.google.com/store/apps/details?id=";
     private static final String PLAY_STORE_URI = "market://details?id=";

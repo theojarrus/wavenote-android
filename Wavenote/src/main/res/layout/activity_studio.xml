@@ -16,40 +16,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ToggleButton
-                android:id="@+id/metronome_toggle"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/custom_icon_size"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:textColor="@drawable/toggle_selector"
-                android:textOff="@string/metronome_en"
-                android:textOn="@string/metronome_en" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="-1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@color/dividerColor" />
-
-            <ToggleButton
-                android:id="@+id/countdown_toggle"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/custom_icon_size"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:textColor="@drawable/toggle_selector"
-                android:textOff="@string/countdown_en"
-                android:textOn="@string/countdown_en" />
-
-        </LinearLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -66,29 +32,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/count_layout"
-                android:layout_width="@dimen/custom_icon_size"
-                android:layout_height="@dimen/custom_icon_size"
-                android:orientation="vertical"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/counter"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:text="@string/passcodelock_numpad_0" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/controls_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/count_layout"
-                app:layout_constraintRight_toLeftOf="@id/file_controls_layout"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <View
@@ -99,14 +47,14 @@
                     android:background="@color/dividerColor" />
 
                 <ToggleButton
-                    android:id="@+id/mix_toggle"
+                    android:id="@+id/metronome_toggle"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/custom_icon_size"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:textColor="@drawable/toggle_selector"
-                    android:textOff="@string/mix"
-                    android:textOn="@string/mix" />
+                    android:textOff="@string/metronome_en"
+                    android:textOn="@string/metronome_en" />
 
                 <View
                     android:layout_width="1dp"
@@ -147,21 +95,11 @@
                     android:layout_marginBottom="1dp"
                     android:background="@color/dividerColor" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/file_controls_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/controls_layout"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
                 <ImageButton
                     android:id="@+id/save"
                     android:layout_width="@dimen/custom_icon_size"
                     android:layout_height="@dimen/custom_icon_size"
-                    android:background="@android:color/transparent"
+                    android:background="?selectableItemBackground"
                     android:contentDescription="@string/export"
                     android:src="@drawable/ma_save_24dp" />
 
@@ -286,6 +224,7 @@
                     android:paddingBottom="@dimen/custom_padding_small"
                     android:drawableStart="@drawable/m_audiotrack_black_18dp"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:textSize="12sp"
                     tools:text="120" />
 
@@ -297,9 +236,9 @@
                     android:paddingBottom="@dimen/custom_padding_small"
                     android:paddingStart="@dimen/custom_padding_small"
                     android:paddingEnd="@dimen/custom_padding_small"
-                    android:textSize="14sp"
                     android:textStyle="bold"
-                    tools:text="4/4" />
+                    android:textSize="14sp"
+                    tools:text="C 4/4" />
             </LinearLayout>
 
             <View

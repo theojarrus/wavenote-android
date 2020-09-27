@@ -91,6 +91,8 @@ public class ExportUtils {
         String htmlMode = context.getString(R.string.html);
         String jsonMode = context.getString(R.string.json);
         String photoMode = context.getString(R.string.photo);
+        String audioMode = context.getString(R.string.audio);
+        String tracksMode = context.getString(R.string.tracks);
         String zipMode = context.getString(R.string.zip);
 
         if (modes.contains(textMode)) {
@@ -111,8 +113,18 @@ public class ExportUtils {
         }
 
         if (modes.contains(photoMode)) {
-            boolean isExported = ExportUtils.exportPhoto(directorySource, new File(directoryExport + FileUtils.PHOTOS_DIR));
+            boolean isExported = ExportUtils.exportMedia(new File(directorySource + FileUtils.PHOTOS_DIR), new File(directoryExport + FileUtils.PHOTOS_DIR));
             resultMap.put(photoMode, isExported);
+        }
+
+        if (modes.contains(audioMode)) {
+            boolean isExported = ExportUtils.exportMedia(new File(directorySource + FileUtils.AUDIO_DIR), new File(directoryExport + FileUtils.AUDIO_DIR));
+            resultMap.put(audioMode, isExported);
+        }
+
+        if (modes.contains(tracksMode)) {
+            boolean isExported = ExportUtils.exportMedia(new File(directorySource + FileUtils.TRACKS_DIR), new File(directoryExport + FileUtils.TRACKS_DIR));
+            resultMap.put(tracksMode, isExported);
         }
 
         if (modes.contains(zipMode)) {
@@ -181,14 +193,13 @@ public class ExportUtils {
         }
     }
 
-    public static boolean exportPhoto(File directorySource, File directoryExport) {
-        File dirPhotoSource = new File(directorySource + FileUtils.PHOTOS_DIR);
+    public static boolean exportMedia(File directorySource, File directoryExport) {
         try {
             ArrayList<Boolean> copiedFiles = new ArrayList<>();
-            String[] photos = dirPhotoSource.list();
-            if (photos == null || photos.length == 0) return false;
-            for (String j : photos) {
-                copiedFiles.add(FileUtils.copyFile(dirPhotoSource, directoryExport, j));
+            String[] files = directorySource.list();
+            if (files == null || files.length == 0) return false;
+            for (String j : files) {
+                copiedFiles.add(FileUtils.copyFile(directorySource, directoryExport, j));
             }
             if (!copiedFiles.contains(false))
                 return true;

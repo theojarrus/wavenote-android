@@ -13,7 +13,6 @@
             android:entries="@array/array_sort_order"
             android:entryValues="@array/array_sort_order_values"
             android:key="pref_key_sort_order"
-            android:summary="%s"
             android:title="@string/sort_order"/>
     </PreferenceCategory>
 
@@ -33,7 +32,6 @@
             android:entries="@array/array_theme_names"
             android:entryValues="@array/array_theme_values"
             android:key="pref_key_theme"
-            android:summary="%s"
             android:title="@string/theme"/>
     </PreferenceCategory>
 
@@ -44,7 +42,6 @@
             android:entries="@array/array_font_size"
             android:entryValues="@array/array_font_size_values"
             android:key="pref_key_font_size"
-            android:summary="%s"
             android:title="@string/font_size"/>
         <Preference
             android:key="pref_key_dictionary"

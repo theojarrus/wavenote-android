@@ -21,7 +21,6 @@ import java.lang.annotation.Retention;
 import static com.theost.wavenote.models.Note.PINNED_INDEX_NAME;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-@SuppressWarnings("unused")
 public class PrefUtils {
 
     // key names for various preferences - note that these same key names are hard-coded in Preferences.xml
@@ -39,7 +38,7 @@ public class PrefUtils {
     public static final String PREF_SHOW_DATES = "pref_key_show_dates";
 
     // int, preferred font size
-    private static final String PREF_FONT_SIZE = "pref_key_font_size";
+    public static final String PREF_FONT_SIZE = "pref_key_font_size";
 
     // boolean, determines keywords content in the editor
     public static final String PREF_DETECT_SYNTAX = "pref_key_detect_syntax";

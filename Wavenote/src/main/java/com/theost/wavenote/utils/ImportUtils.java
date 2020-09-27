@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ImportUtils {
@@ -114,7 +115,6 @@ public class ImportUtils {
     }
 
     public static void importMedia(Context context, File sourceDirectory, String note) {
-        DatabaseHelper database = new DatabaseHelper(context);
         String[] noteDirs = sourceDirectory.list();
         if (noteDirs == null || noteDirs.length == 0) return;
         List<String> mediaDirs = new ArrayList<>(Arrays.asList(noteDirs));
@@ -122,30 +122,52 @@ public class ImportUtils {
         if (mediaDirs.size() != 0) {
             File noteDirectory = new File(context.getCacheDir() + FileUtils.NOTES_DIR + note);
             if (mediaDirs.contains(new File(FileUtils.PHOTOS_DIR).getName())) {
-                File photoSourceDirectory = new File(sourceDirectory + FileUtils.PHOTOS_DIR);
-                String[] mediaFiles = photoSourceDirectory.list();
-                if (mediaFiles != null && mediaFiles.length != 0) {
-                    File photoNoteDirectory = new File(noteDirectory + FileUtils.PHOTOS_DIR);
-                    for (String i : mediaFiles) {
-                        File photoFile = new File(photoSourceDirectory, i);
-                        if (!photoFile.isDirectory()) {
-                            try {
-                                boolean isCopied = FileUtils.copyFile(photoFile, photoNoteDirectory, photoFile.getName());
-                                String asd = photoNoteDirectory + photoFile.getName();
-                                if (isCopied)
-                                    database.insertImageData(note, "", photoNoteDirectory + "/" + photoFile.getName(),
+                boolean isImported = copyMedia(context, sourceDirectory, noteDirectory, FileUtils.PHOTOS_DIR, note);
+            }
+            if (mediaDirs.contains(new File(FileUtils.AUDIO_DIR).getName())) {
+                boolean isImported = copyMedia(context, sourceDirectory, noteDirectory, FileUtils.AUDIO_DIR, note);
+            }
+            if (mediaDirs.contains(new File(FileUtils.TRACKS_DIR).getName())) {
+                boolean isImported = copyMedia(context, sourceDirectory, noteDirectory, FileUtils.TRACKS_DIR, note);
+            }
+        }
+    }
+
+    public static boolean copyMedia(Context context, File sourceDirectory, File noteDirectory, String mediaDir, String note) {
+        DatabaseHelper database = new DatabaseHelper(context);
+        File mediaSourceDirectory = new File(sourceDirectory + mediaDir);
+        String[] mediaFiles = mediaSourceDirectory.list();
+        boolean isImported = true;
+        if (mediaFiles != null && mediaFiles.length != 0) {
+            File mediaNoteDirectory = new File(noteDirectory + mediaDir);
+            for (String i : mediaFiles) {
+                File mediaFile = new File(mediaSourceDirectory, i);
+                if (!mediaFile.isDirectory()) {
+                    try {
+                        boolean isCopied = FileUtils.copyFile(mediaFile, mediaNoteDirectory, mediaFile.getName());
+                        if (isCopied) {
+                            switch (mediaDir) {
+                                case FileUtils.PHOTOS_DIR:
+                                    database.insertImageData(note, "", mediaNoteDirectory + "/" + mediaFile.getName(),
                                             DateTimeUtils.getDateTextString(context, Calendar.getInstance()));
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                    break;
+                                case FileUtils.TRACKS_DIR:
+                                    database.insertTrackData(note, "", mediaFile.getName(), (int) new Date().getTime());
+                                    break;
                             }
+                        } else {
+                            isImported = false;
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        isImported = false;
                     }
                 }
             }
-            // you can add here conditions for other media (for example audio)
         }
+        return isImported;
     }
-    
+
     public static int importPhoto(File file, Bitmap bitmap) {
         if (bitmap != null) {
             try {

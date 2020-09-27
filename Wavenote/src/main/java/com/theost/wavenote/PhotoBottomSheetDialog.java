@@ -37,7 +37,6 @@ import static android.app.Activity.RESULT_OK;
 public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     private static final String ARG_IMAGE_LINK = "image_link";
-    private static final String DOCUMENT_TYPE = "photo";
 
     private static final String TAG = InfoBottomSheetDialog.class.getSimpleName();
     private static final int CAMERA_REQUEST = 0;
@@ -93,7 +92,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         if (resultCode == RESULT_OK) {
             Bitmap imageBitmap = null;
             String imageLink = null;
-            File imageFile = FileUtils.createNoteFile(mActivity, noteId, DOCUMENT_TYPE);
+            File imageFile = FileUtils.createPhotoFile(mActivity, noteId);
             if (imageFile == null) {
                 dismiss();
                 return;

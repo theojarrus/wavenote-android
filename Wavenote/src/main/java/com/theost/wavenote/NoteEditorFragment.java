@@ -416,7 +416,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     menu.findItem(R.id.stylize).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     for (int i = 0; i < menu.size(); i++) {
                         menu.getItem(i).setTitle("");
-                        menu.getItem(i).getIcon().setTint(getContext().getResources().getColor(getActionColor()));
+                        int color;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            color = getContext().getResources().getColor(getActionColor(), requireActivity().getTheme());
+                        } else {
+                            color = getContext().getResources().getColor(getActionColor());
+                        }
+                        menu.getItem(i).getIcon().setTint(color);
+
                     }
                 }
                 return true;
@@ -904,8 +911,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private void showExportDialog() {
         List<String> exportModes = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.array_export_modes)));
         File photoDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.PHOTOS_DIR);
+        File audioDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.AUDIO_DIR);
+        File tracksDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.TRACKS_DIR);
         if (!photoDir.exists() || photoDir.list().length == 0)
             exportModes.remove(getResources().getString(R.string.photo));
+        if (!audioDir.exists() || audioDir.list().length == 0)
+            exportModes.remove(getResources().getString(R.string.audio));
+        if (!tracksDir.exists() || tracksDir.list().length == 0)
+            exportModes.remove(getResources().getString(R.string.tracks));
 
         new MaterialDialog.Builder(getContext())
                 .title(R.string.export)
@@ -1041,7 +1054,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void startAudioActivity() {
-        Intent intent = new Intent(getActivity(), AudioActivity.class);
+        Intent intent = new Intent(getActivity(), StudioActivity.class);
         intent.putExtra(PhotosActivity.ARG_NOTE_ID, mNote.getSimperiumKey());
         startActivity(intent);
     }

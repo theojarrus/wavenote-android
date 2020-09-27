@@ -16,7 +16,7 @@ import java.nio.channels.FileChannel;
 
 public class MusicRecorder {
 
-    private final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
+    public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
 
     private static final int STATUS_NOT_READY = 0x0;
     private static final int STATUS_READY = 0x1;

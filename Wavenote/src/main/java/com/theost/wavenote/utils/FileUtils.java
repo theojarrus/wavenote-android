@@ -3,9 +3,8 @@ package com.theost.wavenote.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 
-import com.google.android.gms.common.util.IOUtils;
+import com.facebook.common.internal.ByteStreams;
 import com.theost.wavenote.R;
 
 import net.lingala.zip4j.ZipFile;
@@ -26,20 +25,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 public class FileUtils {
 
-    private static final String DEFAULT_EXPORT_DIR = "Wavenote";
+    private static final String DEFAULT_EXPORT_DIR = "Documents/Wavenote";
     private static final String PRIMARY_VOLUME_NAME = "primary";
 
     public static final String METRONOME_DIR = "/Metronome/";
-    public static final String TEMP_DIR = "/Temp/";
     public static final String NOTES_DIR = "/Notes/";
     public static final String PHOTOS_DIR = "/Photo/";
     public static final String AUDIO_DIR = "/Audio/";
+    public static final String TRACKS_DIR = "/Tracks/";
     public static final String TEXT_DIR = "/Text/";
     public static final String ACTIVE_DIR = "/Active/";
     public static final String TRASHED_DIR = "/Trashed/";
+
+    public static final String TEMP_DIR = "/temp/";
+    public static final String TMIX_DIR = "/mix/";
+    public static final String TFILES_DIR = "/files/";
+    public static final String TTRACKS_DIR = "/tracks/";
 
     public static final String TEXT_FORMAT = ".txt";
     public static final String HTML_FORMAT = ".htm";
@@ -66,23 +71,9 @@ public class FileUtils {
         writer.close();
     }
 
-    public static File createNoteFile(Context context, String noteId, String type) {
-        File file;
-        String path = NOTES_DIR + noteId;
-        String format;
-        switch (type) {
-            case "photo":
-                path += PHOTOS_DIR;
-                format = PHOTO_FORMAT;
-                break;
-            case "audio":
-                path += AUDIO_DIR;
-                format = AUDIO_FORMAT;
-                break;
-            default:
-                return null;
-        }
-        return getCacheFile(context, path, type, format);
+    public static File createPhotoFile(Context context, String noteId) {
+        String path = NOTES_DIR + noteId + PHOTOS_DIR;
+        return getCacheFile(context, path, UUID.randomUUID().toString(), PHOTO_FORMAT);
     }
 
     public static File getCacheFile(Context context, String dir, String name, String format) {
@@ -90,11 +81,13 @@ public class FileUtils {
         File directory = new File(context.getCacheDir() + dir);
         if (!directory.exists()) directory.mkdirs();
         while (true) {
-            fileId += 1;
-            File file = new File(directory.getPath(), "/" + name + "_" + fileId + format);
+            String path = "/" + name;
+            if (fileId > 0) path += "_" + fileId;
+            File file = new File(directory.getPath(), path + format);
             if (!file.exists()) {
                 return file;
             }
+            fileId += 1;
         }
     }
 
@@ -119,11 +112,11 @@ public class FileUtils {
     }
 
     public static File createTempFile(Context context, InputStream in, String format) throws IOException {
-        File directory = new File(context.getCacheDir() + TEMP_DIR);
+        File directory = new File(context.getCacheDir() + TEMP_DIR, FileUtils.TFILES_DIR);
         if (!directory.exists()) directory.mkdirs();
         File tempFile = File.createTempFile(PREFIX, format, directory);
         FileOutputStream out = new FileOutputStream(tempFile);
-        IOUtils.copyStream(in, out);
+        ByteStreams.copy(in, out);
         tempFile.deleteOnExit();
         return tempFile;
     }
@@ -193,10 +186,14 @@ public class FileUtils {
     }
 
     public static String getDefaultDir(Context context) {
-        File dir = new File(Environment.getExternalStorageDirectory(), DEFAULT_EXPORT_DIR);
+        File dir = new File(getStorageDir(context), DEFAULT_EXPORT_DIR);
         if (!dir.exists())
-            dir.mkdirs();
+            dir.mkdir();
         return dir.getAbsolutePath();
+    }
+
+    public static File getStorageDir(Context context) {
+        return context.getExternalFilesDir("").getParentFile().getParentFile().getParentFile().getParentFile();
     }
 
     public static int getResId(String resName, Class<?> c) {

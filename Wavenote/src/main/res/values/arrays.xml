@@ -54,6 +54,8 @@
         <item>@string/html</item>
         <item>@string/text</item>
         <item>@string/photo</item>
+        <item>@string/audio</item>
+        <item>@string/tracks</item>
         <item>@string/zip</item>
     </string-array>
 

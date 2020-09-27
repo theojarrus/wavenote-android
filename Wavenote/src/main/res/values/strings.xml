@@ -126,7 +126,7 @@
     <string name="about_play_store">Google Play Store</string>
     <string name="rate_us">Rate App</string>
     <string name="no_browser_available">\"Unable to open website. No browser available.\"</string>
-    <string name="donate_developer">Buy Developer a Coffee</string>
+    <string name="donate_developer">Donate</string>
     <string name="instagram" translatable="false">Instagram</string>
     <string name="about_instagram_handle" translatable="false">\@theo.jedi</string>
     <string name="about_donate_handle" translatable="false">\@theojedi</string>
@@ -265,6 +265,8 @@
     <string name="text_color">Text Color</string>
     <string name="export">Export</string>
     <string name="import_text">Import</string>
+    <string name="render">Mix</string>
+    <string name="manage">Manage</string>
     <string name="data">Data</string>
     <string name="choose">Choose</string>
     <string name="choose_samples">Choose samples</string>
@@ -291,6 +293,7 @@
     <string name="note">Note</string>
 
     <string name="photo">Photo</string>
+    <string name="audio">Audio</string>
     <string name="text">Text</string>
     <string name="html" translatable="false">Html</string>
     <string name="json">Json (for import)</string>
@@ -314,6 +317,7 @@
     <string name="convert_error">Conversion error</string>
     <string name="database_error">Database request error</string>
     <string name="exist_error">Already exist</string>
+    <string name="error_permission">Permission required</string>
     <string name="android_error">Deprecated Android version</string>
     <string name="exporting_error">Wait a bit, already exporting</string>
     <string name="feature_error">This feature will be available in the next version</string>
@@ -324,6 +328,7 @@
     <string name="dictionary_summary">Edit keywords list</string>
     <string name="add">Add</string>
     <string name="keyword">Keyword</string>
+    <string name="tracks">Tracks</string>
     <string name="reset">Reset</string>
     <string name="type">Type</string>
     <string name="date">Date</string>
@@ -332,8 +337,8 @@
     <string name="name">Name</string>
     <string name="chords">Chords</string>
     <string name="metronome_en" translatable="false">Metronome</string>
-    <string name="countdown_en" translatable="false">Countdown</string>
     <string name="metronome">Metronome</string>
+    <string name="mix">Mix</string>
     <string name="mute">Mute</string>
     <string name="guitar" translatable="false">Guitar</string>
     <string name="piano" translatable="false">Piano</string>
@@ -351,8 +356,11 @@
     <string name="import_failure">%d notes imported with some errors</string>
     <string name="export_succesful">Successfully exported</string>
     <string name="export_failure">Some errors with exporting</string>
+    <string name="mix_succesful">Successfully mixed. You can export your audio files from note editor menu</string>
+    <string name="mix_failure">Some errors with mixing</string>
     <string name="exporting">Exporting… It could take a some time.</string>
     <string name="importing">Importing… It could take a some time.</string>
+    <string name="rendering">Mixing… It could take a some time.</string>
     <string name="extracting">Extracting… It could take a some time.</string>
     <string name="editing">Editing… It could take a some time.</string>
     <string name="add_photo_storage">Files</string>
@@ -365,7 +373,6 @@
     <string name="loop" translatable="false">Loop</string>
     <string name="tap" translatable="false">Tap</string>
     <string name="adjust_record">Adjust record</string>
-    <string name="mix" translatable="false">Mix</string>
     <string name="get">Get</string>
     <string name="select_tone">Select Tone</string>
     <string name="select_beat">Select Beat</string>
@@ -389,7 +396,7 @@
     <string name="adjust_failed">Retry!</string>
     <string name="adjust_success_tip">Success! You can back to do the recording now</string>
     <string name="adjust_failed_tip">Failed! You need to try to adjust again</string>
-    <string name="adjust_delay_record_time_tip">Put on headset, click the button, follow the beat sound to sing La La La…</string>
+    <string name="adjust_delay_record_time_tip">Put on headset, click the button, follow the beat sound to click</string>
     <string name="adjust_record_reason">There is a time lag between the beginning of the synchronization of the sound and the beginning of the headset and recording, so a synchronization adjustment is required. Noted that whenever you change a new headset for recording, it is recommended to recalibrate, it would be better to synchronize the recording.</string>
     <string name="first_record_adjust_tip">Please adjust record before your first start!</string>
 

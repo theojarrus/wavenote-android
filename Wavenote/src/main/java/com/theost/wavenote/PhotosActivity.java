@@ -202,8 +202,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                if (PermissionUtils.requestFilePermissions(this))
-                    showPhotoSheet();
+                showPhotoSheet();
                 return true;
             case R.id.menu_remove:
                 showRemoveDialog();
@@ -252,7 +251,15 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         return noteId;
     }
 
+    private boolean checkPermission() {
+        boolean isPermissionDenied = false;
+        if (!PermissionUtils.requestFilePermissions(this)) isPermissionDenied = true;
+        if (isPermissionDenied) DisplayUtils.showToast(this, getResources().getString(R.string.error_permission));
+        return isPermissionDenied;
+    }
+
     private void showPhotoSheet() {
+        if (checkPermission()) return;
         if (!mPhotoBottomSheet.isAdded()) mPhotoBottomSheet.show(getSupportFragmentManager());
     }
 
@@ -272,11 +279,12 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private void updateAdapter() {
         adapter.updateData(mPhotoList);
         if (updateEmptyView()) sortItems();
-        if (loadingDialog != null) loadingDialog.dismiss();
     }
 
     private Handler mUpdateHandler = new Handler(msg -> {
         if (msg.what == ImportUtils.RESULT_OK) {
+            if (mPhotoList == null || mPhotoList.size() == 0)
+                mSortLayout.setVisibility(View.INVISIBLE);
             updateAdapter();
         } else if (msg.what == ImportUtils.DATABASE_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
@@ -287,11 +295,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private class UpdateDataThread extends Thread {
         public void run() {
             Cursor mImageData = localDatabase.getImageData(noteId);
-            if (mImageData == null || mImageData.getCount() == 0) {
-                mSortLayout.setVisibility(View.INVISIBLE);
-            } else {
-                updatePhotos(mImageData);
-            }
+            updatePhotos(mImageData);
             mUpdateHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
         }
     }
@@ -434,8 +438,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             }
 
             public void onFinish() {
-                if (isImporting)
-                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_text, R.string.importing);
+                if (isImporting) loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_text, R.string.importing);
             }
         }.start();
     }
@@ -452,6 +455,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         } else if (msg.what == ImportUtils.URI_ERROR) {
             DisplayUtils.showToast(this, getResources().getString(R.string.photo_error));
         }
+        if (loadingDialog != null) loadingDialog.dismiss();
         clearImportData();
         return true;
     });
@@ -461,16 +465,18 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         public void run() {
             isImporting = true;
 
-            if (imageImportBitmap == null)
-                imageImportBitmap = ImportUtils.getLinkImage(imageImportLink);
+            if (imageImportBitmap == null) imageImportBitmap = ImportUtils.getLinkImage(imageImportLink);
+
             if (imageImportBitmap == null) {
                 mImportHandler.sendEmptyMessage(ImportUtils.LINK_ERROR);
+                isImporting = false;
                 return;
             }
 
             int fileResultCode = ImportUtils.importPhoto(imageImportFile, imageImportBitmap);
             if (fileResultCode != ImportUtils.RESULT_OK) {
                 mImportHandler.sendEmptyMessage(fileResultCode);
+                isImporting = false;
                 return;
             }
 

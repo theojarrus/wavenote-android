@@ -52,7 +52,7 @@
             android:label="Chords"
             android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
 
-        <activity android:name="com.theost.wavenote.AudioActivity"
+        <activity android:name="com.theost.wavenote.StudioActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Studio"
             android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
@@ -60,7 +60,7 @@
         <activity android:name="com.theost.wavenote.AdjustRecordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Adjust"
-            android:parentActivityName="com.theost.wavenote.AudioActivity"/>
+            android:parentActivityName="com.theost.wavenote.StudioActivity"/>
 
         <activity
             android:name="com.theost.wavenote.NoteEditorActivity"

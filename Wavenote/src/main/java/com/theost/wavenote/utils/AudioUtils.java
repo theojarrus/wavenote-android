@@ -6,7 +6,8 @@ import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
-import android.media.MediaRecorder;
+
+import com.theost.wavenote.audio.MusicRecorder;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -64,7 +65,7 @@ public class AudioUtils {
                 channelConfig = AudioFormat.CHANNEL_OUT_7POINT1;
             }
         } else {
-            throw new IllegalArgumentException("channelCount not support");
+            throw new IllegalArgumentException("ChannelCount not support");
         }
 
         int bufferSizeInBytes = AudioTrack.getMinBufferSize(AUDIO_SAMPLE_RATE, channelConfig, AUDIO_ENCODING);
@@ -78,7 +79,7 @@ public class AudioUtils {
 
     public static AudioRecord createAudioRecord() {
         final int minBufferSize = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_IN_CHANNEL, AUDIO_ENCODING);
-        return new AudioRecord(MediaRecorder.AudioSource.MIC, AUDIO_SAMPLE_RATE, AUDIO_IN_CHANNEL, AUDIO_ENCODING, minBufferSize);
+        return new AudioRecord(MusicRecorder.AUDIO_INPUT, AUDIO_SAMPLE_RATE, AUDIO_IN_CHANNEL, AUDIO_ENCODING, minBufferSize);
     }
 
 
