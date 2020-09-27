@@ -10,15 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.theost.wavenote.models.Note;
-import com.theost.wavenote.utils.ChecklistUtils;
-import com.theost.wavenote.utils.PrefUtils;
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.User;
-
-import static com.theost.wavenote.utils.WidgetUtils.KEY_WIDGET_CLICK;
+import com.theost.wavenote.models.Note;
+import com.theost.wavenote.utils.ChecklistUtils;
+import com.theost.wavenote.utils.PrefUtils;
 
 public class NoteWidgetDark extends AppWidgetProvider {
     public static final String KEY_WIDGET_IDS_DARK = "key_widget_ids_dark";
@@ -91,15 +89,10 @@ public class NoteWidgetDark extends AppWidgetProvider {
 
             views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
             views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.log_in_use_widget));
+            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
             views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.log_in_use_widget));
+            views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
             views.setViewVisibility(R.id.widget_text_content, View.GONE);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-            } else {
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark));
-            }
         } else {
             // Get note id from SharedPreferences
             String key =  PrefUtils.getStringPref(context, PrefUtils.PREF_NOTE_WIDGET_NOTE + appWidgetId);
@@ -134,14 +127,9 @@ public class NoteWidgetDark extends AppWidgetProvider {
                     // Set widget content
                     views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                     views.setTextViewText(R.id.widget_text, title);
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                     views.setTextViewText(R.id.widget_text_title, title);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    } else {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark));
-                    }
+                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                     SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
                     contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
                             contentSpan,
@@ -157,28 +145,18 @@ public class NoteWidgetDark extends AppWidgetProvider {
 
                     views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                     views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                     views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
+                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                     views.setViewVisibility(R.id.widget_text_content, View.GONE);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    } else {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark));
-                    }
                 }
             } else {
                 views.setOnClickPendingIntent(R.id.widget_layout, null);
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
+                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setViewVisibility(R.id.widget_text_content, View.GONE);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                } else {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark));
-                }
             }
         }
 

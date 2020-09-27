@@ -23,6 +23,7 @@
     <attr name="chipCheckedOnBackgroundColor" format="reference" />
     <attr name="chipTextColor" format="reference" />
     <attr name="pinIconSelector" format="reference" />
+    <attr name="keyBackgroundColor" format="reference"/>
 
     <attr name="toolbarColor" format="reference|color" />
     <attr name="toolbarIconColor" format="reference|color" />

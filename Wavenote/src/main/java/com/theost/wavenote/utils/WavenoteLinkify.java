@@ -11,6 +11,10 @@ public class WavenoteLinkify {
 
     static public final String WAVENOTE_SCHEME = "wavenote";
     static public final Pattern WAVENOTE_LINK_PATTERN = Pattern.compile("wavenote://preferences/[^\\s]*");
+    public static final String SIMPLENOTE_SCHEME = "wavenote://";
+    public static final String SIMPLENOTE_LINK_PREFIX = SIMPLENOTE_SCHEME + "note/";
+    public static final String SIMPLENOTE_LINK_ID = "([a-zA-Z0-9_.\\-%@]{1,256})";
+    public static final Pattern SIMPLENOTE_LINK_PATTERN = Pattern.compile(SIMPLENOTE_LINK_PREFIX + SIMPLENOTE_LINK_ID);
 
     // Works the same as Linkify.addLinks, but doesn't set movement method
     public static boolean addLinks(TextView text, int mask) {
@@ -35,5 +39,13 @@ public class WavenoteLinkify {
 
             return false;
         }
+    }
+
+    public static String getNoteLink(String id) {
+        return "(" + SIMPLENOTE_LINK_PREFIX + id + ")";
+    }
+
+    public static String getNoteLinkWithTitle(String title, String id) {
+        return "[" + title + "]" + getNoteLink(id);
     }
 }

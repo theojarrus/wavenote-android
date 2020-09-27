@@ -24,7 +24,6 @@ public class AboutFragment extends Fragment {
     private static final String DEVELOPER_INSTAGRAM_URL = "http://instagram.com/theo.jedi";
     private static final String DEVELOPER_SUPPORT_URL = "http://patreon.com/theojedi";
     private static final String WAVENOTE_GITHUB_URL = "http://github.com/fedor-jedi/wavenote-android";
-    private static final String PLAY_STORE_URL = "http://play.google.com/store/apps/details?id=";
     private static final String PLAY_STORE_URI = "market://details?id=";
 
     @Nullable
@@ -65,8 +64,7 @@ public class AboutFragment extends Fragment {
             try {
                 startActivity(goToMarket);
             } catch (ActivityNotFoundException e) {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(PLAY_STORE_URL + requireActivity().getPackageName())));
+                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
             }
         });
 

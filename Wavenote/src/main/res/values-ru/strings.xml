@@ -75,6 +75,11 @@
     <string name="simperium_button_login_other">Войти через WordPress.com</string>
     <string name="simperium_button_login_email">Войти через эл. почту</string>
     <string name="simperium_button_login">Вход</string>
+    <string name="simperium_error_browser_copy_success">URL-адрес скопирован в буфер обмена</string>
+    <string name="simperium_error_browser_copy_failure">Невозможно скопировать URL-адрес в буфер обмена</string>
+    <string name="simperium_dialog_title_error_browser">Браузер не обнаружен</string>
+    <string name="simperium_error_browser">Убедитесь, что браузер установлен и работает.</string>
+    <string name="simperium_dialog_button_copy_url">Копировать URL</string>
     <string name="theme_system">Системные параметры по умолчанию</string>
     <string name="toggle_checklist">Сменить список проверки</string>
     <string name="log_in_use_widget">Войдите, чтобы использовать виджет</string>
@@ -297,7 +302,6 @@
     <string name="import_multiple">Несколько</string>
     <string name="encrypted">Зашифровано</string>
     <string name="extracting">Извлечение… Это может занять некоторе время</string>
-    <string name="developer_options">Для разработчиков</string>
     <string name="notes_not_found">Заметки не найдены</string>
     <string name="import_succesful">Готово! Успешно импортировано: %d</string>
     <string name="import_failure">Импортировано с ошибками: %d</string>

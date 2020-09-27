@@ -10,13 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.theost.wavenote.models.Note;
-import com.theost.wavenote.utils.ChecklistUtils;
-import com.theost.wavenote.utils.PrefUtils;
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.User;
+import com.theost.wavenote.models.Note;
+import com.theost.wavenote.utils.ChecklistUtils;
+import com.theost.wavenote.utils.PrefUtils;
 
 public class NoteWidgetLight extends AppWidgetProvider {
     public static final String KEY_WIDGET_IDS_LIGHT = "key_widget_ids_light";
@@ -25,7 +25,6 @@ public class NoteWidgetLight extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null && intent.hasExtra(KEY_WIDGET_IDS_LIGHT)) {
             int[] ids = intent.getExtras().getIntArray(KEY_WIDGET_IDS_LIGHT);
-            assert ids != null;
             this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
         } else {
             super.onReceive(context, intent);
@@ -45,6 +44,18 @@ public class NoteWidgetLight extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.note_widget_light);
         resizeWidget(newOptions, views);
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+    }
+
+    @Override
+    public void onDisabled(Context context) {
     }
 
     private void resizeWidget(Bundle appWidgetOptions, RemoteViews views) {
@@ -78,15 +89,10 @@ public class NoteWidgetLight extends AppWidgetProvider {
 
             views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
             views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.log_in_use_widget));
+            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
             views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.log_in_use_widget));
+            views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
             views.setViewVisibility(R.id.widget_text_content, View.GONE);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-            } else {
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
-                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light));
-            }
         } else {
             // Get note id from SharedPreferences
             String key =  PrefUtils.getStringPref(context, PrefUtils.PREF_NOTE_WIDGET_NOTE + appWidgetId);
@@ -121,14 +127,9 @@ public class NoteWidgetLight extends AppWidgetProvider {
                     // Set widget content
                     views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                     views.setTextViewText(R.id.widget_text, title);
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                     views.setTextViewText(R.id.widget_text_title, title);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                    } else {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light));
-                    }
+                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                     SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
                     contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
                             contentSpan,
@@ -144,28 +145,18 @@ public class NoteWidgetLight extends AppWidgetProvider {
 
                     views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                     views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
+                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                     views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
+                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                     views.setViewVisibility(R.id.widget_text_content, View.GONE);
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                    } else {
-                        views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
-                        views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light));
-                    }
                 }
             } else {
                 views.setOnClickPendingIntent(R.id.widget_layout, null);
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                 views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
+                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
                 views.setViewVisibility(R.id.widget_text_content, View.GONE);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                } else {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light));
-                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light));
-                }
             }
         }
 

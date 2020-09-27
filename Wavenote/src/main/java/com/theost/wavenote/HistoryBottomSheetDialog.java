@@ -1,6 +1,6 @@
 package com.theost.wavenote;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 public class HistoryBottomSheetDialog extends BottomSheetDialogBase {
-    private static final String TAG = HistoryBottomSheetDialog.class.getSimpleName();
+    public static final String TAG = HistoryBottomSheetDialog.class.getSimpleName();
 
     private ArrayList<Note> mNoteRevisionsList;
     private Fragment mFragment;
@@ -53,12 +53,7 @@ public class HistoryBottomSheetDialog extends BottomSheetDialogBase {
 
                     // Convert map to an array list, to work better with the 0-index based seekbar
                     mNoteRevisionsList = new ArrayList<>(revisionsMap.values());
-                    mFragment.requireActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateProgressBar();
-                        }
-                    });
+                    mFragment.requireActivity().runOnUiThread(() -> updateProgressBar());
                 }
 
                 @Override
@@ -71,12 +66,9 @@ public class HistoryBottomSheetDialog extends BottomSheetDialogBase {
                         return;
                     }
 
-                    mFragment.requireActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProgressBar.setVisibility(View.GONE);
-                            mErrorText.setVisibility(View.VISIBLE);
-                        }
+                    mFragment.requireActivity().runOnUiThread(() -> {
+                        mProgressBar.setVisibility(View.GONE);
+                        mErrorText.setVisibility(View.VISIBLE);
                     });
                 }
             };
@@ -93,7 +85,7 @@ public class HistoryBottomSheetDialog extends BottomSheetDialogBase {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View history = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.bottom_sheet_history, null, false);
+        @SuppressLint("InflateParams") View history = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.bottom_sheet_history, null, false);
         mHistoryDate = history.findViewById(R.id.history_date);
         mHistorySeekBar = history.findViewById(R.id.seek_bar);
         mProgressBar = history.findViewById(R.id.history_progress_bar);
@@ -139,45 +131,33 @@ public class HistoryBottomSheetDialog extends BottomSheetDialogBase {
         });
 
         View cancelHistoryButton = history.findViewById(R.id.cancel_history_button);
-        cancelHistoryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDidTapButton = true;
-                mListener.onHistoryCancelClicked();
-            }
+        cancelHistoryButton.setOnClickListener(v -> {
+            mDidTapButton = true;
+            mListener.onHistoryCancelClicked();
         });
 
         mButtonRestore = history.findViewById(R.id.restore_history_button);
-        mButtonRestore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDidTapButton = true;
-                mListener.onHistoryRestoreClicked();
-            }
+        mButtonRestore.setOnClickListener(v -> {
+            mDidTapButton = true;
+            mListener.onHistoryRestoreClicked();
         });
 
         if (getDialog() != null) {
-            getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    mListener.onHistoryDismissed();
-                    mNote = null;
-                }
+            getDialog().setOnDismissListener(dialog -> {
+                mListener.onHistoryDismissed();
+                mNote = null;
             });
 
             // Set peek height to full height of view (i.e. set STATE_EXPANDED) to avoid buttons
             // being off screen when bottom sheet is shown.
-            getDialog().setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                    FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            getDialog().setOnShowListener(dialogInterface -> {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                    if (bottomSheet != null) {
-                        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        behavior.setSkipCollapsed(true);
-                    }
+                if (bottomSheet != null) {
+                    BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    behavior.setSkipCollapsed(true);
                 }
             });
 

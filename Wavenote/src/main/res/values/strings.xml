@@ -260,6 +260,42 @@
     <string name="simperium_hint_password">Password</string>
     <string name="simperium_subtitle">The simplest way to keep notes.</string>
     <string name="simperium_title">@string/app_name</string>
+    <string name="simperium_error_browser_copy_success">URL copied to clipboard</string>
+    <string name="simperium_error_browser_copy_failure">URL could not be copied to clipboard</string>
+    <string name="simperium_dialog_title_error_browser">No Browser Detected</string>
+    <string name="simperium_error_browser">Please, verify a browser is installed and enabled.</string>
+    <string name="simperium_dialog_button_copy_url">Copy URL</string>
+    <string name="simperium_url" translatable="false">http://simplenote.com</string>
+
+    <!-- SHORTCUTS -->
+    <string name="action">Action</string>
+    <string name="item_action_note_new" translatable="false">@string/new_note</string>
+    <string name="item_action_open_search">Open Search</string>
+    <string name="item_action_show_history">Show History</string>
+    <string name="item_action_show_history_edit_error">Select Edit tab to show history</string>
+    <string name="item_action_show_history_error">Select a note to show history</string>
+    <string name="item_action_show_information">Show Information</string>
+    <string name="item_action_show_information_edit_error">Select Edit tab to show information</string>
+    <string name="item_action_show_information_error">Select a note to show information</string>
+    <string name="item_action_show_share">Show Share</string>
+    <string name="item_action_show_share_edit_error">Select Edit tab to show share</string>
+    <string name="item_action_show_share_error">Select a note to show share</string>
+    <string name="item_action_toggle_checklist" translatable="false">@string/toggle_checklist</string>
+    <string name="item_action_toggle_checklist_edit_error">Select Edit tab to toggle checklist</string>
+    <string name="item_action_toggle_checklist_error">Select a note to toggle checklist</string>
+    <string name="item_action_toggle_list">Toggle List</string>
+    <string name="item_action_toggle_list_error">Select a note to toggle list</string>
+    <string name="item_action_toggle_preview">Toggle Preview</string>
+    <string name="item_action_toggle_preview_enable_error">Enable markdown to toggle preview</string>
+    <string name="item_action_toggle_preview_error">Select a note to toggle preview</string>
+    <string name="key_multiple_ctrl">Ctrl</string>
+    <string name="key_multiple_shift">Shift</string>
+    <string name="key_single_c">C</string>
+    <string name="key_single_h">H</string>
+    <string name="key_single_i">I</string>
+    <string name="key_single_l">L</string>
+    <string name="key_single_p">P</string>
+    <string name="key_single_s">S</string>
 
     <!-- FEATURES -->
     <string name="text_color">Text Color</string>
@@ -298,9 +334,6 @@
     <string name="html" translatable="false">Html</string>
     <string name="json">Json (for import)</string>
     <string name="zip">Zip archive</string>
-
-    <!-- Developer Options -->
-    <string name="developer_options">Developer options</string>
 
     <!-- Color Sheet -->
     <string name="text_style">Style</string>

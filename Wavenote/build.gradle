@@ -34,10 +34,10 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "2.5"
+            versionName "1.0"
         }
         versionCode 100
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
 
         vectorDrawables.useSupportLibrary = true
@@ -56,6 +56,9 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        // Disable animations in order to enter text in the text inputs in the
+        // Espresso tests
+        animationsDisabled = true
     }
 
     aaptOptions {
@@ -83,6 +86,7 @@ configurations {
 dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.47'
+    androidTestImplementation 'androidx.test:core:1.0.0'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
@@ -96,7 +100,7 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     // Automattic and WordPress dependencies
-    implementation 'com.simperium.android:simperium:0.9.11'
+    implementation 'com.simperium.android:simperium:0.9.13'
     implementation 'com.automattic:tracks:1.2'
     implementation 'org.wordpress:passcodelock:2.0.2'
 
@@ -155,12 +159,6 @@ if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.ha
                 keyAlias = project.keyAlias
                 keyPassword = project.keyPassword
             }
-            debug {
-                storeFile = rootProject.file(project.storeFile)
-                storePassword = project.storePassword
-                keyAlias = project.keyAlias
-                keyPassword = project.keyPassword
-            }
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
@@ -208,4 +206,17 @@ android.applicationVariants.all { variant ->
     }
     buildConfigField "String", "BUILD", "\"${gitDescribe()}\""
     buildConfigField "String", "BUILD_HASH", "\"${gitHash()}\""
+}
+
+if (project.hasProperty("debugStoreFile")) {
+    def sharedDebugStore = file(project.debugStoreFile.replaceFirst("^~", System.getProperty("user.home")))
+    if (sharedDebugStore.exists()) {
+        android {
+            signingConfigs {
+                debug {
+                    storeFile sharedDebugStore
+                }
+            }
+        }
+    }
 }

@@ -30,6 +30,8 @@
         android:layout_width="0dp"
         android:textColor="?attr/noteTitleColor"
         android:textSize="@dimen/text_suggestion"
+        android:paddingBottom="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
         tools:text="tag:work"
         style="?android:attr/textAppearanceMedium">
     </com.theost.wavenote.widgets.RobotoRegularTextView>

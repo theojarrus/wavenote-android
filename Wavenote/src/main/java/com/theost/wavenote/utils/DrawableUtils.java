@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
-@SuppressWarnings("unused")
 public class DrawableUtils {
     public static void setMenuItemAlpha(MenuItem menuItem, @FloatRange(from=0,to=1) double alpha) {
         Drawable drawable = menuItem.getIcon();
@@ -66,7 +65,7 @@ public class DrawableUtils {
     public static void startAnimatedVectorDrawable(Drawable drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             ((AnimatedVectorDrawable) drawable).start();
-        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        } else {
             ((AnimatedVectorDrawableCompat) drawable).start();
         }
     }

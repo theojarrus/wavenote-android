@@ -27,6 +27,12 @@
 
     <!-- http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout -->
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="header_height">48dp</dimen>
+    <dimen name="key_height">32dp</dimen>
+    <dimen name="key_width">28dp</dimen>
+    <dimen name="text_header">14sp</dimen>
+    <dimen name="text_item">16sp</dimen>
+    <dimen name="text_key">14sp</dimen>
 
     <!-- PASSCODE -->
     <dimen name="passcodelock_button_text_size">24dp</dimen>
@@ -70,6 +76,12 @@
     <dimen name="custom_pane_size">110dp</dimen>
     <dimen name="custom_padding_small">10dp</dimen>
     <dimen name="custom_text_small">10sp</dimen>
+
+    <dimen name="text_about_app">24sp</dimen>
+    <dimen name="text_about_version">16sp</dimen>
+    <dimen name="text_about_title">16sp</dimen>
+    <dimen name="text_about_subtitle">14sp</dimen>
+    <dimen name="minimum_height_about">72dp</dimen>
 
     <!-- Audio -->
     <dimen name="track_height">60dp</dimen>

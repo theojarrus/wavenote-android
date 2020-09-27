@@ -106,10 +106,6 @@
             android:persistent="false"
             android:title="@string/about"/>
         <Preference
-            android:key="pref_key_developer"
-            android:persistent="false"
-            android:title="@string/developer_options"/>
-        <Preference
             android:key="pref_key_build"
             android:persistent="false"
             android:selectable="false"

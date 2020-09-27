@@ -192,11 +192,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         DrawableUtils.tintMenuWithAttribute(getActivity(), menu, R.attr.actionModeTextColor);
         mActionMode = actionMode;
         int colorResId = ThemeUtils.isLightTheme(requireContext()) ? R.color.background_light : R.color.background_dark;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
-        } else {
-            requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId));
-        }
+        requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
         return true;
     }
 
@@ -232,11 +228,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                         setActivateOnItemClick(DisplayUtils.isLargeScreenLandscape(notesActivity));
                         notesActivity.showDetailPlaceholder();
                     }
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
-                    } else {
-                        requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
-                    }
+                    requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
                 },
                 requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
         );
@@ -499,7 +491,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
     }
 
-    private void createNewNote(String label) {
+    public void createNewNote(String label) {
         if (!isAdded()) return;
         addNote();
     }

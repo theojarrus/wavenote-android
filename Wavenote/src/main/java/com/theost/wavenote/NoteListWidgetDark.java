@@ -9,16 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.theost.wavenote.models.Note;
-import com.theost.wavenote.utils.PrefUtils;
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.Query;
 import com.simperium.client.User;
-
-import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
-import static com.theost.wavenote.utils.WidgetUtils.MINIMUM_HEIGHT_FOR_BUTTON;
-import static com.theost.wavenote.utils.WidgetUtils.MINIMUM_WIDTH_FOR_BUTTON;
+import com.theost.wavenote.models.Note;
+import com.theost.wavenote.utils.PrefUtils;
 
 public class NoteListWidgetDark extends AppWidgetProvider {
     public static final String KEY_LIST_WIDGET_IDS_DARK = "key_list_widget_ids_dark";
@@ -35,10 +31,21 @@ public class NoteListWidgetDark extends AppWidgetProvider {
     }
 
     @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+    }
+
+    @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null && intent.hasExtra(KEY_LIST_WIDGET_IDS_DARK)) {
             int[] ids = intent.getExtras().getIntArray(KEY_LIST_WIDGET_IDS_DARK);
-            assert ids != null;
             this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
         } else {
             super.onReceive(context, intent);
@@ -54,15 +61,8 @@ public class NoteListWidgetDark extends AppWidgetProvider {
     }
 
     private void resizeWidget(Context context, Bundle appWidgetOptions, RemoteViews views) {
-        // Show/Hide add button based on widget height and width
-        if (appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) > MINIMUM_HEIGHT_FOR_BUTTON &&
-                appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) > MINIMUM_WIDTH_FOR_BUTTON) {
-            views.setViewPadding(R.id.widget_list, 0, 0, 0, context.getResources().getDimensionPixelSize(R.dimen.note_list_item_padding_bottom_button_widget));
-            views.setViewVisibility(R.id.widget_button, View.VISIBLE);
-        } else {
-            views.setViewPadding(R.id.widget_list, 0, 0, 0, 0);
-            views.setViewVisibility(R.id.widget_button, View.GONE);
-        }
+        views.setViewPadding(R.id.widget_list, 0, 0, 0, 0);
+        views.setViewVisibility(R.id.widget_button, View.GONE);
     }
 
     private void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle appWidgetOptions) {
@@ -78,12 +78,7 @@ public class NoteListWidgetDark extends AppWidgetProvider {
             // Create intent to navigate to notes activity which redirects to login on widget click
             Intent intent = new Intent(context, NotesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
-            } else {
-                pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            }
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
             // Reset intent to navigate to note editor on note list add button click to navigate to notes activity, which redirects to login/signup
@@ -91,14 +86,10 @@ public class NoteListWidgetDark extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_button, PendingIntent.getActivity(context, appWidgetId, intentButton, PendingIntent.FLAG_UPDATE_CURRENT));
 
             views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.log_in_use_widget));
+            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
             views.setViewVisibility(R.id.widget_text, View.VISIBLE);
             views.setViewVisibility(R.id.widget_list, View.GONE);
             views.setViewVisibility(R.id.widget_button, View.GONE);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-            } else {
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-            }
         } else {
             Bucket<Note> notesBucket = currentApp.getNotesBucket();
             Query<Note> query = Note.all(notesBucket);
@@ -131,24 +122,15 @@ public class NoteListWidgetDark extends AppWidgetProvider {
                 views.setOnClickPendingIntent(R.id.widget_button, pendingIntentButton);
 
                 views.setEmptyView(R.id.widget_list, R.id.widget_text);
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
                 views.setViewVisibility(R.id.widget_text, View.GONE);
                 views.setViewVisibility(R.id.widget_list, View.VISIBLE);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                } else {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-                }
             } else {
                 // Create intent to navigate to notes activity on widget click
                 Intent intent = new Intent(context, NotesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
-                } else {
-                    pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                }
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
                 views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
                 // Create intent to navigate to note editor on note list add button click
@@ -157,14 +139,10 @@ public class NoteListWidgetDark extends AppWidgetProvider {
                 PendingIntent pendingIntentButton = PendingIntent.getActivity(context, appWidgetId, intentButton, PendingIntent.FLAG_UPDATE_CURRENT);
                 views.setOnClickPendingIntent(R.id.widget_button, pendingIntentButton);
 
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
                 views.setViewVisibility(R.id.widget_text, View.VISIBLE);
                 views.setViewVisibility(R.id.widget_list, View.GONE);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                } else {
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark));
-                }
             }
         }
 

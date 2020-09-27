@@ -59,11 +59,7 @@ public class AudioUtils {
                     CHANNEL_OUT_SIDE_LEFT | CHANNEL_OUT_SIDE_RIGHT |
                     CHANNEL_OUT_BACK_LEFT | CHANNEL_OUT_BACK_RIGHT;
         } else if (channelCount == 8) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                channelConfig = AudioFormat.CHANNEL_OUT_7POINT1_SURROUND;
-            } else {
-                channelConfig = AudioFormat.CHANNEL_OUT_7POINT1;
-            }
+            channelConfig = AudioFormat.CHANNEL_OUT_7POINT1_SURROUND;
         } else {
             throw new IllegalArgumentException("ChannelCount not support");
         }
@@ -97,12 +93,7 @@ public class AudioUtils {
         long sampleRate = mediaFormat.getInteger(MediaFormat.KEY_SAMPLE_RATE);
         long audioSize = new File(path).length();
 
-        long bitRate;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            bitRate = mediaFormat.getInteger("bits-per-sample");
-        } else {
-            bitRate = audioSize / (channelCount * sampleRate * mediaFormat.getLong(MediaFormat.KEY_DURATION));
-        }
+        long bitRate = mediaFormat.getInteger("bits-per-sample");
 
         return new long[]{channelCount, sampleRate, bitRate, audioSize};
     }

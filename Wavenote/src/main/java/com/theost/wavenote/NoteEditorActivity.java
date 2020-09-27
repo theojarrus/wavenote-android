@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.HapticFeedbackConstants;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -42,6 +43,9 @@ import static com.theost.wavenote.utils.MatchOffsetHighlighter.MATCH_INDEX_START
 public class NoteEditorActivity extends ThemedAppCompatActivity {
     private static final String STATE_MATCHES_INDEX = "MATCHES_INDEX";
     private static final String STATE_MATCHES_LOCATIONS = "MATCHES_LOCATIONS";
+
+    private static final int INDEX_TAB_EDIT = 0;
+    private static final int INDEX_TAB_PREVIEW = 1;
 
     private ImageButton mButtonPrevious;
     private ImageButton mButtonNext;
@@ -86,6 +90,14 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
         Intent intent = getIntent();
         mNoteId = intent.getStringExtra(NoteEditorFragment.ARG_ITEM_ID);
 
+        try {
+            Wavenote application = (Wavenote) getApplication();
+            Bucket<Note> notesBucket = application.getNotesBucket();
+            mNote = notesBucket.get(mNoteId);
+        } catch (BucketObjectMissingException exception) {
+            exception.printStackTrace();
+        }
+
         if (savedInstanceState == null) {
             // Create the note editor fragment
             Bundle arguments = new Bundle();
@@ -116,7 +128,7 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
                     new NoteEditorViewPager.OnPageChangeListener() {
                         @Override
                         public void onPageSelected(int position) {
-                            if (position == 1) {  // Preview is position 1
+                            if (position == INDEX_TAB_PREVIEW) {
                                 DisplayUtils.hideKeyboard(mViewPager);
                             }
 
@@ -126,7 +138,7 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
                                 mNote = notesBucket.get(mNoteId);
 
                                 if (mNote != null) {
-                                    mNote.setPreviewEnabled(position == 1);  // Preview is position 1
+                                    mNote.setPreviewEnabled(position == INDEX_TAB_PREVIEW);
                                     mNote.save();
                                 }
                             } catch (BucketObjectMissingException exception) {
@@ -215,15 +227,127 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        // Relaunch shortcut dialog when window is maximized or restored (Chrome OS).
+        if (getSupportFragmentManager().findFragmentByTag(ShortcutDialogFragment.DIALOG_TAG) != null) {
+            ShortcutDialogFragment.showShortcuts(NoteEditorActivity.this, isPreviewTabSelected());
+        }
+
         // If changing to large screen landscape, we finish the activity to go back to
         // NotesActivity with the note selected in the multipane layout.
         if (DisplayUtils.isLargeScreen(this) &&
                 newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && mNoteId != null) {
             Intent resultIntent = new Intent();
             resultIntent.putExtra(Wavenote.SELECTED_NOTE_ID, mNoteId);
+            resultIntent.putExtra(ShortcutDialogFragment.DIALOG_VISIBLE,
+                    getSupportFragmentManager().findFragmentByTag(ShortcutDialogFragment.DIALOG_TAG) != null);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_C:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    if (!isPreviewTabSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.insertChecklist();
+                        }
+                    } else {
+                        Toast.makeText(NoteEditorActivity.this, R.string.item_action_toggle_checklist_edit_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_COMMA:
+                if (event.isCtrlPressed()) {
+                    ShortcutDialogFragment.showShortcuts(NoteEditorActivity.this, isPreviewTabSelected());
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_H:
+                if (event.isCtrlPressed()) {
+                    if (!isPreviewTabSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.showHistory();
+                        }
+                    } else {
+                        Toast.makeText(NoteEditorActivity.this, R.string.item_action_show_history_edit_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_I:
+                if (event.isCtrlPressed()) {
+                    if (!isPreviewTabSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.showInfo();
+                        }
+                    } else {
+                        Toast.makeText(NoteEditorActivity.this, R.string.item_action_show_information_edit_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_P:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    if (mNote != null && mNote.isMarkdownEnabled()) {
+                        togglePreview();
+                    } else {
+                        Toast.makeText(NoteEditorActivity.this, R.string.item_action_toggle_preview_enable_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_S:
+                if (event.isCtrlPressed()) {
+                    if (!isPreviewTabSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.shareNote();
+                        }
+                    } else {
+                        Toast.makeText(NoteEditorActivity.this, R.string.item_action_show_share_edit_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
+    }
+
+    private boolean isPreviewTabSelected() {
+        return mNote != null && mNote.isMarkdownEnabled() && mViewPager != null && mViewPager.getCurrentItem() == INDEX_TAB_PREVIEW;
+    }
+
+    private void togglePreview() {
+        int position = mNote.isPreviewEnabled() ? 0 : 1;  // Edit is position 0, Preview is position 1
+        mViewPager.setCurrentItem(position);
+
+        try {
+            Wavenote application = (Wavenote) getApplication();
+            Bucket<Note> notesBucket = application.getNotesBucket();
+            mNote = notesBucket.get(mNoteId);
+
+            if (mNote != null) {
+                mNote.setPreviewEnabled(position == 1);  // Preview is position 1
+                mNote.save();
+            }
+        } catch (BucketObjectMissingException exception) {
+            exception.printStackTrace();
         }
     }
 

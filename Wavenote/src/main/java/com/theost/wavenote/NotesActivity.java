@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -98,6 +100,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     private boolean mIsTabletFullscreen;
     private boolean mShouldSelectNewNote;
 
+    private Menu mMenu;
     private String mTabletSearchQuery;
     private UndoBarController mUndoBarController;
     private View mFragmentsContainer;
@@ -344,20 +347,11 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 new int[]{-android.R.attr.state_checked}  // unchecked
         };
 
-        int[] colors;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            colors = new int[]{
-                    getResources().getColor(R.color.text_title_disabled, getTheme()),
-                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
-                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
-            };
-        } else {
-            colors = new int[]{
-                    getResources().getColor(R.color.text_title_disabled),
-                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
-                    ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
-            };
-        }
+        int[] colors = new int[]{
+                getResources().getColor(R.color.text_title_disabled, getTheme()),
+                ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.colorAccent),
+                ThemeUtils.getColorFromAttribute(NotesActivity.this, R.attr.noteTitleColor)
+        };
 
         return new ColorStateList(states, colors);
     }
@@ -446,6 +440,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         checkEmptyListText(mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded());
 
+        // Show list/sidebar when it was hidden while in landscape orientation.
         if (mNoteListFragment.isHidden()) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.show(mNoteListFragment);
@@ -672,6 +667,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notes_list, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
+        mMenu = menu;
 
         // restore the search query if on a landscape tablet
         String searchQuery = null;
@@ -830,31 +826,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         }
         switch (item.getItemId()) {
             case R.id.menu_sidebar:
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-                if (mNoteListFragment.isHidden()) {
-                    ft.show(mNoteListFragment);
-                    setIconAfterAnimation(item, R.drawable.av_list_hide_show_24dp, R.string.list_hide);
-                } else {
-                    ft.hide(mNoteListFragment);
-                    setIconAfterAnimation(item, R.drawable.av_list_show_hide_24dp, R.string.list_show);
-                }
-
-                ft.commitNowAllowingStateLoss();
-                mIsTabletFullscreen = mNoteListFragment.isHidden();
+                toggleSidebar(item);
                 return true;
             case R.id.menu_markdown_preview:
-                if (mIsShowingMarkdown) {
-                    setIconAfterAnimation(item, R.drawable.av_visibility_on_off_24dp, R.string.markdown_show);
-                    setMarkdownShowing(false);
-                    mCurrentNote.setPreviewEnabled(false);
-                } else {
-                    setIconAfterAnimation(item, R.drawable.av_visibility_off_on_24dp, R.string.markdown_hide);
-                    setMarkdownShowing(true);
-                    mCurrentNote.setPreviewEnabled(true);
-                }
-
-                mCurrentNote.save();
+                togglePreview(item);
                 return true;
             case R.id.menu_trash:
                 if (mNoteEditorFragment != null && mCurrentNote != null) {
@@ -1158,6 +1133,11 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                         if (mNoteEditorFragment != null) {
                             mNoteEditorFragment.setNote(selectedNoteId);
                         }
+
+                        // Relaunch shortcut dialog if it was showing in editor (Chrome OS).
+                        if (data.getBooleanExtra(ShortcutDialogFragment.DIALOG_VISIBLE, false)) {
+                            ShortcutDialogFragment.showShortcuts(NotesActivity.this, false);
+                        }
                     }
                 }
                 break;
@@ -1215,6 +1195,11 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         mDrawerToggle.onConfigurationChanged(newConfig);
 
+        // Relaunch shortcut dialog when window is maximized or restored (Chrome OS).
+        if (getSupportFragmentManager().findFragmentByTag(ShortcutDialogFragment.DIALOG_TAG) != null) {
+            ShortcutDialogFragment.showShortcuts(NotesActivity.this, false);
+        }
+
         if (DisplayUtils.isLargeScreen(this)) {
             mIsShowingMarkdown = false;
 
@@ -1245,6 +1230,11 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             } else if (mNoteListFragment.isHidden() && mCurrentNote != null) {
                 onNoteSelected(mCurrentNote.getSimperiumKey(), null, mCurrentNote.isMarkdownEnabled(), mCurrentNote.isPreviewEnabled());
             }
+        } else if (mNoteListFragment.isHidden()) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.show(mNoteListFragment);
+            fragmentTransaction.commitNowAllowingStateLoss();
+            mIsTabletFullscreen = mNoteListFragment.isHidden();
         }
 
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && mNoteEditorFragment != null) {
@@ -1264,6 +1254,148 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             fm.executePendingTransactions();
             invalidateOptionsMenu();
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_C:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    if (isLargeLandscapeAndNoteSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.insertChecklist();
+                        }
+                    } else {
+                        Toast.makeText(NotesActivity.this, R.string.item_action_toggle_checklist_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_COMMA:
+                if (event.isCtrlPressed()) {
+                    ShortcutDialogFragment.showShortcuts(NotesActivity.this, false);
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_H:
+                if (event.isCtrlPressed()) {
+                    if (isLargeLandscapeAndNoteSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.showHistory();
+                        }
+                    } else {
+                        Toast.makeText(NotesActivity.this, R.string.item_action_show_history_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_I:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    getNoteListFragment().createNewNote("keyboard_shortcut");
+                    return true;
+                } else if (event.isCtrlPressed()) {
+                    if (isLargeLandscapeAndNoteSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.showInfo();
+                        }
+                    } else {
+                        Toast.makeText(NotesActivity.this, R.string.item_action_show_information_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_L:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    if (isLargeLandscapeAndNoteSelected()) {
+                        toggleSidebar(mMenu.findItem(R.id.menu_sidebar));
+                    } else {
+                        Toast.makeText(NotesActivity.this, R.string.item_action_toggle_list_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_P:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    if (isLargeLandscapeAndNoteSelected()) {
+                        if (mCurrentNote != null && mCurrentNote.isMarkdownEnabled()) {
+                            togglePreview(mMenu.findItem(R.id.menu_markdown_preview));
+                        } else {
+                            Toast.makeText(NotesActivity.this, R.string.item_action_toggle_preview_enable_error, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(NotesActivity.this, R.string.item_action_toggle_preview_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            case KeyEvent.KEYCODE_S:
+                if (event.isShiftPressed() && event.isCtrlPressed()) {
+                    if (mSearchMenuItem != null && mSearchView != null) {
+                        mSearchMenuItem.expandActionView();
+                        mSearchView.requestFocus();
+                    }
+
+                    return true;
+                } else if (event.isCtrlPressed()) {
+                    if (isLargeLandscapeAndNoteSelected()) {
+                        if (mNoteEditorFragment != null) {
+                            mNoteEditorFragment.shareNote();
+                        }
+                    } else {
+                        Toast.makeText(NotesActivity.this, R.string.item_action_show_share_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                } else {
+                    return super.onKeyUp(keyCode, event);
+                }
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
+    }
+
+    private void togglePreview(MenuItem item) {
+        if (mIsShowingMarkdown) {
+            setIconAfterAnimation(item, R.drawable.av_visibility_on_off_24dp, R.string.markdown_show);
+            setMarkdownShowing(false);
+            mCurrentNote.setPreviewEnabled(false);
+        } else {
+            setIconAfterAnimation(item, R.drawable.av_visibility_off_on_24dp, R.string.markdown_hide);
+            setMarkdownShowing(true);
+            mCurrentNote.setPreviewEnabled(true);
+        }
+
+        mCurrentNote.save();
+    }
+
+    private void toggleSidebar(MenuItem item) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        if (mNoteListFragment.isHidden()) {
+            ft.show(mNoteListFragment);
+            setIconAfterAnimation(item, R.drawable.av_list_hide_show_24dp, R.string.list_hide);
+        } else {
+            ft.hide(mNoteListFragment);
+            setIconAfterAnimation(item, R.drawable.av_list_show_hide_24dp, R.string.list_show);
+        }
+
+        ft.commitNowAllowingStateLoss();
+        mIsTabletFullscreen = mNoteListFragment.isHidden();
+    }
+
+    private boolean isLargeLandscapeAndNoteSelected() {
+        return DisplayUtils.isLargeScreenLandscape(NotesActivity.this) && mNoteEditorFragment != null && !mNoteEditorFragment.isPlaceholderVisible();
     }
 
     public void checkEmptyListText(boolean isSearch) {

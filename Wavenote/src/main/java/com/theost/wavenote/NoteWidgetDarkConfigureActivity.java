@@ -23,14 +23,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.simperium.Simperium;
+import com.simperium.client.Bucket;
+import com.simperium.client.Query;
+import com.simperium.client.User;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.ChecklistUtils;
 import com.theost.wavenote.utils.PrefUtils;
-import com.simperium.Simperium;
-import com.simperium.client.Bucket;
-import com.simperium.client.Bucket.ObjectCursor;
-import com.simperium.client.Query;
-import com.simperium.client.User;
 
 public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
     private AppWidgetManager mWidgetManager;
@@ -86,7 +85,7 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
         Query<Note> query = Note.all(mNotesBucket);
         query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
         PrefUtils.sortNoteQuery(query, NoteWidgetDarkConfigureActivity.this, true);
-        ObjectCursor<Note> cursor = query.execute();
+        Bucket.ObjectCursor<Note> cursor = query.execute();
 
         Context context = new ContextThemeWrapper(NoteWidgetDarkConfigureActivity.this, R.style.Theme_Transparent);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -97,20 +96,20 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
         list.setAdapter(mNotesAdapter);
 
         builder.setView(layout)
-            .setTitle(R.string.select_note)
-            .setOnDismissListener(
-                    dialog -> finish()
-            )
-            .setNegativeButton(android.R.string.cancel,
-                    (dialog, which) -> finish()
-            )
-            .show();
+                .setTitle(R.string.select_note)
+                .setOnDismissListener(
+                        dialog -> finish()
+                )
+                .setNegativeButton(android.R.string.cancel,
+                        (dialog, which) -> finish()
+                )
+                .show();
     }
 
     private class NotesCursorAdapter extends CursorAdapter {
-        private final ObjectCursor<Note> mCursor;
+        private final Bucket.ObjectCursor<Note> mCursor;
 
-        private NotesCursorAdapter(Context context, ObjectCursor<Note> cursor) {
+        private NotesCursorAdapter(Context context, Bucket.ObjectCursor<Note> cursor) {
             super(context, cursor, 0);
             mCursor = cursor;
         }
@@ -182,14 +181,9 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
                 // Set widget content
                 mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                 mRemoteViews.setTextViewText(R.id.widget_text, title1);
+                mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 mRemoteViews.setTextViewText(R.id.widget_text_title, title1);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                } else {
-                    mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark));
-                    mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark));
-                }
+                mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
                 contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
                         contentSpan,

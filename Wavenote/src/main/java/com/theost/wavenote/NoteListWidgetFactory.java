@@ -9,11 +9,11 @@ import android.widget.RemoteViewsService.RemoteViewsFactory;
 
 import androidx.annotation.LayoutRes;
 
+import com.simperium.client.Bucket;
+import com.simperium.client.Query;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.ChecklistUtils;
 import com.theost.wavenote.utils.PrefUtils;
-import com.simperium.client.Bucket;
-import com.simperium.client.Query;
 
 public class NoteListWidgetFactory implements RemoteViewsFactory {
     public static final String EXTRA_IS_LIGHT = "is_light";
@@ -53,12 +53,13 @@ public class NoteListWidgetFactory implements RemoteViewsFactory {
             views.setTextViewText(R.id.note_title, note.getTitle());
             SpannableStringBuilder contentSpan = new SpannableStringBuilder(note.getContentPreview());
             contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
-                contentSpan,
-                ChecklistUtils.CHECKLIST_REGEX
+                    contentSpan,
+                    ChecklistUtils.CHECKLIST_REGEX
             );
             views.setTextViewText(R.id.note_content, contentSpan);
             views.setViewVisibility(R.id.note_pinned, note.isPinned() ? View.VISIBLE : View.GONE);
-            views.setViewVisibility(R.id.note_status, note.isPinned() ? View.VISIBLE : View.GONE);
+            views.setViewVisibility(R.id.note_published, note.isPublished() ? View.VISIBLE : View.GONE);
+            views.setViewVisibility(R.id.note_status, note.isPinned() || note.isPublished() ? View.VISIBLE : View.GONE);
 
             // Create intent to navigate to note editor on note list item click
             Intent intent = new Intent(mContext, NoteEditorActivity.class);

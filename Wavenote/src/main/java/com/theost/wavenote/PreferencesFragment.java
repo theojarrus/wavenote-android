@@ -1,6 +1,7 @@
 package com.theost.wavenote;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -45,6 +46,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
 public class PreferencesFragment extends PreferenceFragmentCompat implements User.StatusChangeListener,
         Simperium.OnUserCreatedListener {
 

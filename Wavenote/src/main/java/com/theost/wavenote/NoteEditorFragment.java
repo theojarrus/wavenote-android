@@ -51,6 +51,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 
 import androidx.appcompat.widget.ActionBarContextView;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 import androidx.core.widget.NestedScrollView;
@@ -166,6 +167,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private ActionMode mActionMode;
     private MenuItem mCopyMenuItem;
     private MenuItem mShareMenuItem;
+    private MenuItem mChecklistMenuItem;
+    private MenuItem mInformationMenuItem;
     private MenuItem mViewLinkMenuItem;
     private Drawable mCallIcon;
     private Drawable mCopyIcon;
@@ -233,11 +236,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             int colorResId = ThemeUtils.isLightTheme(requireContext()) ? R.color.background_light : R.color.background_dark;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
-            } else {
-                requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId));
-            }
+            requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
             return true;
         }
 
@@ -274,7 +273,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     return true;
                 case R.id.menu_share:
                     if (mLinkText != null) {
-                        showShareSheet();
+                        showShare(mLinkText);
                         mode.finish();
                     }
                     return true;
@@ -288,13 +287,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
             new Handler().postDelayed(
-                    () -> {
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
-                        } else {
-                            requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
-                        }
-                    },
+                    () -> requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme())),
                     requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
             );
         }
@@ -396,6 +389,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mContentEditText.setOnCheckboxToggledListener(this);
         mContentEditText.setMovementMethod(WavenoteMovementMethod.getInstance());
         mContentEditText.setOnFocusChangeListener(this);
+        mContentEditText.setTextSize(TypedValue.COMPLEX_UNIT_SP, PrefUtils.getFontSize(requireContext()));
         mTagInput = mRootView.findViewById(R.id.tag_input);
         mTagInput.setDropDownBackgroundResource(R.drawable.bg_list_popup);
         mTagInput.setTokenizer(new SpaceTokenizer());
@@ -404,54 +398,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mTagPadding = mRootView.findViewById(R.id.tag_padding);
         mHighlighter = new MatchOffsetHighlighter(mMatchHighlighter, mContentEditText);
         mPlaceholderView = mRootView.findViewById(R.id.placeholder);
-
-        mContentEditText.setCustomSelectionActionModeCallback(new android.view.ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.selection, menu);
-                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
-                    mode.setTitle("");
-                    menu.findItem(R.id.add_dictionary).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    menu.findItem(R.id.stylize).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    for (int i = 0; i < menu.size(); i++) {
-                        menu.getItem(i).setTitle("");
-                        int color;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            color = getContext().getResources().getColor(getActionColor(), requireActivity().getTheme());
-                        } else {
-                            color = getContext().getResources().getColor(getActionColor());
-                        }
-                        menu.getItem(i).getIcon().setTint(color);
-
-                    }
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.add_dictionary:
-                        showKeywordDialog();
-                        return true;
-                    case R.id.stylize:
-                        changeTextColor();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(android.view.ActionMode mode) {
-            }
-        });
 
         keywordColors = ResUtils.getDialogColors(getContext());
         keywordTypes = ResUtils.getKeywordTypes(getContext());
@@ -598,6 +544,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
         if (mAutoSaveHandler != null) {
             mAutoSaveHandler.removeCallbacks(mAutoSaveRunnable);
+            mAutoSaveHandler.post(mAutoSaveRunnable);
         }
 
         if (mPublishTimeoutHandler != null) {
@@ -652,12 +599,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         colorItemView.setOnClickListener(v -> onOptionsItemSelected(colorItem));
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            colorItemView.setOnLongClickListener(v -> {
-                pickTextColor();
-                return true;
-            });
-        }
+        colorItemView.setOnLongClickListener(v -> {
+            pickTextColor();
+            return true;
+        });
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -669,11 +614,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 startPhotosActivity();
                 return true;
             case R.id.menu_color:
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    changeTextColor();
-                } else {
-                    pickTextColor();
-                }
+                changeTextColor();
                 return true;
             case R.id.menu_sheet:
                 startChordsActivity();
@@ -682,7 +623,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 startAudioActivity();
                 return true;
             case R.id.menu_checklist:
-                DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
                 insertChecklist();
                 return true;
             case R.id.menu_copy:
@@ -751,13 +691,15 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             MenuItem copyLinkItem = menu.findItem(R.id.menu_copy);
             MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
             MenuItem trashItem = menu.findItem(R.id.menu_trash);
-            MenuItem checklistItem = menu.findItem(R.id.menu_checklist);
             MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
             MenuItem photoItem = menu.findItem(R.id.menu_photos);
             MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
             MenuItem exportItem = menu.findItem(R.id.menu_export);
             MenuItem colorItem = menu.findItem(R.id.menu_color);
             ImageView colorItemView = (ImageView) colorItem.getActionView();
+
+            mChecklistMenuItem = menu.findItem(R.id.menu_checklist);
+            mInformationMenuItem = menu.findItem(R.id.menu_info).setVisible(true);
 
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
@@ -777,11 +719,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 historyItem.setEnabled(false);
                 publishItem.setEnabled(false);
                 copyLinkItem.setEnabled(false);
-                checklistItem.setEnabled(false);
+                mChecklistMenuItem.setEnabled(false);
                 colorItemView.setEnabled(false);
                 colorItemView.setEnabled(false);
 
-                DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);  // 0.3 is 30% opacity.
+                DrawableUtils.setMenuItemAlpha(mChecklistMenuItem, 0.3);  // 0.3 is 30% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 0.3);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 0.3);
                 DrawableUtils.setMenuItemAlpha(photoItem, 0.3);
@@ -801,11 +743,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 historyItem.setEnabled(true);
                 publishItem.setEnabled(true);
                 markdownItem.setEnabled(true);
-                checklistItem.setEnabled(true);
+                mChecklistMenuItem.setEnabled(true);
                 colorItemView.setEnabled(true);
                 colorItemView.setEnabled(true);
 
-                DrawableUtils.setMenuItemAlpha(checklistItem, 1.0);  // 1.0 is 100% opacity.
+                DrawableUtils.setMenuItemAlpha(mChecklistMenuItem, 1.0);  // 1.0 is 100% opacity.
                 DrawableUtils.setMenuItemAlpha(colorItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(sheetItem, 1.0);
                 DrawableUtils.setMenuItemAlpha(photoItem, 1.0);
@@ -895,6 +837,15 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         } else {
             DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.database_error));
         }
+    }
+
+    private void showShare(String text) {
+        startActivity(
+                ShareCompat.IntentBuilder.from(requireActivity())
+                        .setText(text)
+                        .setType("text/plain")
+                        .createChooserIntent()
+        );
     }
 
     private void updateKeyDialogData() {
@@ -994,7 +945,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
     }
 
-    private void insertChecklist() {
+    public void insertChecklist() {
         try {
             mContentEditText.insertChecklist();
         } catch (Exception e) {
@@ -1034,10 +985,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         );
     }
 
-    private void shareNote() {
+    public void shareNote() {
         if (mNote != null) {
             mContentEditText.clearFocus();
-            showShareSheet();
+            showShare(mLinkText);
         }
     }
 
@@ -1059,7 +1010,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         startActivity(intent);
     }
 
-    private void showHistory() {
+    public void showHistory() {
         if (mNote != null && mNote.getVersion() > 1) {
             mContentEditText.clearFocus();
             mHistoryTimeoutHandler.postDelayed(mHistoryTimeoutRunnable, HISTORY_TIMEOUT);
@@ -1069,7 +1020,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
     }
 
-    private void showInfo() {
+    public void showInfo() {
         if (mNote != null) {
             mContentEditText.clearFocus();
             mContentEditText.clearComposingText();
@@ -1080,6 +1031,25 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void setMarkdown(boolean isChecked) {
         mIsMarkdownEnabled = isChecked;
+        showMarkdownActionOrTabs();
+        saveNote();
+
+        // Set preference so that next new note will have markdown enabled.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PrefUtils.PREF_MARKDOWN_ENABLED, isChecked);
+        editor.apply();
+    }
+
+    private void setMarkdownEnabled(boolean enabled) {
+        mIsMarkdownEnabled = enabled;
+
+        if (mIsMarkdownEnabled) {
+            loadMarkdownData();
+        }
+    }
+
+    private void showMarkdownActionOrTabs() {
         Activity activity = getActivity();
 
         if (activity instanceof NoteEditorActivity) {
@@ -1102,21 +1072,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         mContentEditText.clearComposingText();
-        saveNote();
-
-        // Set preference so that next new note will have markdown enabled.
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PrefUtils.PREF_MARKDOWN_ENABLED, isChecked);
-        editor.apply();
-    }
-
-    private void setMarkdownEnabled(boolean enabled) {
-        mIsMarkdownEnabled = enabled;
-
-        if (mIsMarkdownEnabled) {
-            loadMarkdownData();
-        }
     }
 
     private void loadMarkdownData() {
@@ -1166,7 +1121,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 mIsPreviewEnabled = mNote.isPreviewEnabled();
 
                 // Show/Hide tabs based on markdown flag.
-                setMarkdown(mIsMarkdownEnabled);
+                showMarkdownActionOrTabs();
 
                 // Save note so any local changes get synced.
                 mNote.save();
@@ -1315,6 +1270,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         new SaveNoteTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public boolean isPlaceholderVisible() {
+        if (mPlaceholderView != null) {
+            return mPlaceholderView.getVisibility() == View.VISIBLE;
+        } else {
+            return false;
+        }
     }
 
     public void setPlaceholderVisible(boolean isVisible) {
@@ -1615,10 +1578,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
     }
 
-    private void showShareSheet() {
-        DisplayUtils.showTextShareBottomSheet(getContext(), mContentEditText.getText());
-    }
-
     private void showInfoSheet() {
         if (isAdded() && mInfoBottomSheet != null && !mInfoBottomSheet.isAdded()) {
             mInfoBottomSheet.show(getParentFragmentManager(), mNote);
@@ -1650,6 +1609,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (changeType == Bucket.ChangeType.MODIFY) {
             if (getNote() != null && getNote().getSimperiumKey().equals(key)) {
                 try {
+                    mNotesBucket = noteBucket;
                     final Note updatedNote = mNotesBucket.get(key);
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
