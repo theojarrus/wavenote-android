@@ -29,7 +29,8 @@
         <activity
             android:name="com.theost.wavenote.AboutActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Wavestyle.About">
+            android:theme="@style/Theme.Wavestyle.About"
+            android:parentActivityName="com.theost.wavenote.PreferencesActivity">
         </activity>
 
         <activity android:name="com.theost.wavenote.DictionaryActivity"
