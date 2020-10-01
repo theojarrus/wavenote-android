@@ -274,8 +274,6 @@ public class StudioActivity extends ThemedAppCompatActivity {
         boolean isPermissionDenied = false;
         if (!PermissionUtils.requestFilePermissions(this)) isPermissionDenied = true;
         if (!PermissionUtils.requestAudioPermissions(this)) isPermissionDenied = true;
-        if (isPermissionDenied)
-            DisplayUtils.showToast(this, getResources().getString(R.string.error_permission));
         return isPermissionDenied;
     }
 

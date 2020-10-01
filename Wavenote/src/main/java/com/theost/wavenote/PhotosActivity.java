@@ -254,7 +254,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     private boolean checkPermission() {
         boolean isPermissionDenied = false;
         if (!PermissionUtils.requestFilePermissions(this)) isPermissionDenied = true;
-        if (isPermissionDenied) DisplayUtils.showToast(this, getResources().getString(R.string.error_permission));
         return isPermissionDenied;
     }
 
