@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.fedor-jedi:zoomy:1.1.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/175d8b6aed36b3b91c03d67cad5fde69/jetified-zoomy-1.1.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/175d8b6aed36b3b91c03d67cad5fde69/jetified-zoomy-1.1.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/175d8b6aed36b3b91c03d67cad5fde69/jetified-zoomy-1.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/959b08575d39918a8c211b88a7ab7925/jetified-zoomy-1.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/959b08575d39918a8c211b88a7ab7925/jetified-zoomy-1.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/959b08575d39918a8c211b88a7ab7925/jetified-zoomy-1.1.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.fedor-jedi/zoomy/1.1.0/d537f8847f57deb0fe1dd5bb3b0ed1aab2eb30b7/zoomy-1.1.0-javadoc.jar!/" />

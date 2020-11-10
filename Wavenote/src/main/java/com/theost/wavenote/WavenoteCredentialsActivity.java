@@ -25,11 +25,6 @@ public class WavenoteCredentialsActivity extends CredentialsActivity {
         if (BuildConfig.DEBUG && getIntent().getBooleanExtra(EXTRA_IS_LOGIN, false)) {
             EditText inputEmail = ((TextInputLayout) findViewById(R.id.input_email)).getEditText();
             EditText inputPassword = ((TextInputLayout) findViewById(R.id.input_password)).getEditText();
-
-            if (inputEmail != null && inputPassword != null) {
-                inputEmail.setText(BuildConfig.LOGIN_EMAIL);
-                inputPassword.setText(BuildConfig.LOGIN_PASSWORD);
-            }
         }
     }
 }

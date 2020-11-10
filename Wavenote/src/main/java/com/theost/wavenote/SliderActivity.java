@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,10 +23,11 @@ import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.theost.wavenote.adapters.SliderAdapter;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.adapters.SliderAdapter;
+import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.widgets.MultiTouchViewPager;
 
 import java.io.File;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SliderActivity extends ThemedAppCompatActivity {
 
@@ -76,7 +79,6 @@ public class SliderActivity extends ThemedAppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setPadding(0, DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.status_bar_height)), 0, 0);
 
         mSliderData = findViewById(R.id.slider_data);
 
@@ -86,7 +88,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mPhotoList = new ArrayList<>(getIntent().getParcelableArrayListExtra(ARG_PHOTOS));
+        mPhotoList = new ArrayList<>(Objects.requireNonNull(getIntent().getParcelableArrayListExtra(ARG_PHOTOS)));
         currentPosition = getIntent().getIntExtra(ARG_POSITION, 0);
         noteId = getIntent().getStringExtra(PhotosActivity.ARG_NOTE_ID);
 
@@ -140,6 +142,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
         super.onBackPressed();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -167,14 +170,21 @@ public class SliderActivity extends ThemedAppCompatActivity {
     }
 
     private void updateOrientation() {
+        int statusBarHeight = ResUtils.getStatusBarHeight(this);
+        int navigationBarHeight = ResUtils.getNavBarHeight(this);
         int screenWidth = DisplayUtils.getScreenWidth();
+
         int mediumPadding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.padding_medium));
-        int navHeight = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.navigation_bar_height));
+        int toolbarPadding = 0;
+
         int bottomPadding = mediumPadding;
         if (!DisplayUtils.isLandscape(this)) {
-            bottomPadding += navHeight;
+            bottomPadding += navigationBarHeight;
+        } else {
+            screenWidth += navigationBarHeight;
         }
         mSliderData.setPadding(mediumPadding, mediumPadding, mediumPadding, bottomPadding);
+        toolbar.setPadding(toolbarPadding, statusBarHeight, toolbarPadding, toolbarPadding);
         mSliderData.getLayoutParams().width = screenWidth;
         toolbar.getLayoutParams().width = screenWidth;
     }
@@ -248,11 +258,11 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
     private static class TransformImageTask extends AsyncTask<Void, Void, Boolean> {
 
-        private WeakReference<SliderActivity> activityReference;
+        private final WeakReference<SliderActivity> activityReference;
 
-        private String mode;
-        private int param1;
-        private int param2;
+        private final String mode;
+        private final int param1;
+        private final int param2;
 
         private Bitmap editedBitmap;
         private Photo photo;

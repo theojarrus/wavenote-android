@@ -16,6 +16,9 @@ android {
             minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 
@@ -100,7 +103,7 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     // Automattic and WordPress dependencies
-    implementation 'com.simperium.android:simperium:0.9.13'
+    implementation 'com.github.fedor-jedi:simperium-android:v0.8.2'
     implementation 'com.automattic:tracks:1.2'
     implementation 'org.wordpress:passcodelock:2.0.2'
 
@@ -150,7 +153,7 @@ repositories {
     maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
 }
 
-if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ) {
+if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0) {
     android {
         signingConfigs {
             release {
@@ -197,10 +200,7 @@ android.applicationVariants.all { variant ->
         def key = toSnakeCase(property.key).toUpperCase()
         if (key == "SIMPERIUM_APP_ID" ||
                 key == "SIMPERIUM_APP_KEY" ||
-                key == "LOGIN_EMAIL" ||
-                key == "LOGIN_PASSWORD" ||
-                key == "SENTRY_DSN" ||
-                key == "WPCOM_CLIENT_ID") {
+                key == "SENTRY_DSN") {
             buildConfigField "String", key, "\"${property.value}\""
         }
     }

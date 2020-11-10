@@ -89,7 +89,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     public static String TAG_NOTE_LIST = "noteList";
     public static String TAG_NOTE_EDITOR = "noteEditor";
 
-    private static String STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED = "STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED";
+    private static final String STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED = "STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED";
 
     protected Bucket<Note> mNotesBucket;
     protected Bucket<Tag> mTagsBucket;
@@ -111,8 +111,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     private NoteEditorFragment mNoteEditorFragment;
     private Note mCurrentNote;
     private MenuItem mEmptyTrashMenuItem;
-    private Handler mInvalidateOptionsMenuHandler = new Handler();
-    private Runnable mInvalidateOptionsMenuRunnable = this::invalidateOptionsMenu;
+    private final Handler mInvalidateOptionsMenuHandler = new Handler();
+    private final Runnable mInvalidateOptionsMenuRunnable = this::invalidateOptionsMenu;
 
     // Menu drawer
     private static final int GROUP_PRIMARY = 100;
@@ -124,7 +124,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     private TagsAdapter mTagsAdapter;
     private TagsAdapter.TagMenuItem mSelectedTag;
     // Tags bucket listener
-    private Bucket.Listener<Tag> mTagsMenuUpdater = new Bucket.Listener<Tag>() {
+    private final Bucket.Listener<Tag> mTagsMenuUpdater = new Bucket.Listener<Tag>() {
         void updateNavigationDrawer() {
             runOnUiThread(() -> updateNavigationDrawerItems());
         }
@@ -451,11 +451,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         }
 
         // Disable long press on notes when viewing Trash.
-        if (mSelectedTag.id == TRASH_ID) {
-            getNoteListFragment().getListView().setLongClickable(false);
-        } else {
-            getNoteListFragment().getListView().setLongClickable(true);
-        }
+        getNoteListFragment().getListView().setLongClickable(mSelectedTag.id != TRASH_ID);
 
         getNoteListFragment().refreshListFromNavSelect();
 
@@ -833,6 +829,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -1516,8 +1513,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     }
 
     private static class EmptyTrashTask extends AsyncTask<Void, Void, Void> {
-        private SoftReference<NotesActivity> mNotesActivityReference;
-        private DatabaseHelper localDatabase;
+        private final SoftReference<NotesActivity> mNotesActivityReference;
+        private final DatabaseHelper localDatabase;
 
         EmptyTrashTask(NotesActivity context) {
             mNotesActivityReference = new SoftReference<>(context);

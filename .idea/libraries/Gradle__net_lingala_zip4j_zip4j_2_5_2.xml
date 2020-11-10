@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: net.lingala.zip4j:zip4j:2.5.2@jar">
+  <library name="Gradle: net.lingala.zip4j:zip4j:2.5.2">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.lingala.zip4j/zip4j/2.5.2/10a7eed8d1eb39896fe188120197db6a478149a/zip4j-2.5.2.jar!/" />
     </CLASSES>

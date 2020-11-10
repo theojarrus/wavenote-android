@@ -1,9 +1,13 @@
 <component name="libraryTable">
   <library name="Gradle: com.commonsware.cwac:anddown:0.4.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2d61b7f9240a8579533eaeed91d9ba0a/jetified-anddown-0.4.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2d61b7f9240a8579533eaeed91d9ba0a/jetified-anddown-0.4.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2d61b7f9240a8579533eaeed91d9ba0a/jetified-anddown-0.4.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/298222ff2b0f01e2c4105d23629d15ad/jetified-anddown-0.4.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8ee4f4ec89e5c06598c4e23da5ec84e8/jetified-anddown-0.4.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc80ade7b0e86b059e6f71b5d3250b6d/jetified-anddown-0.4.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f5157c6fe3bf443c47791d16dde411b0/jetified-anddown-0.4.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/298222ff2b0f01e2c4105d23629d15ad/jetified-anddown-0.4.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/298222ff2b0f01e2c4105d23629d15ad/jetified-anddown-0.4.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.commonsware.cwac/anddown/0.4.0/85cde9e95da5b553b44b778c3577e2028845cc2c/anddown-0.4.0-javadoc.jar!/" />

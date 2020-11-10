@@ -1,12 +1,16 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.fresco:imagepipeline:2.2.0@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30803f39ee9cc0253ee5ce363ece807a/jetified-imagepipeline-2.2.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/09544daf04d23a3028c8921d02bbae86/jetified-imagepipeline-2.2.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30803f39ee9cc0253ee5ce363ece807a/jetified-imagepipeline-2.2.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30803f39ee9cc0253ee5ce363ece807a/jetified-imagepipeline-2.2.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30803f39ee9cc0253ee5ce363ece807a/jetified-imagepipeline-2.2.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/09544daf04d23a3028c8921d02bbae86/jetified-imagepipeline-2.2.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ca89a8558b0a7d4a532760f2207b315e/jetified-imagepipeline-2.2.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d92d7932d7b8e55be886f875a485975/jetified-imagepipeline-2.2.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff151d27b91ee02b08df6afb82829d29/jetified-imagepipeline-2.2.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/09544daf04d23a3028c8921d02bbae86/jetified-imagepipeline-2.2.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/09544daf04d23a3028c8921d02bbae86/jetified-imagepipeline-2.2.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/imagepipeline/2.2.0/f14549d5fc7b9a84be27b0a7811bb048a68e73c3/imagepipeline-2.2.0-javadoc.jar!/" />

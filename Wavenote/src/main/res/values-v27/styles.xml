@@ -5,6 +5,7 @@
     <style name="Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:navigationBarColor">@color/background_light</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -62,6 +63,24 @@
         <item name="dialogPrimaryVariant">@color/dialogPrimaryVariant</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarColor">@color/dialogPrimary</item>
+    </style>
+
+    <style name="Slider.Theme.Wavestyle" parent="Base.Theme.Wavestyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="toolbarIconColor">@color/white</item>
+        <item name="android:colorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="toolbarColor">@color/transparent</item>
+        <item name="elevation">0dp</item>
     </style>
 
 </resources>

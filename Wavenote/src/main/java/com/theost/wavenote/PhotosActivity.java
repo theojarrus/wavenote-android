@@ -1,6 +1,7 @@
 package com.theost.wavenote;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -104,7 +105,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         mMaterialTitle = findViewById(R.id.materials_title);
 
         if (noteId == null) noteId = getIntent().getStringExtra(ARG_NOTE_ID);
-        if (noteId.equals(THEORY_PREFIX)) {
+        if ((noteId != null) && (noteId.equals(THEORY_PREFIX))) {
             setTitle(R.string.theory);
             findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
         } else {
@@ -196,6 +197,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -278,7 +280,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         if (updateEmptyView()) sortItems();
     }
 
-    private Handler mUpdateHandler = new Handler(msg -> {
+    private final Handler mUpdateHandler = new Handler(msg -> {
         if (msg.what == ImportUtils.RESULT_OK) {
             if (mPhotoList == null || mPhotoList.size() == 0)
                 mSortLayout.setVisibility(View.INVISIBLE);
@@ -381,6 +383,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         ).setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void sortItems() {
         switch (Note.getPhotoActiveSortMode()) {
             case R.id.sort_by_date:
@@ -438,7 +441,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }.start();
     }
 
-    private Handler mImportHandler = new Handler(msg -> {
+    private final Handler mImportHandler = new Handler(msg -> {
         if (msg.what == ImportUtils.RESULT_OK) {
             updateAdapter();
         } else if (msg.what == ImportUtils.FILE_ERROR) {
