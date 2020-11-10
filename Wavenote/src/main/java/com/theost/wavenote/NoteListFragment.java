@@ -49,6 +49,13 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.simperium.client.Bucket;
+import com.simperium.client.Bucket.ObjectCursor;
+import com.simperium.client.BucketObjectMissingException;
+import com.simperium.client.BucketObjectNameInvalid;
+import com.simperium.client.Query;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Preferences;
 import com.theost.wavenote.models.Suggestion;
@@ -64,13 +71,6 @@ import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.TextHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.WidgetUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.simperium.client.Bucket;
-import com.simperium.client.Bucket.ObjectCursor;
-import com.simperium.client.BucketObjectMissingException;
-import com.simperium.client.BucketObjectNameInvalid;
-import com.simperium.client.Query;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

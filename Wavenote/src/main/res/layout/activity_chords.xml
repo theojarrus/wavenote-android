@@ -13,94 +13,69 @@
         layout="@layout/empty_view"
         android:visibility="gone" />
 
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
+        android:id="@+id/chords_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:animateLayoutChanges="true">
 
         <LinearLayout
+            android:id="@+id/chords_view_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chord_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/custom_space"
-                android:layout_marginBottom="@dimen/custom_space"
-                android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/custom_space"
-                android:paddingEnd="0dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/instrument_layout"
-                    style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginEnd="@dimen/custom_space"
-                    android:layout_weight="1">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/instrument"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="0dp"
-                        tools:ignore="LabelFor" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginEnd="@dimen/custom_space"
-                    android:layout_weight="1">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/columns"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="0dp"
-                        tools:ignore="LabelFor" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
+                android:background="?attr/mainBackgroundColor"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/chord_item" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="-1dp"
-                android:background="@color/dividerColor" />
+                android:background="?attr/dividerColor" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/chords_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/mainBackgroundColor"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
-                android:id="@+id/search_chords"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/custom_space"
-                    android:layout_marginBottom="@dimen/custom_space"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:paddingStart="@dimen/custom_space"
-                    android:paddingEnd="0dp">
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:paddingTop="@dimen/custom_space"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="@dimen/custom_space">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/search_layout"
+                        android:id="@+id/instrument_layout"
                         style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_marginStart="0dp"
@@ -108,10 +83,30 @@
                         android:layout_weight="1">
 
                         <AutoCompleteTextView
-                            android:id="@+id/search_items"
+                            android:id="@+id/instrument"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="0dp"
+                            android:singleLine="true"
+                            tools:ignore="LabelFor" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginEnd="@dimen/custom_space"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/columns"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:singleLine="true"
                             tools:ignore="LabelFor" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -122,30 +117,79 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="-1dp"
-                    android:background="@color/dividerColor" />
+                    android:background="?attr/dividerColor" />
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/search_chords"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/chords_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/custom_space"
+                        android:layout_marginBottom="@dimen/custom_space"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/custom_space"
+                        android:paddingEnd="0dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/chord_view"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/search_layout"
+                            style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="@dimen/custom_space"
+                            android:layout_weight="1">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/search_items"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="0dp"
+                                android:singleLine="true"
+                                tools:ignore="LabelFor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="-1dp"
+                        android:background="?attr/dividerColor" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/chords_buttons_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    tools:listitem="@layout/chord_item" />
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/chord_buttons"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="0dp"
+                        android:paddingBottom="@dimen/padding_large"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        tools:listitem="@layout/chord_button" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-    </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 
 </LinearLayout>

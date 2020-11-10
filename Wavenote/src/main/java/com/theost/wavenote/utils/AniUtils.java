@@ -13,7 +13,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
 import android.widget.TextView;
 
-@SuppressWarnings("unused")
 public class AniUtils {
     private AniUtils() {
         throw new AssertionError();

@@ -22,10 +22,10 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 public class ThemeUtils {
 
     // theme constants
-    private static final int THEME_LIGHT = 0;
-    private static final int THEME_DARK = 1;
-    public static final int THEME_AUTO = 2;
-    private static final int THEME_SYSTEM = 3;
+    private static final int THEME_SYSTEM = 0;
+    private static final int THEME_LIGHT = 1;
+    private static final int THEME_DARK = 2;
+    public static final int THEME_AUTO = 3;
     private static final String PREFERENCES_URI_AUTHORITY = "preferences";
     private static final String URI_SEGMENT_THEME = "theme";
 

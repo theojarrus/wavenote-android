@@ -26,6 +26,8 @@
     <color name="background_dark_12">#37393b</color>
     <color name="background_dark_16">#424549</color>
     <color name="background_dark_24">#3d3f41</color>
+    <color name="background_light_gray">#dfdfdf</color>
+    <color name="background_dark_gray">@color/gray_50</color>
 
     <!-- PASSCODE -->
     <color name="passcodelock_background">@color/background_dark</color>
@@ -82,8 +84,8 @@
     <color name="blue_10">#d2d4f3</color>
     <color name="blue_20">#bec1ee</color>
     <color name="blue_30">#a9aee9</color>
-    <color name="blue_40">#959be3</color>
-    <color name="blue_50">#959be3</color>
+    <color name="blue_40">#a9aee9</color>
+    <color name="blue_50">#a9aee9</color>
     <color name="blue_60">#6d75d9</color>
     <color name="blue_70">#444fce</color>
     <color name="blue_80">#242b89</color>
@@ -152,20 +154,30 @@
 
     <!-- Color Sheet -->
 
-    <color name="colorsheet_default">#6AB3D0</color>
+    <color name="palette_cyan">#64B0CE</color>
+    <color name="palette_yellow">#F2DC5D</color>
+    <color name="palette_orange">#FC814A</color>
+    <color name="palette_red">#ED6A5A</color>
+    <color name="palette_green">#5CAD77</color>
+    <color name="palette_blue">@color/blue</color>
+    <color name="palette_lightblue">@color/blue_20</color>
+    <color name="palette_lightpink">#E7C8DD</color>
+    <color name="palette_purple">#836E87</color>
+    <color name="palette_darkpurple">#5D4E60</color>
+    <color name="palette_black">@color/background_dark</color>
 
     <array name="colorsheet_colors">
-        <item>@color/colorsheet_default</item>
-        <item>#E7C8DD</item>
-        <item>#67597A</item>
-        <item>#5D4E60</item>
-        <item>#0f1238</item>
-        <item>#E91E63</item>
-        <item>#3F51B5</item>
-        <item>#1E88E5</item>
-        <item>#F4511E</item>
-        <item>#546E7A</item>
-        <item>#43A047</item>
+        <item>@color/palette_cyan</item>
+        <item>@color/palette_yellow</item>
+        <item>@color/palette_orange</item>
+        <item>@color/palette_red</item>
+        <item>@color/palette_green</item>
+        <item>@color/palette_blue</item>
+        <item>@color/palette_lightblue</item>
+        <item>@color/palette_lightpink</item>
+        <item>@color/palette_purple</item>
+        <item>@color/palette_darkpurple</item>
+        <item>@color/palette_black</item>
     </array>
 
     <color name="dialogPrimary">#FAFAFA</color>
@@ -175,13 +187,16 @@
     <color name="dividerColor">#1F000000</color>
 
     <!-- Views -->
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/text_title_disabled</color>
-    <color name="mtrl_textinput_disabled_color" tools:override="true">@color/text_title_disabled</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">
+        @color/text_title_disabled
+    </color>
+    <color name="mtrl_textinput_disabled_color" tools:override="true">@color/text_title_disabled
+    </color>
 
     <!-- Highlight -->
     <color name="syntax_title">@color/blue_20</color>
-    <color name="syntax_word">@color/purple</color>
-    <color name="syntax_chord">#E91E63</color>
+    <color name="syntax_word">@color/blue</color>
+    <color name="syntax_chord">@color/blue</color>
 
     <!-- Audio -->
 

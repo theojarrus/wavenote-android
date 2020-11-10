@@ -5,12 +5,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
-import com.theost.wavenote.R;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketSchema;
 import com.simperium.client.Query;
 import com.simperium.client.Query.ComparisonType;
+import com.theost.wavenote.R;
 import com.theost.wavenote.utils.HtmlCompat;
 
 import org.json.JSONArray;
@@ -70,11 +70,13 @@ public class Note extends BucketObject {
     private static boolean photoSortDirRev = false;
     private static boolean dictionarySortDirRev = false;
 
-    private static String themedTextActiveColor = "#000000";
-    private static String themedTextInactiveColor = "#ffffff";
+    private static boolean chordGridEnabled = true;
+
+    private static String themedTextActiveColor;
+    private static String themedTextInactiveColor;
 
     private static String activeMetronomeSound;
-    private static String noteActiveInstrument;
+    private static int noteActiveInstrument;
 
     private static int activeStyleColor;
 
@@ -120,7 +122,6 @@ public class Note extends BucketObject {
                 .where(TAGS_PROPERTY, ComparisonType.EQUAL_TO, null);
     }
 
-    @SuppressWarnings("unused")
     public static String dateString(Number time, boolean useShortFormat, Context context) {
         Calendar c = numberToDate(time);
         return dateString(c, useShortFormat, context);
@@ -187,7 +188,7 @@ public class Note extends BucketObject {
 
             if (firstNewLinePosition < content.length()) {
                 mContentPreview = content.substring(firstNewLinePosition);
-                mContentPreview = mContentPreview.replace(NEW_LINE, SPACE).replace(SPACE + SPACE, SPACE).trim();
+                mContentPreview = mContentPreview.replaceAll("\\s+", SPACE).trim();
             } else {
                 mContentPreview = content;
             }
@@ -197,11 +198,19 @@ public class Note extends BucketObject {
         }
     }
 
-    public static String getNoteActiveInstrument() {
+    public static boolean isChordGridEnabled() {
+        return chordGridEnabled;
+    }
+
+    public static void setChordGridEnabled(boolean chordGridEnabled) {
+        Note.chordGridEnabled = chordGridEnabled;
+    }
+
+    public static int getNoteActiveInstrument() {
         return noteActiveInstrument;
     }
 
-    public static void setNoteActiveInstrument(String noteActiveInstrument) {
+    public static void setNoteActiveInstrument(int noteActiveInstrument) {
         Note.noteActiveInstrument = noteActiveInstrument;
     }
 
@@ -354,7 +363,7 @@ public class Note extends BucketObject {
         if (content == null) {
             return BLANK_CONTENT;
         }
-        if (content.contains(themedTextInactiveColor))
+        if ((themedTextInactiveColor != null) && (content.contains(themedTextInactiveColor)))
             content = content.replaceAll(themedTextInactiveColor, themedTextActiveColor);
         return (Spannable) HtmlCompat.fromHtml(content);
     }

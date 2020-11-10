@@ -37,20 +37,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.theost.wavenote.models.Note;
-import com.theost.wavenote.models.Tag;
-import com.theost.wavenote.utils.CrashUtils;
-import com.theost.wavenote.utils.DatabaseHelper;
-import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.utils.DrawableUtils;
-import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.utils.HtmlCompat;
-import com.theost.wavenote.utils.PrefUtils;
-import com.theost.wavenote.utils.ResUtils;
-import com.theost.wavenote.utils.StrUtils;
-import com.theost.wavenote.adapters.TagsAdapter;
-import com.theost.wavenote.utils.ThemeUtils;
-import com.theost.wavenote.utils.UndoBarController;
 import com.google.android.material.navigation.NavigationView;
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
@@ -58,6 +44,21 @@ import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.BucketObjectNameInvalid;
 import com.simperium.client.Query;
 import com.simperium.client.User;
+import com.theost.wavenote.adapters.TagsAdapter;
+import com.theost.wavenote.models.Note;
+import com.theost.wavenote.models.Tag;
+import com.theost.wavenote.utils.CrashUtils;
+import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.DrawableUtils;
+import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.Html;
+import com.theost.wavenote.utils.HtmlCompat;
+import com.theost.wavenote.utils.PrefUtils;
+import com.theost.wavenote.utils.ResUtils;
+import com.theost.wavenote.utils.StrUtils;
+import com.theost.wavenote.utils.ThemeUtils;
+import com.theost.wavenote.utils.UndoBarController;
 
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -70,8 +71,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.theost.wavenote.NoteListFragment.TAG_PREFIX;
-import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
-import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 import static com.theost.wavenote.adapters.TagsAdapter.ALL_NOTES_ID;
 import static com.theost.wavenote.adapters.TagsAdapter.DEFAULT_ITEM_POSITION;
 import static com.theost.wavenote.adapters.TagsAdapter.METRONOME_ID;
@@ -80,6 +79,8 @@ import static com.theost.wavenote.adapters.TagsAdapter.TAGS_ID;
 import static com.theost.wavenote.adapters.TagsAdapter.THEORY_ID;
 import static com.theost.wavenote.adapters.TagsAdapter.TRASH_ID;
 import static com.theost.wavenote.adapters.TagsAdapter.UNTAGGED_NOTES_ID;
+import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
+import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
 
 public class NotesActivity extends ThemedAppCompatActivity implements NoteListFragment.Callbacks,
@@ -316,12 +317,14 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
     @Override
     public void onActionModeCreated() {
+        mDrawerLayout.requestDisallowInterceptTouchEvent(true);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Override
     public void onActionModeDestroyed() {
         if (mSearchMenuItem != null && !mSearchMenuItem.isActionViewExpanded()) {
+            mDrawerLayout.requestDisallowInterceptTouchEvent(false);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
     }
@@ -479,9 +482,15 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 Note welcomeNote = mNotesBucket.newObject("welcome-android");
                 welcomeNote.setCreationDate(Calendar.getInstance());
                 welcomeNote.setModificationDate(welcomeNote.getCreationDate());
-                welcomeNote.setContent(new SpannableString(getString(R.string.welcome_note)));
+                welcomeNote.setContent(new SpannableString(Html.fromHtml(getString(R.string.welcome_note))));
                 welcomeNote.getTitle();
                 welcomeNote.save();
+                Note songNote = mNotesBucket.newObject("welcomesong-android");
+                songNote.setCreationDate(Calendar.getInstance());
+                songNote.setModificationDate(welcomeNote.getCreationDate());
+                songNote.setContent(new SpannableString(Html.fromHtml(getString(R.string.welcome_song))));
+                songNote.getTitle();
+                songNote.save();
             } catch (BucketObjectNameInvalid e) {
                 // this won't happen because welcome-android is a valid name
             }
@@ -719,6 +728,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                mDrawerLayout.requestDisallowInterceptTouchEvent(true);
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getNoteListFragment().searchNotes("", false);
 
@@ -738,6 +748,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                mDrawerLayout.requestDisallowInterceptTouchEvent(false);
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
                 if (DisplayUtils.isLargeScreenLandscape(NotesActivity.this)) {
@@ -810,10 +821,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         DrawableUtils.tintMenuItemWithAttribute(this, menu.findItem(R.id.menu_search), R.attr.toolbarIconColor);
 
         if (mDrawerLayout != null && mSearchMenuItem != null) {
-            mDrawerLayout.setDrawerLockMode(mSearchMenuItem.isActionViewExpanded() ?
-                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED :
-                    DrawerLayout.LOCK_MODE_UNLOCKED
-            );
+            if (mSearchMenuItem.isActionViewExpanded()) {
+                mDrawerLayout.requestDisallowInterceptTouchEvent(true);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            } else {
+                mDrawerLayout.requestDisallowInterceptTouchEvent(false);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
         }
 
         return true;

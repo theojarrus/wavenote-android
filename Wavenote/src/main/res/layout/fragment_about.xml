@@ -1,205 +1,346 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fillViewport="true"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:fillViewport="true">
 
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:paddingTop="@dimen/padding_large"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
+        android:paddingTop="@dimen/padding_large">
 
         <ImageView
             android:id="@+id/about_logo"
-            android:contentDescription="@string/logo"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_width="90dp">
-        </ImageView>
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/logo" />
 
         <com.theost.wavenote.widgets.RobotoLightTextView
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:paddingEnd="@dimen/padding_large"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:paddingStart="@dimen/padding_large"
+            android:paddingEnd="@dimen/padding_large"
             android:text="@string/app_name"
-            android:textSize="32sp">
-        </com.theost.wavenote.widgets.RobotoLightTextView>
+            android:textSize="25sp" />
 
         <com.theost.wavenote.widgets.RobotoLightTextView
             android:id="@+id/about_version"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginBottom="@dimen/padding_extra_large"
-            android:layout_marginTop="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:textSize="13sp"
-            tools:text="Version 2.5">
-        </com.theost.wavenote.widgets.RobotoLightTextView>
+            tools:text="Version 2.5" />
 
         <View
-            android:background="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_width="match_parent">
-        </View>
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/about_donate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_medium">
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
 
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/donate_developer"
-                android:textSize="22sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_donate_handle"
-                android:textSize="15sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/donate_developer"
+                        android:textSize="22sp" />
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/about_donate_handle"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/padding_large"
+                    android:paddingEnd="@dimen/padding_large"
+                    android:src="@drawable/ic_arrow_top_right_24dp"
+                    android:contentDescription="@string/about" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <View
-            android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_width="match_parent">
-        </View>
+            android:background="@color/white" />
 
         <LinearLayout
-            android:id="@+id/about_play_store"
+            android:id="@+id/about_website"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_medium">
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
 
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/rate_us"
-                android:textSize="22sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_play_store"
-                android:textSize="15sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/website"
+                        android:textSize="22sp" />
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/about_website_handle"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/padding_large"
+                    android:paddingEnd="@dimen/padding_large"
+                    android:src="@drawable/ic_arrow_top_right_24dp"
+                    android:contentDescription="@string/about" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <View
-            android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_width="match_parent">
-        </View>
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/about_instagram"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_medium">
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
 
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/instagram"
-                android:textSize="22sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
-            <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingEnd="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large"
-                android:text="@string/about_instagram_handle"
-                android:textSize="15sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/instagram"
+                        android:textSize="22sp" />
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/about_instagram_handle"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/padding_large"
+                    android:paddingEnd="@dimen/padding_large"
+                    android:src="@drawable/ic_arrow_top_right_24dp"
+                    android:contentDescription="@string/about" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <View
-            android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_width="match_parent">
-        </View>
+            android:background="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/about_play_store"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/rate_us"
+                        android:textSize="22sp" />
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/about_play_store"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/padding_large"
+                    android:paddingEnd="@dimen/padding_large"
+                    android:src="@drawable/ic_arrow_top_right_24dp"
+                    android:contentDescription="@string/about" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/about_github"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_medium">
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
 
             <com.theost.wavenote.widgets.RobotoLightTextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:lineSpacingExtra="@dimen/line_spacing"
-                android:paddingEnd="@dimen/padding_large"
                 android:paddingStart="@dimen/padding_large"
+                android:paddingEnd="@dimen/padding_large"
                 android:text="@string/about_somewords"
-                android:textSize="15sp">
-            </com.theost.wavenote.widgets.RobotoLightTextView>
+                android:gravity="center_horizontal"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
         <View
-            android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_width="match_parent">
-        </View>
+            android:background="@color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <com.theost.wavenote.widgets.RobotoLightTextView
             android:id="@+id/about_copyright"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="bottom|center_horizontal"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/padding_large"
-            android:layout_marginTop="@dimen/padding_small"
             android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:textSize="15sp">
-        </com.theost.wavenote.widgets.RobotoLightTextView>
+            android:background="?attr/selectableItemBackground"
+            android:gravity="bottom|center_horizontal"
+            android:textSize="15sp" />
 
     </LinearLayout>
 

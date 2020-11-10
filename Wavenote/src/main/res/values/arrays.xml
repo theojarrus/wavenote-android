@@ -113,9 +113,9 @@
     </string-array>
 
     <string-array name="array_musical_instruments">
-        <item>Guitar</item>
-        <item>Piano</item>
-        <item>Ukulele</item>
+        <item>@string/guitar</item>
+        <item>@string/piano</item>
+        <item>@string/ukulele</item>
     </string-array>
 
     <string-array name="track_menu_array">
@@ -124,12 +124,11 @@
     </string-array>
 
     <string-array name="array_musical_columns">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
+        <item>100%</item>
+        <item>50%</item>
+        <item>33%</item>
+        <item>25%</item>
+        <item>20%</item>
     </string-array>
 
     <string-array name="array_musical_chords">
@@ -284,17 +283,17 @@
 
     <string-array name="array_musical_notes_order">
         <item>C</item>
-        <item>C#</item>
         <item>D</item>
-        <item>Eb</item>
         <item>E</item>
         <item>F</item>
-        <item>F#</item>
         <item>G</item>
-        <item>Ab</item>
         <item>A</item>
-        <item>Bb</item>
         <item>B</item>
+    </string-array>
+
+    <string-array name="array_musical_notes_halftones">
+        <item>C</item>
+        <item>F</item>
     </string-array>
 
 </resources>

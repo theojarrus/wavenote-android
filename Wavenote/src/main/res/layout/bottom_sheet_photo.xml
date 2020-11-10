@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="-1dp"
-        android:background="@color/dividerColor" />
+        android:background="?attr/dividerColor" />
 
     <com.theost.wavenote.widgets.RobotoRegularTextView
         android:id="@+id/add_photo_camera"
@@ -73,6 +73,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="-1dp"
-        android:background="@color/dividerColor" />
+        android:background="?attr/dividerColor" />
 
 </LinearLayout>

@@ -65,7 +65,7 @@ jobs:
           destination: Artifacts
 
 workflows:
-  simplenote-android:
+  wavenote-android:
     jobs:
       - Test
       - Lint

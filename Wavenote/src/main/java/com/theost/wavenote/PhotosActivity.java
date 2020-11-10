@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +26,7 @@ import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.theost.wavenote.adapters.PhotoAdapter;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DatabaseHelper;
@@ -35,8 +35,6 @@ import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.PermissionUtils;
-import com.theost.wavenote.adapters.PhotoAdapter;
-import com.theost.wavenote.utils.SyntaxHighlighter;
 import com.theost.wavenote.utils.ThemeUtils;
 
 import java.io.File;
@@ -397,8 +395,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public void startChordsActivity(View view) {
         Intent intent = new Intent(this, ChordsActivity.class);
         intent.putExtra(ChordsActivity.ARG_ALL_CHORDS, true);
-        intent.putExtra(ChordsActivity.ARG_CHORDS, SyntaxHighlighter.getAllChords(this));
-        intent.putExtra(ChordsActivity.ARG_INSTRUMENT, ((Button) view).getText().toString());
         startActivity(intent);
     }
 

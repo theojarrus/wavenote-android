@@ -23,6 +23,7 @@ public class AboutFragment extends Fragment {
 
     private static final String DEVELOPER_INSTAGRAM_URL = "http://instagram.com/theo.jedi";
     private static final String DEVELOPER_SUPPORT_URL = "http://patreon.com/theojedi";
+    private static final String DEVELOPER_WEBSITE_URL = "http://theost.tech";
     private static final String WAVENOTE_GITHUB_URL = "http://github.com/fedor-jedi/wavenote-android";
     private static final String PLAY_STORE_URI = "market://details?id=com.theost.wavenote";
 
@@ -30,6 +31,7 @@ public class AboutFragment extends Fragment {
     private TextView copyright;
     private ImageView logoImageView;
     private View instagram;
+    private View website;
     private View playStore;
     private View donate;
     private View github;
@@ -44,6 +46,7 @@ public class AboutFragment extends Fragment {
         copyright = view.findViewById(R.id.about_copyright);
         logoImageView = view.findViewById(R.id.about_logo);
         instagram = view.findViewById(R.id.about_instagram);
+        website = view.findViewById(R.id.about_website);
         playStore = view.findViewById(R.id.about_play_store);
         donate = view.findViewById(R.id.about_donate);
         github = view.findViewById(R.id.about_github);
@@ -64,6 +67,14 @@ public class AboutFragment extends Fragment {
         instagram.setOnClickListener(v -> {
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_INSTAGRAM_URL)));
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        website.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_WEBSITE_URL)));
             } catch (Exception e) {
                 Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
             }

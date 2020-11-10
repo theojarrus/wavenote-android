@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:orientation="horizontal"
-    android:animateLayoutChanges="true"
     android:paddingTop="10dp"
     android:id="@+id/chord_layout">
 

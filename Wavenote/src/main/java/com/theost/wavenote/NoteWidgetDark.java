@@ -18,6 +18,8 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.ChecklistUtils;
 import com.theost.wavenote.utils.PrefUtils;
 
+import static com.theost.wavenote.models.Note.NEW_LINE;
+
 public class NoteWidgetDark extends AppWidgetProvider {
     public static final String KEY_WIDGET_IDS_DARK = "key_widget_ids_dark";
 
@@ -81,83 +83,69 @@ public class NoteWidgetDark extends AppWidgetProvider {
         Simperium simperium = currentApp.getSimperium();
         User user = simperium.getUser();
 
-        if (user.getStatus().equals(User.Status.NOT_AUTHORIZED)) {
-            // Create intent to navigate to notes activity which redirects to login on widget click
-            Intent intent = new Intent(context, NotesActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, 0);
+        // Get note id from SharedPreferences
+        String key = PrefUtils.getStringPref(context, PrefUtils.PREF_NOTE_WIDGET_NOTE + appWidgetId);
 
-            views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-            views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.log_in_use_widget));
-            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-            views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.log_in_use_widget));
-            views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-            views.setViewVisibility(R.id.widget_text_content, View.GONE);
-        } else {
-            // Get note id from SharedPreferences
-            String key =  PrefUtils.getStringPref(context, PrefUtils.PREF_NOTE_WIDGET_NOTE + appWidgetId);
+        if (!key.isEmpty()) {
+            // Get notes bucket
+            Bucket<Note> notesBucket = currentApp.getNotesBucket();
 
-            if (!key.isEmpty()) {
-                // Get notes bucket
-                Bucket<Note> notesBucket = currentApp.getNotesBucket();
+            try {
+                // Update note
+                Note updatedNote = notesBucket.get(key);
 
-                try {
-                    // Update note
-                    Note updatedNote = notesBucket.get(key);
+                // Prepare bundle for NoteEditorActivity
+                Bundle arguments = new Bundle();
+                arguments.putBoolean(NoteEditorFragment.ARG_IS_FROM_WIDGET, true);
+                arguments.putString(NoteEditorFragment.ARG_ITEM_ID, updatedNote.getSimperiumKey());
+                arguments.putBoolean(NoteEditorFragment.ARG_MARKDOWN_ENABLED, updatedNote.isMarkdownEnabled());
+                arguments.putBoolean(NoteEditorFragment.ARG_PREVIEW_ENABLED, updatedNote.isPreviewEnabled());
 
-                    // Prepare bundle for NoteEditorActivity
-                    Bundle arguments = new Bundle();
-                    arguments.putBoolean(NoteEditorFragment.ARG_IS_FROM_WIDGET, true);
-                    arguments.putString(NoteEditorFragment.ARG_ITEM_ID, updatedNote.getSimperiumKey());
-                    arguments.putBoolean(NoteEditorFragment.ARG_MARKDOWN_ENABLED, updatedNote.isMarkdownEnabled());
-                    arguments.putBoolean(NoteEditorFragment.ARG_PREVIEW_ENABLED, updatedNote.isPreviewEnabled());
+                // Create intent to navigate to selected note on widget click
+                Intent intent = new Intent(context, NoteEditorActivity.class);
+                intent.putExtras(arguments);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    // Create intent to navigate to selected note on widget click
-                    Intent intent = new Intent(context, NoteEditorActivity.class);
-                    intent.putExtras(arguments);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                // Remove title from content
+                String title = updatedNote.getTitle();
+                String contentWithoutTitle = updatedNote.getContent().toString().replace(title, "");
+                int indexOfNewline = contentWithoutTitle.indexOf(NEW_LINE) + 1;
+                String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
 
-                    // Remove title from content
-                    String title = updatedNote.getTitle();
-                    String contentWithoutTitle = updatedNote.getContent().toString().replace(title, "");
-                    int indexOfNewline = contentWithoutTitle.indexOf("\n") + 1;
-                    String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
+                // Set widget content
+                views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
+                views.setTextViewText(R.id.widget_text, title);
+                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                views.setTextViewText(R.id.widget_text_title, title);
+                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
+                contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
+                        contentSpan,
+                        ChecklistUtils.CHECKLIST_REGEX
+                );
+                views.setTextViewText(R.id.widget_text_content, contentSpan);
+            } catch (BucketObjectMissingException e) {
+                // Create intent to navigate to widget configure activity on widget click
+                Intent intent = new Intent(context, NoteWidgetDarkConfigureActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    // Set widget content
-                    views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-                    views.setTextViewText(R.id.widget_text, title);
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    views.setTextViewText(R.id.widget_text_title, title);
-                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
-                    contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
-                            contentSpan,
-                            ChecklistUtils.CHECKLIST_REGEX
-                    );
-                    views.setTextViewText(R.id.widget_text_content, contentSpan);
-                } catch (BucketObjectMissingException e) {
-                    // Create intent to navigate to widget configure activity on widget click
-                    Intent intent = new Intent(context, NoteWidgetDarkConfigureActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-                    views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
-                    views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
-                    views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-                    views.setViewVisibility(R.id.widget_text_content, View.GONE);
-                }
-            } else {
-                views.setOnClickPendingIntent(R.id.widget_layout, null);
+                views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                 views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
                 views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
                 views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
                 views.setViewVisibility(R.id.widget_text_content, View.GONE);
             }
+        } else {
+            views.setOnClickPendingIntent(R.id.widget_layout, null);
+            views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
+            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+            views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
+            views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+            views.setViewVisibility(R.id.widget_text_content, View.GONE);
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, views);

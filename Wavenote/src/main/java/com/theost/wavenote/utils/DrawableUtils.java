@@ -1,11 +1,9 @@
 package com.theost.wavenote.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -51,15 +49,8 @@ public class DrawableUtils {
 
     public static Drawable tintDrawableWithAttribute(Context context, @DrawableRes int drawableRes,
                                                      @AttrRes int tintColorAttribute) {
-        @ColorInt int color = getColor(context, tintColorAttribute);
+        @ColorInt int color = ThemeUtils.getColorFromAttribute(context, tintColorAttribute);
         return tintDrawable(context, drawableRes, color);
-    }
-
-    public static int getColor(Context context, @AttrRes int tintColorAttribute) {
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(tintColorAttribute, typedValue, true);
-        return typedValue.data;
     }
 
     public static void startAnimatedVectorDrawable(Drawable drawable) {
@@ -71,7 +62,7 @@ public class DrawableUtils {
     }
 
     public static void tintMenuWithAttribute(Context context, Menu menu, @AttrRes int tintColorAttribute) {
-        @ColorInt int color = getColor(context, tintColorAttribute);
+        @ColorInt int color = ThemeUtils.getColorFromAttribute(context, tintColorAttribute);
         DrawableUtils.tintMenu(menu, color);
     }
 
@@ -98,7 +89,7 @@ public class DrawableUtils {
     }
 
     public static void tintMenuItemWithAttribute(Context context, MenuItem menuItem, @AttrRes int tintColorAttribute) {
-        @ColorInt int color = getColor(context, tintColorAttribute);
+        @ColorInt int color = ThemeUtils.getColorFromAttribute(context, tintColorAttribute);
         DrawableUtils.tintMenuItem(menuItem, color);
     }
 }

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.simperium.android:simperium:0.9.13@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8f2bcc0e98cddcbeab31c05a9aeaf9f0/jetified-simperium-0.9.13/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8f2bcc0e98cddcbeab31c05a9aeaf9f0/jetified-simperium-0.9.13/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8f2bcc0e98cddcbeab31c05a9aeaf9f0/jetified-simperium-0.9.13/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d895dde1f3e9b608b1f706ce27cf4ba7/jetified-simperium-0.9.13/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d895dde1f3e9b608b1f706ce27cf4ba7/jetified-simperium-0.9.13/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d895dde1f3e9b608b1f706ce27cf4ba7/jetified-simperium-0.9.13/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.simperium.android/simperium/0.9.13/cd41293b35e9a12c40a6772405e8fd76512a6fc1/simperium-0.9.13-javadoc.jar!/" />

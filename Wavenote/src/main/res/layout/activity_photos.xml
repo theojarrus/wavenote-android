@@ -39,92 +39,40 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:orientation="horizontal"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp">
+                    android:paddingLeft="@dimen/padding_large"
+                    android:paddingTop="@dimen/padding_small"
+                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingRight="@dimen/padding_large">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/custom_space"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:paddingTop="@dimen/custom_space"
-                        android:paddingBottom="@dimen/custom_space"
-                        android:text="@string/chords"
+                        android:text="@string/chord_tablatures"
                         android:textColor="?attr/noteEditorTextColor"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="-1dp"
-                    android:background="@color/dividerColor" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/custom_space"
-                    android:layout_marginBottom="@dimen/custom_space"
-                    android:paddingLeft="@dimen/custom_space"
-                    android:paddingRight="@dimen/custom_space">
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="2sp"
+                        android:layout_marginLeft="@dimen/padding_extra_large"
+                        android:layout_marginRight="@dimen/padding_extra_large"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:background="?attr/dividerColor" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/guitar_chords"
+                        android:id="@+id/see_chords"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:letterSpacing="0"
                         android:onClick="startChordsActivity"
-                        android:orientation="vertical"
-                        android:text="@string/guitar"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="15sp"
-                        app:strokeColor="?attr/colorAccent"
-                        app:strokeWidth="2dp"
-                        tools:ignore="PrivateResource" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/piano_chords"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/custom_space"
-                        android:layout_marginRight="@dimen/custom_space"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0"
-                        android:onClick="startChordsActivity"
-                        android:orientation="vertical"
-                        android:text="@string/piano"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="15sp"
-                        app:strokeColor="?attr/colorAccent"
-                        app:strokeWidth="2dp"
-                        tools:ignore="PrivateResource" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/ukulele_chords"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0"
-                        android:onClick="startChordsActivity"
-                        android:orientation="vertical"
-                        android:text="@string/ukulele"
+                        android:text="@string/open"
                         android:textAllCaps="false"
                         android:textColor="?attr/colorAccent"
                         android:textSize="15sp"
@@ -138,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="-1dp"
-                    android:background="@color/dividerColor" />
+                    android:background="?attr/dividerColor" />
 
             </LinearLayout>
 
@@ -151,8 +99,8 @@
                     android:id="@+id/sort_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="invisible">
 
                     <LinearLayout
                         android:id="@+id/materials_title"
@@ -163,8 +111,8 @@
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:orientation="horizontal"
-                        android:paddingLeft="25dp"
-                        android:paddingRight="25dp"
+                        android:paddingLeft="@dimen/padding_large"
+                        android:paddingRight="@dimen/padding_large"
                         android:visibility="invisible">
 
                         <TextView
@@ -186,7 +134,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="-1dp"
-                        android:background="@color/dividerColor" />
+                        android:background="?attr/dividerColor" />
 
                     <include layout="@layout/search_sort" />
 
@@ -194,7 +142,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="-1dp"
-                        android:background="@color/dividerColor" />
+                        android:background="?attr/dividerColor" />
 
                 </LinearLayout>
 

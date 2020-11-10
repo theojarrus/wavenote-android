@@ -20,6 +20,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils.SimpleStringSplitter;
 import android.text.TextWatcher;
@@ -47,9 +48,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-
 import androidx.appcompat.widget.ActionBarContextView;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
@@ -61,38 +62,39 @@ import androidx.preference.PreferenceManager;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
-import com.theost.wavenote.models.Note;
-import com.theost.wavenote.models.Tag;
-import com.theost.wavenote.utils.AutoBullet;
-import com.theost.wavenote.utils.ContextUtils;
-import com.theost.wavenote.utils.DatabaseHelper;
-import com.theost.wavenote.utils.ImportUtils;
-import com.theost.wavenote.utils.ResUtils;
-import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.utils.DrawableUtils;
-import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.utils.MatchOffsetHighlighter;
-import com.theost.wavenote.utils.NetworkUtils;
-import com.theost.wavenote.utils.NoteUtils;
-import com.theost.wavenote.utils.PermissionUtils;
-import com.theost.wavenote.utils.PrefUtils;
-import com.theost.wavenote.utils.SyntaxHighlighter;
-import com.theost.wavenote.utils.WavenoteLinkify;
-import com.theost.wavenote.utils.WavenoteMovementMethod;
-import com.theost.wavenote.utils.SpaceTokenizer;
-import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView;
-import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView.OnTagAddedListener;
-import com.theost.wavenote.utils.TextHighlighter;
-import com.theost.wavenote.utils.ThemeUtils;
-import com.theost.wavenote.utils.WidgetUtils;
-import com.theost.wavenote.utils.ExportUtils;
-import com.theost.wavenote.widgets.WavenoteEditText;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
+import com.theost.wavenote.models.Note;
+import com.theost.wavenote.models.Tag;
+import com.theost.wavenote.utils.AutoBullet;
+import com.theost.wavenote.utils.ContextUtils;
+import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.DrawableUtils;
+import com.theost.wavenote.utils.ExportUtils;
+import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.HighlightUtils;
+import com.theost.wavenote.utils.ImportUtils;
+import com.theost.wavenote.utils.MatchOffsetHighlighter;
+import com.theost.wavenote.utils.NetworkUtils;
+import com.theost.wavenote.utils.NoteUtils;
+import com.theost.wavenote.utils.PermissionUtils;
+import com.theost.wavenote.utils.PrefUtils;
+import com.theost.wavenote.utils.ResUtils;
+import com.theost.wavenote.utils.SpaceTokenizer;
+import com.theost.wavenote.utils.StrUtils;
+import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView;
+import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView.OnTagAddedListener;
+import com.theost.wavenote.utils.TextHighlighter;
+import com.theost.wavenote.utils.ThemeUtils;
+import com.theost.wavenote.utils.WavenoteLinkify;
+import com.theost.wavenote.utils.WavenoteMovementMethod;
+import com.theost.wavenote.utils.WidgetUtils;
+import com.theost.wavenote.widgets.WavenoteEditText;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -101,11 +103,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+import static com.theost.wavenote.models.Note.NEW_LINE;
 import static com.theost.wavenote.utils.SearchTokenizer.SPACE;
 
 public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note>,
@@ -128,6 +132,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private static final int MAX_REVISIONS = 30;
     private static final int PUBLISH_TIMEOUT = 20000;
     private static final int HISTORY_TIMEOUT = 10000;
+
+    private static final int TRANSPOSE_CODE = 0;
 
     private int[] keywordColors;
     private int[] styleColors;
@@ -504,6 +510,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) new TransposeThread(data).start();
+        showLoadingDialog(R.string.transpose, R.string.transposing);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mNotesBucket.start();
@@ -768,10 +781,65 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         super.onPrepareOptionsMenu(menu);
     }
 
+    private Handler mTransposeHandler = new Handler(msg -> {
+        saveAndSyncNote();
+        if (loadingDialog != null) loadingDialog.dismiss();
+        return true;
+    });
+
+    private class TransposeThread extends Thread {
+        Intent mData;
+
+        public TransposeThread(Intent data) {
+            mData = data;
+        }
+
+        public void run() {
+            transposeChords(mData);
+            mTransposeHandler.sendEmptyMessage(TRANSPOSE_CODE);
+        }
+    }
+
+    private void transposeChords(Intent data) {
+        HashMap<String, String> transposedChords = (HashMap<String, String>) data.getSerializableExtra(ChordsActivity.ARG_TRANSPOSED);
+        if ((transposedChords != null) && (transposedChords.size() != 0)) {
+            SpannableStringBuilder content = new SpannableStringBuilder(mContentEditText.getText());
+            String contentStr = content.toString();
+            int titleEnd = getTitleEnd();
+            if (titleEnd < 0) return;
+            contentStr = contentStr.substring(titleEnd).replaceAll("[\\t\\r\\n\\u202F\\u00A0]", Note.SPACE);
+            for (String i : transposedChords.keySet()) {
+                String chord = transposedChords.get(i);
+                String splitter = SPACE + i + SPACE;
+                int index = 0;
+                while (index != -1) {
+                    index = contentStr.indexOf(splitter, index);
+                    if (index != -1) {
+                        String beginStr = contentStr.substring(0, index);
+                        String endStr = contentStr.substring(index + splitter.length());
+                        index += titleEnd;
+                        contentStr = beginStr + SPACE + StrUtils.repeat("-", chord.length()) + SPACE + endStr;
+                        content.delete(index + 1, index + splitter.length() - 1);
+                        content.insert(index + 1, chord);
+                        index = index - titleEnd + 1;
+                    }
+                }
+            }
+            if (content != null) {
+                getActivity().runOnUiThread(() -> mContentEditText.setText(content));
+            }
+        }
+    }
+
+    private int getTitleEnd() {
+        String content = mContentEditText.getText().toString();
+        int end = content.indexOf(NEW_LINE);
+        if (end == -1) end = content.length();
+        return end;
+    }
+
     private int getActionColor() {
-        TypedValue typedValue = new TypedValue();
-        getActivity().getTheme().resolveAttribute(R.attr.actionModeTextColor, typedValue, true);
-        return typedValue.resourceId;
+        return ThemeUtils.getColorFromAttribute(getContext(), R.attr.actionModeTextColor);
     }
 
     private void showKeywordDialog() {
@@ -902,13 +970,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 }).show();
     }
 
-    private void showLoadingDialog() {
+    private void showLoadingDialog(int title, int content) {
         new CountDownTimer(200, 200) {
-            public void onTick(long millisUntilFinished) {}
+            public void onTick(long millisUntilFinished) {
+            }
 
             public void onFinish() {
                 if (isExporting)
-                    loadingDialog = DisplayUtils.showLoadingDialog(getContext(), R.string.export, R.string.exporting);
+                    loadingDialog = DisplayUtils.showLoadingDialog(getContext(), title, content);
             }
         }.start();
     }
@@ -923,7 +992,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void exportNote() {
-        showLoadingDialog();
+        showLoadingDialog(R.string.export, R.string.exporting);
         new ExportThread().start();
     }
 
@@ -992,6 +1061,16 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
     }
 
+    private String getTextContent() {
+        String content = mContentEditText.getText().toString();
+        int firstNewLinePosition = content.indexOf(NEW_LINE);
+        if (firstNewLinePosition > -1) {
+            return content.substring(firstNewLinePosition);
+        } else {
+            return "";
+        }
+    }
+
     private void startPhotosActivity() {
         Intent intent = new Intent(getActivity(), PhotosActivity.class);
         intent.putExtra(PhotosActivity.ARG_NOTE_ID, mNote.getSimperiumKey());
@@ -1000,8 +1079,20 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void startChordsActivity() {
         Intent intent = new Intent(getActivity(), ChordsActivity.class);
-        intent.putExtra(ChordsActivity.ARG_CHORDS, SyntaxHighlighter.getNoteChords(getContext(), mContentEditText.getText().toString()));
-        startActivity(intent);
+        ArrayList<String> chordsList = new ArrayList<>();
+        HashMap<Integer, String> wordsMap = new HashMap<>();
+
+        Map<ArrayList<String>, HashMap<Integer, String>> chordsData = HighlightUtils.getChordsData(getContext(), getTextContent());
+        if (chordsData.entrySet().iterator().hasNext()) {
+            Map.Entry<ArrayList<String>, HashMap<Integer, String>> chordsDataEntry = chordsData.entrySet().iterator().next();
+            chordsList = chordsDataEntry.getKey();
+            wordsMap = chordsDataEntry.getValue();
+        }
+
+        intent.putExtra(ChordsActivity.ARG_CHORDS, chordsList);
+        intent.putExtra(ChordsActivity.ARG_WORDS, wordsMap);
+
+        startActivityForResult(intent, TRANSPOSE_CODE);
     }
 
     private void startAudioActivity() {
@@ -1011,13 +1102,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     public void showHistory() {
-        if (mNote != null && mNote.getVersion() > 1) {
-            mContentEditText.clearFocus();
-            mHistoryTimeoutHandler.postDelayed(mHistoryTimeoutRunnable, HISTORY_TIMEOUT);
-            showHistorySheet();
-        } else {
-            Toast.makeText(getActivity(), R.string.error_history, Toast.LENGTH_LONG).show();
-        }
+        //if (mNote != null && mNote.getVersion() > 1) {
+        mContentEditText.clearFocus();
+        mHistoryTimeoutHandler.postDelayed(mHistoryTimeoutRunnable, HISTORY_TIMEOUT);
+        showHistorySheet();
+        //} else {
+        //    Toast.makeText(getActivity(), R.string.error_history, Toast.LENGTH_LONG).show();
+        //}
     }
 
     public void showInfo() {
@@ -1238,9 +1329,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
      * spans are removed when {@link MetricAffectingSpan} is removed.
      */
     private void setTitleSpan(Editable editable) {
-        int newLinePosition = getNoteContentString().indexOf("\n");
+        int newLinePosition = getNoteContentString().indexOf(NEW_LINE);
         int titleEnd = newLinePosition;
         if (titleEnd == -1) titleEnd = editable.length();
+
+        editable.removeSpan(titleEnd);
 
         for (MetricAffectingSpan span : editable.getSpans(0, titleEnd, MetricAffectingSpan.class)) {
             if (span instanceof RelativeSizeSpan || span instanceof StyleSpan) {
@@ -1561,7 +1654,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void changeTextColor() {
-        SyntaxHighlighter.changeTextStyle(mContentEditText, mNote.getTextStyle(), Note.getActiveStyleColor(), mNote.getActiveColor());
+        HighlightUtils.changeTextStyle(mContentEditText, mNote.getTextStyle(), Note.getActiveStyleColor(), mNote.getActiveColor());
     }
 
     private void pickTextColor() {
@@ -1792,7 +1885,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         if (PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX)) {
-            SyntaxHighlighter.updateSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor(), PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX));
+            HighlightUtils.updateSyntaxHighlight(getContext(), mContentEditText, mNote.getActiveColor(), PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX));
         }
     }
 

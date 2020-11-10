@@ -9,6 +9,8 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.theost.wavenote.R;
+import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.ThemeUtils;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class TrackView extends View {
     private int waveMinWidth;
     private int waveSpaceHeight;
     private int waveSpaceWidth;
+    private int dividerLineWidth;
 
     private boolean isRecording;
 
@@ -42,10 +45,11 @@ public class TrackView extends View {
     public TrackView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         paint = new Paint();
-        dividerLineColor = context.getResources().getColor(R.color.divider_track_color);
+        dividerLineColor = ThemeUtils.getColorFromAttribute(getContext(), R.attr.dividerColor);
+        dividerLineWidth = DisplayUtils.dpToPx(getContext(), 1);
         waveColor = context.getResources().getColor(R.color.wave_line_color_primary);
-        middleLineColor = context.getResources().getColor(R.color.wave_middle_line_color);
         playLineColor = context.getResources().getColor(R.color.wave_play_line_color);
+        middleLineColor = dividerLineColor;
         isRecording = false;
         playLineWidth = 1;
         waveMinHeight = 0;
@@ -93,7 +97,8 @@ public class TrackView extends View {
 
         //draw bottom line
         paint.setColor(dividerLineColor);
-        canvas.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1, paint);
+        //canvas.drawLine(0, getHeight() - dividerLineWidth, getWidth(), getHeight() - dividerLineWidth, paint);
+        canvas.drawRect(0, getHeight() - dividerLineWidth - 1, getWidth(), getHeight(), paint);
 
         int frameWidth = frameGains.size();
 
@@ -146,27 +151,36 @@ public class TrackView extends View {
 
         if (!isRecording) waveLen = canvasWidth;
 
-        double prev_am = waveMinHeight;
+        double prevAm = waveMinHeight;
         if (waveOffset > 0 && waveOffset < frameGains.size()) frameGains.get(waveOffset - waveMinWidth - waveSpaceWidth);
 
         for (int i = 0; i < waveLen; i += waveMinWidth + waveSpaceWidth) {
             boolean isAudio = waveOffset + i < frameGains.size();
             double am;
             if (isAudio) {
-                am = halfCanvasHeight * frameGains.get(waveOffset + i);
-                if (am < waveMinHeight) am = waveMinHeight;
+                int count = 1;
+                double average = frameGains.get(waveOffset + i);
+                if (waveOffset + i - waveSpaceWidth >= 0) {
+                    for (int j = 0; j < waveSpaceWidth; j++) {
+                        average += frameGains.get(waveOffset + i - j);
+                        count++;
+                    }
+                    average /= count;
+                }
+                am = halfCanvasHeight * average;
             } else {
                 isAudio = false;
                 am = waveSpaceHeight;
             }
-            am = (prev_am + am) / 2;
-            prev_am = am;
+            am = (prevAm + am) / 2;
+            if (am < waveMinHeight) am = waveMinHeight;
+            prevAm = am;
 
             int waveX = getPaddingLeft() + i;
             int startY = (int) (halfCanvasHeight - am);
             int stopY = (int) (halfCanvasHeight + am);
             canvas.drawRoundRect(waveX, startY, waveMinWidth + waveX, (float) (halfCanvasHeight + am), 50.0f, 50.0f, paint);
-            if (!isAudio) prev_am = waveSpaceHeight;
+            if (!isAudio) prevAm = waveSpaceHeight;
         }
 
         //draw playing line

@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int insertImageData(String note, String name, String uri, String date) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1_IMAGES, note);
         contentValues.put(COL_2_IMAGES, name);
@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getImageData(String note) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor result;
         try {
             result = db.rawQuery("SELECT * FROM " + NAME_IMAGES_TABLE
@@ -99,7 +99,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @SuppressLint("Recycle")
     public String getImageUri(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor result;
         String uri;
         try {
@@ -117,7 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean renameImageData(String id, String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2_IMAGES, name);
         long result = db.update(NAME_IMAGES_TABLE, contentValues, COL_0 + "=" + id, null);
@@ -125,17 +125,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void removeImageData(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(NAME_IMAGES_TABLE, COL_0 + "=" + id, null);
     }
 
     public void removeAllImageData(String note) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(NAME_IMAGES_TABLE, COL_1_IMAGES + "='" + note + "'", null);
     }
 
     public boolean insertDictionaryData(String keyword, String type) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1_DICTIONARY, keyword);
         contentValues.put(COL_2_DICTIONARY, type);
@@ -144,18 +144,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getDictionaryData(String type) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT " + COL_1_DICTIONARY + " FROM " + NAME_DICTIONARY_TABLE
                 + " WHERE " + COL_2_DICTIONARY + "='" + type + "'", null);
     }
 
     public Cursor getAllDictionaryData() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + NAME_DICTIONARY_TABLE, null);
     }
 
     public boolean renameDictionaryData(String id, String type) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2_DICTIONARY, type);
         long result = db.update(NAME_DICTIONARY_TABLE, contentValues, COL_0 + "=" + id, null);
@@ -163,13 +163,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean removeDictionaryData(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(NAME_DICTIONARY_TABLE, COL_0 + "=" + id, null);
         return result != -1;
     }
 
     public boolean insertMetronomeData(String sound) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1_METRONOME, sound);
         long result = db.insert(NAME_METRONOME_TABLE, null, contentValues);
@@ -177,18 +177,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getMetronomeData() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + NAME_METRONOME_TABLE, null);
     }
 
     public boolean removeMetronomeData(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(NAME_METRONOME_TABLE, COL_0 + "=" + id, null);
         return result != -1;
     }
 
     public boolean insertAudioData(String note, String tune, String beat, int speed) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1_AUDIO, note);
         contentValues.put(COL_2_AUDIO, tune);
@@ -199,7 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean renameAudioData(String note, String tune, String beat, int speed) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2_AUDIO, tune);
         contentValues.put(COL_3_AUDIO, beat);
@@ -207,14 +207,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.update(NAME_AUDIO_TABLE, contentValues, COL_1_AUDIO + "='" + note + "'", null);
         return result != -1;
     }
-    
+
     public Cursor getAudioData(String note) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + NAME_AUDIO_TABLE + " WHERE " + COL_1_AUDIO + "='" + note + "'", null);
     }
 
     public int insertTrackData(String note, String name, String uri, int date) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1_TRACKS, note);
         contentValues.put(COL_2_TRACKS, name);
@@ -223,7 +223,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean renameTrackData(String id, String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2_TRACKS, name);
         long result = db.update(NAME_TRACKS_TABLE, contentValues, COL_0 + "=" + id, null);
@@ -231,12 +231,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getTrackData(String note) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + NAME_TRACKS_TABLE + " WHERE " + COL_1_TRACKS + "='" + note + "'", null);
     }
 
     public boolean removeTrackData(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(NAME_TRACKS_TABLE, COL_0 + "=" + id, null);
         return result != -1;
     }

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.asksira.android:photoview:1.0.3@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d53aea0ae2d286542b5afdb8a3a2436d/jetified-photoview-1.0.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d53aea0ae2d286542b5afdb8a3a2436d/jetified-photoview-1.0.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d53aea0ae2d286542b5afdb8a3a2436d/jetified-photoview-1.0.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9072fecd9e4fac4fb53fade99a6753ac/jetified-photoview-1.0.3/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9072fecd9e4fac4fb53fade99a6753ac/jetified-photoview-1.0.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9072fecd9e4fac4fb53fade99a6753ac/jetified-photoview-1.0.3/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.asksira.android/photoview/1.0.3/b140801d81e3275f4eb9193cb641ff665b3a5572/photoview-1.0.3-javadoc.jar!/" />

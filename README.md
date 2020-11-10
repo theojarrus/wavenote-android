@@ -1,5 +1,5 @@
 # Wavenote for Android
-[![Version](https://img.shields.io/badge/version-1.0-orange.svg)](https://github.com/fedor-jedi/wavenote-android/releases/tag/1.0)
+[![Version](https://img.shields.io/badge/version-2.0-blue)](https://play.google.com/store/apps/details?id=com.theost.wavenote)
 
 Wavenote - notepad for musicians. Based on [Simplenote](https://simplenote.com).
 
@@ -21,9 +21,7 @@ sdk.dir=/Applications/Android Studio.app/sdk
 ./gradlew installDebug
 ```
 
-* Create a new account in order to use a development build. Logging in with an existing Wavenote account won't work. Use the account for **testing purposes only** as all note data will be periodically cleared out on the server.
-
-_Note: Wavenote API features such as sharing and publishing will not work with development builds._
+* Create a new account in order to use a development build. Logging in with an existing Simplenote account won't work.
 
 ## Android Wear
 

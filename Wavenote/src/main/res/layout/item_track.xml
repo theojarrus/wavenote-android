@@ -40,7 +40,7 @@
                 android:layout_width="1dp"
                 android:layout_marginStart="-1dp"
                 android:layout_height="match_parent"
-                android:background="@color/divider_track_color" />
+                android:background="?attr/dividerColor" />
 
         </LinearLayout>
 
@@ -51,6 +51,6 @@
         android:layout_height="1dp"
         android:layout_marginTop="-1dp"
         android:layout_marginEnd="1dp"
-        android:background="@color/divider_track_color" />
+        android:background="?attr/dividerColor" />
 
 </LinearLayout>

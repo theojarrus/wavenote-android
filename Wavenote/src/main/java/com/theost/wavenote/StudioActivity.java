@@ -132,7 +132,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     private boolean stopUpdatePlayFrame;
     private boolean isRendering;
 
-    List<Track> trackList;
+    private List<Track> trackList;
     private String noteId;
 
     private MaterialDialog loadingDialog;
@@ -717,7 +717,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     }
 
     private void updateButtons() {
-        if (ArrayUtils.isEmpty(trackList)) {
+        if (trackHolderList.size() == 0) {
             disableViews(mPlayButton, mStopButton, mSaveButton);
         } else {
             enableViews(mPlayButton, mStopButton, mSaveButton);

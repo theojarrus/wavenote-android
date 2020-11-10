@@ -23,9 +23,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
+
+import static com.theost.wavenote.utils.ResUtils.getResId;
 
 public class FileUtils {
 
@@ -194,16 +195,6 @@ public class FileUtils {
 
     public static File getStorageDir(Context context) {
         return context.getExternalFilesDir("").getParentFile().getParentFile().getParentFile().getParentFile();
-    }
-
-    public static int getResId(String resName, Class<?> c) {
-        try {
-            Field idField = c.getDeclaredField(resName);
-            return idField.getInt(idField);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
     }
 
     public static File[] getAllSampleFiles(Context context, String name) {

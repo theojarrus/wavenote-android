@@ -1,10 +1,16 @@
 package com.theost.wavenote.utils;
 
 import android.content.Context;
-import android.util.TypedValue;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 
 import androidx.core.content.ContextCompat;
+
 import com.theost.wavenote.R;
+
+import java.lang.reflect.Field;
+import java.util.Locale;
 
 public class ResUtils {
 
@@ -13,10 +19,8 @@ public class ResUtils {
     }
 
     public static int[] getDialogColors(Context context) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
         int colorDisabled = ContextCompat.getColor(context, R.color.gray_20);
-        int colorEnabled = ContextCompat.getColor(context, typedValue.resourceId);
+        int colorEnabled = ThemeUtils.getColorFromAttribute(context, R.attr.colorAccent);
         return new int[]{colorDisabled, colorEnabled};
     }
 
@@ -33,6 +37,30 @@ public class ResUtils {
         database.removeDictionaryData(DatabaseHelper.COL_0);
         for (String j : resourceTitles) database.insertDictionaryData(j, keywordTypes[0]);
         for (String i : resourceWords) database.insertDictionaryData(i, keywordTypes[1]);
+    }
+
+    public static int getResId(String resName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public static String getResStringLanguage(Context context, int id, String lang) {
+        Resources res = context.getResources();
+        Configuration conf = res.getConfiguration();
+        Locale savedLocale = conf.locale;
+        Configuration confAr = context.getResources().getConfiguration();
+        confAr.locale = new Locale(lang);
+        DisplayMetrics metrics = new DisplayMetrics();
+        Resources resources = new Resources(context.getAssets(), metrics, confAr);
+        String string = resources.getString(id);
+        conf.locale = savedLocale;
+        res.updateConfiguration(conf, null);
+        return string;
     }
 
 }

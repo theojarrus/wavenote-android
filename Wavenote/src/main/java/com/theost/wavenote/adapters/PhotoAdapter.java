@@ -107,7 +107,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             }
         });
 
-        holder.mShareButton.setOnClickListener(view -> mActivity.showShareBottomSheet(position));
     }
 
     @Override
@@ -123,7 +122,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         ImageButton mCancelButton;
         ImageButton mFullscreenButton;
         ImageButton mTrashButton;
-        ImageButton mShareButton;
         String photoName;
 
         ViewHolder(View itemView) {
@@ -135,7 +133,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             mCancelButton = itemView.findViewById(R.id.photo_name_cancel);
             mFullscreenButton = itemView.findViewById(R.id.photo_fullscreen);
             mTrashButton = itemView.findViewById(R.id.photo_trash);
-            mShareButton = itemView.findViewById(R.id.photo_share);
         }
     }
 

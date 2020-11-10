@@ -17,7 +17,6 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +29,8 @@ import com.simperium.client.User;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.ChecklistUtils;
 import com.theost.wavenote.utils.PrefUtils;
+
+import static com.theost.wavenote.models.Note.NEW_LINE;
 
 public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
     private AppWidgetManager mWidgetManager;
@@ -56,11 +57,6 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
         mApplication = (Wavenote) getApplicationContext();
         Simperium simperium = mApplication.getSimperium();
         User user = simperium.getUser();
-
-        if (user.getStatus().equals(User.Status.NOT_AUTHORIZED)) {
-            Toast.makeText(NoteWidgetDarkConfigureActivity.this, R.string.log_in_add_widget, Toast.LENGTH_LONG).show();
-            finish();
-        }
 
         // Get widget information
         mWidgetManager = AppWidgetManager.getInstance(NoteWidgetDarkConfigureActivity.this);
@@ -175,7 +171,7 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
                 // Remove title from content
                 String title1 = note.getTitle();
                 String contentWithoutTitle = note.getContent().toString().replace(title1, "");
-                int indexOfNewline = contentWithoutTitle.indexOf("\n") + 1;
+                int indexOfNewline = contentWithoutTitle.indexOf(NEW_LINE) + 1;
                 String content = contentWithoutTitle.substring(indexOfNewline < contentWithoutTitle.length() ? indexOfNewline : 0);
 
                 // Set widget content

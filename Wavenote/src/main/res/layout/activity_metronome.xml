@@ -130,6 +130,7 @@
                             android:layout_height="match_parent"
                             android:clickable="true"
                             android:focusable="true"
+                            android:singleLine="true"
                             android:focusableInTouchMode="true"
                             tools:ignore="LabelFor" />
 

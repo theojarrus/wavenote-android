@@ -42,14 +42,9 @@ public class MatchOffsetHighlighter implements Runnable {
             Handler handler = mTextView.getHandler();
             if (handler == null) return;
 
-            handler.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (mStopped) return;
-                    sListener.onMatch(factory, text, start, end);
-                }
-
+            handler.post(() -> {
+                if (mStopped) return;
+                sListener.onMatch(factory, text, start, end);
             });
         }
 
@@ -126,7 +121,7 @@ public class MatchOffsetHighlighter implements Runnable {
         String[] values = matches.split("\\s+", 4);
         if (values.length > MATCH_INDEX_START) {
             try {
-                int location = Integer.valueOf(values[MATCH_INDEX_START]);
+                int location = Integer.parseInt(values[MATCH_INDEX_START]);
 
                 return location + getByteOffset(content, 0, location);
             } catch (NumberFormatException exception) {
@@ -226,7 +221,7 @@ public class MatchOffsetHighlighter implements Runnable {
             Object[] spans = factory.buildSpans();
 
             for (Object span : spans) {
-                if (start >= 0 && end >= start && end <= content.length()) {
+                if (start >= 0 && end > start && end <= content.length()) {
                     content.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mMatchedSpans.add(span);
                 }

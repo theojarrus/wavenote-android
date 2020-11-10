@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.theost.wavenote.adapters.NoFilterArrayAdapter;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ViewUtils {
 
@@ -19,8 +20,8 @@ public class ViewUtils {
         view.dismissDropDown();
     }
 
-    public static void updateFilterDropdown(Context context, AutoCompleteTextView view, String[] hints) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, Arrays.asList(hints));
+    public static void updateFilterDropdown(Context context, AutoCompleteTextView view, List<String> hints) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, hints);
         view.setAdapter(adapter);
         view.dismissDropDown();
     }

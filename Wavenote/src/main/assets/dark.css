@@ -38,7 +38,6 @@ html {
     background: #84878a;
 }
 
-/* Same styles as app.simplenote.com/publish */
 .note-detail-markdown {
     user-select: auto;
     font-family: 'Noto Serif', serif;

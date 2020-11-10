@@ -221,6 +221,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
             adjustTip = R.string.adjust_failed_tip;
             setResult(RESULT_CANCELED);
         }
+        updatePlayImage();
         DisplayUtils.showToast(this, getResources().getString(adjustTip));
         mResultTextView.setText(getResources().getString(adjustResult));
         mResultTextView.setVisibility(View.VISIBLE);
@@ -271,7 +272,6 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
                     if (isValid) {
                         stopPlay = true;
-                        updatePlayImage();
                         if (readSize == readRecordBytesLen) {
                             Message doneMsg = Message.obtain();
                             doneMsg.what = R.integer.ADJUST_RECORD_DISTANCE_DONE;

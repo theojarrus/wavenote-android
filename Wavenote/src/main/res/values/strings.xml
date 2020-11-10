@@ -82,7 +82,8 @@
     <string name="notes_trashed">Notes trashed.</string>
 
     <!-- welcome note for new users -->
-    <string name="welcome_note">Welcome to Wavenote Android!\nOpen this note for instructions.\n\nTo create a new note, tap the blue \"New Note\" button with the plus icon.\n\nTo search your notes, tap the \"Search\" button with the magnifying glass icon and enter any text. Wavenote will show you recent searches initially and suggested searches while entering text. Notes matching the entered text will be shown once the search is submitted.\n\nGot a really important note? Pin it to the top of the note list. You can pin a note in two ways. Long-press the note in the list and tap the \"Pin to top\" button with the pin icon. Tap the \"Info\" button with the \"i\" icon while viewing a note and turn the \"Pin to top\" switch on.\n\nUse tags to help organize your notes. Create a tag in the \"Add tag&#8230;\" field at the bottom of a note. You can also add an email address as a tag to share a note with someone.\n\nEasily share notes with other Android apps by tapping the \"Share\" button with the share icon while viewing a note.\n\nDeleted notes go in the trash. You can restore them if you want, or empty the trash to get rid of them forever.\n\nYou can access your notes on the web and your other devices.\n\nWe hope you enjoy using Wavenote!</string>
+    <string name="welcome_note"><![CDATA[Welcome to Wavenote!<br>Open this note for instructions.<br><br><br><br><b>Notes</b><br><br><br><br>To create a new note, tap the blue \"New Note\" button with the plus icon.<br><br><br><br>To search your notes, tap the \"Search\" button with the magnifying glass icon and enter any text. Wavenote will show you recent searches initially and suggested searches while entering text. Notes matching the entered text will be shown once the search is submitted.<br><br><br><br>Got a really important note? Pin it to the top of the note list. You can pin a note in two ways. Long-press the note in the list and tap the \"Pin to top\" button with the pin icon.<br><br><br><br>Use tags to help organize your notes. Create a tag in the \"Add tag\" field at the bottom of a note. You can also add an email address as a tag to share a note with someone.<br><br><br><br>Deleted notes go in the trash. You can restore them if you want, or empty the trash to get rid of them forever.<br><br><br><br><b>Editor</b><br><br><br><br>Create your note style. Select a text styling mode by holding the \"Palette\" button in the editor and then select the text and tap it again. If you don\'t like it, you can always clear the style by choosing the first colour and try again.<br><br><br><br>Automate text formatting with smart keyword and chord highlighting. Go to settings to edit your keyword dictionary.<br><br><br><br><b>Chords</b><br><br><br><br>Enter a chord manually or copy and paste the lyrics and then on the \"Chords\" button in the top bar. Take a fresh look with this feature. Tap on a chord to see the fingerings. Can\'t find it? Use the chord search.<br>To hide song lyrics press the \"Grid\" button.<br>Need to transpose? Do it just in one click.<br><br><br><br><b>Photos</b><br><br><br><br>Save photos to notes. Set names and sort them by date or alphabet. See them in the feed or go full screen to transform or rotate.<br><br><br><br><b>Studio</b><br><br><br><br>Create a multi-track recording. If you need perfect accuracy, calibrate playback delay by tapping the \"Adjust record\" button.<br><br><br><br><b>Metronome</b><br><br><br><br>Use the smart \"Tap\" button to determine the tempo of the music. Load your sound samples in this metronome in two clicks, it will automatically convert and calibrate them.<br><br><br><br><b>Share</b><br><br><br><br>Easily share notes with other Android apps by tapping the \"Share\" button in note menu. You can also export and import all of your data from note to files (text, photo, audio and more). Supported zip archives with encryption.<br><br><br><br>You can access your notes on your other devices using account sync, but this feature is in beta and may work unstably.<br><br><br><br>We recommend using the \"Export & Import\" feature to send files to other devices. In this case, your media files and settings will also be added. To back up and transfer all your notes find \"Export & Import\" section in preferences.<br><br><br><br><b>Privacy</b><br><br><br><br>All your data, except for the texts of the notes, if you are using an account, is stored only on the device. We do not collect any metadata or analytics other than crash logs. Your privacy is our top priority.<br><br><br><br>We hope you enjoy using Wavenote!<br><br><br><br>Source code available on github.com]]></string>
+    <string name="welcome_song"><![CDATA[Simple song<br><br>[Verse]<br><br>D A D A<br>Well this is just a simple song<br><br>D A D A<br>To show what app\'ve done]]></string>
     <string name="confirm_delete_tag">Are you sure you want to delete this tag?</string>
     <string name="new_note_list">New note&#8230;</string>
     <string name="open_drawer">Open drawer</string>
@@ -128,8 +129,10 @@
     <string name="no_browser_available">\"Unable to open website. No browser available.\"</string>
     <string name="donate_developer">Donate</string>
     <string name="instagram" translatable="false">Instagram</string>
+    <string name="website" translatable="false">Website</string>
     <string name="about_instagram_handle" translatable="false">\@theo.jedi</string>
     <string name="about_donate_handle" translatable="false">\@theojedi</string>
+    <string name="about_website_handle" translatable="false">theost.tech</string>
 
     <!-- Unsynced note warnings -->
     <string name="unsynced_notes">Unsynced notes detected</string>
@@ -258,7 +261,7 @@
     <string name="simperium_footer_signup_url">https://simplenote.com/terms/</string>
     <string name="simperium_hint_email">Email</string>
     <string name="simperium_hint_password">Password</string>
-    <string name="simperium_subtitle">The simplest way to keep notes.</string>
+    <string name="simperium_subtitle">Sync notes with Simperium</string>
     <string name="simperium_title">@string/app_name</string>
     <string name="simperium_error_browser_copy_success">URL copied to clipboard</string>
     <string name="simperium_error_browser_copy_failure">URL could not be copied to clipboard</string>
@@ -288,14 +291,14 @@
     <string name="item_action_toggle_preview">Toggle Preview</string>
     <string name="item_action_toggle_preview_enable_error">Enable markdown to toggle preview</string>
     <string name="item_action_toggle_preview_error">Select a note to toggle preview</string>
-    <string name="key_multiple_ctrl">Ctrl</string>
-    <string name="key_multiple_shift">Shift</string>
-    <string name="key_single_c">C</string>
-    <string name="key_single_h">H</string>
-    <string name="key_single_i">I</string>
-    <string name="key_single_l">L</string>
-    <string name="key_single_p">P</string>
-    <string name="key_single_s">S</string>
+    <string name="key_multiple_ctrl" translatable="false">Ctrl</string>
+    <string name="key_multiple_shift" translatable="false">Shift</string>
+    <string name="key_single_c" translatable="false">C</string>
+    <string name="key_single_h" translatable="false">H</string>
+    <string name="key_single_i" translatable="false">I</string>
+    <string name="key_single_l" translatable="false">L</string>
+    <string name="key_single_p" translatable="false">P</string>
+    <string name="key_single_s" translatable="false">S</string>
 
     <!-- FEATURES -->
     <string name="text_color">Text Color</string>
@@ -373,9 +376,9 @@
     <string name="metronome">Metronome</string>
     <string name="mix">Mix</string>
     <string name="mute">Mute</string>
-    <string name="guitar" translatable="false">Guitar</string>
-    <string name="piano" translatable="false">Piano</string>
-    <string name="ukulele" translatable="false">Ukulele</string>
+    <string name="guitar">Guitar</string>
+    <string name="piano">Piano</string>
+    <string name="ukulele">Ukulele</string>
     <string name="transpose_up">Transpose Up</string>
     <string name="transpose_down">Transpose Down</string>
     <string name="materials">Materials</string>
@@ -396,6 +399,8 @@
     <string name="rendering">Mixing… It could take a some time.</string>
     <string name="extracting">Extracting… It could take a some time.</string>
     <string name="editing">Editing… It could take a some time.</string>
+    <string name="transposing">Transpose… It could take a some time.</string>
+    <string name="transpose">Transpose</string>
     <string name="add_photo_storage">Files</string>
     <string name="add_keyword">Add Keyword</string>
     <string name="add_sound">Add Sound</string>
@@ -413,8 +418,8 @@
     <string name="add_to_dictionary">Add to Dictionary</string>
     <string name="flip_vertical">Flip Vertical</string>
     <string name="flip_horizontal">Flip Horizontal</string>
-    <string name="rotate_to_left">Rotate to Left</string>
-    <string name="rotate_to_right">Rotate to Right</string>
+    <string name="rotate_to_left">Rotate Left</string>
+    <string name="rotate_to_right">Rotate Right</string>
 
     <!-- Audio -->
     <string name="studio">Studio</string>
@@ -432,5 +437,7 @@
     <string name="adjust_delay_record_time_tip">Put on headset, click the button, follow the beat sound to click</string>
     <string name="adjust_record_reason">There is a time lag between the beginning of the synchronization of the sound and the beginning of the headset and recording, so a synchronization adjustment is required. Noted that whenever you change a new headset for recording, it is recommended to recalibrate, it would be better to synchronize the recording.</string>
     <string name="first_record_adjust_tip">Please adjust record before your first start!</string>
+    <string name="open">Open</string>
+    <string name="chord_tablatures">Chord Tablatures</string>
 
 </resources>

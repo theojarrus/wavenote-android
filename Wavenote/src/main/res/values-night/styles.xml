@@ -39,6 +39,7 @@
         <item name="listSearchHighlightBackgroundColor">@color/blue_60</item>
         <item name="listSearchHighlightForegroundColor">@color/blue_5</item>
         <item name="mainBackgroundColor">@color/background_dark</item>
+        <item name="buttonBackgroundColor">@color/background_dark_gray</item>
         <item name="noteEditorTextColor">@color/gray_20</item>
         <item name="notePinColor">@color/white</item>
         <item name="notePreviewColor">@color/text_content_dark</item>

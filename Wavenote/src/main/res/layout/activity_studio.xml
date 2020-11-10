@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="-1dp"
-            android:background="@color/dividerColor" />
+            android:background="?attr/dividerColor" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -39,13 +39,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="-1dp"
-                    android:layout_marginBottom="1dp"
-                    android:background="@color/dividerColor" />
-
                 <ToggleButton
                     android:id="@+id/metronome_toggle"
                     android:layout_width="0dp"
@@ -61,7 +54,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="-1dp"
                     android:layout_marginBottom="1dp"
-                    android:background="@color/dividerColor" />
+                    android:background="?attr/dividerColor" />
 
                 <ToggleButton
                     android:id="@+id/loop_toggle"
@@ -78,7 +71,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="-1dp"
                     android:layout_marginBottom="1dp"
-                    android:background="@color/dividerColor" />
+                    android:background="?attr/dividerColor" />
 
                 <ImageButton
                     android:id="@+id/reset"
@@ -93,7 +86,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="-1dp"
                     android:layout_marginBottom="1dp"
-                    android:background="@color/dividerColor" />
+                    android:background="?attr/dividerColor" />
 
                 <ImageButton
                     android:id="@+id/save"
@@ -111,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="-1dp"
-            android:background="@color/dividerColor" />
+            android:background="?attr/dividerColor" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -162,7 +155,7 @@
                     android:id="@+id/tint_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
-                    android:background="?attr/colorAccent"
+                    android:background="@color/blue"
                     android:visibility="invisible"
                     tools:ignore="UselessParent">
 
@@ -202,7 +195,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/dividerColor" />
+            android:background="?attr/dividerColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -262,7 +255,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/dividerColor" />
+            android:background="?attr/dividerColor" />
 
         <LinearLayout
             android:layout_width="match_parent"

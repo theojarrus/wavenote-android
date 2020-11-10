@@ -8,7 +8,7 @@ apply plugin: 'com.android.application'
 
 android {
     buildToolsVersion '29.0.3'
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     buildTypes {
         release {
@@ -20,8 +20,8 @@ android {
 
     defaultConfig {
         applicationId "com.theost.wavenote"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion 23
+        targetSdkVersion 30
         versionCode 2
         versionName "1.1.0"
     }
@@ -35,9 +35,9 @@ buildscript {
 }
 
 dependencies {
-    compileOnly 'androidx.wear:wear:1.0.0'
+    compileOnly 'androidx.wear:wear:1.1.0'
 
-    implementation 'androidx.wear:wear:1.0.0'
+    implementation 'androidx.wear:wear:1.1.0'
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
 }
 
