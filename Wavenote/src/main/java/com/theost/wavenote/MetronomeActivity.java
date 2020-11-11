@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -37,22 +38,22 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.theost.wavenote.configs.AudioConfig;
+import com.theost.wavenote.configs.BundleKeys;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AudioUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.ExportUtils;
+import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.ImportUtils;
+import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.ResUtils;
-import com.theost.wavenote.utils.PermissionUtils;
-import com.theost.wavenote.widgets.PCMAnalyser;
-import com.theost.wavenote.configs.AudioConfig;
-import com.theost.wavenote.configs.BundleKeys;
-import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
+import com.theost.wavenote.widgets.PCMAnalyser;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class MetronomeActivity extends ThemedAppCompatActivity {
@@ -113,14 +115,14 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private String currentTone;
     private String exportPath;
     private String resultDialogMessage;
-    private List<String> toneList = new ArrayList<>();
+    private final List<String> toneList = new ArrayList<>();
     private List<Double> tapList = new ArrayList<>();
 
-    HashMap<String, String> soundList;
-    List<String> resourceSounds;
-    HashMap<String, Integer> customSounds;
-    HashMap<String, Boolean> resultMap;
-    String[] soundData;
+    private HashMap<String, String> soundList;
+    private List<String> resourceSounds;
+    private HashMap<String, Integer> customSounds;
+    private HashMap<String, Boolean> resultMap;
+    private String[] soundData;
 
     private boolean isImporting;
     private boolean isExporting;
@@ -128,7 +130,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private DatabaseHelper localDatabase;
     private File tmpFile;
 
-    private Intent beatResult = new Intent();
+    private final Intent beatResult = new Intent();
     private PCMAnalyser pcmAudioFile;
     private BeatPlayHandler beatPlayHandler;
 
@@ -137,19 +139,19 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private MenuItem mExportItem;
     private MenuItem mRemoveItem;
 
-    int[] dialogColors;
+    private int[] dialogColors;
 
-    TextView mBeatTextView;
-    AutoCompleteTextView mSoundTextView;
-    ImageButton mSpeedDownButton;
-    TextView mSpeedTextView;
-    ImageButton mSpeedUpButton;
-    SeekBar mSpeedBar;
-    Button mPlayButton;
-    Button mTapButton;
-    TextView mTuneTextView;
-    LinearLayout mActionsLayout;
-    LinearLayout mPlayLayout;
+    private TextView mBeatTextView;
+    private AutoCompleteTextView mSoundTextView;
+    private ImageButton mSpeedDownButton;
+    private TextView mSpeedTextView;
+    private ImageButton mSpeedUpButton;
+    private SeekBar mSpeedBar;
+    private Button mPlayButton;
+    private Button mTapButton;
+    private TextView mTuneTextView;
+    private LinearLayout mActionsLayout;
+    private LinearLayout mPlayLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -287,6 +289,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -423,7 +426,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private synchronized void generatePlayBeatBytes() {
         this.playBeatBytes = pcmAudioFile.generateBeatBytes(beatStrongBytes, beetWeakBytes, currentBeat, currentSpeed);
-        audioTrack.flush();
+        if (audioTrack != null) audioTrack.flush();
     }
 
     private void updateColors() {
@@ -482,16 +485,16 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         mTuneTextView.setText(tune);
     }
 
-    private void loadBeatData(String sound) {
+    private void loadBeatData(String metronomeSound) {
         new Thread() {
             @Override
             public void run() {
                 try {
                     byte[][] beatsData;
-                    if (resourceSounds.contains(sound)) {
-                        beatsData = FileUtils.getStereoBeatResource(getApplicationContext(), sound);
+                    if (resourceSounds.contains(metronomeSound)) {
+                        beatsData = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound);
                     } else {
-                        beatsData = FileUtils.getStereoBeatCustom(getApplicationContext(), sound);
+                        beatsData = FileUtils.getStereoBeatCustom(getApplicationContext(), metronomeSound);
                     }
                     beatStrongBytes = beatsData[0];
                     beetWeakBytes = beatsData[1];
@@ -630,7 +633,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private Handler mExportHandler = new Handler(msg -> {
+    private final Handler mExportHandler = new Handler(msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         showResultDialog();
         return true;
@@ -658,7 +661,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private Handler mImportHandler = new Handler(msg -> {
+    private final Handler mImportHandler = new Handler(msg -> {
         boolean isCreated = false;
         if (msg.what == ImportUtils.RESULT_OK) {
             isCreated = true;
@@ -699,12 +702,12 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 return;
             }
 
-            if (audioParams[1] != AudioConfig.AUDIO_SAMPLE_RATE)
+            if ((audioParams != null) && (audioParams[1] != AudioConfig.AUDIO_SAMPLE_RATE))
                 mImportHandler.sendEmptyMessage(ImportUtils.SAMPLE_ERROR);
 
 
             try {
-                switch ((int) audioParams[0]) {
+                switch ((int) Objects.requireNonNull(audioParams)[0]) {
                     case 1:
                         monoBytes = audioBytes;
                         stereoBytes = AudioUtils.convertToStereo(audioBytes);
@@ -719,7 +722,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 }
 
                 File[] sampleFiles = FileUtils.getSampleFiles(context, soundName, soundType); // mono, stereo
-                if (sampleFiles[0] == null || sampleFiles[1] == null) {
+                if (sampleFiles != null && (sampleFiles[0] == null || sampleFiles[1] == null)) {
                     mImportHandler.sendEmptyMessage(ImportUtils.EXIST_ERROR);
                     return;
                 }
@@ -735,10 +738,14 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 System.arraycopy(stereoHeader, 0, stereoStream, 0, stereoHeader.length);
                 System.arraycopy(stereoBytes, 0, stereoStream, stereoHeader.length, stereoBytes.length);
 
-                sampleFiles[0].createNewFile();
-                sampleFiles[1].createNewFile();
-                FileUtils.createWavFile(sampleFiles[0], monoStream);
-                FileUtils.createWavFile(sampleFiles[1], stereoStream);
+                if (sampleFiles != null) {
+                    sampleFiles[0].createNewFile();
+                    sampleFiles[1].createNewFile();
+                    FileUtils.createWavFile(sampleFiles[0], monoStream);
+                    FileUtils.createWavFile(sampleFiles[1], stereoStream);
+                } else {
+                    mImportHandler.sendEmptyMessage(ImportUtils.FILE_ERROR);
+                }
                 mImportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -754,7 +761,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == FILE_REQUEST) {
                 try {
-                    InputStream wavInput = getContentResolver().openInputStream(data.getData());
+                    InputStream wavInput = getContentResolver().openInputStream(Objects.requireNonNull(data.getData()));
                     importSound(wavInput);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -889,8 +896,10 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 .build();
         MDButton addButton = soundDialog.getActionButton(DialogAction.POSITIVE);
         if (!soundName.equals("")) addButton.setTextColor(dialogColors[1]);
-        TextInputLayout mAddSoundLayout = soundDialog.getCustomView().findViewById(R.id.dialog_layout);
-        mAddSoundLayout.setCounterMaxLength(MAX_SOUND_NAME);
+        if (soundDialog.getCustomView() != null) {
+            TextInputLayout mAddSoundLayout = soundDialog.getCustomView().findViewById(R.id.dialog_layout);
+            mAddSoundLayout.setCounterMaxLength(MAX_SOUND_NAME);
+        }
         mAddSoundEditText = soundDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddSoundEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_SOUND_NAME)});
         mAddSoundEditText.setText(soundName);

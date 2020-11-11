@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.theost.wavenote.configs.AudioConfig;
 import com.theost.wavenote.configs.SpConfig;
+import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AudioUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.FileUtils;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -142,10 +144,16 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                try {
+                List<String> resourceSounds = Arrays.asList(getResources().getStringArray(R.array.metronome_sounds));
 
-                    byte[][] beatsData = FileUtils.getStereoBeatResource(AdjustRecordActivity.this, "Sticks");
-                    byte[] beatStrongBytes = beatsData[0];
+                String metronomeSound = Note.getActiveMetronomeSound();
+                byte[] beatStrongBytes;
+                try {
+                    if (resourceSounds.contains(metronomeSound)) {
+                        beatStrongBytes = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound)[0];
+                    } else {
+                        beatStrongBytes = FileUtils.getStereoBeatCustom(getApplicationContext(), metronomeSound)[0];
+                    }
 
                     beatFirstSoundBytePos = getMaxSamplePos(beatStrongBytes);
 
@@ -277,9 +285,9 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                             doneMsg.what = R.integer.ADJUST_RECORD_DISTANCE_DONE;
                             doneMsg.obj = averSampleValue;
                             mAdjustHandler.sendMessage(doneMsg);
-                        } else {
-                            mAdjustHandler.sendEmptyMessage(R.integer.ADJUST_RECORD_DISTANCE_FAIL);
                         }
+                    } else {
+                        mAdjustHandler.sendEmptyMessage(R.integer.ADJUST_RECORD_DISTANCE_FAIL);
                     }
                 }
             }

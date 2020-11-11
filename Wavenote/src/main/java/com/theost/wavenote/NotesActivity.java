@@ -172,15 +172,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         setSupportActionBar(toolbar);
         configureNavigationDrawer(toolbar);
 
-        if (savedInstanceState == null) {
-            mNoteListFragment = new NoteListFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.note_fragment_container, mNoteListFragment, TAG_NOTE_LIST);
-            fragmentTransaction.commit();
-        } else {
-            mHasTappedNoteListWidgetButton = savedInstanceState.getBoolean(STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED);
-            mNoteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(TAG_NOTE_LIST);
-        }
+        mNoteListFragment = new NoteListFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.note_fragment_container, mNoteListFragment, TAG_NOTE_LIST);
+        fragmentTransaction.commit();
 
         assert mNoteListFragment != null;
         mIsTabletFullscreen = mNoteListFragment.isHidden();

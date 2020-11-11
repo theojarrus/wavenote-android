@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: me.relex:photodraweeview:2.0.0@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/40fc841b66c4792cc7b35567161022df/jetified-photodraweeview-2.0.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8c403d421f221c11383cc3e333c60440/jetified-photodraweeview-2.0.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0ae1b0290bd231dc6265bb0d647fed5b/jetified-photodraweeview-2.0.0/res" />
@@ -9,8 +9,8 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/db4a963f216f82167e2bfc69c68e5f41/jetified-photodraweeview-2.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b28ac9cee0ca600c9f8c0723ba12fe94/jetified-photodraweeview-2.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8c403d421f221c11383cc3e333c60440/jetified-photodraweeview-2.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/40fc841b66c4792cc7b35567161022df/jetified-photodraweeview-2.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/40fc841b66c4792cc7b35567161022df/jetified-photodraweeview-2.0.0/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8c403d421f221c11383cc3e333c60440/jetified-photodraweeview-2.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8c403d421f221c11383cc3e333c60440/jetified-photodraweeview-2.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.relex/photodraweeview/2.0.0/25375217c71e841224383855e1d3c5f0457ef931/photodraweeview-2.0.0-javadoc.jar!/" />

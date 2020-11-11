@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.fresco:drawee:2.2.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a44d5dbc301f56fe7f04e99807f5f9ed/jetified-drawee-2.2.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a44d5dbc301f56fe7f04e99807f5f9ed/jetified-drawee-2.2.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a44d5dbc301f56fe7f04e99807f5f9ed/jetified-drawee-2.2.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d81b486a01e9add4770dec7893fd8d0f/jetified-drawee-2.2.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d81b486a01e9add4770dec7893fd8d0f/jetified-drawee-2.2.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d81b486a01e9add4770dec7893fd8d0f/jetified-drawee-2.2.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/2.2.0/be1db90d43e2a57c081079bfb4eb576762d22f89/drawee-2.2.0-javadoc.jar!/" />

@@ -319,7 +319,7 @@
     <string name="adjust_delay_record_time_tip">Наденьте наушники, нажмите на кнопку, затем постучите, следуя метроному</string>
     <string name="adjust_record_reason">В синхронизации записи звука и проигрывания гарнитуры существует задержка во времени, поэтому требуется дополнительная настройка. Заметьте, что всякий раз, когда вы меняете новую гарнитуру, рекомендуется выполнить повторную калибровку</string>
     <string name="adjust_failed">Повторите снова!</string>
-    <string name="adjust_failed_tip">Ошибка! Запустите калибровку еще раз</string>
+    <string name="adjust_failed_tip">Ошибка! Продолжайте калибровать</string>
     <string name="error_permission">Требуется разрешение</string>
     <string name="manage">Управление</string>
     <string name="render">Микс</string>

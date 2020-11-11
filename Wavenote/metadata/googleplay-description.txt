@@ -1,0 +1,38 @@
+Wavenote is a notebook for musicians. Open up new possibilities and simplify your daily tasks with editor, studio, chords, metronome and other features.
+
+<b>Notes</b>
+- A simple, note taking experience
+- Stay organized with tags
+- Sync text with Simperium (beta)
+- Export & Import
+
+<b>Editor</b>
+- Create your own text style
+- Chords and keywords highlight
+- Customizable keyword dictionary
+- Two types of keywords
+
+<b>Chords</b>
+- See lyrics and chords at the same time
+- Find fingerings in one click
+- Smart chord grid
+- Easy to transpose
+- Chord search
+
+<b>Photo</b>
+- Photo feed in every note
+- Zoom, flip and rotate
+- Full screen mode
+
+<b>Studio</b>
+- Multichannel recording
+- Playback delay adjust
+- Metronome support
+
+<b>Metronome</b>
+- Simple interface
+- Smart "Tap Tempo"
+- Custom samples support
+
+
+The application is being actively improved. If you have any requests or questions, we would be grateful if you contact us.

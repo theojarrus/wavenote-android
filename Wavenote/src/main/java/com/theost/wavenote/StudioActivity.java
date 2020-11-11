@@ -61,6 +61,8 @@ import java.util.UUID;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+import static com.theost.wavenote.MetronomeActivity.DEFAULT_SOUND;
+
 public class StudioActivity extends ThemedAppCompatActivity {
 
     private static final String ARG_NOTE_ID = "note_id";
@@ -78,7 +80,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     private static final String DEFAULT_BEAT = "4/4";
     private static final String DEFAULT_TUNE = "C";
 
-    private static final int WAVE_MIN_HEIGHT = 4;
+    private static final int WAVE_MIN_HEIGHT = 3;
     private static final int WAVE_MIN_WIDTH = 5;
     private static final int PLAY_LINE_WIDTH = 2;
     private static final int WAVE_SPACE_HEIGHT = 2;
@@ -102,7 +104,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     private ImageButton mStopButton;
     private ImageButton mSaveButton;
 
-    private ArrayList<TrackHolder> trackHolderList = new ArrayList<>();
+    private final ArrayList<TrackHolder> trackHolderList = new ArrayList<>();
     private TrackHolder recordingTrackHolder;
     private int trackHeight;
 
@@ -110,7 +112,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     private PCMAnalyser recordPcmAudioFile;
     private int recordStatus;
     private long totalPlayBytes;
-    private MultiAudioMixer audioMixer = MultiAudioMixer.createAudioMixer();
+    private final MultiAudioMixer audioMixer = MultiAudioMixer.createAudioMixer();
     private AudioTrack musicAudioTrack;
 
     private byte[] beatStrongBytes;
@@ -133,11 +135,12 @@ public class StudioActivity extends ThemedAppCompatActivity {
     private boolean isRendering;
 
     private List<Track> trackList;
+    private List<String> resourceSounds;
     private String noteId;
 
     private MaterialDialog loadingDialog;
 
-    private CyclicBarrier recordBarrier = new CyclicBarrier(2);
+    private final CyclicBarrier recordBarrier = new CyclicBarrier(2);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -195,13 +198,18 @@ public class StudioActivity extends ThemedAppCompatActivity {
 
         updateNoteData();
 
-        mMetronomeToggle.setChecked(true);
+        mMetronomeToggle.setChecked(false);
+        onBeatSoundClick();
 
         isLoopPlay = mLoopToggle.isChecked();
 
         bytesPerFrame = recordPcmAudioFile.bytesPerFrame();
         mSpeedTextView.setText(String.format("= %s", currentSpeed));
         mTuneBeatTextView.setText(String.format("%s %s", currentTune, currentBeat));
+
+        resourceSounds = Arrays.asList(getResources().getStringArray(R.array.metronome_sounds));
+        if (Note.getActiveMetronomeSound() == null)
+            Note.setActiveMetronomeSound(resourceSounds.get(DEFAULT_SOUND));
 
         layoutTracks.setOnTrackScrollListener(new TrackGroupLayout.OnTrackScrollListener() {
 
@@ -259,7 +267,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
         String newSound = Note.getActiveMetronomeSound();
         if ((newSound != null) && (!newSound.equals(metronomeSound))) metronomeSound = newSound;
         if (metronomeSound == null)
-            metronomeSound = getResources().getStringArray(R.array.metronome_sounds)[MetronomeActivity.DEFAULT_SOUND];
+            metronomeSound = getResources().getStringArray(R.array.metronome_sounds)[DEFAULT_SOUND];
     }
 
     private void updateAdjustTip() {
@@ -288,6 +296,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -315,7 +324,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
                 }).show();
     }
 
-    private Handler mRemoveHandler = new Handler(msg -> {
+    private final Handler mRemoveHandler = new Handler(msg -> {
         updateManage();
         return true;
     });
@@ -542,7 +551,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
                     }
                 }
 
-                loadMetronomeData();
+                loadBeatData();
 
                 playStatus = STATUS_PLAY_PREPARE;
                 recordStatus = STATUS_RECORD_PREPARE;
@@ -551,13 +560,20 @@ public class StudioActivity extends ThemedAppCompatActivity {
         }.start();
     }
 
-    private void loadMetronomeData() {
+    private void loadBeatData() {
         try {
-            byte[][] beatsData = FileUtils.getStereoBeatResource(mActivity, metronomeSound);
+            byte[][] beatsData;
+            if (resourceSounds.contains(metronomeSound)) {
+                beatsData = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound);
+            } else {
+                beatsData = FileUtils.getStereoBeatCustom(getApplicationContext(), metronomeSound);
+            }
             beatStrongBytes = beatsData[0];
             beetWeakBytes = beatsData[1];
             refreshBeatData();
         } catch (IOException ex) {
+            beatStrongBytes = new byte[0];
+            beetWeakBytes = new byte[0];
             ex.printStackTrace();
         }
     }
@@ -624,7 +640,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
             mSpeedTextView.setText(String.format("= %s", currentSpeed));
             mTuneBeatTextView.setText(String.format("%s  %s", currentTune, currentBeat));
             updateMetronome();
-            loadMetronomeData();
+            loadBeatData();
         } else if (requestCode == REQ_CODE_ADJUST_RECORD) {
             updateAdjustTip();
         }
@@ -1079,7 +1095,8 @@ public class StudioActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private Handler mAudioHandler = new Handler(msg -> {
+    @SuppressLint("NonConstantResourceId")
+    private final Handler mAudioHandler = new Handler(msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         switch (msg.what) {
             case R.integer.RECEIVE_RECORDING_DATA:

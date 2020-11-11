@@ -433,7 +433,7 @@
     <string name="adjust_success">Adjust Done!</string>
     <string name="adjust_failed">Retry!</string>
     <string name="adjust_success_tip">Success! You can back to do the recording now</string>
-    <string name="adjust_failed_tip">Failed! You need to try to adjust again</string>
+    <string name="adjust_failed_tip">Failed! Keep adjusting</string>
     <string name="adjust_delay_record_time_tip">Put on headset, click the button, follow the beat sound to click</string>
     <string name="adjust_record_reason">There is a time lag between the beginning of the synchronization of the sound and the beginning of the headset and recording, so a synchronization adjustment is required. Noted that whenever you change a new headset for recording, it is recommended to recalibrate, it would be better to synchronize the recording.</string>
     <string name="first_record_adjust_tip">Please adjust record before your first start!</string>
