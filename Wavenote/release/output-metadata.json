@@ -10,7 +10,7 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 200,
+      "versionCode": 201,
       "versionName": "2.0",
       "outputFile": "Wavenote-release.apk"
     }
