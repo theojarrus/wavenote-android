@@ -334,10 +334,6 @@
         <item name="boxBackgroundColor">@null</item>
     </style>
 
-    <style name="Wavestyle.Button.Outlined.Inactive" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="strokeColor">?attr/dividerColor</item>
-    </style>
-
     <style name="Shortcut.Key.Multiple" parent="TextAppearance.AppCompat">
         <item name="android:background">@drawable/bg_key</item>
         <item name="android:gravity">center</item>
