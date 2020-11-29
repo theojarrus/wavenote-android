@@ -260,8 +260,8 @@ public class WavenoteEditText extends AppCompatEditText {
         boolean isChanged = false;
         int offset = 0;
         for (Integer i : newlineIndexes) {
-            if ((i == 0) || (!Objects.requireNonNull(editable).subSequence(i - 1, i).toString().equals(SPACE))) {
-                Objects.requireNonNull(editable).insert(i + offset, SPACE);
+            if ((i == 0) || (!editable.subSequence(i + offset - 1, i + offset).toString().equals(SPACE))) {
+                editable.insert(i + offset, SPACE);
                 isChanged = true;
                 offset++;
             }

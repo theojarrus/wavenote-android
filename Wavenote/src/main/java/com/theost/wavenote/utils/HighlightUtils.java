@@ -73,10 +73,10 @@ public class HighlightUtils {
         }
 
         if (isHighlightChanged) {
-            int cursorPoistionStart = mContentEditText.getSelectionStart();
-            int cursorPoistionEnd = mContentEditText.getSelectionEnd();
+            int cursorPositionStart = mContentEditText.getSelectionStart();
+            int cursorPositionEnd = mContentEditText.getSelectionEnd();
             mContentEditText.setText(noteContent);
-            mContentEditText.setSelection(cursorPoistionStart, cursorPoistionEnd);
+            mContentEditText.setSelection(cursorPositionStart, cursorPositionEnd);
         }
 
         mContentEditText.setTag(null);

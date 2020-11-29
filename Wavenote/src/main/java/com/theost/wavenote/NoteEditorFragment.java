@@ -1990,6 +1990,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 fragment.linkifyEditorContent();
                 fragment.syntaxHighlightEditorContent();
                 fragment.updateMarkdownView();
+                fragment.countSyllableContent();
             }
         }
 
