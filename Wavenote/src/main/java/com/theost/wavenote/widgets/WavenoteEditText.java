@@ -193,6 +193,14 @@ public class WavenoteEditText extends AppCompatEditText {
         return 0;
     }
 
+    public void restoreSelection(int[] indexes) {
+        setSelection(indexes[0], indexes[1]);
+    }
+
+    public int[] getSelectionIndexes() {
+        return new int[]{getSelectionStart(), getSelectionEnd()};
+    }
+
     public String getSelectedString() {
         return Objects.requireNonNull(getText()).toString().substring(getSelectionStart(), getSelectionEnd());
     }

@@ -1333,7 +1333,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
         int end = start + count;
         if (end != start && charSequence.toString().substring(start, end).substring(end - start - 1).equals(NEW_LINE)) {
-            mContentEditText.setSelection(mContentEditText.getSelectionEnd() + 1);
+            int offsetSelection = mContentEditText.getSelectionEnd() + 1;
+            if (offsetSelection > mContentEditText.length()) {
+                mContentEditText.getText().insert(mContentEditText.length() - 1, " ");
+            }
+            mContentEditText.setSelection(offsetSelection);
         }
 
         // Temporarily remove the text watcher as we process checklists to prevent callback looping
@@ -2007,6 +2011,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         String syllable = SyllableCounter.getSyllableContent(mContentEditText.getTextContent());
+        int[] selectionIndexes = mContentEditText.getSelectionIndexes();
         mSyllableEditText.setText(syllable);
         Editable editable = mSyllableEditText.getText();
         if (editable != null) {
@@ -2015,6 +2020,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             mSyllableEditText.setText(editable);
             AniUtils.fadeIn(mSyllableEditText);
         }
+        mContentEditText.restoreSelection(selectionIndexes);
     }
 
     private void syntaxHighlightEditorContent() {
