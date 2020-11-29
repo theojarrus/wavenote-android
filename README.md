@@ -7,7 +7,7 @@ Wavenote - notepad for musicians. Based on [Simplenote](https://simplenote.com).
 
 * Clone repository.
 ```shell
-git clone https://github.com/fedor-jedi/wavenote-android.git
+git clone https://github.com/theo-jedi/wavenote-android.git
 cd wavenote-android
 ```
 
