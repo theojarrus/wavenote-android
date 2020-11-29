@@ -98,6 +98,7 @@ public class ImportUtils {
                 note.setTags(ArrayUtils.jsonToList(source.getJSONArray(ExportUtils.NOTE_COLUMN_5)));
                 note.setPinned(source.getBoolean(ExportUtils.NOTE_COLUMN_6));
                 note.setMarkdownEnabled(source.getBoolean(ExportUtils.NOTE_COLUMN_7));
+                note.setSyllableEnabled(source.getBoolean(ExportUtils.NOTE_COLUMN_8));
                 note.setDeleted(trashedNotes.contains(source.getString(ExportUtils.NOTE_COLUMN_1)));
                 note.save();
                 String noteType = FileUtils.ACTIVE_DIR;
@@ -165,6 +166,7 @@ public class ImportUtils {
                 }
             }
         }
+        database.close();
         return isImported;
     }
 

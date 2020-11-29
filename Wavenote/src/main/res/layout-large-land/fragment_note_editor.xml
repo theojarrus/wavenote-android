@@ -20,89 +20,111 @@
             android:focusableInTouchMode="true"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/padding_extra_large"
-            android:paddingStart="@dimen/padding_extra_large">
+            android:orientation="vertical">
 
-            <androidx.core.widget.NestedScrollView
-                android:fillViewport="true"
+            <ScrollView
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_width="match_parent">
+                android:fillViewport="true">
 
-                <com.theost.wavenote.widgets.WavenoteEditText
-                    android:id="@+id/note_content"
-                    android:background="@android:color/transparent"
-                    android:gravity="top"
-                    android:inputType="text|textMultiLine|textCapSentences|textNoSuggestions"
-                    android:layout_height="match_parent"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:lineSpacingExtra="@dimen/line_spacing"
-                    android:lineSpacingMultiplier="1.0"
-                    android:maxLength="999999999"
-                    android:imeOptions="flagNoExtractUi"
-                    android:nextFocusDown="@id/tag_input"
-                    android:nextFocusForward="@id/tag_input"
-                    android:paddingBottom="@dimen/padding_extra_extra_large"
-                    android:paddingTop="@dimen/padding_extra_extra_large"
-                    android:scrollHorizontally="false"
-                    android:textColor="?attr/noteEditorTextColor"
-                    android:textColorLink="?attr/colorAccent"
-                    tools:context=".NoteEditorFragment">
-                </com.theost.wavenote.widgets.WavenoteEditText>
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/padding_extra_large"
+                    android:paddingEnd="@dimen/padding_extra_large"
+                    android:animateLayoutChanges="true">
 
-            </androidx.core.widget.NestedScrollView>
+                    <com.theost.wavenote.widgets.WavenoteEditText
+                        android:id="@+id/syllable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingEnd="@dimen/padding_small"
+                        android:paddingStart="0dp"
+                        android:paddingTop="@dimen/padding_extra_extra_large"
+                        android:paddingBottom="@dimen/padding_extra_extra_large"
+                        android:lineSpacingExtra="@dimen/line_spacing"
+                        android:lineSpacingMultiplier="1.0"
+                        android:includeFontPadding="false"
+                        android:gravity="center_horizontal"
+                        android:minWidth="32sp"
+                        android:enabled="false"
+                        android:background="@null" />
+
+                    <com.theost.wavenote.widgets.WavenoteEditText
+                        android:id="@+id/note_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="top"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="textCapSentences|textNoSuggestions|textMultiLine|textAutoCorrect"
+                        android:lineSpacingExtra="@dimen/line_spacing"
+                        android:lineSpacingMultiplier="1.0"
+                        android:includeFontPadding="false"
+                        android:maxLength="999999999"
+                        android:nextFocusDown="@id/tag_input"
+                        android:nextFocusForward="@id/tag_input"
+                        android:paddingTop="@dimen/padding_extra_extra_large"
+                        android:paddingBottom="@dimen/padding_extra_extra_large"
+                        android:scrollHorizontally="false"
+                        android:textColor="?attr/noteEditorTextColor"
+                        android:textColorLink="?attr/colorAccent"
+                        tools:context=".NoteEditorFragment" />
+
+                </LinearLayout>
+
+            </ScrollView>
 
             <HorizontalScrollView
                 android:id="@+id/horizontal_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:fillViewport="true"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/padding_extra_large"
+                    android:paddingEnd="0dp"
                     android:orientation="horizontal">
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/tag_chips"
-                        android:clipToPadding="false"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:paddingBottom="@dimen/padding_small"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:clipToPadding="false"
                         android:paddingTop="@dimen/padding_small"
-                        android:visibility="gone">
-                    </com.google.android.material.chip.ChipGroup>
+                        android:paddingBottom="@dimen/padding_small"
+                        android:visibility="gone" />
 
                     <View
                         android:id="@+id/tag_padding"
-                        android:layout_height="match_parent"
-                        android:layout_width="@dimen/padding_small">
-                    </View>
+                        android:layout_width="@dimen/padding_small"
+                        android:layout_height="match_parent" />
 
                     <com.theost.wavenote.utils.TagsMultiAutoCompleteTextView
                         android:id="@+id/tag_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="?attr/mainBackgroundColor"
                         android:completionThreshold="1"
                         android:dropDownAnchor="@id/horizontal_scroll_view"
                         android:hint="@string/tag_hint"
                         android:imeOptions="actionNext"
                         android:inputType="textNoSuggestions"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
                         android:longClickable="false"
                         android:minHeight="@dimen/tag_input_height"
-                        android:nextFocusForward="@+id/note_content"
                         android:nextFocusLeft="@id/tag_input"
                         android:nextFocusUp="@id/note_editor"
+                        android:nextFocusForward="@+id/note_content"
                         android:textColor="?attr/noteEditorTextColor"
                         android:textColorHint="?attr/hintTextColor"
-                        android:textSize="@dimen/text_tag">
-                    </com.theost.wavenote.utils.TagsMultiAutoCompleteTextView>
+                        android:textSize="@dimen/text_tag" />
 
                 </LinearLayout>
 
@@ -112,21 +134,20 @@
 
         <LinearLayout
             android:id="@+id/placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="?attr/mainBackgroundColor"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
             android:visibility="gone">
 
             <ImageView
-                android:contentDescription="@string/logo"
-                android:layout_height="@dimen/logo_empty"
                 android:layout_width="@dimen/logo_empty"
-                android:src="@drawable/ic_wavenote_24dp"
-                android:tint="?attr/emptyImageColor">
-            </ImageView>
+                android:layout_height="@dimen/logo_empty"
+                android:contentDescription="@string/logo"
+                android:src="@drawable/logo_login"
+                android:tint="?attr/emptyImageColor" />
 
         </LinearLayout>
 

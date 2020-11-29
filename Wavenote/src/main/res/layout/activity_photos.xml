@@ -45,7 +45,7 @@
                     android:paddingBottom="@dimen/padding_small"
                     android:paddingRight="@dimen/padding_large">
 
-                    <TextView
+                    <com.theost.wavenote.widgets.RobotoMediumTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
@@ -115,7 +115,7 @@
                         android:paddingRight="@dimen/padding_large"
                         android:visibility="invisible">
 
-                        <TextView
+                        <com.theost.wavenote.widgets.RobotoMediumTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/custom_space"

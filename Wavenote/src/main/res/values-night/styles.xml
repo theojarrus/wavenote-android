@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Base.Theme.Wavestyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:navigationBarColor">@color/background_dark</item>
@@ -50,7 +50,7 @@
         <item name="settingsTextColor">@color/white</item>
         <item name="toolbarColor">@color/background_dark_4</item>
         <item name="toolbarIconColor">@color/gray_20</item>
-        <item name="toolbarPopupTheme">@style/ToolbarTheme.Popup</item>
+        <item name="toolbarPopupTheme">@style/ThemeOverlay.MaterialComponents.Dark</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 
@@ -66,7 +66,7 @@
     <style name="Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">

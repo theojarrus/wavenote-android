@@ -159,7 +159,7 @@
                     android:visibility="invisible"
                     tools:ignore="UselessParent">
 
-                    <TextView
+                    <com.theost.wavenote.widgets.RobotoRegularTextView
                         android:id="@+id/adjust_tip"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -207,21 +207,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.theost.wavenote.widgets.RobotoMediumTextView
                     android:id="@+id/beat_speed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingStart="@dimen/custom_padding_small"
                     android:paddingEnd="0dp"
-                    android:paddingTop="@dimen/custom_padding_small"
-                    android:paddingBottom="@dimen/custom_padding_small"
                     android:drawableStart="@drawable/m_audiotrack_black_18dp"
                     android:gravity="center"
-                    android:textStyle="bold"
                     android:textSize="12sp"
                     tools:text="120" />
 
-                <TextView
+                <com.theost.wavenote.widgets.RobotoMediumTextView
                     android:id="@+id/tune_and_beat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -229,8 +226,8 @@
                     android:paddingBottom="@dimen/custom_padding_small"
                     android:paddingStart="@dimen/custom_padding_small"
                     android:paddingEnd="@dimen/custom_padding_small"
-                    android:textStyle="bold"
                     android:textSize="14sp"
+                    android:gravity="center"
                     tools:text="C 4/4" />
             </LinearLayout>
 
@@ -239,7 +236,7 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <TextView
+            <com.theost.wavenote.widgets.RobotoRegularTextView
                 android:id="@+id/adjust_record"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -284,7 +281,8 @@
                 app:borderWidth="0dp"
                 app:elevation="0dp"
                 app:pressedTranslationZ="12dp"
-                app:tint="?attr/fabIconColor" />
+                app:tint="?attr/fabIconColor"
+                android:contentDescription="@string/add" />
 
             <ImageButton
                 android:id="@+id/add_track"

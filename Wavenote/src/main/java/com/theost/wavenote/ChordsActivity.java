@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -56,10 +57,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     public static final String ARG_CHORDS = "chords";
     public static final String ARG_WORDS = "words";
 
+    private final int DEFAULT_COLUMN = 4;
+
     public static final String SHARP = "#";
     public static final String BEMOL = "b";
 
-    private int DEFAULT_COLUMN = 4;
     private int activeInstrument;
 
     private Map<Integer, String> mWordsMap;
@@ -84,6 +86,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private boolean isAllChords;
     private boolean chordGridEnabled;
     private boolean chordSearchGridEnabled;
+    private boolean orientationChanged;
 
     private int[] mInstrumentIntArray;
     private String[] mInstrumentStringArray;
@@ -294,6 +297,14 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         chordButtonAdapter = new ChordButtonAdapter(this, itemWidth, wordsWidth, colors);
         mChordsButtonsRecyclerView.setAdapter(chordButtonAdapter);
 
+        ViewTreeObserver viewTreeObserver = mChordsButtonsLayout.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(() -> {
+            if (orientationChanged) {
+                updateItemSize();
+                orientationChanged = false;
+            }
+        });
+
         new UpdateChordsThread().start();
     }
 
@@ -315,6 +326,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -338,12 +350,6 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        updateItemSize();
     }
 
     @Override
@@ -419,16 +425,19 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             chordButtonAdapter.updateChordData(mChordsList);
         }
         updateSearchDropdown();
-        updateDisplayMetrics();
         updateItemSize();
     }
 
-    private Handler mUpdateChordsHandler = new Handler(msg -> {
-        if (msg.what == ImportUtils.RESULT_OK) {
-            updateAdapter();
-        }
+    private final Handler mUpdateChordsHandler = new Handler(msg -> {
+        if (msg.what == ImportUtils.RESULT_OK) updateAdapter();
         return true;
     });
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        orientationChanged = true;
+    }
 
     private class UpdateChordsThread extends Thread {
         public void run() {
@@ -515,9 +524,11 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
     private void updateItemSize() {
         updateDisplayMetrics();
+        int imageCount = 4;
+        if (DisplayUtils.isLandscape(this)) imageCount += 4;
         itemWidth = (displayMetrics.widthPixels - itemPadding * (itemsInline + 1)) / itemsInline;
         wordsWidth = displayMetrics.widthPixels - itemPadding * 2;
-        chordWidth = displayMetrics.widthPixels / 4;
+        chordWidth = displayMetrics.widthPixels / imageCount;
         if (chordButtonAdapter != null) chordButtonAdapter.updateItemSize(itemWidth, wordsWidth);
         if (chordAdapter != null) chordAdapter.updateItemSize(chordWidth);
         updateLayout();

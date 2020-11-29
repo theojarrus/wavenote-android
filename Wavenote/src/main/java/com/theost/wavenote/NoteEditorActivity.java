@@ -19,14 +19,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.google.android.material.tabs.TabLayout;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.widgets.NoteEditorViewPager;
 import com.theost.wavenote.widgets.RobotoMediumTextView;
-import com.google.android.material.tabs.TabLayout;
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -79,6 +79,8 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        ThemeUtils.updateTextTheme(this);
 
         mNoteEditorFragment = new NoteEditorFragment();
         NoteMarkdownFragment noteMarkdownFragment;

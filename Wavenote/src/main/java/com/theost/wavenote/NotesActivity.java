@@ -52,7 +52,6 @@ import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.utils.Html;
 import com.theost.wavenote.utils.HtmlCompat;
 import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.ResUtils;
@@ -172,10 +171,19 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         setSupportActionBar(toolbar);
         configureNavigationDrawer(toolbar);
 
-        mNoteListFragment = new NoteListFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.note_fragment_container, mNoteListFragment, TAG_NOTE_LIST);
-        fragmentTransaction.commit();
+        ThemeUtils.updateTextTheme(this);
+
+        if (savedInstanceState != null) {
+            mHasTappedNoteListWidgetButton = savedInstanceState.getBoolean(STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED);
+            mNoteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(TAG_NOTE_LIST);
+        }
+
+        if ((mNoteListFragment == null) || (!mNoteListFragment.isAdded())) {
+            mNoteListFragment = new NoteListFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.note_fragment_container, mNoteListFragment, TAG_NOTE_LIST);
+            fragmentTransaction.commit();
+        }
 
         assert mNoteListFragment != null;
         mIsTabletFullscreen = mNoteListFragment.isHidden();
@@ -473,13 +481,14 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 Note welcomeNote = mNotesBucket.newObject("welcome-android");
                 welcomeNote.setCreationDate(Calendar.getInstance());
                 welcomeNote.setModificationDate(welcomeNote.getCreationDate());
-                welcomeNote.setContent(new SpannableString(Html.fromHtml(getString(R.string.welcome_note))));
+                welcomeNote.setContent(new SpannableString(HtmlCompat.fromHtml(getString(R.string.welcome_note))));
                 welcomeNote.getTitle();
                 welcomeNote.save();
                 Note songNote = mNotesBucket.newObject("welcomesong-android");
                 songNote.setCreationDate(Calendar.getInstance());
                 songNote.setModificationDate(welcomeNote.getCreationDate());
-                songNote.setContent(new SpannableString(Html.fromHtml(getString(R.string.welcome_song))));
+                songNote.setSyllableEnabled(true);
+                songNote.setContent(new SpannableString(HtmlCompat.fromHtml(getString(R.string.welcome_song))));
                 songNote.getTitle();
                 songNote.save();
             } catch (BucketObjectNameInvalid e) {
@@ -1532,7 +1541,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 localDatabase.removeAllImageData(cursor.getSimperiumKey());
                 cursor.getObject().delete();
             }
-
+            if (localDatabase != null) localDatabase.close();
             return null;
         }
 

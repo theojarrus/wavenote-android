@@ -91,6 +91,74 @@
         <item>12/8</item>
     </string-array>
 
+    <string-array name="syllable_exceptions">
+        <item>1 brutes</item>
+        <item>1 chummed</item>
+        <item>1 flapped</item>
+        <item>1 foamed</item>
+        <item>1 gaped</item>
+        <item>1 h\'m</item>
+        <item>1 lb</item>
+        <item>1 mimes</item>
+        <item>1 ms</item>
+        <item>1 peeped</item>
+        <item>1 sheered</item>
+        <item>1 st</item>
+        <item>1 queue</item>
+        <item>2 bepatched</item>
+        <item>2 capered</item>
+        <item>2 caressed</item>
+        <item>2 clattered</item>
+        <item>2 deafened</item>
+        <item>2 dr</item>
+        <item>2 effaced</item>
+        <item>2 effaces</item>
+        <item>2 fringed</item>
+        <item>2 gravesend</item>
+        <item>2 greyish</item>
+        <item>2 jr</item>
+        <item>2 mangroves</item>
+        <item>2 messieurs</item>
+        <item>2 motioned</item>
+        <item>2 moustaches</item>
+        <item>2 mr</item>
+        <item>2 mrs</item>
+        <item>2 pencilled</item>
+        <item>2 poleman</item>
+        <item>2 quivered</item>
+        <item>2 reclined</item>
+        <item>2 shivered</item>
+        <item>2 sidespring</item>
+        <item>2 slandered</item>
+        <item>2 sombre</item>
+        <item>2 sr</item>
+        <item>2 stammered</item>
+        <item>2 suavely</item>
+        <item>2 tottered</item>
+        <item>2 trespassed</item>
+        <item>2 truckle</item>
+        <item>2 unstained</item>
+        <item>2 therefore</item>
+        <item>3 businesses</item>
+        <item>3 bottleful</item>
+        <item>3 discoloured</item>
+        <item>3 disinterred</item>
+        <item>3 hemispheres</item>
+        <item>3 manoeuvred</item>
+        <item>3 sepulchre</item>
+        <item>3 shamefully</item>
+        <item>3 unexpressed</item>
+        <item>3 veriest</item>
+        <item>3 wyoming</item>
+        <item>4 etc</item>
+        <item>4 sailmaker</item>
+        <item>4 satiated</item>
+        <item>4 sententiously</item>
+        <item>5 particularized</item>
+        <item>5 unostentatious</item>
+        <item>6 propitiatory</item>
+    </string-array>
+
     <string-array name="keyword_types">
         <item>Title</item>
         <item>Word</item>
@@ -128,6 +196,15 @@
         <item>50%</item>
         <item>33%</item>
         <item>25%</item>
+        <item>20%</item>
+    </string-array>
+
+    <string-array name="array_musical_columns_landscape">
+        <item>100%</item>
+        <item>50%</item>
+        <item>33%</item>
+        <item>25%</item>
+        <item>20%</item>
         <item>20%</item>
     </string-array>
 

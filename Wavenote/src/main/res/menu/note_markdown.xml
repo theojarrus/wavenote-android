@@ -46,16 +46,21 @@
             android:checkable="true"
             android:enabled="false"
             android:title="@string/pin"
-            app:showAsAction="never">
-        </item>
+            app:showAsAction="never" />
 
         <item
             android:id="@+id/menu_markdown"
             android:checkable="true"
             android:enabled="false"
             android:title="@string/markdown"
-            app:showAsAction="never">
-        </item>
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menu_syllable"
+            android:checkable="true"
+            android:enabled="false"
+            android:title="@string/syllable"
+            app:showAsAction="never" />
 
     </group>
 

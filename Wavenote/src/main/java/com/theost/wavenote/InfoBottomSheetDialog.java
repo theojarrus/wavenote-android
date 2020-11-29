@@ -1,6 +1,6 @@
 package com.theost.wavenote;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.view.LayoutInflater;
@@ -14,10 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.theost.wavenote.models.Note;
-import com.theost.wavenote.utils.DateTimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.theost.wavenote.models.Note;
+import com.theost.wavenote.utils.DateTimeUtils;
 
 import java.text.NumberFormat;
 
@@ -37,7 +37,7 @@ public class InfoBottomSheetDialog extends BottomSheetDialogBase {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View infoView = inflater.inflate(R.layout.bottom_sheet_info, null, false);
+        @SuppressLint("InflateParams") View infoView = inflater.inflate(R.layout.bottom_sheet_info, null, false);
         mCountCharacters = infoView.findViewById(R.id.count_characters);
         mCountWords = infoView.findViewById(R.id.count_words);
         mDateTimeCreated = infoView.findViewById(R.id.date_time_created);
@@ -46,17 +46,14 @@ public class InfoBottomSheetDialog extends BottomSheetDialogBase {
         if (getDialog() != null) {
             // Set peek height to full height of view (i.e. set STATE_EXPANDED) to avoid buttons
             // being off screen when bottom sheet is shown.
-            getDialog().setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                    FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            getDialog().setOnShowListener(dialogInterface -> {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                    if (bottomSheet != null) {
-                        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        behavior.setSkipCollapsed(true);
-                    }
+                if (bottomSheet != null) {
+                    BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    behavior.setSkipCollapsed(true);
                 }
             });
 

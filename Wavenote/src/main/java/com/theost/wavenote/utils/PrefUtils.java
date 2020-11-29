@@ -11,10 +11,10 @@ import android.content.SharedPreferences;
 import androidx.annotation.IntDef;
 import androidx.preference.PreferenceManager;
 
+import com.simperium.client.Query;
 import com.theost.wavenote.BuildConfig;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Note;
-import com.simperium.client.Query;
 
 import java.lang.annotation.Retention;
 
@@ -63,6 +63,9 @@ public class PrefUtils {
 
     // boolean, allow notes to preview markdown
     public static final String PREF_MARKDOWN_ENABLED = "pref_key_markdown_enabled";
+
+    // boolean, allow notes to syllable
+    public static final String PREF_SYLLABLE_ENABLED = "pref_key_syllable_enabled";
 
     // boolean, determines if the theme was ever changed
     public static final String PREF_THEME_MODIFIED = "pref_theme_modified";

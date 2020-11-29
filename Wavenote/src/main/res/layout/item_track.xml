@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-            <TextView
+            <com.theost.wavenote.widgets.RobotoRegularTextView
                 android:id="@+id/track_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

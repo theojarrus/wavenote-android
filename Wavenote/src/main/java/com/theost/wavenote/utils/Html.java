@@ -488,7 +488,7 @@ public class Html {
             }
         }
 
-        out.append("</p>\n");
+        out.append("</p>");
     }
 
     @SuppressLint("DefaultLocale")
@@ -511,10 +511,7 @@ public class Html {
                 }
                 if (characterStyle instanceof TypefaceSpan) {
                     String s = ((TypefaceSpan) characterStyle).getFamily();
-
-                    if ("monospace".equals(s)) {
-                        out.append("<tt>");
-                    }
+                    out.append(String.format("<font face=\"%s\">", s));
                 }
                 if (characterStyle instanceof SuperscriptSpan) {
                     out.append("<sup>");
@@ -595,10 +592,7 @@ public class Html {
                 }
                 if (style[j] instanceof TypefaceSpan) {
                     String s = ((TypefaceSpan) style[j]).getFamily();
-
-                    if (s.equals("monospace")) {
-                        out.append("</tt>");
-                    }
+                    out.append("</font>");
                 }
                 if (style[j] instanceof StyleSpan) {
                     int s = ((StyleSpan) style[j]).getStyle();
@@ -656,12 +650,12 @@ class HtmlToSpannedConverter implements ContentHandler {
             1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,
     };
 
-    private String mSource;
-    private XMLReader mReader;
-    private SpannableStringBuilder mSpannableStringBuilder;
-    private android.text.Html.ImageGetter mImageGetter;
-    private android.text.Html.TagHandler mTagHandler;
-    private int mFlags;
+    private final String mSource;
+    private final XMLReader mReader;
+    private final SpannableStringBuilder mSpannableStringBuilder;
+    private final android.text.Html.ImageGetter mImageGetter;
+    private final android.text.Html.TagHandler mTagHandler;
+    private final int mFlags;
 
     private static Pattern sTextAlignPattern;
     private static Pattern sForegroundColorPattern;
@@ -985,7 +979,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     private static void endBlockElement(Editable text) {
         Newline n = getLast(text, Newline.class);
         if (n != null) {
-            appendNewlines(text, n.mNumNewlines);
+            appendNewlines(text, 0);
             text.removeSpan(n);
         }
 
@@ -1135,10 +1129,11 @@ class HtmlToSpannedConverter implements ContentHandler {
         }
 
         int len = text.length();
-        text.append("\uFFFC");
-
-        text.setSpan(new ImageSpan(d, src), len, text.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (text.length() - len != 0) {
+            text.append("\uFFFC");
+            text.setSpan(new ImageSpan(d, src), len, text.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
     }
 
     private void startFont(Editable text, Attributes attributes) {
@@ -1315,7 +1310,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static class Foreground {
-        private int mForegroundColor;
+        private final int mForegroundColor;
 
         public Foreground(int foregroundColor) {
             mForegroundColor = foregroundColor;
@@ -1323,7 +1318,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static class Background {
-        private int mBackgroundColor;
+        private final int mBackgroundColor;
 
         public Background(int backgroundColor) {
             mBackgroundColor = backgroundColor;
@@ -1331,7 +1326,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static class Heading {
-        private int mLevel;
+        private final int mLevel;
 
         public Heading(int level) {
             mLevel = level;
@@ -1339,7 +1334,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static class Newline {
-        private int mNumNewlines;
+        private final int mNumNewlines;
 
         public Newline(int numNewlines) {
             mNumNewlines = numNewlines;
@@ -1347,7 +1342,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private static class Alignment {
-        private Layout.Alignment mAlignment;
+        private final Layout.Alignment mAlignment;
 
         public Alignment(Layout.Alignment alignment) {
             mAlignment = alignment;

@@ -10,6 +10,10 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.simperium.Simperium;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketNameInvalid;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.NoteCountIndexer;
 import com.theost.wavenote.models.NoteTagger;
@@ -17,9 +21,6 @@ import com.theost.wavenote.models.Preferences;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.CrashUtils;
 import com.theost.wavenote.utils.PrefUtils;
-import com.simperium.Simperium;
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketNameInvalid;
 
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -45,6 +46,7 @@ public class Wavenote extends Application {
         super.onCreate();
 
         CrashUtils.initWithContext(this);
+        Fresco.initialize(this);
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
 
         mSimperium = Simperium.newClient(
@@ -77,7 +79,6 @@ public class Wavenote extends Application {
         CrashUtils.setCurrentUser(mSimperium.getUser());
     }
 
-    @SuppressWarnings("unused")
     private boolean isFirstLaunch() {
         // NotesActivity sets this pref to false after first launch
         return PrefUtils.getBoolPref(this, PrefUtils.PREF_FIRST_LAUNCH, true);

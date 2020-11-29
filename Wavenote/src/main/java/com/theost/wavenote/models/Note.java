@@ -29,6 +29,7 @@ public class Note extends BucketObject {
     public static final String BUCKET_NAME = "note";
     public static final String MARKDOWN_TAG = "markdown";
     public static final String PINNED_TAG = "pinned";
+    public static final String SYLLABLE_TAG = "syllable";
     public static final String PREVIEW_TAG = "preview";
     public static final String PUBLISHED_TAG = "published";
     public static final String CONTENT_PROPERTY = "content";
@@ -61,7 +62,7 @@ public class Note extends BucketObject {
     private static boolean isTextStyleBold = false;
     private static boolean isTextStyleItalic = false;
     private static boolean isTextStyleStroke = false;
-    private static boolean isTextStyleMono = false;
+    private static boolean isTextStyleUpper = false;
     private static boolean isTextStyleUnderline = false;
     private static boolean isTextStyleStrikethrough = false;
 
@@ -71,6 +72,9 @@ public class Note extends BucketObject {
     private static boolean dictionarySortDirRev = false;
 
     private static boolean chordGridEnabled = true;
+
+    private static List<Integer> textFontToggles;
+    private static String activeTextFont = "";
 
     private static String themedTextActiveColor;
     private static String themedTextInactiveColor;
@@ -278,7 +282,25 @@ public class Note extends BucketObject {
         dictionarySortDirRev = isReversed;
     }
 
-    public static boolean isIsTextStyleBold() { return isTextStyleBold;}
+    public static String getActiveTextFont() {
+        return activeTextFont;
+    }
+
+    public static void setActiveTextFont(String font) {
+        activeTextFont = font;
+    }
+
+    public static List<Integer> getTextFontToggles() {
+        return textFontToggles;
+    }
+
+    public static void setTextFontToggles(List<Integer> checkedIds) {
+        textFontToggles = checkedIds;
+    }
+
+    public static boolean isIsTextStyleBold() {
+        return isTextStyleBold;
+    }
 
     public static boolean isIsTextStyleItalic() {
         return isTextStyleItalic;
@@ -288,8 +310,8 @@ public class Note extends BucketObject {
         return isTextStyleStroke;
     }
 
-    public static boolean isIsTextStyleMono() {
-        return isTextStyleMono;
+    public static boolean isIsTextStyleUpper() {
+        return isTextStyleUpper;
     }
 
     public static boolean isIsTextStyleUnderline() {
@@ -298,11 +320,6 @@ public class Note extends BucketObject {
 
     public static boolean isIsTextStyleStrikethrough() {
         return isTextStyleStrikethrough;
-    }
-
-    public boolean[] getTextStyle() {
-        return new boolean[]{isTextStyleBold, isTextStyleItalic, isTextStyleMono, isTextStyleUnderline,
-                isTextStyleStrikethrough, isTextStyleStroke};
     }
 
     public static void setIsTextStyleBold(boolean checked) {
@@ -317,8 +334,8 @@ public class Note extends BucketObject {
         isTextStyleStroke = checked;
     }
 
-    public static void setIsTextStyleMono(boolean checked) {
-        isTextStyleMono = checked;
+    public static void setIsTextStyleUpper(boolean checked) {
+        isTextStyleUpper = checked;
     }
 
     public static void setIsTextStyleUnderline(boolean checked) {
@@ -337,7 +354,7 @@ public class Note extends BucketObject {
         activeStyleColor = selectedColor;
     }
 
-    public void setThemeText(String colorLight, String colorDark, boolean isLight) {
+    public static void setThemeText(String colorLight, String colorDark, boolean isLight) {
         if (isLight) {
             themedTextActiveColor = colorLight;
             themedTextInactiveColor = colorDark;
@@ -347,7 +364,7 @@ public class Note extends BucketObject {
         }
     }
 
-    public String getActiveColor() {
+    public static String getActiveColor() {
         return themedTextActiveColor;
     }
 
@@ -363,6 +380,7 @@ public class Note extends BucketObject {
         if (content == null) {
             return BLANK_CONTENT;
         }
+
         if ((themedTextInactiveColor != null) && (content.contains(themedTextInactiveColor)))
             content = content.replaceAll(themedTextInactiveColor, themedTextActiveColor);
         return (Spannable) HtmlCompat.fromHtml(content);
@@ -478,7 +496,7 @@ public class Note extends BucketObject {
         }
 
         // Make sure string has a trailing space
-        if (tagString.length() > 1 && !tagString.substring(tagString.length() - 1).equals(SPACE))
+        if (tagString.length() > 1 && !tagString.endsWith(SPACE))
             tagString = tagString + SPACE;
         // for comparing case-insensitive strings, would like to find a way to
         // do this without allocating a new list and strings
@@ -551,6 +569,18 @@ public class Note extends BucketObject {
             addSystemTag(PINNED_TAG);
         } else {
             removeSystemTag(PINNED_TAG);
+        }
+    }
+
+    public boolean isSyllableEnabled() {
+        return hasSystemTag(SYLLABLE_TAG);
+    }
+
+    public void setSyllableEnabled(boolean isSyllableEnabled) {
+        if (isSyllableEnabled) {
+            addSystemTag(SYLLABLE_TAG);
+        } else {
+            removeSystemTag(SYLLABLE_TAG);
         }
     }
 

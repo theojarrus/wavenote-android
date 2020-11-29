@@ -420,10 +420,10 @@ public class StudioActivity extends ThemedAppCompatActivity {
                 recordBarrier.reset();
                 newEmptyThreadToSync();
                 startPlay();
-                disableViews(mRecordButton, mAddButton);
+                disableViews(mRecordButton, mAddButton, mSaveButton);
             } else if (playStatus == STATUS_PLAYING) {
                 stopPlay();
-                enableViews(mRecordButton, mAddButton);
+                enableViews(mRecordButton, mAddButton, mSaveButton);
             }
         }
     }
@@ -493,6 +493,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (localDatabase != null) localDatabase.close();
         if (musicRecorder != null) {
             musicRecorder.release();
         }
@@ -1029,7 +1030,6 @@ public class StudioActivity extends ThemedAppCompatActivity {
                                 && (audioStream.read(readBuffer)) != -1) {
                             if (trackHolder.isSoundOn) {
                                 allAudioBytes[streamIndex] = Arrays.copyOf(readBuffer, readBuffer.length);
-                                System.out.println();
                             } else {
                                 allAudioBytes[streamIndex] = new byte[frameBytes];
                             }

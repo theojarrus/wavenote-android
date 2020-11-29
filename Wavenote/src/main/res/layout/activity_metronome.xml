@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.theost.wavenote.widgets.RobotoMediumTextView
                     android:id="@+id/metronome_tune"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                     android:textStyle="bold"
                     tools:text="C" />
 
-                <TextView
+                <com.theost.wavenote.widgets.RobotoMediumTextView
                     android:id="@+id/metronome_beat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_remove_circle_outline_36dp" />
 
-                <TextView
+                <com.theost.wavenote.widgets.RobotoRegularTextView
                     android:id="@+id/beat_speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

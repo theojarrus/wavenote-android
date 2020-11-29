@@ -8,7 +8,7 @@
     android:layout_gravity="bottom"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.theost.wavenote.ColorSheet"
+    tools:context="com.theost.wavenote.StyleBottomSheetDialog"
     tools:ignore="MissingDefaultResource">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
         android:clipToPadding="true"
         android:orientation="horizontal">
 
-        <com.theost.wavenote.widgets.ColorSheetTitle
+        <com.theost.wavenote.widgets.RobotoMediumTextView
             android:id="@+id/sheetTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -45,99 +45,160 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
         android:paddingLeft="12dp"
+        android:paddingTop="14dp"
         android:paddingRight="12dp"
-        android:baselineAligned="false">
+        android:paddingBottom="14dp">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/text_fonts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_mono_font"
+                style="@style/Wavestyle.Button.Outlined.Inactive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/mono" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_serif_font"
+                style="@style/Wavestyle.Button.Outlined.Inactive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/serif" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_casual_font"
+                style="@style/Wavestyle.Button.Outlined.Inactive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/casual" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_cursive_font"
+                style="@style/Wavestyle.Button.Outlined.Inactive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cursive" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="-1dp"
+        android:background="?attr/dividerColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <CheckBox
                 android:id="@+id/text_bold"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="?attr/colorAccent"
-                android:text="@string/text_bold"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                android:textAlignment="center"
-                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
+                android:text="@string/text_bold"
+                android:textAlignment="center" />
 
             <CheckBox
                 android:id="@+id/text_italic"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="?attr/colorAccent"
-                android:text="@string/text_italic"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                android:textAlignment="center"
-                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
+                android:text="@string/text_italic"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <CheckBox
                 android:id="@+id/text_stroke"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="?attr/colorAccent"
-                android:text="@string/text_stroke"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                android:textAlignment="center"
-                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
+                android:text="@string/text_stroke"
+                android:textAlignment="center" />
 
             <CheckBox
-                android:id="@+id/text_mono"
+                android:id="@+id/text_upper"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="?attr/colorAccent"
-                android:text="@string/text_mono"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                android:textAlignment="center"
-                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
+                android:text="@string/text_upper"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <CheckBox
                 android:id="@+id/text_underline"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="?attr/colorAccent"
-                android:text="@string/text_underline"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                android:textAlignment="center"
-                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
+                android:text="@string/text_underline"
+                android:textAlignment="center" />
 
             <CheckBox
                 android:id="@+id/text_strikethrough"
+                style="@style/Theme.Wavestyle.BottomSheetDialog.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="?attr/colorAccent"
-                android:text="@string/text_strikethrough"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                android:textAlignment="center"
-                style="@style/Theme.Wavestyle.BottomSheetDialog.Label" />
+                android:text="@string/text_strikethrough"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
@@ -148,6 +209,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="-1dp"
         android:background="?attr/dividerColor" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/colorSheetList"

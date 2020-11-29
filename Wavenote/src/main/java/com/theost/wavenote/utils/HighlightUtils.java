@@ -10,8 +10,10 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.text.style.SuperscriptSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import androidx.core.content.ContextCompat;
 
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Note;
+import com.theost.wavenote.widgets.WavenoteEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +34,8 @@ import java.util.TreeMap;
 
 import static com.theost.wavenote.models.Note.NEW_LINE;
 import static com.theost.wavenote.models.Note.SPACE;
+import static com.theost.wavenote.widgets.TypefaceCache.TYPEFACE_NAME_ROBOTO_REGULAR;
+import static com.theost.wavenote.widgets.WavenoteEditText.DISABLE_TEXTWATCHER;
 
 public class HighlightUtils {
 
@@ -49,6 +54,8 @@ public class HighlightUtils {
 
     @SuppressLint("ResourceAsColor")
     public static void updateSyntaxHighlight(Context context, EditText mContentEditText, String foregroundColor, boolean detectChords) {
+        mContentEditText.setTag(DISABLE_TEXTWATCHER);
+
         if (Note.isIsNeedResourceUpdate()) updateResources(context);
 
         Spannable noteContent = mContentEditText.getText();
@@ -66,10 +73,13 @@ public class HighlightUtils {
         }
 
         if (isHighlightChanged) {
-            int cursorPoistion = mContentEditText.getSelectionEnd();
+            int cursorPoistionStart = mContentEditText.getSelectionStart();
+            int cursorPoistionEnd = mContentEditText.getSelectionEnd();
             mContentEditText.setText(noteContent);
-            mContentEditText.setSelection(cursorPoistion);
+            mContentEditText.setSelection(cursorPoistionStart, cursorPoistionEnd);
         }
+
+        mContentEditText.setTag(null);
     }
 
     public static Spannable addSyntaxHighlight(List<String> words, Spannable contentSpan, boolean isTitle, boolean isForeground) {
@@ -84,8 +94,8 @@ public class HighlightUtils {
                 if (!isForeground) i = i.toLowerCase();
                 index = contentBuffer.indexOf(SPACE + i + SPACE, index);
                 if (index != -1) {
+                    ForegroundColorSpan[] markedSpans = contentSpan.getSpans(index + 1, index + 1 + i.length(), ForegroundColorSpan.class);
                     index += SPACE.length();
-                    ForegroundColorSpan[] markedSpans = contentSpan.getSpans(index, index + 1, ForegroundColorSpan.class);
                     if (markedSpans.length > 0) {
                         index++;
                         continue;
@@ -226,14 +236,13 @@ public class HighlightUtils {
         return new ArrayList<>(Arrays.asList(resourceChords));
     }
 
-    public static void changeTextStyle(EditText mContentEditText, boolean[] textStyle, int selectedColor, String backgroundColor) {
+    public static void changeTextStyle(WavenoteEditText mContentEditText, int selectedColor, String backgroundColor) {
 
         // Getting resources and checking selection
         int cursorPositionStart = mContentEditText.getSelectionStart();
         int cursorPositionEnd = mContentEditText.getSelectionEnd();
         if (cursorPositionStart == cursorPositionEnd) return;
         int titleEnd = getTitleEnd(mContentEditText.getText());
-        if (cursorPositionStart == cursorPositionEnd) return;
         if (cursorPositionStart < titleEnd) {
             if (cursorPositionEnd > titleEnd) {
                 cursorPositionStart = titleEnd;
@@ -242,30 +251,47 @@ public class HighlightUtils {
             }
         }
 
+        mContentEditText.setTag(DISABLE_TEXTWATCHER);
+
         // Clear selected text style
         String strContent = mContentEditText.getText().toString().substring(cursorPositionStart, cursorPositionEnd);
-        mContentEditText.getText().delete(cursorPositionStart, cursorPositionEnd);
-        mContentEditText.getText().insert(cursorPositionStart, strContent);
+
         Editable noteContent = mContentEditText.getText();
+        noteContent.delete(cursorPositionStart, cursorPositionEnd);
+        noteContent.insert(cursorPositionStart, strContent);
 
         // Setting new style
-        if (textStyle[0]) {
+
+        String font = Note.getActiveTextFont();
+        if (font.equals("")) {
+            noteContent.setSpan(new TypefaceSpan(TYPEFACE_NAME_ROBOTO_REGULAR), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else {
+            noteContent.setSpan(new TypefaceSpan(Note.getActiveTextFont()), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (Note.isIsTextStyleBold()) {
             noteContent.setSpan(new StyleSpan(Typeface.BOLD), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if (textStyle[1]) {
+
+        if (Note.isIsTextStyleItalic()) {
             noteContent.setSpan(new StyleSpan(Typeface.ITALIC), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if (textStyle[2]) {
-            noteContent.setSpan(new TypefaceSpan("monospace"), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        if (Note.isIsTextStyleUpper()) {
+            noteContent.setSpan(new RelativeSizeSpan(0.8f), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            noteContent.setSpan(new SuperscriptSpan(), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if (textStyle[3]) {
+
+        if (Note.isIsTextStyleUnderline()) {
             noteContent.setSpan(new UnderlineSpan(), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if (textStyle[4]) {
+
+        if (Note.isIsTextStyleStrikethrough()) {
             noteContent.setSpan(new StrikethroughSpan(), cursorPositionStart, cursorPositionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+
         if (selectedColor != -1) {
-            if (textStyle[5]) {
+            if (Note.isIsTextStyleStroke()) {
                 noteContent.setSpan(new ForegroundColorSpan(Color.parseColor(backgroundColor)), cursorPositionStart, cursorPositionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 noteContent.setSpan(new BackgroundColorSpan(selectedColor), cursorPositionStart, cursorPositionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -273,8 +299,8 @@ public class HighlightUtils {
             }
         }
 
-        mContentEditText.setText(noteContent);
         mContentEditText.setSelection(cursorPositionEnd);
+        mContentEditText.setTag(null);
     }
 
     public static void updateResources(Context context) {
@@ -293,6 +319,7 @@ public class HighlightUtils {
         }
 
         Note.setIsNeedResourceUpdate(false);
+        localDatabase.close();
     }
 
 }

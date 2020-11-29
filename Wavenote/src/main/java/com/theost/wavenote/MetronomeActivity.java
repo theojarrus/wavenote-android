@@ -422,6 +422,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         audioTrack = null;
         beatPlayHandler.removeCallbacksAndMessages(null);
         beatPlayHandler = null;
+        if (localDatabase != null) localDatabase.close();
     }
 
     private synchronized void generatePlayBeatBytes() {

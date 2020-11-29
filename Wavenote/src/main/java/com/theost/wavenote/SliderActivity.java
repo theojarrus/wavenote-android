@@ -3,7 +3,6 @@ package com.theost.wavenote;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
@@ -13,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,8 +82,6 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
         mSliderData = findViewById(R.id.slider_data);
 
-        updateOrientation();
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -100,6 +98,9 @@ public class SliderActivity extends ThemedAppCompatActivity {
 
         mShareButton = findViewById(R.id.slide_share);
         mShareButton.setOnClickListener(v -> showShareBottomSheet());
+
+        ViewTreeObserver viewTreeObserver = viewPager.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(this::updateOrientation);
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -163,12 +164,6 @@ public class SliderActivity extends ThemedAppCompatActivity {
         }
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        updateOrientation();
-    }
-
     private void updateOrientation() {
         int statusBarHeight = ResUtils.getStatusBarHeight(this);
         int navigationBarHeight = ResUtils.getNavBarHeight(this);
@@ -177,14 +172,17 @@ public class SliderActivity extends ThemedAppCompatActivity {
         int mediumPadding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.padding_medium));
         int toolbarPadding = 0;
 
-        int bottomPadding = mediumPadding;
+        int verticalPadding = mediumPadding;
+        int horizontalPadding = mediumPadding;
         if (!DisplayUtils.isLandscape(this)) {
-            bottomPadding += navigationBarHeight;
+            verticalPadding += navigationBarHeight;
         } else {
-            screenWidth += navigationBarHeight;
+            horizontalPadding += navigationBarHeight;
+            toolbarPadding += navigationBarHeight;
+            screenWidth += navigationBarHeight * 2 + 4;
         }
-        mSliderData.setPadding(mediumPadding, mediumPadding, mediumPadding, bottomPadding);
-        toolbar.setPadding(toolbarPadding, statusBarHeight, toolbarPadding, toolbarPadding);
+        mSliderData.setPadding(horizontalPadding, mediumPadding, horizontalPadding, verticalPadding);
+        toolbar.setPadding(toolbarPadding, statusBarHeight, toolbarPadding, 0);
         mSliderData.getLayoutParams().width = screenWidth;
         toolbar.getLayoutParams().width = screenWidth;
     }

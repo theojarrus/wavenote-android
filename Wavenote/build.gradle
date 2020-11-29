@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.sentry.android.gradle'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     buildToolsVersion '29.0.3'
@@ -33,19 +31,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-
     defaultConfig {
         applicationId "com.theost.wavenote"
         // Allow versionName to be overridden with property. e.g. -PversionName=1234
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "2.1"
+            versionName "2.2"
         }
-        versionCode 201
+        versionCode 200
         minSdkVersion 23
         targetSdkVersion 30
 
@@ -78,7 +72,6 @@ android {
 buildscript {
     dependencies {
         classpath 'io.sentry:sentry-android-gradle-plugin:1.7.36'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72'
     }
 
     repositories {
@@ -95,13 +88,13 @@ configurations {
 dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.47'
-    androidTestImplementation 'androidx.test:core:1.0.0'
+    androidTestImplementation 'androidx.test:core:1.3.0'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
-    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.2.0') {
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.3.0') {
         // Necessary to avoid version conflicts
         exclude group: 'androidx', module: 'appcompat'
         exclude group: 'androidx', module: 'support-v4'
@@ -109,26 +102,21 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     // Automattic and WordPress dependencies
-    implementation 'com.github.fedor-jedi:simperium-android:v0.8.2'
+    implementation 'com.github.theo-jedi:simperium-android:v0.8.2'
     implementation 'com.automattic:tracks:1.2'
     implementation 'org.wordpress:passcodelock:2.0.2'
-
-    // Kotlin
-    implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72') {
-        exclude group: 'org.jetbrains', module: 'annotations'
-    }
 
     // Zip4j
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.5.2'
 
-    // TagSoup
+    // Tag Soup
     implementation group: 'org.ccil.cowan.tagsoup', name: 'tagsoup', version: '1.2'
 
-    // Photo View
+    // Photo and Cache
     implementation 'com.asksira.android:photoview:1.0.3'
     implementation 'com.facebook.fresco:fresco:2.2.0'
     implementation 'me.relex:photodraweeview:2.0.0'
-    implementation 'com.github.fedor-jedi:zoomy:1.1.0'
+    implementation 'com.github.theo-jedi:zoomy:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
@@ -136,7 +124,7 @@ dependencies {
     implementation 'androidx.core:core:1.3.0'
     implementation 'androidx.core:core-ktx:1.1.0-alpha04'
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
-    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
@@ -154,7 +142,7 @@ dependencies {
 
 repositories {
     jcenter()
-    maven { url "https://maven.google.com" }
+    google()
     maven { url "https://jitpack.io" }
     maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
 }

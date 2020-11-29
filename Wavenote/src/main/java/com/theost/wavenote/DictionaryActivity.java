@@ -1,6 +1,7 @@
 package com.theost.wavenote;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,13 +31,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
+import com.theost.wavenote.adapters.DictionaryAdapter;
 import com.theost.wavenote.models.Keyword;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
+import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ResUtils;
-import com.theost.wavenote.utils.DisplayUtils;
-import com.theost.wavenote.adapters.DictionaryAdapter;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
 
@@ -174,6 +175,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -209,6 +211,12 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             mRemoveItem.setEnabled(true);
             return true;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (localDatabase != null) localDatabase.close();
     }
 
     public void disableDictionaryInputs(EditText editText, AutoCompleteTextView autoCompleteTextView) {
@@ -274,7 +282,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         new UpdateDataThread().start();
     }
 
-    private Handler mUpdateHandler = new Handler(msg -> {
+    private final Handler mUpdateHandler = new Handler(msg -> {
         updateAdapter();
         return true;
     });
@@ -305,6 +313,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         updateData();
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void insertKeyword(String keyword) {
         if (keyword.equals("") || mAddKeywordType.getCheckedRadioButtonId() == -1) return;
         if (mWordList.contains(keyword.toLowerCase())) {
@@ -380,6 +389,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         ).setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void sortItems() {
         switch (Note.getDictionaryActiveSortMode()) {
             case R.id.sort_by_date:

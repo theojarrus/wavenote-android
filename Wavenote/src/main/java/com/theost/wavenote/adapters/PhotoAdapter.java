@@ -29,8 +29,8 @@ import java.util.List;
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
     private List<Photo> mData;
-    private PhotosActivity mActivity;
-    private LayoutInflater mInflater;
+    private final PhotosActivity mActivity;
+    private final LayoutInflater mInflater;
 
     public PhotoAdapter(PhotosActivity activity, List<Photo> data) {
         this.mInflater = LayoutInflater.from(activity);

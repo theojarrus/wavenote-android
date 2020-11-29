@@ -51,6 +51,12 @@ public class DisplayUtils {
         return (int) px;
     }
 
+    public static int spToPx(Context context, int sp) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
+                context.getResources().getDisplayMetrics());
+        return (int) px;
+    }
+
     public static boolean isLarge(Context context) {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
                 == Configuration.SCREENLAYOUT_SIZE_LARGE;

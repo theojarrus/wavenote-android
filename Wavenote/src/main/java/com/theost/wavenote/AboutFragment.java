@@ -1,6 +1,5 @@
 package com.theost.wavenote;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +20,11 @@ import java.util.Locale;
 
 public class AboutFragment extends Fragment {
 
-    private static final String DEVELOPER_INSTAGRAM_URL = "http://instagram.com/theo.jedi";
-    private static final String DEVELOPER_SUPPORT_URL = "http://patreon.com/theojedi";
+    private static final String DEVELOPER_INSTAGRAM_URL = "https://instagram.com/theo.jedi";
+    private static final String DEVELOPER_SUPPORT_URL = "https://patreon.com/theojedi";
     private static final String DEVELOPER_WEBSITE_URL = "http://theost.tech";
-    private static final String WAVENOTE_GITHUB_URL = "http://github.com/fedor-jedi/wavenote-android";
-    private static final String PLAY_STORE_URI = "market://details?id=com.theost.wavenote";
+    private static final String WAVENOTE_GITHUB_URL = "https://github.com/theo-jedi/wavenote-android";
+    private static final String PLAY_STORE_URI = "https://play.google.com/store/apps/details?id=com.theost.wavenote";
 
     private TextView version;
     private TextView copyright;
@@ -64,49 +63,19 @@ public class AboutFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        instagram.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_INSTAGRAM_URL)));
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        website.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_WEBSITE_URL)));
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        playStore.setOnClickListener(v -> {
-            Uri uri = Uri.parse(PLAY_STORE_URI + requireActivity().getPackageName());
-            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
-                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-            try {
-                startActivity(goToMarket);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        donate.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_SUPPORT_URL)));
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        github.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WAVENOTE_GITHUB_URL)));
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
-            }
-        });
+        instagram.setOnClickListener(v -> openLink(DEVELOPER_INSTAGRAM_URL));
+        website.setOnClickListener(v -> openLink(DEVELOPER_WEBSITE_URL));
+        playStore.setOnClickListener(v -> openLink(PLAY_STORE_URI));
+        donate.setOnClickListener(v -> openLink(DEVELOPER_SUPPORT_URL));
+        github.setOnClickListener(v -> openLink(WAVENOTE_GITHUB_URL));
     }
+
+    private void openLink(String link) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), R.string.no_browser_available, Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

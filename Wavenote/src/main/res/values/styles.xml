@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="ActionMode.Wavestyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">?attr/actionModeBackgroundColor</item>
@@ -63,8 +63,10 @@
 
     <style name="Slider.Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:windowBackground">@android:color/black</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="colorSurface">@android:color/transparent</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="toolbarIconColor">@color/white</item>
         <item name="android:colorPrimary">@color/white</item>
@@ -72,7 +74,7 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="toolbarColor">@color/transparent</item>
         <item name="elevation">0dp</item>
@@ -118,14 +120,14 @@
     <style name="Theme.Wavestyle" parent="Base.Theme.Wavestyle">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.Wavestyle.Splash">
         <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
         <item name="android:statusBarColor">?attr/mainBackgroundColor</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
@@ -261,7 +263,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:windowBackground">@color/blue</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="toolbarColor">@color/blue</item>
     </style>
 
@@ -312,32 +314,6 @@
         <item name="android:tint">@color/passcodelock_button_image_color</item>
     </style>
 
-    <!-- Color Sheet -->
-    <style name="BaseTheme.ColorSheet.Light" parent="Theme.Wavestyle.BottomSheetDialog">
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.5</item>
-        <item name="android:colorBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="dialogPrimary">@color/dialogPrimary</item>
-        <item name="dialogPrimaryVariant">@color/dialogPrimaryVariant</item>
-    </style>
-
-    <style name="BaseTheme.ColorSheet.Dark" parent="Theme.Wavestyle.BottomSheetDialog">
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.5</item>
-        <item name="android:colorBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="dialogPrimary">@color/dialogDarkPrimary</item>
-        <item name="dialogPrimaryVariant">@color/dialogDarkPrimaryVariant</item>
-        <item name="android:navigationBarColor">@color/dialogDarkPrimary</item>
-    </style>
-
     <style name="Wavestyle.InputLayoutStyle.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">?attr/colorAccent</item>
         <item name="android:textColor">@color/text_title_disabled</item>
@@ -356,6 +332,10 @@
         <item name="android:textColor">?attr/colorAccent</item>
         <item name="colorButtonNormal">?attr/colorAccent</item>
         <item name="boxBackgroundColor">@null</item>
+    </style>
+
+    <style name="Wavestyle.Button.Outlined.Inactive" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">?attr/dividerColor</item>
     </style>
 
     <style name="Shortcut.Key.Multiple" parent="TextAppearance.AppCompat">

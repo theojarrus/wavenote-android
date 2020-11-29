@@ -79,6 +79,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.theost.wavenote.models.Note.SPACE;
 import static com.theost.wavenote.models.Note.TAGS_PROPERTY;
 import static com.theost.wavenote.models.Preferences.MAX_RECENT_SEARCHES;
 import static com.theost.wavenote.models.Preferences.PREFERENCES_OBJECT_KEY;
@@ -115,7 +116,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
      * A dummy implementation of the {@link Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
-    private static Callbacks sCallbacks = new Callbacks() {
+    private static final Callbacks sCallbacks = new Callbacks() {
         @Override
         public void onActionModeCreated() {
         }
@@ -201,6 +202,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         return false;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         if (getListView().getCheckedItemIds().length > 0) {
@@ -262,6 +264,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         return inflater.inflate(R.layout.fragment_notes_list, container, false);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -679,10 +682,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             query.include(new Query.FullTextOffsets("match_offsets"));
             query.include(new Query.FullTextSnippet(Note.MATCHED_TITLE_INDEX_NAME, Note.TITLE_INDEX_NAME));
             query.include(new Query.FullTextSnippet(Note.MATCHED_CONTENT_INDEX_NAME, Note.CONTENT_PROPERTY));
-            query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
-        } else {
-            query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
         }
+        query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
 
         query.include(Note.PINNED_INDEX_NAME);
         PrefUtils.sortNoteQuery(query, requireContext(), true);
@@ -706,10 +707,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             query.include(new Query.FullTextOffsets("match_offsets"));
             query.include(new Query.FullTextSnippet(Note.MATCHED_TITLE_INDEX_NAME, Note.TITLE_INDEX_NAME));
             query.include(new Query.FullTextSnippet(Note.MATCHED_CONTENT_INDEX_NAME, Note.CONTENT_PROPERTY));
-            query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
-        } else {
-            query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
         }
+        query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
 
         PrefUtils.sortNoteQuery(query, requireContext(), false);
         return query.execute();
@@ -737,6 +736,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         final Note note = notesBucket.newObject();
         note.setCreationDate(Calendar.getInstance());
         note.setModificationDate(note.getCreationDate());
+        note.setSyllableEnabled(PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_SYLLABLE_ENABLED, false));
         note.setMarkdownEnabled(PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_MARKDOWN_ENABLED, false));
 
         if (notesActivity.getSelectedTag() != null && notesActivity.getSelectedTag().name != null) {
@@ -949,7 +949,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     public class NotesCursorAdapter extends CursorAdapter {
         private ObjectCursor<Note> mCursor;
 
-        private SearchSnippetFormatter.SpanFactory mSnippetHighlighter = new TextHighlighter(requireActivity(),
+        private final SearchSnippetFormatter.SpanFactory mSnippetHighlighter = new TextHighlighter(requireActivity(),
                 R.attr.listSearchHighlightForegroundColor, R.attr.listSearchHighlightBackgroundColor);
 
         public NotesCursorAdapter(Context context, ObjectCursor<Note> c, int flags) {
@@ -996,10 +996,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                 holder.mDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, mPreviewFontSize);
             }
 
-            if (position == getListView().getCheckedItemPosition())
-                view.setActivated(true);
-            else
-                view.setActivated(false);
+            view.setActivated(position == getListView().getCheckedItemPosition());
 
             // for performance reasons we are going to get indexed values
             // from the cursor instead of instantiating the entire bucket object
@@ -1046,7 +1043,13 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
             if (hasSearchQuery() && matchOffsetsIndex != -1) {
                 title = mCursor.getString(mCursor.getColumnIndex(Note.MATCHED_TITLE_INDEX_NAME));
-                String snippet = mCursor.getString(mCursor.getColumnIndex(Note.MATCHED_CONTENT_INDEX_NAME));
+                String snippet = mCursor.getString(mCursor.getColumnIndex(Note.MATCHED_CONTENT_INDEX_NAME)).replaceAll("\\s+", SPACE);
+                int titleEnd = snippet.indexOf(SPACE);
+                if (titleEnd == -1) {
+                    snippet = "";
+                } else {
+                    snippet = snippet.substring(titleEnd + 1);
+                }
                 holder.mMatchOffsets = mCursor.getString(matchOffsetsIndex);
 
                 try {
@@ -1202,11 +1205,11 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageButton mButtonDelete;
-            private ImageView mSuggestionIcon;
-            private TextView mSuggestionText;
-            private View mView;
-            private int mViewType;
+            private final ImageButton mButtonDelete;
+            private final ImageView mSuggestionIcon;
+            private final TextView mSuggestionText;
+            private final View mView;
+            private final int mViewType;
 
             private ViewHolder(View itemView, int viewType) {
                 super(itemView);
@@ -1227,8 +1230,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private static class SuggestionDiffCallback extends DiffUtil.Callback {
-        private List<Suggestion> mListNew;
-        private List<Suggestion> mListOld;
+        private final List<Suggestion> mListNew;
+        private final List<Suggestion> mListOld;
 
         private SuggestionDiffCallback(List<Suggestion> oldList, List<Suggestion> newList) {
             mListOld = oldList;
@@ -1275,6 +1278,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void showPopupMenuAtPosition(View view, int position) {
         if (view.getContext() == null) {
             return;
@@ -1326,7 +1330,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private static class RefreshListTask extends AsyncTask<Boolean, Void, ObjectCursor<Note>> {
-        private SoftReference<NoteListFragment> mNoteListFragmentReference;
+        private final SoftReference<NoteListFragment> mNoteListFragmentReference;
         private boolean mIsFromNavSelect;
 
         private RefreshListTask(NoteListFragment context) {
@@ -1354,7 +1358,6 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             try {
                 fragment.mNotesAdapter.changeCursor(cursor);
                 count = fragment.mNotesAdapter.getCount();
-                System.out.println();
             } catch (SQLiteException e) {
                 count = 0;
                 Log.e(Wavenote.TAG, "Invalid SQL statement", e);
@@ -1384,7 +1387,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private static class RefreshListForSearchTask extends AsyncTask<Void, Void, ObjectCursor<Note>> {
-        private SoftReference<NoteListFragment> mNoteListFragmentReference;
+        private final SoftReference<NoteListFragment> mNoteListFragmentReference;
 
         private RefreshListForSearchTask(NoteListFragment context) {
             mNoteListFragmentReference = new SoftReference<>(context);
@@ -1423,7 +1426,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private static class PinNotesTask extends AsyncTask<Void, Void, Void> {
-        private SoftReference<NoteListFragment> mNoteListFragmentReference;
+        private final SoftReference<NoteListFragment> mNoteListFragmentReference;
         private SparseBooleanArray mSelectedRows = new SparseBooleanArray();
 
         private PinNotesTask(NoteListFragment context) {
@@ -1468,8 +1471,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private static class TrashNotesTask extends AsyncTask<Void, Void, Void> {
-        private List<String> mDeletedNoteIds = new ArrayList<>();
-        private SoftReference<NoteListFragment> mNoteListFragmentReference;
+        private final List<String> mDeletedNoteIds = new ArrayList<>();
+        private final SoftReference<NoteListFragment> mNoteListFragmentReference;
         private SparseBooleanArray mSelectedRows = new SparseBooleanArray();
 
         private TrashNotesTask(NoteListFragment context) {

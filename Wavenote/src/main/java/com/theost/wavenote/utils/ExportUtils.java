@@ -33,6 +33,7 @@ public class ExportUtils {
     public static final String NOTE_COLUMN_5 = "tags";
     public static final String NOTE_COLUMN_6 = "pinned";
     public static final String NOTE_COLUMN_7 = "markdown";
+    public static final String NOTE_COLUMN_8 = "syllable";
 
     public static final String ACTIVE_NOTES = "activeNotes";
     public static final String TRASHED_NOTES = "trashedNotes";
@@ -53,6 +54,7 @@ public class ExportUtils {
                 noteObject.put(NOTE_COLUMN_5, new JSONArray(note.getTags()));
                 noteObject.put(NOTE_COLUMN_6, note.isPinned());
                 noteObject.put(NOTE_COLUMN_7, note.isMarkdownEnabled());
+                noteObject.put(NOTE_COLUMN_8, note.isSyllableEnabled());
                 if (note.isDeleted()) {
                     trashedArray.put(noteObject);
                 } else {

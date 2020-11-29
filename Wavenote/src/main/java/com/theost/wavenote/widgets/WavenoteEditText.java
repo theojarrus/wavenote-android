@@ -10,6 +10,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -24,11 +26,16 @@ import com.theost.wavenote.utils.DrawableUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.theost.wavenote.models.Note.NEW_LINE;
+import static com.theost.wavenote.models.Note.SPACE;
 
 public class WavenoteEditText extends AppCompatEditText {
-    private List<OnSelectionChangedListener> listeners;
+    private final List<OnSelectionChangedListener> listeners;
     private OnCheckboxToggledListener mOnCheckboxToggledListener;
     private final int CHECKBOX_LENGTH = 3; // One CheckableSpan + a space character
+    public static final String DISABLE_TEXTWATCHER = "disable_textwatcher";
 
     public interface OnCheckboxToggledListener {
         void onCheckboxToggled();
@@ -83,13 +90,61 @@ public class WavenoteEditText extends AppCompatEditText {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 
+    public String getTextContent() {
+        String content = Objects.requireNonNull(getText()).toString();
+        int firstNewLinePosition = content.indexOf(NEW_LINE);
+        if (firstNewLinePosition > -1) {
+            return content.substring(firstNewLinePosition);
+        } else {
+            return "";
+        }
+    }
+
+    public int getTitleEnd() {
+        String content = Objects.requireNonNull(getText()).toString();
+        return content.indexOf(NEW_LINE);
+    }
+
+    public ArrayList<Integer> getNewlineIndexes() {
+        ArrayList<Integer> newlineIndexes = new ArrayList<>();
+        int nlIndex = 0;
+        while (nlIndex != -1) {
+            nlIndex = Objects.requireNonNull(getText()).toString().indexOf(NEW_LINE, nlIndex);
+            if (nlIndex != -1) {
+                newlineIndexes.add(nlIndex);
+                nlIndex += 1;
+            }
+        }
+        return newlineIndexes;
+    }
+
+    public float getTextLineWidth(CharSequence line) {
+        TextPaint paint = new TextPaint();
+        float textSize = getTextSize();
+        paint.setTextSize(textSize);
+        StaticLayout tempLayout = new StaticLayout(line, paint, 10000, android.text.Layout.Alignment.ALIGN_NORMAL, 0f, 0f, false);
+        float lineWidth = 0;
+        for (int i = 0; i < tempLayout.getLineCount(); i++) lineWidth += tempLayout.getLineWidth(i);
+        return lineWidth;
+    }
+
+    public float getTextLineHeight(CharSequence line) {
+        TextPaint paint = new TextPaint();
+        float textSize = getTextSize();
+        paint.setTextSize(textSize);
+        StaticLayout tempLayout = new StaticLayout(line, paint, 10000, android.text.Layout.Alignment.ALIGN_NORMAL, 0f, 0f, false);
+        Rect rect = new Rect();
+        tempLayout.getLineBounds(0, rect);
+        return rect.height();
+    }
+
     // Updates the ImageSpan drawable to the new checked state
     public void toggleCheckbox(final CheckableSpan checkableSpan) {
         setCursorVisible(false);
 
         final Editable editable = getText();
 
-        final int checkboxStart = editable.getSpanStart(checkableSpan);
+        final int checkboxStart = Objects.requireNonNull(editable).getSpanStart(checkableSpan);
         final int checkboxEnd = editable.getSpanEnd(checkableSpan);
 
         final int selectionStart = getSelectionStart();
@@ -139,7 +194,7 @@ public class WavenoteEditText extends AppCompatEditText {
     }
 
     public String getSelectedString() {
-        return getText().toString().substring(getSelectionStart(), getSelectionEnd());
+        return Objects.requireNonNull(getText()).toString().substring(getSelectionStart(), getSelectionEnd());
     }
 
     public void insertChecklist() {
@@ -153,7 +208,7 @@ public class WavenoteEditText extends AppCompatEditText {
             end = getLayout().getLineEnd(lineNumber);
         }
 
-        SpannableStringBuilder workingString = new SpannableStringBuilder(getText().subSequence(start, end));
+        SpannableStringBuilder workingString = new SpannableStringBuilder(Objects.requireNonNull(getText()).subSequence(start, end));
         Editable editable = getText();
         if (editable.length() < start || editable.length() < end) {
             return;
@@ -163,7 +218,7 @@ public class WavenoteEditText extends AppCompatEditText {
         CheckableSpan[] checkableSpans = workingString.getSpans(0, workingString.length(), CheckableSpan.class);
         if (checkableSpans.length > 0) {
             // Remove any CheckableSpans found
-            for (CheckableSpan span: checkableSpans) {
+            for (CheckableSpan span : checkableSpans) {
                 workingString.replace(
                         workingString.getSpanStart(span) - 1,
                         workingString.getSpanEnd(span) + 1,
@@ -198,12 +253,29 @@ public class WavenoteEditText extends AppCompatEditText {
         return false;
     }
 
+    public void fixLineHeight() {
+        setTag(DISABLE_TEXTWATCHER);
+        Editable editable = getText();
+        ArrayList<Integer> newlineIndexes = getNewlineIndexes();
+        boolean isChanged = false;
+        int offset = 0;
+        for (Integer i : newlineIndexes) {
+            if ((i == 0) || (!Objects.requireNonNull(editable).subSequence(i - 1, i).toString().equals(SPACE))) {
+                Objects.requireNonNull(editable).insert(i + offset, SPACE);
+                isChanged = true;
+                offset++;
+            }
+        }
+        if (isChanged) setSelection(Math.max(getSelectionStart() - 1, 0));
+        setTag(null);
+    }
+
     public void fixLineSpacing() {
         // Prevents line heights from compacting
         // https://issuetracker.google.com/issues/37009353
         float lineSpacingExtra = getLineSpacingExtra();
         float lineSpacingMultiplier = getLineSpacingMultiplier();
-        setLineSpacing(0.0f, 1.2f);
+        setLineSpacing(0f, 1.2f);
         setLineSpacing(lineSpacingExtra, lineSpacingMultiplier);
     }
 
@@ -214,13 +286,13 @@ public class WavenoteEditText extends AppCompatEditText {
     // Replaces any CheckableSpans with their markdown counterpart (e.g. '- [ ]')
     public Spannable getPlainTextContent() {
         if (getText() == null) {
-            return new SpannableString( "");
+            return new SpannableString("");
         }
 
         SpannableStringBuilder content = new SpannableStringBuilder(getText());
         CheckableSpan[] spans = content.getSpans(0, content.length(), CheckableSpan.class);
 
-        for (CheckableSpan span: spans) {
+        for (CheckableSpan span : spans) {
             int start = content.getSpanStart(span);
             int end = content.getSpanEnd(span);
             ((Editable) content).replace(
@@ -240,7 +312,7 @@ public class WavenoteEditText extends AppCompatEditText {
 
         SpannableStringBuilder content = new SpannableStringBuilder(getText());
         CheckableSpan[] spans = content.getSpans(0, content.length(), CheckableSpan.class);
-        for(CheckableSpan span: spans) {
+        for (CheckableSpan span : spans) {
             int start = content.getSpanStart(span);
             int end = content.getSpanEnd(span);
             ((Editable) content).replace(
@@ -253,7 +325,7 @@ public class WavenoteEditText extends AppCompatEditText {
     }
 
     public void processChecklists() {
-        if (getText().length() == 0 || getContext() == null) {
+        if (Objects.requireNonNull(getText()).length() == 0 || getContext() == null) {
             return;
         }
 
@@ -271,4 +343,6 @@ public class WavenoteEditText extends AppCompatEditText {
     public void setOnCheckboxToggledListener(OnCheckboxToggledListener listener) {
         mOnCheckboxToggledListener = listener;
     }
+
+
 }

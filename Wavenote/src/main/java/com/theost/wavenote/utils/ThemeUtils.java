@@ -4,17 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.theost.wavenote.R;
+import com.theost.wavenote.models.Note;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
@@ -22,10 +26,10 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 public class ThemeUtils {
 
     // theme constants
-    private static final int THEME_SYSTEM = 0;
-    private static final int THEME_LIGHT = 1;
-    private static final int THEME_DARK = 2;
-    public static final int THEME_AUTO = 3;
+    private static final int THEME_LIGHT = 0;
+    private static final int THEME_DARK = 1;
+    public static final int THEME_AUTO = 2;
+    private static final int THEME_SYSTEM = 3;
     private static final String PREFERENCES_URI_AUTHORITY = "preferences";
     private static final String URI_SEGMENT_THEME = "theme";
 
@@ -33,7 +37,7 @@ public class ThemeUtils {
         // if we have a data uri that sets the theme let's do it here
         Uri data = activity.getIntent().getData();
         if (data != null) {
-            if (data.getAuthority().equals(PREFERENCES_URI_AUTHORITY)) {
+            if (Objects.equals(data.getAuthority(), PREFERENCES_URI_AUTHORITY)) {
                 List<String> segments = data.getPathSegments();
 
                 // check if we have reached /preferences/theme
@@ -67,6 +71,14 @@ public class ThemeUtils {
 
     public static boolean isLightTheme(Context context) {
         return (context.getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK) != UI_MODE_NIGHT_YES;
+    }
+
+    public static void updateTextTheme(Context context) {
+        String lightColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.background_light)).substring(2).toUpperCase();
+        String darkColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.background_dark)).substring(2).toUpperCase();
+        boolean isThemeLight = false;
+        if (ThemeUtils.isLightTheme(context)) isThemeLight = true;
+        Note.setThemeText(lightColor, darkColor, isThemeLight);
     }
 
     /*
@@ -104,4 +116,17 @@ public class ThemeUtils {
         typedArray.recycle();
         return context.getResources().getColor(colorResId);
     }
+
+    public static int getColor(@NonNull Context context, int id) {
+        return context.getResources().getColor(id);
+    }
+
+    public static boolean isColorDark(int color) {
+        if (color == Color.TRANSPARENT) {
+            return false;
+        }
+        double brightness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
+        return brightness >= 0.5;
+    }
+
 }

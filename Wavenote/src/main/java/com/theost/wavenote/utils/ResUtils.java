@@ -37,6 +37,7 @@ public class ResUtils {
         database.removeDictionaryData(DatabaseHelper.COL_0);
         for (String j : resourceTitles) database.insertDictionaryData(j, keywordTypes[0]);
         for (String i : resourceWords) database.insertDictionaryData(i, keywordTypes[1]);
+        if (database != null) database.close();
     }
 
     public static int getResId(String resName, Class<?> c) {

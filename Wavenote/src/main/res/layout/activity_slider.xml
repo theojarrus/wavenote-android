@@ -28,20 +28,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/slide_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            tools:text="Name"/>
+            <com.theost.wavenote.widgets.RobotoMediumTextView
+                android:id="@+id/slide_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="Name" />
 
-        <TextView
-            android:id="@+id/slide_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            tools:text="Jan 27, 2020, 13:37"/>
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/slide_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                tools:text="Jan 27, 2020, 13:37" />
 
         </LinearLayout>
 
