@@ -11,6 +11,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.theost.wavenote.SliderActivity;
 import com.theost.wavenote.models.Photo;
@@ -75,4 +76,11 @@ public class SliderAdapter extends PagerAdapter {
 
         return photoDraweeView;
     }
+
+    public void clearUriCache(Uri uri) {
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.evictFromCache(uri);
+        imagePipeline.clearCaches();
+    }
+
 }

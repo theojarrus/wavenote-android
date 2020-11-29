@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -233,6 +234,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
             FileUtils.createPhotoFile(bitmap, file);
             isModified = true;
             currentPosition = viewPager.getCurrentItem();
+            adapter.clearUriCache(Uri.fromFile(file));
             viewPager.setAdapter(adapter);
             updatePage();
         } catch (IOException e) {

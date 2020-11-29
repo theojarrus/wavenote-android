@@ -185,7 +185,6 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             fragmentTransaction.commit();
         }
 
-        assert mNoteListFragment != null;
         mIsTabletFullscreen = mNoteListFragment.isHidden();
 
         if (DisplayUtils.isLargeScreen(this)) {
@@ -1494,7 +1493,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
     @Override
     public void onSaveObject(Bucket<Note> bucket, Note note) {
-        runOnUiThread(() -> mNoteListFragment.refreshList());
+        if (mNoteListFragment.isAdded()) runOnUiThread(() -> mNoteListFragment.refreshList());
 
         if (note.equals(mCurrentNote)) {
             mCurrentNote = note;
