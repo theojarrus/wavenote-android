@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.ParcelableSpan;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
@@ -254,11 +255,10 @@ public class HighlightUtils {
         mContentEditText.setTag(DISABLE_TEXTWATCHER);
 
         // Clear selected text style
-        String strContent = mContentEditText.getText().toString().substring(cursorPositionStart, cursorPositionEnd);
 
         Editable noteContent = mContentEditText.getText();
-        noteContent.delete(cursorPositionStart, cursorPositionEnd);
-        noteContent.insert(cursorPositionStart, strContent);
+        ParcelableSpan[] spans = noteContent.getSpans(cursorPositionStart, cursorPositionEnd, ParcelableSpan.class);
+        for (ParcelableSpan span : spans) noteContent.removeSpan(span);
 
         // Setting new style
 

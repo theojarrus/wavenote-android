@@ -1331,6 +1331,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             ((NoteEditorActivity) requireActivity()).setSearchMatchBarVisible(false);
         }
 
+        int end = start + count;
+        if (end != start && charSequence.toString().substring(start, end).substring(end - start - 1).equals(NEW_LINE)) {
+            mContentEditText.setSelection(mContentEditText.getSelectionEnd() + 1);
+        }
+
         // Temporarily remove the text watcher as we process checklists to prevent callback looping
         mContentEditText.removeTextChangedListener(this);
         mContentEditText.processChecklists();
@@ -1958,7 +1963,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             fragment.linkifyEditorContent();
             fragment.syntaxHighlightEditorContent();
             if (fragment.mNote != null && fragment.mNote.isSyllableEnabled())
-                fragment.updateSyllable(true);
+                fragment.countSyllableContent();
             fragment.mIsLoadingNote = false;
         }
     }
@@ -1990,6 +1995,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 fragment.linkifyEditorContent();
                 fragment.syntaxHighlightEditorContent();
                 fragment.updateMarkdownView();
+                fragment.countSyllableContent();
             }
         }
 
