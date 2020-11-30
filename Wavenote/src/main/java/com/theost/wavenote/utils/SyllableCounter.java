@@ -22,11 +22,13 @@ public class SyllableCounter {
     private static Map<String, Integer> exceptions;
     private static Set<String> twoVowelSounds;
     private static Set<String> vowels;
+    private static Set<String> chords;
 
     public static void updateSyllableResources(Context context) {
         exceptions = new HashMap<>();
         vowels = new HashSet<>(Arrays.asList("a", "e", "i", "o", "u", "y"));
         twoVowelSounds = new HashSet<>(Arrays.asList("ae", "ee", "oa", "oo", "ou", "oi", "ow", "aw", "au"));
+        chords = new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.array_musical_chords)));
         String[] exceptionsArray = context.getResources().getStringArray(R.array.syllable_exceptions);
         for (String i : exceptionsArray) {
             String[] parseArray = i.split(SPACE);
@@ -48,8 +50,8 @@ public class SyllableCounter {
         String[] words = line.split(SPACE);
         int count = 0;
         for (String w : words) {
-            w = w.toLowerCase().trim();
-            if (!w.equals("")) {
+            if (!w.equals("") && !chords.contains(w)) {
+                w = w.toLowerCase().trim();
                 if (CYRILLIC_ALPHABET.indexOf(w.toCharArray()[0]) == -1) {
                     count += countSyllableLatin(w);
                 } else {

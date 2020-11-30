@@ -848,7 +848,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     }
                 }
             }
-            if (content != null) {
+            if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> mContentEditText.setText(content));
             }
         }
@@ -1331,13 +1331,18 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             ((NoteEditorActivity) requireActivity()).setSearchMatchBarVisible(false);
         }
 
-        int end = start + count;
-        if (end != start && charSequence.toString().substring(start, end).substring(end - start - 1).equals(NEW_LINE)) {
-            int offsetSelection = mContentEditText.getSelectionEnd() + 1;
-            if (offsetSelection > mContentEditText.length()) {
-                mContentEditText.getText().insert(mContentEditText.length() - 1, " ");
+        if (mContentEditText.getText() != null) {
+            int end = start + count;
+            String content = charSequence.toString();
+            if (end > start && content.startsWith(NEW_LINE, end - 1)) {
+                if (end - 2 < 0 || !content.substring(end - 2, end - 1).equals(" ")) {
+                    int offsetSelection = mContentEditText.getSelectionEnd() + 1;
+                    if (mContentEditText.length() != 0 && offsetSelection > mContentEditText.length()) {
+                        mContentEditText.getText().insert(mContentEditText.length() - 1, " ");
+                    }
+                    mContentEditText.setSelection(offsetSelection);
+                }
             }
-            mContentEditText.setSelection(offsetSelection);
         }
 
         // Temporarily remove the text watcher as we process checklists to prevent callback looping
