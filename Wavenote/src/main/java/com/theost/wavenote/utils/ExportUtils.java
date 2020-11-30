@@ -139,6 +139,8 @@ public class ExportUtils {
 
     public static boolean exportNotes(Activity context, String path, List<CharSequence> modes, String password) {
         String photoMode = context.getResources().getString(R.string.photo); // some notes may be without photos
+        String audioMode = context.getString(R.string.audio); // some notes may be without audio
+        String tracksMode = context.getString(R.string.tracks); // some notes may be without tracks
         String zipMode = context.getResources().getString(R.string.zip);
         boolean isExported = true; // error flag
         boolean isZip = modes.contains(zipMode);
@@ -174,6 +176,8 @@ public class ExportUtils {
             }
             HashMap<String, Boolean> resultMap = exportNote(context, note, path + statusDir, modes, password);
             resultMap.remove(photoMode);
+            resultMap.remove(audioMode);
+            resultMap.remove(tracksMode);
             if (resultMap.containsValue(false)) isExported = false;
         }
 
