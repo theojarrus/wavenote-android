@@ -393,6 +393,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             DrawableUtils.setMenuItemAlpha(mGridMenuItem, 0.3);
             DisplayUtils.showKeyboard(this, mSearchInputView);
         } else {
+            prevRequest = "";
+            mSearchInputView.setText("");
             DisplayUtils.hideKeyboard(mSearchInputView);
             updateGrid(chordSearchGridEnabled);
             chordSearchGridEnabled = false;
