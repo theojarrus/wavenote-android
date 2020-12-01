@@ -39,7 +39,7 @@ android {
         } else {
             versionName "2.2"
         }
-        versionCode 200
+        versionCode 202
         minSdkVersion 23
         targetSdkVersion 30
 
