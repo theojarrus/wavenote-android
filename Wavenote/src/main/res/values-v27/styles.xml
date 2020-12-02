@@ -30,6 +30,7 @@
         <item name="actionBarTextColor">@color/white</item>
         <item name="colorPrimaryDark">@color/blue_dark</item>
         <item name="toolbarColor">@color/blue</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
     <style name="Theme.Wavestyle.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">

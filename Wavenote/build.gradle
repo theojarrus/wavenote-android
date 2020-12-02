@@ -46,7 +46,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     tasks.withType(JavaCompile) {
@@ -103,7 +102,6 @@ dependencies {
     }
     // Automattic and WordPress dependencies
     implementation 'com.github.theo-jedi:simperium-android:v0.8.2'
-    implementation 'com.automattic:tracks:1.2'
     implementation 'org.wordpress:passcodelock:2.0.2'
 
     // Zip4j
@@ -134,6 +132,7 @@ dependencies {
     // Google Play Services
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     // Third Party
+    implementation 'io.sentry:sentry-android:4.0.0-alpha.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation 'com.commonsware.cwac:anddown:0.4.0'
     implementation 'net.openid:appauth:0.7.0'
@@ -193,9 +192,10 @@ android.applicationVariants.all { variant ->
     properties.any { property ->
         def key = toSnakeCase(property.key).toUpperCase()
         if (key == "SIMPERIUM_APP_ID" ||
-                key == "SIMPERIUM_APP_KEY" ||
-                key == "SENTRY_DSN") {
+                key == "SIMPERIUM_APP_KEY") {
             buildConfigField "String", key, "\"${property.value}\""
+        } else if (key == "SENTRY_DSN") {
+            resValue "string", key, "\"${property.value}\""
         }
     }
     buildConfigField "String", "BUILD", "\"${gitDescribe()}\""

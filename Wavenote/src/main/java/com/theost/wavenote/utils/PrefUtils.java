@@ -103,6 +103,9 @@ public class PrefUtils {
     // button for about activity
     public static final String PREF_ABOUT = "pref_key_about";
 
+    // button for feedback activity
+    public static final String PREF_FEEDBACK = "pref_key_feedback";
+
     public static final int ALPHABETICAL_ASCENDING = 4;
     public static final int ALPHABETICAL_DESCENDING = 5;
     public static final int DATE_CREATED_ASCENDING = 3;

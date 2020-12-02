@@ -47,7 +47,6 @@ import com.simperium.client.User;
 import com.theost.wavenote.adapters.TagsAdapter;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
-import com.theost.wavenote.utils.CrashUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
@@ -1157,14 +1156,9 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                 break;
             case Simperium.SIGNUP_SIGNIN_REQUEST:
                 invalidateOptionsMenu();
-
-                Wavenote app = (Wavenote) getApplication();
-                CrashUtils.setCurrentUser(app.getSimperium().getUser());
-
                 if (resultCode == Activity.RESULT_CANCELED && userAuthenticationIsInvalid()) {
                     finish();
                 }
-
                 break;
         }
     }

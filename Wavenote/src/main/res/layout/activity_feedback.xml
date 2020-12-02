@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_parent_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="?attr/toolbarColor"
+        android:elevation="0dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/ThemeOverlay.MaterialComponents" />
+
+    <include
+        android:id="@android:id/empty"
+        layout="@layout/empty_view"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/feedback_layout"
+        android:clipToPadding="false"
+        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="@dimen/width_layout"
+        android:padding="@dimen/margin_default"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/feedback_name"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_default_half"
+            android:layout_marginEnd="@dimen/margin_default_quarter"
+            android:layout_marginStart="@dimen/margin_default_quarter"
+            android:layout_marginTop="@dimen/margin_default"
+            android:layout_width="match_parent"
+            android:hint="@string/feedback_name"
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/feedback_email"
+            android:layout_below="@id/feedback_name"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_default_half"
+            android:layout_marginEnd="@dimen/margin_default_quarter"
+            android:layout_marginStart="@dimen/margin_default_quarter"
+            android:layout_marginTop="@dimen/margin_default_quarter"
+            android:layout_width="match_parent"
+            android:hint="@string/simperium_hint_email"
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/feedback_message"
+            android:layout_below="@id/feedback_email"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_default_quarter"
+            android:layout_marginStart="@dimen/margin_default_quarter"
+            android:layout_marginTop="@dimen/margin_default_quarter"
+            android:layout_marginBottom="@dimen/margin_default"
+            android:layout_width="match_parent"
+            android:hint="@string/feedback_message"
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:gravity="top"
+                android:inputType="textCapSentences|textNoSuggestions|textMultiLine|textAutoCorrect"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

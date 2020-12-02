@@ -76,6 +76,10 @@ public class Note extends BucketObject {
     private static List<Integer> textFontToggles;
     private static String activeTextFont = "";
 
+    private static String feedbackName = "";
+    private static String feedbackEmail = "";
+    private static String feedbackMessage = "";
+
     private static String themedTextActiveColor;
     private static String themedTextInactiveColor;
 
@@ -200,6 +204,30 @@ public class Note extends BucketObject {
             mTitle = content;
             mContentPreview = content;
         }
+    }
+
+    public static String getFeedbackName() {
+        return feedbackName;
+    }
+
+    public static void setFeedbackName(String text) {
+        feedbackName = text;
+    }
+
+    public static String getFeedbackEmail() {
+        return feedbackEmail;
+    }
+
+    public static void setFeedbackEmail(String text) {
+        feedbackEmail = text;
+    }
+
+    public static String getFeedbackMessage() {
+        return feedbackMessage;
+    }
+
+    public static void setFeedbackMessage(String text) {
+        feedbackMessage = text;
     }
 
     public static boolean isChordGridEnabled() {

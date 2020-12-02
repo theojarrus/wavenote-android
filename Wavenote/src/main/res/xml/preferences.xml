@@ -99,16 +99,18 @@
             android:key="pref_key_authenticate"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/more_info">
+    <PreferenceCategory android:title="@string/more_info">
         <Preference
             android:key="pref_key_about"
-            android:title="@string/about"/>
+            android:title="@string/about" />
+        <Preference
+            android:key="pref_key_feedback"
+            android:title="@string/feedback" />
         <Preference
             android:key="pref_key_build"
             android:persistent="false"
             android:selectable="false"
-            android:title="@string/version"/>
+            android:title="@string/version" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

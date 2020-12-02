@@ -20,9 +20,11 @@ import androidx.preference.SwitchPreferenceCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
+import com.simperium.Simperium;
+import com.simperium.client.Bucket;
+import com.simperium.client.User;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Preferences;
-import com.theost.wavenote.utils.CrashUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.ExportUtils;
 import com.theost.wavenote.utils.FileUtils;
@@ -31,9 +33,6 @@ import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.StrUtils;
 import com.theost.wavenote.utils.WidgetUtils;
-import com.simperium.Simperium;
-import com.simperium.client.Bucket;
-import com.simperium.client.User;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -135,6 +134,11 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             return true;
         });
 
+        findPreference(PrefUtils.PREF_FEEDBACK).setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), FeedbackActivity.class));
+            return true;
+        });
+
         findPreference(PrefUtils.PREF_EXPORT_DIR).setOnPreferenceClickListener(preference -> {
             if (PermissionUtils.requestFilePermissions(getActivity())) showFolderDialog();
             return true;
@@ -225,9 +229,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         application.getTagsBucket().stop();
         application.getPreferencesBucket().stop();
 
-        // User back to 'anon' type
-        CrashUtils.clearCurrentUser();
-
         // Remove wp.com token
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
         editor.remove(PrefUtils.PREF_WP_TOKEN);
@@ -252,9 +253,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
                 Preference authenticatePreference = findPreference(PrefUtils.PREF_AUTHENTICATE);
                 authenticatePreference.setTitle(R.string.log_out);
             });
-
-            Wavenote app = (Wavenote) getActivity().getApplication();
-            CrashUtils.setCurrentUser(app.getSimperium().getUser());
         }
     }
 

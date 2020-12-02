@@ -19,7 +19,6 @@ import com.theost.wavenote.models.NoteCountIndexer;
 import com.theost.wavenote.models.NoteTagger;
 import com.theost.wavenote.models.Preferences;
 import com.theost.wavenote.models.Tag;
-import com.theost.wavenote.utils.CrashUtils;
 import com.theost.wavenote.utils.PrefUtils;
 
 import org.wordpress.passcodelock.AppLockManager;
@@ -45,7 +44,6 @@ public class Wavenote extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CrashUtils.initWithContext(this);
         Fresco.initialize(this);
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
 
@@ -75,8 +73,6 @@ public class Wavenote extends Application {
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
-
-        CrashUtils.setCurrentUser(mSimperium.getUser());
     }
 
     private boolean isFirstLaunch() {

@@ -9,46 +9,58 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
-    <uses-sdk tools:overrideLibrary="com.simperium"/> <!-- For Lollipop -->
 
     <application
         android:name="com.theost.wavenote.Wavenote"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wavestyle.Splash"
         android:requestLegacyExternalStorage="true"
-        tools:ignore="AllowBackup"
         tools:targetApi="q">
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="@string/SENTRY_DSN" />
 
         <activity
             android:name="com.theost.wavenote.AboutActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Wavestyle.About"
-            android:parentActivityName="com.theost.wavenote.PreferencesActivity">
-        </activity>
+            android:parentActivityName="com.theost.wavenote.PreferencesActivity" />
 
-        <activity android:name="com.theost.wavenote.DictionaryActivity"
+        <activity
+            android:name="com.theost.wavenote.FeedbackActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.Wavestyle.About"
+            android:parentActivityName="com.theost.wavenote.PreferencesActivity" />
+
+        <activity
+            android:name="com.theost.wavenote.DictionaryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Dictionary"
-            android:parentActivityName="com.theost.wavenote.PreferencesActivity"/>
+            android:parentActivityName="com.theost.wavenote.PreferencesActivity" />
 
-        <activity android:name="com.theost.wavenote.PhotosActivity"
+        <activity
+            android:name="com.theost.wavenote.PhotosActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Photo"
-            android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
+            android:parentActivityName="com.theost.wavenote.NoteEditorActivity" />
 
-        <activity android:name="com.theost.wavenote.SliderActivity"
+        <activity
+            android:name="com.theost.wavenote.SliderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Photo"
-            android:parentActivityName="com.theost.wavenote.PhotosActivity"/>
+            android:parentActivityName="com.theost.wavenote.PhotosActivity" />
 
-        <activity android:name="com.theost.wavenote.ChordsActivity"
+        <activity
+            android:name="com.theost.wavenote.ChordsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Chords"
             android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>

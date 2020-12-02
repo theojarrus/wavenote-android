@@ -356,5 +356,6 @@
     <string name="transpose">Транспонирование</string>
     <string name="grid">Сетка</string>
     <string name="syllable">Слоги</string>
+    <string name="feedback">Обратная связь</string>
 
 </resources>

@@ -441,9 +441,18 @@
     <string name="chord_tablatures">Chord Tablatures</string>
     <string name="grid">Grid</string>
     <string name="syllable">Syllable</string>
+
     <string name="mono" translatable="false">Mono</string>
     <string name="serif" translatable="false">Serif</string>
     <string name="casual" translatable="false">Casual</string>
     <string name="cursive" translatable="false">Cursive</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="feedback_name">What\'s your name?</string>
+    <string name="feedback_message">Message</string>
+    <string name="send">Send</string>
+    <string name="feedback_error_name">Invalid name</string>
+    <string name="feedback_error_message">Ooops, your message is too short!</string>
+    <string name="feedback_successful">Sent! Thank you!</string>
 
 </resources>
