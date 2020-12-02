@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -32,11 +33,14 @@ import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.widgets.MultiTouchViewPager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.theost.wavenote.PhotoBottomSheetDialog.FILE_REQUEST;
 
 public class SliderActivity extends ThemedAppCompatActivity {
 
@@ -63,6 +67,8 @@ public class SliderActivity extends ThemedAppCompatActivity {
     private TextView mDateTextView;
     private ImageButton mShareButton;
     private Toolbar toolbar;
+
+    private Uri sharedUri;
 
     private MultiTouchViewPager viewPager;
     private SliderAdapter adapter;
@@ -217,8 +223,29 @@ public class SliderActivity extends ThemedAppCompatActivity {
         mDateTextView.setText(mPhotoList.get(currentPosition).getDate());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_REQUEST) {
+            getContentResolver().delete(sharedUri, null, null);
+        }
+    }
+
     private void showShareBottomSheet() {
-        DisplayUtils.showImageShareBottomSheet(this, mPhotoList.get(currentPosition));
+        try {
+            Photo photo = mPhotoList.get(currentPosition);
+            sharedUri = Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),
+                    new File(photo.getUri()).getAbsolutePath(), photo.getName(), null));
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, sharedUri);
+            shareIntent.setType("image/*");
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(Intent.createChooser(shareIntent, getResources().getText(R.string.share)), FILE_REQUEST);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+        }
     }
 
     private void rotateBitmap(int direction) {

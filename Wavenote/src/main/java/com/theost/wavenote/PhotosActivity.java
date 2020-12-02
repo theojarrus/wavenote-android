@@ -431,10 +431,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         imageImportLink = null;
     }
 
-    public void showShareBottomSheet(int position) {
-        DisplayUtils.showImageShareBottomSheet(this, mPhotoList.get(position));
-    }
-
     private void showLoadingDialog() {
         PhotosActivity context = this;
         new CountDownTimer(400, 400) {

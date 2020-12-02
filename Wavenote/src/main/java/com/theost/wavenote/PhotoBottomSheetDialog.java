@@ -26,8 +26,8 @@ import com.afollestad.materialdialogs.internal.MDButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputLayout;
-import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.FileUtils;
+import com.theost.wavenote.utils.ResUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +39,9 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
     private static final String ARG_IMAGE_LINK = "image_link";
 
     private static final String TAG = InfoBottomSheetDialog.class.getSimpleName();
-    private static final int CAMERA_REQUEST = 0;
-    private static final int FILE_REQUEST = 1;
-    private static final int LINK_REQUEST = 2;
+    public static final int CAMERA_REQUEST = 0;
+    public static final int FILE_REQUEST = 1;
+    public static final int LINK_REQUEST = 2;
 
     private EditText mAddLinkEditText;
 

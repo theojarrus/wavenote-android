@@ -6,9 +6,6 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PermissionUtils {
 
     public static final int REQUEST_PERMISSIONS = 1;

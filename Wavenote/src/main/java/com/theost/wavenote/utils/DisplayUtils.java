@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.net.Uri;
 import android.text.Spannable;
 import android.util.TypedValue;
 import android.view.Display;
@@ -21,12 +20,8 @@ import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.theost.wavenote.R;
-import com.theost.wavenote.models.Photo;
 
 import org.wordpress.passcodelock.AppLockManager;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 
 public class DisplayUtils {
     private DisplayUtils() {
@@ -176,24 +171,6 @@ public class DisplayUtils {
                 .progressIndeterminateStyle(true).build();
         loadingDialog.show();
         return loadingDialog;
-    }
-
-    public static void showImageShareBottomSheet(Context context, Photo photo) {
-        Uri uri;
-        try {
-            uri = Uri.parse(android.provider.MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    new File(photo.getUri()).getAbsolutePath(), photo.getName(), null));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            DisplayUtils.showToast(context, context.getResources().getString(R.string.file_error));
-            return;
-        }
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        shareIntent.setType("image/*");
-        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        context.startActivity(Intent.createChooser(shareIntent, context.getResources().getText(R.string.share)));
     }
 
     public static void showTextShareBottomSheet(Context context, Spannable content) {
