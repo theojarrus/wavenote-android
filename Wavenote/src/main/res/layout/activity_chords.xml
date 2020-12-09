@@ -85,7 +85,7 @@
                         <AutoCompleteTextView
                             android:id="@+id/instrument"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/custom_icon_size"
                             android:padding="0dp"
                             android:singleLine="true"
                             tools:ignore="LabelFor" />
@@ -104,7 +104,7 @@
                         <AutoCompleteTextView
                             android:id="@+id/columns"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/custom_icon_size"
                             android:padding="0dp"
                             android:singleLine="true"
                             tools:ignore="LabelFor" />

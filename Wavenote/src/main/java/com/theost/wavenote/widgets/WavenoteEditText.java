@@ -123,10 +123,15 @@ public class WavenoteEditText extends AppCompatEditText {
         TextPaint paint = new TextPaint();
         float textSize = getTextSize();
         paint.setTextSize(textSize);
-        StaticLayout.Builder sb = StaticLayout.Builder.obtain(line, 0, line.length(), paint, 10000)
-                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
-                .setIncludePad(false);
-        StaticLayout tempLayout = sb.build();
+        StaticLayout tempLayout;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            StaticLayout.Builder sb = StaticLayout.Builder.obtain(line, 0, line.length(), paint, 10000)
+                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                    .setIncludePad(false);
+            tempLayout = sb.build();
+        } else {
+            tempLayout = new StaticLayout(line, paint, 10000, android.text.Layout.Alignment.ALIGN_NORMAL, 0f, 0f, false);
+        }
         float lineWidth = 0;
         for (int i = 0; i < tempLayout.getLineCount(); i++) lineWidth += tempLayout.getLineWidth(i);
         return lineWidth;
@@ -136,10 +141,15 @@ public class WavenoteEditText extends AppCompatEditText {
         TextPaint paint = new TextPaint();
         float textSize = getTextSize();
         paint.setTextSize(textSize);
-        StaticLayout.Builder sb = StaticLayout.Builder.obtain(line, 0, line.length(), paint, 10000)
-                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
-                .setIncludePad(false);
-        StaticLayout tempLayout = sb.build();
+        StaticLayout tempLayout;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            StaticLayout.Builder sb = StaticLayout.Builder.obtain(line, 0, line.length(), paint, 10000)
+                    .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                    .setIncludePad(false);
+            tempLayout = sb.build();
+        } else {
+            tempLayout = new StaticLayout(line, paint, 10000, android.text.Layout.Alignment.ALIGN_NORMAL, 0f, 0f, false);
+        }
         Rect rect = new Rect();
         tempLayout.getLineBounds(0, rect);
         return rect.height();

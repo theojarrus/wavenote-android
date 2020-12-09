@@ -777,7 +777,11 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
 
     private void pickFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("audio/x-wav");
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            intent.setType("audio/x-wav");
+        } else {
+            intent.setType("audio/wav");
+        }
         startActivityForResult(intent, FILE_REQUEST);
     }
 

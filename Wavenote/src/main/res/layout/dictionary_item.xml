@@ -30,7 +30,7 @@
             android:id="@+id/keyword_name"
             style="@style/Wavestyle.InputLayoutStyle.Outlined"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/custom_textview_size"
             android:layout_weight="1"
             android:text="@string/word"
             android:maxLength="20" />
@@ -52,7 +52,7 @@
         <AutoCompleteTextView
             android:id="@+id/keyword_type"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/custom_textview_size"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -65,8 +65,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/keyword_trash"
         style="@style/Wavestyle.Button.Outlined"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/custom_textview_size"
+        android:layout_height="@dimen/custom_textview_size"
         android:layout_marginStart="@dimen/padding_medium"
         android:layout_marginEnd="@dimen/padding_medium"
         android:insetLeft="0dp"

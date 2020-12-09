@@ -34,7 +34,7 @@ android {
             versionName "3.0"
         }
         versionCode 300
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 30
 
         vectorDrawables.useSupportLibrary = true
@@ -84,7 +84,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
     // Automattic and WordPress dependencies
-    implementation 'com.github.theo-jedi:simperium-android:v0.8.2'
+    implementation 'com.github.theo-jedi:simperium-android:v0.8.3'
     implementation 'org.wordpress:passcodelock:2.0.2'
 
     // Zip4j

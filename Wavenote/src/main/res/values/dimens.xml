@@ -72,6 +72,7 @@
     <dimen name="mtrl_button_box_stroke_width_default" tools:override="true">2dp</dimen>
     <dimen name="mtrl_btn_stroke_size" tools:override="true">2dp</dimen>
     <dimen name="custom_icon_size">55dp</dimen>
+    <dimen name="custom_textview_size">60dp</dimen>
     <dimen name="custom_pane_size">110dp</dimen>
     <dimen name="custom_padding_small">10dp</dimen>
     <dimen name="custom_text_small">10sp</dimen>
@@ -83,6 +84,6 @@
     <dimen name="minimum_height_about">72dp</dimen>
 
     <!-- Audio -->
-    <dimen name="track_height">60dp</dimen>
+    <dimen name="track_height">@dimen/custom_textview_size</dimen>
 
 </resources>

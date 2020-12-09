@@ -71,8 +71,9 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lookup_type_layout"
                     style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/custom_textview_size"
+                    android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true">
@@ -93,7 +94,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Wavestyle.InputLayoutStyle.Outlined"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/custom_textview_size"
                     android:layout_marginStart="@dimen/padding_medium"
                     android:layout_weight="1"
                     android:hint="@string/word">
@@ -110,8 +111,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/lookup_button"
                     style="@style/Wavestyle.Button.Outlined"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="@dimen/custom_textview_size"
+                    android:layout_height="@dimen/custom_textview_size"
                     android:layout_marginStart="@dimen/padding_medium"
                     android:insetLeft="0dp"
                     android:insetRight="0dp"
@@ -162,7 +163,7 @@
                     style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
                     android:id="@+id/lookup_cut_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/custom_textview_size"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
@@ -183,7 +184,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Wavestyle.InputLayoutStyle.Outlined"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/custom_textview_size"
                     android:layout_marginStart="@dimen/padding_medium"
                     android:layout_weight="2"
                     android:hint="@string/letters">
@@ -211,7 +212,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Wavestyle.InputLayoutStyle.Outlined"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/custom_textview_size"
                     android:layout_weight="1"
                     android:hint="@string/means_like">
 
@@ -227,7 +228,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Wavestyle.InputLayoutStyle.Outlined"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/custom_textview_size"
                     android:layout_weight="1"
                     android:hint="@string/sounds_like"
                     android:paddingStart="@dimen/padding_medium"

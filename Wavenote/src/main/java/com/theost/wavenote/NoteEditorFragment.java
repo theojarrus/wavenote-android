@@ -424,7 +424,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     menu.findItem(R.id.stylize).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     for (int i = 0; i < menu.size(); i++) {
                         menu.getItem(i).setTitle("");
-                        menu.getItem(i).getIcon().setTint(requireContext().getResources().getColor(getActionColor()));
+                        menu.getItem(i).getIcon().setTint(getActionColor());
                     }
                 }
                 return true;

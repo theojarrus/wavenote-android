@@ -20,7 +20,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_input"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="@dimen/custom_icon_size"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:hint="@string/word"
