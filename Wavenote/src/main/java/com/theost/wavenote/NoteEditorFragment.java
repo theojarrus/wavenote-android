@@ -1722,7 +1722,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void publishNote() {
-        if (NetworkUtils.isNetworkAvailable(requireContext())) {
+        if (!NetworkUtils.isNetworkAvailable(requireContext())) {
             Toast.makeText(requireContext(), R.string.error_network_required, Toast.LENGTH_LONG).show();
             return;
         }
@@ -1736,7 +1736,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void unpublishNote() {
-        if (NetworkUtils.isNetworkAvailable(requireContext())) {
+        if (!NetworkUtils.isNetworkAvailable(requireContext())) {
             Toast.makeText(requireContext(), R.string.error_network_required, Toast.LENGTH_LONG).show();
             return;
         }

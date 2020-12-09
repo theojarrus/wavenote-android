@@ -479,7 +479,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             }
 
             if (imageImportBitmap == null) {
-                if (imageImportNetwork) {
+                if (!imageImportNetwork) {
                     mImportHandler.sendEmptyMessage(ImportUtils.NETWORK_ERROR);
                 } else {
                     mImportHandler.sendEmptyMessage(ImportUtils.LINK_ERROR);

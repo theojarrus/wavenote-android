@@ -184,7 +184,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
     private void onSendClick() {
         boolean isNetwork = NetworkUtils.isNetworkAvailable(this);
-        if (!isNetwork && !getString(R.string.SENTRY_DSN).equals("")) {
+        if (isNetwork && !getString(R.string.SENTRY_DSN).equals("")) {
             sendFeedback();
         } else {
             showNetworkDialog();
