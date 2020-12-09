@@ -79,7 +79,7 @@
                     android:layout_height="@dimen/custom_icon_size"
                     android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/stop"
-                    android:src="@drawable/ma_reset_24dp" />
+                    android:src="@drawable/av_reset_24dp" />
 
                 <View
                     android:layout_width="1dp"
@@ -94,7 +94,7 @@
                     android:layout_height="@dimen/custom_icon_size"
                     android:background="?selectableItemBackground"
                     android:contentDescription="@string/export"
-                    android:src="@drawable/ma_save_24dp" />
+                    android:src="@drawable/ic_render_24dp" />
 
             </LinearLayout>
 
@@ -180,8 +180,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:background="@drawable/ic_close"
-                            android:backgroundTint="@color/white"
+                            android:background="@drawable/ic_close_24dp"
                             android:contentDescription="@string/adjust_record" />
 
                     </LinearLayout>
@@ -213,7 +212,7 @@
                     android:layout_height="match_parent"
                     android:paddingStart="@dimen/custom_padding_small"
                     android:paddingEnd="0dp"
-                    android:drawableStart="@drawable/m_audiotrack_black_18dp"
+                    android:drawableStart="@drawable/av_chords_24dp"
                     android:gravity="center"
                     android:textSize="12sp"
                     tools:text="120" />
@@ -266,17 +265,17 @@
                 android:layout_height="@dimen/custom_icon_size"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/play"
-                android:src="@drawable/ma_play_24dp" />
+                android:src="@drawable/av_play_24dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/record_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/custom_space"
-                android:layout_marginBottom="@dimen/custom_space"
+                android:layout_marginTop="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/padding_large"
                 android:layout_marginStart="@dimen/padding_large"
                 android:layout_marginEnd="@dimen/padding_large"
-                android:src="@drawable/ma_rec_24dp"
+                android:src="@drawable/ic_rec_24dp"
                 app:backgroundTint="?attr/fabColor"
                 app:borderWidth="0dp"
                 app:elevation="0dp"
@@ -290,7 +289,7 @@
                 android:layout_height="@dimen/custom_icon_size"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/cancel"
-                android:src="@drawable/av_add_track_24dp" />
+                android:src="@drawable/av_add_24dp" />
 
         </LinearLayout>
 

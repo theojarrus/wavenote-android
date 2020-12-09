@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
@@ -39,8 +40,7 @@
             android:maxHeight="@dimen/icon_status"
             android:maxWidth="@dimen/icon_status"
             android:src="@drawable/ic_arrow_down_16dp"
-            android:tint="?attr/toolbarIconColor">
-        </ImageView>
+            app:tint="?attr/toolbarIconColor" />
 
         <ImageButton
             android:id="@+id/sort_direction_switch"
@@ -53,8 +53,7 @@
             android:layout_width="@dimen/sort_switch_width"
             android:padding="@dimen/padding_medium"
             android:src="@drawable/ic_sort_order_24dp"
-            android:tint="?attr/toolbarIconColor">
-        </ImageButton>
+            app:tint="?attr/toolbarIconColor" />
 
     </RelativeLayout>
 

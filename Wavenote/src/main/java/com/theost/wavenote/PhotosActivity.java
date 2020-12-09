@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
@@ -33,15 +34,16 @@ import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DateTimeUtils;
 import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.FileUtils;
 import com.theost.wavenote.utils.ImportUtils;
+import com.theost.wavenote.utils.NetworkUtils;
 import com.theost.wavenote.utils.PermissionUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
 
@@ -55,7 +57,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     private PhotoBottomSheetDialog mPhotoBottomSheet;
     private RecyclerView mPhotoRecyclerView;
-    private List<Photo> mPhotoList;
+    private ArrayList<Photo> mPhotoList;
     private PhotoAdapter adapter;
     private LinearLayout emptyView;
     private LinearLayout mMaterialTitle;
@@ -70,6 +72,8 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     private String imageImportPath;
     private String noteId;
+
+    private boolean imageImportNetwork;
 
     private boolean mIsSortDown;
     private boolean mIsSortReverse;
@@ -99,7 +103,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         emptyView = findViewById(android.R.id.empty);
         ImageView mEmptyViewImage = emptyView.findViewById(R.id.image);
         TextView mEmptyViewText = emptyView.findViewById(R.id.text);
-        mEmptyViewImage.setImageResource(R.drawable.m_insert_photo_black_24dp);
+        mEmptyViewImage.setImageResource(R.drawable.av_photo_24dp);
         mEmptyViewText.setText(R.string.empty_photos);
 
         mMaterialTitle = findViewById(R.id.materials_title);
@@ -157,6 +161,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         ImageView sortDirectionSwitch = findViewById(R.id.sort_direction_switch);
         sortDirectionSwitch.setImageResource(R.drawable.ic_sort_order_24dp);
         sortDirectionSwitch.setOnClickListener(v -> {
+            sortItems();
             if (Note.isPhotoSortDirRev()) {
                 Note.setPhotoSortDirRev(false);
                 if (mIsSortReverse) {
@@ -172,7 +177,6 @@ public class PhotosActivity extends ThemedAppCompatActivity {
                     mSortDirectionAnimation.reverse();
                 }
             }
-            sortItems();
         });
 
         sortDirectionSwitch.setOnLongClickListener(v -> {
@@ -190,6 +194,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.items_list, menu);
+        DrawableUtils.tintMenuWithAttribute(this, menu, R.attr.toolbarIconColor);
         mRemoveItem = menu.findItem(R.id.menu_remove);
         menu.findItem(R.id.menu_restore).setVisible(false);
         MenuCompat.setGroupDividerEnabled(menu, true);
@@ -286,13 +291,13 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         if (updateEmptyView()) sortItems();
     }
 
-    private final Handler mUpdateHandler = new Handler(msg -> {
+    private final Handler mUpdateHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (msg.what == ImportUtils.RESULT_OK) {
             if (mPhotoList == null || mPhotoList.size() == 0)
                 mSortLayout.setVisibility(View.INVISIBLE);
             updateAdapter();
         } else if (msg.what == ImportUtils.DATABASE_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
         }
         return true;
     });
@@ -341,7 +346,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
     public void renamePhoto(String id, String name) {
         boolean isRenamed = localDatabase.renameImageData(id, name);
         if (!isRenamed) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
         } else {
             sortItems();
         }
@@ -409,7 +414,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
 
     public void startSliderActivity(int position) {
         Intent intent = new Intent(this, SliderActivity.class);
-        intent.putParcelableArrayListExtra(SliderActivity.ARG_PHOTOS, (ArrayList) mPhotoList);
+        intent.putParcelableArrayListExtra(SliderActivity.ARG_PHOTOS, mPhotoList);
         intent.putExtra(SliderActivity.ARG_POSITION, position);
         intent.putExtra(ARG_NOTE_ID, noteId);
         startActivityForResult(intent, 0);
@@ -420,6 +425,7 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         imageImportBitmap = imageBitmap;
         imageImportLink = imageLink;
         imageImportPath = imageFile.getPath();
+        imageImportNetwork = NetworkUtils.isNetworkAvailable(this);
         new ImportPhotosThread().start();
         showLoadingDialog();
     }
@@ -438,22 +444,25 @@ public class PhotosActivity extends ThemedAppCompatActivity {
             }
 
             public void onFinish() {
-                if (isImporting) loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_text, R.string.importing);
+                if (isImporting)
+                    loadingDialog = DisplayUtils.showLoadingDialog(context, R.string.import_text, R.string.importing);
             }
         }.start();
     }
 
-    private final Handler mImportHandler = new Handler(msg -> {
+    private final Handler mImportHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (msg.what == ImportUtils.RESULT_OK) {
             updateAdapter();
         } else if (msg.what == ImportUtils.FILE_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+            DisplayUtils.showToast(this, getString(R.string.file_error));
         } else if (msg.what == ImportUtils.LINK_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.link_error));
+            DisplayUtils.showToast(this, getString(R.string.link_error));
         } else if (msg.what == ImportUtils.DATABASE_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
         } else if (msg.what == ImportUtils.URI_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.photo_error));
+            DisplayUtils.showToast(this, getString(R.string.photo_error));
+        } else if (msg.what == ImportUtils.NETWORK_ERROR) {
+            DisplayUtils.showToast(this, getString(R.string.network_error_message));
         }
         if (loadingDialog != null) loadingDialog.dismiss();
         clearImportData();
@@ -465,10 +474,16 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         public void run() {
             isImporting = true;
 
-            if (imageImportBitmap == null) imageImportBitmap = ImportUtils.getLinkImage(imageImportLink);
+            if (imageImportBitmap == null) {
+                imageImportBitmap = ImportUtils.getLinkImage(imageImportLink);
+            }
 
             if (imageImportBitmap == null) {
-                mImportHandler.sendEmptyMessage(ImportUtils.LINK_ERROR);
+                if (imageImportNetwork) {
+                    mImportHandler.sendEmptyMessage(ImportUtils.NETWORK_ERROR);
+                } else {
+                    mImportHandler.sendEmptyMessage(ImportUtils.LINK_ERROR);
+                }
                 isImporting = false;
                 return;
             }

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -43,6 +44,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.ListFragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DiffUtil;
@@ -193,7 +195,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         DrawableUtils.tintMenuWithAttribute(getActivity(), menu, R.attr.actionModeTextColor);
         mActionMode = actionMode;
         int colorResId = ThemeUtils.isLightTheme(requireContext()) ? R.color.background_light : R.color.background_dark;
-        requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
+        requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), colorResId));
         return true;
     }
 
@@ -223,14 +225,14 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     public void onDestroyActionMode(ActionMode mode) {
         mCallbacks.onActionModeDestroyed();
         mActionMode = null;
-        new Handler().postDelayed(
+        new Handler(Looper.getMainLooper()).postDelayed(
                 () -> {
                     if (getActivity() != null) {
                         NotesActivity notesActivity = (NotesActivity) getActivity();
                         setActivateOnItemClick(DisplayUtils.isLargeScreenLandscape(notesActivity));
                         notesActivity.showDetailPlaceholder();
                     }
-                    requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme()));
+                    requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), android.R.color.transparent));
                 },
                 requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
         );
@@ -425,18 +427,21 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
     private @StringRes
     int getSortOrderText() {
-        switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
-            case ALPHABETICAL_ASCENDING:
-            case ALPHABETICAL_DESCENDING:
-                return R.string.sort_search_alphabetically;
-            case DATE_CREATED_ASCENDING:
-            case DATE_CREATED_DESCENDING:
-                return R.string.sort_search_created;
-            case DATE_MODIFIED_ASCENDING:
-            case DATE_MODIFIED_DESCENDING:
-            default:
-                return R.string.sort_search_modified;
+        if (this.isAdded()) {
+            switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
+                case ALPHABETICAL_ASCENDING:
+                case ALPHABETICAL_DESCENDING:
+                    return R.string.sort_search_alphabetically;
+                case DATE_CREATED_ASCENDING:
+                case DATE_CREATED_DESCENDING:
+                    return R.string.sort_search_created;
+                case DATE_MODIFIED_ASCENDING:
+                case DATE_MODIFIED_DESCENDING:
+                default:
+                    return R.string.sort_search_modified;
+            }
         }
+        return R.string.modified;
     }
 
     private void setSortDirection() {
@@ -736,8 +741,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         final Note note = notesBucket.newObject();
         note.setCreationDate(Calendar.getInstance());
         note.setModificationDate(note.getCreationDate());
-        note.setSyllableEnabled(PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_SYLLABLE_ENABLED, false));
         note.setMarkdownEnabled(PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_MARKDOWN_ENABLED, false));
+        note.setSyllableEnabled(PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_SYLLABLE_ENABLED, false));
 
         if (notesActivity.getSelectedTag() != null && notesActivity.getSelectedTag().name != null) {
             String tagName = notesActivity.getSelectedTag().name;
@@ -750,7 +755,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         if (DisplayUtils.isLargeScreenLandscape(getActivity())) {
             // Hack: Simperium saves async so we add a small delay to ensure the new note is truly
             // saved before proceeding.
-            new Handler().postDelayed(() -> mCallbacks.onNoteSelected(note.getSimperiumKey(), null, note.isMarkdownEnabled(), note.isPreviewEnabled()), 50);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> mCallbacks.onNoteSelected(note.getSimperiumKey(), null, note.isMarkdownEnabled(), note.isPreviewEnabled()), 50);
         } else {
             Bundle arguments = new Bundle();
             arguments.putString(NoteEditorFragment.ARG_ITEM_ID, note.getSimperiumKey());
@@ -977,7 +982,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             final NoteViewHolder holder;
 
             if (view == null) {
-                view = View.inflate(requireActivity().getBaseContext(), R.layout.note_list_row, null);
+                view = View.inflate(getContext(), R.layout.note_list_row, null);
                 holder = new NoteViewHolder();
                 holder.mTitle = view.findViewById(R.id.note_title);
                 holder.mContent = view.findViewById(R.id.note_content);

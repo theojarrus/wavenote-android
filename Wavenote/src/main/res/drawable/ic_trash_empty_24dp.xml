@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<vector android:height="24dp"
+    android:name="av_trash_empty_24dp"
+    android:viewportHeight="24"
+    android:viewportWidth="24"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <path
+        android:fillColor="@color/white"
+        android:name="base"
+        android:pathData="M 18 21 L 6 21 C 4.9 21 4 20.1 4 19 L 4 9 L 6 9 L 6 19 L 18 19 L 18 9 L 20 9 L 20 19 C 20 20.1 19.1 21 18 21 Z" />
+
+    <path
+        android:fillColor="@color/white"
+        android:name="lid"
+        android:pathData="M 16 5 L 16 4 C 16 2.9 15.1 2 14 2 L 10 2 C 8.9 2 8 2.9 8 4 L 8 5 L 3 5 L 3 7 L 21 7 L 21 5 L 16 5 Z M 10 4 L 14 4 L 14 5 L 10 5 L 10 4 Z" />
+
+    <clip-path
+        android:name="mask_fill"
+        android:pathData="M 9 9 L 15 9 L 15 17 L 9 17 L 9 9 Z" />
+
+    <path
+        android:fillColor="@color/white"
+        android:name="fill"
+        android:pathData="M 9 9 L 11 9 L 11 17 L 9 17 L 9 9 Z M 13 9 L 15 9 L 15 17 L 13 17 L 13 9 Z" />
+
+</vector>

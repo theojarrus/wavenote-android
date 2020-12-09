@@ -10,6 +10,8 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import androidx.core.content.ContextCompat;
+
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -27,7 +29,11 @@ public class NoteWidgetLight extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null && intent.hasExtra(KEY_WIDGET_IDS_LIGHT)) {
             int[] ids = intent.getExtras().getIntArray(KEY_WIDGET_IDS_LIGHT);
-            this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+            if (ids != null) {
+                this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+            } else {
+                super.onReceive(context, intent);
+            }
         } else {
             super.onReceive(context, intent);
         }
@@ -116,9 +122,9 @@ public class NoteWidgetLight extends AppWidgetProvider {
                 // Set widget content
                 views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                 views.setTextViewText(R.id.widget_text, title);
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+                views.setTextColor(R.id.widget_text, ContextCompat.getColor(context, R.color.text_title_light));
                 views.setTextViewText(R.id.widget_text_title, title);
-                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+                views.setTextColor(R.id.widget_text_title, ContextCompat.getColor(context, R.color.text_title_light));
                 SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
                 contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
                         contentSpan,
@@ -133,18 +139,18 @@ public class NoteWidgetLight extends AppWidgetProvider {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-                views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
-                views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-                views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
-                views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+                views.setTextViewText(R.id.widget_text, context.getString(R.string.note_not_found));
+                views.setTextColor(R.id.widget_text, ContextCompat.getColor(context, R.color.text_title_light));
+                views.setTextViewText(R.id.widget_text_title, context.getString(R.string.note_not_found));
+                views.setTextColor(R.id.widget_text_title, ContextCompat.getColor(context, R.color.text_title_light));
                 views.setViewVisibility(R.id.widget_text_content, View.GONE);
             }
         } else {
             views.setOnClickPendingIntent(R.id.widget_layout, null);
-            views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.note_not_found));
-            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
-            views.setTextViewText(R.id.widget_text_title, context.getResources().getString(R.string.note_not_found));
-            views.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_light, context.getTheme()));
+            views.setTextViewText(R.id.widget_text, context.getString(R.string.note_not_found));
+            views.setTextColor(R.id.widget_text, ContextCompat.getColor(context, R.color.text_title_light));
+            views.setTextViewText(R.id.widget_text_title, context.getString(R.string.note_not_found));
+            views.setTextColor(R.id.widget_text_title, ContextCompat.getColor(context, R.color.text_title_light));
             views.setViewVisibility(R.id.widget_text_content, View.GONE);
         }
 

@@ -79,7 +79,7 @@ public final class ColorAdapter extends Adapter {
 
         private void bindColorView(@ColorInt int color) {
             mSelectedImageView.setVisibility((selectedColor != null && selectedColor == color) ? View.VISIBLE : View.GONE);
-            mSelectedImageView.setImageResource(R.drawable.ic_check);
+            mSelectedImageView.setImageResource(R.drawable.av_check_24dp);
             if (ThemeUtils.isColorDark(color)) {
                 mSelectedImageView.setColorFilter(Color.WHITE);
             } else {
@@ -91,9 +91,9 @@ public final class ColorAdapter extends Adapter {
         private void bindNoColorView() {
             mSelectedImageView.setVisibility(View.VISIBLE);
             if (selectedColor != null && selectedColor == NO_COLOR) {
-                mSelectedImageView.setImageResource(R.drawable.ic_check);
+                mSelectedImageView.setImageResource(R.drawable.av_check_24dp);
             } else {
-                mSelectedImageView.setImageResource(R.drawable.ic_no_color);
+                mSelectedImageView.setImageResource(R.drawable.ic_no_color_24dp);
             }
             mSelectedImageView.setColorFilter(Color.WHITE);
             mSelectedCircleImageView.setColorFilter(Color.BLACK);
@@ -111,7 +111,7 @@ public final class ColorAdapter extends Adapter {
             } else {
                 selected = colors[position];
             }
-            fragment.updateTextColor(selected);
+            fragment.updateTextStyle(selected);
             dialog.dismiss();
         }
 

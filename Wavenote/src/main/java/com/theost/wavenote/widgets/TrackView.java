@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.theost.wavenote.R;
 import com.theost.wavenote.utils.DisplayUtils;
@@ -47,8 +48,8 @@ public class TrackView extends View {
         paint = new Paint();
         dividerLineColor = ThemeUtils.getColorFromAttribute(getContext(), R.attr.dividerColor);
         dividerLineWidth = DisplayUtils.dpToPx(getContext(), 1);
-        waveColor = context.getResources().getColor(R.color.wave_line_color_primary);
-        playLineColor = context.getResources().getColor(R.color.wave_play_line_color);
+        waveColor = ContextCompat.getColor(context, R.color.wave_line_color_primary);
+        playLineColor = ContextCompat.getColor(context, R.color.wave_play_line_color);
         middleLineColor = dividerLineColor;
         isRecording = false;
         playLineWidth = 1;
@@ -79,7 +80,7 @@ public class TrackView extends View {
         this.isRecording = isRecording;
         int color = R.color.wave_line_color_primary;
         if (isRecording) color = R.color.wave_line_recording_color;
-        waveColor = getContext().getResources().getColor(color);
+        waveColor = ContextCompat.getColor(getContext(), color);
         invalidate();
     }
 

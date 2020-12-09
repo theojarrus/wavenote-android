@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -52,8 +54,8 @@
                         android:layout_height="@dimen/custom_icon_size"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/save"
-                        android:visibility="invisible"
-                        android:src="@drawable/av_check" />
+                        android:src="@drawable/av_check_24dp"
+                        android:visibility="invisible" />
 
                     <ImageButton
                         android:id="@+id/photo_name_cancel"
@@ -61,8 +63,9 @@
                         android:layout_height="@dimen/custom_icon_size"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/cancel"
-                        android:visibility="invisible"
-                        android:src="@drawable/av_cancel" />
+                        android:src="@drawable/ic_close_24dp"
+                        android:backgroundTint="?attr/hintTextColor"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -76,8 +79,8 @@
                         android:layout_height="@dimen/custom_icon_size"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/photo"
-                        android:visibility="visible"
-                        android:src="@drawable/av_fullscreen" />
+                        android:src="@drawable/av_fullscreen_24dp"
+                        android:visibility="visible" />
 
                     <ImageButton
                         android:id="@+id/photo_trash"
@@ -85,7 +88,8 @@
                         android:layout_height="@dimen/custom_icon_size"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/description_delete_item"
-                        android:src="@drawable/av_trash_empty_blue_24dp" />
+                        android:src="@drawable/ic_trash_24dp"
+                        app:tint="?attr/colorAccent" />
 
                 </LinearLayout>
 
@@ -128,13 +132,18 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/photo_image"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/note_list_widget_preview_light"
-        android:contentDescription="@string/photo" />
+        android:layout_height="wrap_content">
+
+        <com.theost.wavenote.widgets.WrapContentDraweeView
+            android:id="@+id/photo_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            fresco:actualImageScaleType="fitXY"
+            fresco:placeholderImageScaleType="fitCenter" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/listBackgroundSelector"
     android:orientation="vertical"
     android:paddingStart="@dimen/padding_small"
@@ -42,7 +43,7 @@
             android:contentDescription="@string/published"
             android:focusable="false"
             android:src="@drawable/ic_pinned_16dp"
-            android:tint="?attr/notePreviewColor"
+            app:tint="?attr/notePreviewColor"
             android:visibility="gone"
             tools:tint="@color/text_content_light"
             tools:visibility="visible" />
@@ -56,7 +57,7 @@
             android:contentDescription="@string/published"
             android:focusable="false"
             android:src="@drawable/ic_publish_16dp"
-            android:tint="?attr/notePreviewColor"
+            app:tint="?attr/notePreviewColor"
             android:visibility="gone"
             tools:tint="@color/text_content_light"
             tools:visibility="visible" />

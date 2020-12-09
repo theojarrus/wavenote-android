@@ -34,7 +34,7 @@
                 android:contentDescription="@string/mute"
                 android:gravity="center"
                 android:padding="@dimen/padding_small"
-                android:src="@drawable/ic_volume_up" />
+                android:src="@drawable/av_volume_up_24dp" />
 
             <View
                 android:layout_width="1dp"

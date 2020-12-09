@@ -6,6 +6,7 @@ import android.content.ComponentCallbacks2;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -107,7 +108,7 @@ public class Wavenote extends Application {
                 mIsInBackground = true;
 
                 // Give the buckets some time to finish sync, then stop them
-                new Handler().postDelayed(() -> {
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     if (!mIsInBackground) {
                         return;
                     }

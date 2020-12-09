@@ -11,6 +11,11 @@ Wavenote is a notebook for musicians. Open up new possibilities and simplify you
 - Chords and keywords highlight
 - Customizable keyword dictionary
 - Two types of keywords
+- Syllable counter
+
+<b>Lookup</b>
+- Find words, rhymes, synonyms and more
+- Supports both words and phrases
 
 <b>Chords</b>
 - See lyrics and chords at the same time
@@ -33,6 +38,9 @@ Wavenote is a notebook for musicians. Open up new possibilities and simplify you
 - Simple interface
 - Smart "Tap Tempo"
 - Custom samples support
+
+<b>Feedback</b>
+- Contact the developer directly from the app
 
 
 The application is being actively improved. If you have any requests or questions, we would be grateful if you contact us.

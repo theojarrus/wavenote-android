@@ -23,6 +23,7 @@ import com.theost.wavenote.adapters.ColorAdapter;
 import com.theost.wavenote.models.Note;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class StyleBottomSheetDialog extends BottomSheetDialogBase {
 
@@ -32,8 +33,6 @@ public final class StyleBottomSheetDialog extends BottomSheetDialogBase {
     public static final String SERIF = "serif";
     public static final String MONOSPACE = "monospace";
     public static final String MONOSPACE_SHORT = "mono";
-    public static final String CURSIVE = "cursive";
-    public static final String CASUAL = "casual";
 
     private CheckBox mBoldCheckbox;
     private CheckBox mItalicCheckbox;
@@ -52,10 +51,10 @@ public final class StyleBottomSheetDialog extends BottomSheetDialogBase {
                 view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 BottomSheetDialog dialog = (BottomSheetDialog) StyleBottomSheetDialog.this.getDialog();
                 FrameLayout bottomSheet = dialog != null ? (FrameLayout) dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet) : null;
-                BottomSheetBehavior behavior = BottomSheetBehavior.from((View) bottomSheet);
+                BottomSheetBehavior behavior = BottomSheetBehavior.from((View) Objects.requireNonNull(bottomSheet));
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 behavior.setPeekHeight(0);
-                behavior.setBottomSheetCallback(new BottomSheetCallback() {
+                behavior.addBottomSheetCallback(new BottomSheetCallback() {
                     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                     }
 
@@ -142,7 +141,7 @@ public final class StyleBottomSheetDialog extends BottomSheetDialogBase {
         colorAdapter = null;
     }
 
-    public final void colorPicker(NoteEditorFragment fragment, @NonNull int[] colors,
+    public final void stylePicker(NoteEditorFragment fragment, @NonNull int[] colors,
                                   @Nullable Integer selectedColor, boolean noColorOption) {
         colorAdapter = new ColorAdapter(this, fragment, colors, selectedColor, noColorOption);
     }

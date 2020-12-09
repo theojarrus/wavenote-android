@@ -12,7 +12,7 @@
         <item>@string/sort_alphabetical_reverse</item>
     </string-array>
 
-    <string-array name="array_sort_order_values" translatable="false">
+    <string-array name="array_sort_order_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -27,7 +27,7 @@
         <item>@string/theme_auto</item>
     </string-array>
 
-    <string-array name="array_theme_values" translatable="false" tools:ignore="InconsistentArrays">
+    <string-array name="array_theme_values" tools:ignore="InconsistentArrays">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -41,12 +41,18 @@
         <item>@string/font_size_extra_large</item>
     </string-array>
 
-    <string-array name="array_font_size_values" translatable="false">
+    <string-array name="array_font_size_values">
         <item>12</item>
         <item>14</item>
         <item>16</item>
         <item>18</item>
         <item>22</item>
+    </string-array>
+
+    <string-array name="array_feedback_actions">
+        <item>@string/rate_us</item>
+        <item>@string/share_thoughts</item>
+        <item>@string/donate_developer</item>
     </string-array>
 
     <string-array name="array_export_modes">
@@ -59,17 +65,17 @@
         <item>@string/zip</item>
     </string-array>
 
-    <string-array name="import_types">
+    <string-array name="array_import_types">
         <item>@string/import_json</item>
         <item>@string/import_plaintext</item>
     </string-array>
 
-    <string-array name="import_modes">
+    <string-array name="array_import_modes">
         <item>@string/import_single</item>
         <item>@string/import_multiple</item>
     </string-array>
 
-    <string-array name="metronome_sounds">
+    <string-array name="array_metronome_sounds">
         <item>Basic</item>
         <item>Sticks</item>
         <item>Claps</item>
@@ -78,7 +84,7 @@
         <item>Machine</item>
     </string-array>
 
-    <string-array name="beats_array">
+    <string-array name="array_metronome_beats">
         <item tools:ignore="TypographyFractions">1/4</item>
         <item>2/4</item>
         <item tools:ignore="TypographyFractions">3/4</item>
@@ -91,7 +97,7 @@
         <item>12/8</item>
     </string-array>
 
-    <string-array name="syllable_exceptions">
+    <string-array name="array_syllable_exceptions">
         <item>1 brutes</item>
         <item>1 chummed</item>
         <item>1 flapped</item>
@@ -166,6 +172,7 @@
 
     <string-array name="array_musical_titles">
         <item>[Intro]</item>
+        <item>[Pre-Verse]</item>
         <item>[Verse]</item>
         <item>[Pre-Chorus]</item>
         <item>[Chorus]</item>
@@ -178,6 +185,9 @@
     <string-array name="array_musical_words">
         <item>Tempo</item>
         <item>Capo</item>
+        <item>Song</item>
+        <item>Artist</item>
+        <item>Album</item>
     </string-array>
 
     <string-array name="array_musical_instruments">
@@ -186,7 +196,31 @@
         <item>@string/ukulele</item>
     </string-array>
 
-    <string-array name="track_menu_array">
+    <string-array name="array_lookup_modes">
+        <item>@string/definitions</item>
+        <item>@string/exact_rhymes</item>
+        <item>@string/near_rhymes</item>
+        <item>@string/synonyms</item>
+        <item>@string/antonyms</item>
+        <item>@string/associations</item>
+        <item>@string/adjectives</item>
+        <item>@string/nouns</item>
+        <item>@string/homophones</item>
+        <item>@string/hypernyms</item>
+        <item>@string/hyponyms</item>
+        <item>@string/holonyms</item>
+        <item>@string/meronyms</item>
+        <item>@string/consonant_match</item>
+        <item>@string/means_like</item>
+        <item>@string/sounds_like</item>
+    </string-array>
+
+    <string-array name="array_lookup_cut_modes">
+        <item>@string/starts_with</item>
+        <item>@string/ends_with</item>
+    </string-array>
+
+    <string-array name="array_track_menu">
         <item>Rename</item>
         <item>Delete Track</item>
     </string-array>
@@ -199,22 +233,15 @@
         <item>20%</item>
     </string-array>
 
-    <string-array name="array_musical_columns_landscape">
-        <item>100%</item>
-        <item>50%</item>
-        <item>33%</item>
-        <item>25%</item>
-        <item>20%</item>
-        <item>20%</item>
-    </string-array>
+    <integer-array name="array_musical_textsize">
+        <item>80</item>
+        <item>28</item>
+        <item>22</item>
+        <item>16</item>
+        <item>10</item>
+    </integer-array>
 
     <string-array name="array_musical_chords">
-        <item>Cb</item>
-        <item>Cb7</item>
-        <item>Cbmaj7</item>
-        <item>Cbm</item>
-        <item>Cbm7</item>
-        <item>Cbsus4</item>
         <item>C</item>
         <item>C7</item>
         <item>Cmaj7</item>
@@ -257,12 +284,6 @@
         <item>Em</item>
         <item>Em7</item>
         <item>Esus4</item>
-        <item>E#</item>
-        <item>E#7</item>
-        <item>E#maj7</item>
-        <item>E#m</item>
-        <item>E#m7</item>
-        <item>E#sus4</item>
         <item>Fb</item>
         <item>Fb7</item>
         <item>Fbmaj7</item>
@@ -329,12 +350,6 @@
         <item>Bm</item>
         <item>Bm7</item>
         <item>Bsus4</item>
-        <item>B#</item>
-        <item>B#7</item>
-        <item>B#maj7</item>
-        <item>B#m</item>
-        <item>B#m7</item>
-        <item>B#sus4</item>
     </string-array>
 
     <string-array name="array_musical_chords_replace">

@@ -34,6 +34,8 @@ public class ImportUtils {
     public static final int SAMPLE_ERROR = 5;
     public static final int EXIST_ERROR = 6;
     public static final int PASSWORD_ERROR = 7;
+    public static final int NETWORK_ERROR = 8;
+    public static final int LANGUAGE_ERROR = 9;
 
     public static int[] importPlaintext(Context context, Bucket<Note> mNotesBucket, File importFile) {
         int[] importResult = {FILE_ERROR, 0}; // status (failed/success), notes imported (count)
@@ -51,11 +53,15 @@ public class ImportUtils {
             note.setModificationDate(note.getCreationDate());
             note.setContent(new SpannableString(content));
             note.save();
-            File noteDirectory = importFile.getParentFile().getParentFile();
+            File tmpParentFile = importFile.getParentFile();
+            File noteDirectory = new File("");
+            if (tmpParentFile != null && tmpParentFile.getParentFile() != null) {
+                noteDirectory = tmpParentFile.getParentFile();
+            }
             ImportUtils.importMedia(context, noteDirectory, note.getSimperiumKey());
             if (mNotesBucket.containsKey(note.getSimperiumKey())) importResult[1] += 1;
             importResult[0] = RESULT_OK;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
         return importResult;
@@ -65,7 +71,7 @@ public class ImportUtils {
         int[] importResult = {FILE_ERROR, 0}; // status (failed/success), notes imported (count)
         if (importFile.isDirectory()) {
             String textPath = importFile.getPath();
-            if (importQuantity.equals(context.getResources().getString(R.string.import_single)))
+            if (importQuantity.equals(context.getString(R.string.import_single)))
                 textPath += FileUtils.TEXT_DIR;
             importFile = ImportUtils.findFile(new File(textPath), FileUtils.JSON_FORMAT);
         }
@@ -73,9 +79,12 @@ public class ImportUtils {
         if (importFile == null || !importFile.exists()) return importResult;
 
         String notePath = "";
-        if (importQuantity.equals(context.getResources().getString(R.string.import_single))) {
-            notePath = importFile.getParentFile().getParent();
-        } else if (importQuantity.equals(context.getResources().getString(R.string.import_multiple))) {
+        if (importQuantity.equals(context.getString(R.string.import_single))) {
+            File tmpParentFile = importFile.getParentFile();
+            if (tmpParentFile != null) {
+                notePath = tmpParentFile.getParent();
+            }
+        } else if (importQuantity.equals(context.getString(R.string.import_multiple))) {
             notePath = importFile.getParent() + "%s%s";
         }
 
@@ -104,6 +113,7 @@ public class ImportUtils {
                 String noteType = FileUtils.ACTIVE_DIR;
                 if (trashedNotes.contains(source.getString(ExportUtils.NOTE_COLUMN_1)))
                     noteType = FileUtils.TRASHED_DIR;
+                if (notePath == null) notePath = "";
                 File noteDirectory = new File(String.format(notePath, noteType, StrUtils.formatFilename(note.getTitle())));
                 ImportUtils.importMedia(context, noteDirectory, note.getSimperiumKey());
                 if (mNotesBucket.containsKey(note.getSimperiumKey())) importResult[1] += 1;

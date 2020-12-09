@@ -48,10 +48,10 @@
         android:layout_gravity="center"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:paddingLeft="12dp"
+        android:paddingLeft="@dimen/padding_medium"
         android:paddingTop="14dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="14dp">
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_medium">
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/text_fonts"
@@ -109,8 +109,8 @@
         android:layout_gravity="center"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp">
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -221,11 +221,5 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="6"
         tools:listitem="@layout/color_item" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="-1dp"
-        android:background="?attr/dividerColor" />
 
 </LinearLayout>

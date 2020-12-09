@@ -9,7 +9,8 @@
     android:paddingTop="@dimen/padding_large"
     android:id="@+id/chord_layout">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/Wavestyle.Button.Outlined"
         android:id="@+id/chord_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +18,7 @@
         android:textAllCaps="false"
         android:fontFamily="sans-serif"
         android:letterSpacing="0"
-        android:textSize="@dimen/text_subtitle"
+        android:textSize="16sp"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"

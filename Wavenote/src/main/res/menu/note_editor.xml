@@ -7,114 +7,108 @@
     tools:ignore="AlwaysShowAction">
 
     <item
-        android:id="@+id/menu_color"
+        android:id="@+id/menu_style"
         android:title="@string/text_color"
-        android:icon="@drawable/m_palette_black_24dp"
+        android:icon="@drawable/ic_style_24dp"
         app:actionViewClass="android.widget.ImageView"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_sheet"
-        android:icon="@drawable/m_audiotrack_black_24dp"
+        android:id="@+id/menu_chords"
+        android:icon="@drawable/av_chords_24dp"
         android:title="@string/chords"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_photos"
-        android:icon="@drawable/m_insert_photo_black_24dp"
+        android:icon="@drawable/av_photo_24dp"
         android:title="@string/photo"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_audiotracks"
-        android:icon="@drawable/m_graphic_eq_black_24dp"
+        android:id="@+id/menu_studio"
+        android:icon="@drawable/ic_studio_24dp"
         android:title="@string/studio"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_checklist"
-        android:icon="@drawable/av_checklist_24dp"
+        android:icon="@drawable/ic_checklist_24dp"
         android:title="@string/toggle_checklist"
         app:showAsAction="always" />
 
-    <group
-        android:id="@+id/group_1">
+    <group android:id="@+id/group_organize_features">
 
         <item
             android:id="@+id/menu_pin"
             android:checkable="true"
-            android:enabled="false"
             android:title="@string/pin"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/menu_markdown"
             android:checkable="true"
-            android:enabled="false"
             android:title="@string/markdown"
-            app:showAsAction="never" />
-
-        <item
-            android:id="@+id/menu_syllable"
-            android:checkable="true"
-            android:enabled="false"
-            android:title="@string/syllable"
             app:showAsAction="never" />
 
     </group>
 
-    <group
-        android:id="@+id/group_2">
+    <group android:id="@+id/group_ext_features">
+
+        <item
+            android:id="@+id/menu_syllable"
+            android:checkable="true"
+            android:title="@string/syllable"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menu_lookup"
+            android:title="@string/words"
+            app:showAsAction="never" />
+
+    </group>
+
+    <group android:id="@+id/group_info_features">
 
         <item
             android:id="@+id/menu_info"
-            android:enabled="false"
-            android:icon="@drawable/av_info_24dp"
-            android:title="@string/information">
-        </item>
+            android:icon="@drawable/ic_info_24dp"
+            android:title="@string/information" />
 
         <item
             android:id="@+id/menu_history"
-            android:enabled="false"
             android:title="@string/history"
             app:showAsAction="never">
         </item>
 
     </group>
 
-    <group
-        android:id="@+id/group_3">
+    <group android:id="@+id/group_share_features">
 
         <item
             android:id="@+id/menu_share"
-            android:enabled="false"
             android:title="@string/share"
-            app:showAsAction="never">
-        </item>
+            app:showAsAction="never" />
 
         <item
             android:id="@+id/menu_export"
             android:title="@string/export"
-            app:showAsAction="never">
-        </item>
+            app:showAsAction="never" />
 
     </group>
 
-    <group
-        android:id="@+id/group_4">
+
+    <group android:id="@+id/group_publish_features">
 
         <item
             android:id="@+id/menu_publish"
             android:checkable="true"
-            android:enabled="false"
             android:visible="false"
             android:title="@string/publish"
-            app:showAsAction="never">
-        </item>
+            app:showAsAction="never" />
 
         <item
             android:id="@+id/menu_copy"
-            android:enabled="false"
             android:visible="false"
             android:title="@string/copy_link"
             app:showAsAction="never">
@@ -122,14 +116,12 @@
 
     </group>
 
-    <group
-        android:id="@+id/group_5">
+    <group android:id="@+id/group_note_features">
 
         <item
             android:id="@+id/menu_trash"
             android:title="@string/trash"
-            app:showAsAction="never">
-        </item>
+            app:showAsAction="never" />
 
     </group>
 

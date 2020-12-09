@@ -1,6 +1,7 @@
 package com.theost.wavenote;
 
 import android.app.ActivityManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -17,11 +18,14 @@ abstract public class ThemedAppCompatActivity extends AppCompatActivity {
     protected @StyleRes int mThemeId = R.style.Theme_Wavestyle;
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(mThemeId);
 
-        this.setTaskDescription(new ActivityManager.TaskDescription(null, null, getWindowColor()));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            setTaskDescription(new ActivityManager.TaskDescription(null, null, getWindowColor()));
+        }
     }
 
     protected int getWindowColor() {

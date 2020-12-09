@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+
+import static com.theost.wavenote.MetronomeActivity.DEFAULT_SOUND;
 
 public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
@@ -111,11 +114,12 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
         updatePlayImage();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updatePlayImage() {
         if (stopPlay) {
-            mPlayButton.setImageDrawable(getDrawable(R.drawable.ma_rec_24dp));
+            mPlayButton.setImageDrawable(getDrawable(R.drawable.ic_rec_24dp));
         } else {
-            mPlayButton.setImageDrawable(getDrawable(R.drawable.ma_stop_24dp));
+            mPlayButton.setImageDrawable(getDrawable(R.drawable.ic_stop_24dp));
         }
     }
 
@@ -144,16 +148,14 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                List<String> resourceSounds = Arrays.asList(getResources().getStringArray(R.array.metronome_sounds));
+                List<String> resourceSounds = Arrays.asList(getResources().getStringArray(R.array.array_metronome_sounds));
 
                 String metronomeSound = Note.getActiveMetronomeSound();
+                if (!resourceSounds.contains(metronomeSound))
+                    metronomeSound = resourceSounds.get(DEFAULT_SOUND);
                 byte[] beatStrongBytes;
                 try {
-                    if (resourceSounds.contains(metronomeSound)) {
-                        beatStrongBytes = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound)[0];
-                    } else {
-                        beatStrongBytes = FileUtils.getStereoBeatCustom(getApplicationContext(), metronomeSound)[0];
-                    }
+                    beatStrongBytes = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound, true)[0];
 
                     beatFirstSoundBytePos = getMaxSamplePos(beatStrongBytes);
 
@@ -215,7 +217,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private Handler mAdjustHandler = new Handler(msg -> {
+    private Handler mAdjustHandler = new Handler(Looper.getMainLooper(), msg -> {
         int adjustTip = 0;
         int adjustResult = 0;
         if (msg.what == R.integer.ADJUST_RECORD_DISTANCE_DONE) {
@@ -230,8 +232,8 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
             setResult(RESULT_CANCELED);
         }
         updatePlayImage();
-        DisplayUtils.showToast(this, getResources().getString(adjustTip));
-        mResultTextView.setText(getResources().getString(adjustResult));
+        DisplayUtils.showToast(this, getString(adjustTip));
+        mResultTextView.setText(getString(adjustResult));
         mResultTextView.setVisibility(View.VISIBLE);
         return true;
     });

@@ -59,8 +59,7 @@
             android:layout_width="match_parent"
             android:paddingBottom="@dimen/padding_small"
             android:paddingTop="@dimen/padding_extra_large"
-            android:thumbTint="@color/blue">
-        </SeekBar>
+            android:thumbTint="?attr/colorAccent" />
 
         <LinearLayout
             android:layout_gravity="end"

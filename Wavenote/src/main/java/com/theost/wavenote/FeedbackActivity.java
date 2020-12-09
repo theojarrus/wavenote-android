@@ -65,9 +65,12 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
         mEmailLayout = findViewById(R.id.feedback_email);
         mMessageLayout = findViewById(R.id.feedback_message);
 
-        mNameLayout.getEditText().setText(Note.getFeedbackName());
-        mEmailLayout.getEditText().setText(Note.getFeedbackEmail());
-        mMessageLayout.getEditText().setText(Note.getFeedbackMessage());
+        if (mNameLayout.getEditText() != null)
+            mNameLayout.getEditText().setText(Note.getFeedbackName());
+        if (mEmailLayout.getEditText() != null)
+            mEmailLayout.getEditText().setText(Note.getFeedbackEmail());
+        if (mMessageLayout.getEditText() != null)
+            mMessageLayout.getEditText().setText(Note.getFeedbackMessage());
 
         isNameValid = isValidName(mNameLayout.getEditText().getText().toString());
         isEmailValid = isValidName(mEmailLayout.getEditText().getText().toString());
@@ -84,7 +87,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String name = s.toString();
+                String name = s.toString().trim();
                 Note.setFeedbackName(name);
                 isNameValid = isValidName(name);
                 updateSendButton();
@@ -102,7 +105,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String email = s.toString();
+                String email = s.toString().trim();
                 Note.setFeedbackEmail(email);
                 isEmailValid = isValidEmail(email);
                 updateSendButton();
@@ -120,7 +123,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String message = s.toString();
+                String message = s.toString().trim();
                 Note.setFeedbackMessage(message);
                 isMessageValid = isValidMessage(message);
                 updateSendButton();
@@ -160,6 +163,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.feedback_list, menu);
+        DrawableUtils.tintMenuWithAttribute(this, menu, R.attr.toolbarIconColor);
         mSendMenuItem = menu.findItem(R.id.feedback_send);
         MenuCompat.setGroupDividerEnabled(menu, true);
         updateSendButton();
@@ -172,9 +176,15 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        DisplayUtils.hideKeyboard(mNameLayout);
+    }
+
     private void onSendClick() {
         boolean isNetwork = NetworkUtils.isNetworkAvailable(this);
-        if (!isNetwork && !getResources().getString(R.string.SENTRY_DSN).equals("")) {
+        if (!isNetwork && !getString(R.string.SENTRY_DSN).equals("")) {
             sendFeedback();
         } else {
             showNetworkDialog();
@@ -182,14 +192,16 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
     }
 
     private void sendFeedback() {
-        mSendMenuItem.setVisible(false);
-        String name = mNameLayout.getEditText().getText().toString();
-        String email = mEmailLayout.getEditText().getText().toString();
-        String message = mMessageLayout.getEditText().getText().toString();
-        sendSentry(name, email, message);
-        mFeedbackLayout.setVisibility(View.GONE);
-        showEmptyView();
-        clearSavedData();
+        if (mNameLayout.getEditText() != null && mEmailLayout.getEditText() != null && mMessageLayout.getEditText() != null) {
+            mSendMenuItem.setVisible(false);
+            String name = mNameLayout.getEditText().getText().toString().trim();
+            String email = mEmailLayout.getEditText().getText().toString().trim();
+            String message = mMessageLayout.getEditText().getText().toString().trim();
+            sendSentry(name, email, message);
+            mFeedbackLayout.setVisibility(View.GONE);
+            showEmptyView();
+            clearSavedData();
+        }
     }
 
     private void sendSentry(String name, String email, String message) {
@@ -239,7 +251,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
     private void checkNameInput() {
         if (!isNameValid) {
-            mNameLayout.setError(getResources().getString(R.string.feedback_error_name));
+            mNameLayout.setError(getString(R.string.feedback_error_name));
         } else {
             mNameLayout.setError("");
         }
@@ -255,7 +267,7 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
     private void checkMessageInput() {
         if (!isMessageValid) {
-            mMessageLayout.setError(getResources().getString(R.string.feedback_error_message));
+            mMessageLayout.setError(getString(R.string.feedback_error_message));
         } else {
             mMessageLayout.setError("");
         }

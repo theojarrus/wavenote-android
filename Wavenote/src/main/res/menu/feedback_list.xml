@@ -8,7 +8,7 @@
     <item
         android:id="@+id/feedback_send"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_send_24"
+        android:icon="@drawable/ic_send_24dp"
         android:title="@string/send"
         app:showAsAction="always" />
 

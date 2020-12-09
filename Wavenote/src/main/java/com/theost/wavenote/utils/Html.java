@@ -1062,6 +1062,7 @@ class HtmlToSpannedConverter implements ContentHandler {
         text.setSpan(mark, len, len, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
     }
 
+    @SuppressWarnings("unchecked")
     private static void end(Editable text, Class kind, Object repl) {
         int len = text.length();
         Object obj = getLast(text, kind);

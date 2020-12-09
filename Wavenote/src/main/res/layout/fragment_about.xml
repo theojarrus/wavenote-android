@@ -111,6 +111,69 @@
             android:background="@color/white" />
 
         <LinearLayout
+            android:id="@+id/about_play_store"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/rate_us"
+                        android:textSize="22sp" />
+
+                    <com.theost.wavenote.widgets.RobotoLightTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_large"
+                        android:paddingEnd="@dimen/padding_large"
+                        android:text="@string/about_play_store"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/padding_large"
+                    android:paddingEnd="@dimen/padding_large"
+                    android:src="@drawable/ic_arrow_top_right_24dp"
+                    android:contentDescription="@string/about" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/white" />
+
+        <LinearLayout
             android:id="@+id/about_website"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -209,69 +272,6 @@
                         android:paddingStart="@dimen/padding_large"
                         android:paddingEnd="@dimen/padding_large"
                         android:text="@string/about_instagram_handle"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingStart="@dimen/padding_large"
-                    android:paddingEnd="@dimen/padding_large"
-                    android:src="@drawable/ic_arrow_top_right_24dp"
-                    android:contentDescription="@string/about" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/white" />
-
-        <LinearLayout
-            android:id="@+id/about_play_store"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_medium">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                tools:ignore="UselessParent">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.theost.wavenote.widgets.RobotoLightTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/padding_large"
-                        android:paddingEnd="@dimen/padding_large"
-                        android:text="@string/rate_us"
-                        android:textSize="22sp" />
-
-                    <com.theost.wavenote.widgets.RobotoLightTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/padding_large"
-                        android:paddingEnd="@dimen/padding_large"
-                        android:text="@string/about_play_store"
                         android:textSize="15sp" />
 
                 </LinearLayout>

@@ -3,7 +3,9 @@ package com.theost.wavenote;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -38,14 +40,14 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     private static final String ARG_IMAGE_LINK = "image_link";
 
-    private static final String TAG = InfoBottomSheetDialog.class.getSimpleName();
+    private static final String TAG = PhotoBottomSheetDialog.class.getSimpleName();
     public static final int CAMERA_REQUEST = 0;
     public static final int FILE_REQUEST = 1;
     public static final int LINK_REQUEST = 2;
 
     private EditText mAddLinkEditText;
 
-    private PhotosActivity mActivity;
+    private final PhotosActivity mActivity;
     private String noteId;
 
     public PhotoBottomSheetDialog(@NonNull PhotosActivity activity) {
@@ -165,9 +167,7 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
 
     private void addPhotoCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            startActivityForResult(intent, CAMERA_REQUEST);
-        }
+        startActivityForResult(intent, CAMERA_REQUEST);
     }
 
     private void addPhotoGallery() {
@@ -182,9 +182,14 @@ public class PhotoBottomSheetDialog extends BottomSheetDialogBase {
         startActivityForResult(intent, FILE_REQUEST);
     }
 
+    @SuppressWarnings("deprecation")
     private Bitmap getBitmap(Uri imageUri) {
         try {
-            return MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContext().getContentResolver(), imageUri));
+            } else {
+                return MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return null;

@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.simperium.client.Bucket;
+import com.simperium.client.Query;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
-import com.simperium.client.Bucket;
-import com.simperium.client.Query;
 import com.theost.wavenote.utils.StrUtils;
 
 public class TagsAdapter extends BaseAdapter {
@@ -168,7 +168,7 @@ public class TagsAdapter extends BaseAdapter {
         }
 
         private TagMenuItem(long id, int resourceId) {
-            this(id, mContext.getResources().getString(resourceId));
+            this(id, mContext.getString(resourceId));
         }
 
         public Query<Note> query() {

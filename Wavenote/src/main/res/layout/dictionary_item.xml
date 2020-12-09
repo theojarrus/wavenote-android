@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="2dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
     android:paddingTop="0dp"
-    android:paddingBottom="@dimen/custom_space"
+    android:paddingBottom="@dimen/padding_medium"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -20,15 +21,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginStart="@dimen/custom_space"
-        android:layout_marginEnd="@dimen/custom_space"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
         android:layout_weight="1.5"
         android:hint="@string/keyword">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/keyword_name"
+            style="@style/Wavestyle.InputLayoutStyle.Outlined"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
+            android:layout_weight="1"
             android:text="@string/word"
             android:maxLength="20" />
 
@@ -37,8 +40,11 @@
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_gravity="start"
         android:layout_weight="1"
         android:hint="@string/type"
         android:text="@string/type">
@@ -46,22 +52,31 @@
         <AutoCompleteTextView
             android:id="@+id/keyword_type"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/type"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:singleLine="true"
-            android:padding="0dp"
+            android:text="@string/type"
             tools:ignore="LabelFor" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/keyword_trash"
-        android:layout_width="@dimen/custom_icon_size"
-        android:layout_height="@dimen/custom_icon_size"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="1dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/description_delete_item"
-        android:src="@drawable/av_trash_empty_blue_24dp" />
+        style="@style/Wavestyle.Button.Outlined"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:insetLeft="0dp"
+        android:insetRight="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:layout_marginTop="5dp"
+        app:icon="@drawable/ic_trash_24dp"
+        app:iconTint="?attr/colorAccent"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp" />
 
 </LinearLayout>

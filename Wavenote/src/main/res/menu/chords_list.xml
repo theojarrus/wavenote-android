@@ -9,28 +9,28 @@
     <item
         android:id="@+id/menu_transposedown"
         android:enabled="true"
-        android:icon="@drawable/av_transpose_down"
+        android:icon="@drawable/ic_transpose_down"
         android:title="@string/transpose_down"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_transposeup"
         android:enabled="true"
-        android:icon="@drawable/av_transpose_up_24dp"
+        android:icon="@drawable/ic_transpose_up_24dp"
         android:title="@string/transpose_up"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/grid"
         android:enabled="true"
-        android:icon="@drawable/av_grid_on_24"
+        android:icon="@drawable/ic_grid_on_24dp"
         android:title="@string/grid"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/search"
         android:enabled="true"
-        android:icon="@drawable/av_search_24dp"
+        android:icon="@drawable/ic_search_24dp"
         android:title="@string/search_chords"
         app:showAsAction="always" />
 

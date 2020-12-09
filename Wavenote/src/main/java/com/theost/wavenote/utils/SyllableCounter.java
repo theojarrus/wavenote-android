@@ -29,7 +29,7 @@ public class SyllableCounter {
         vowels = new HashSet<>(Arrays.asList("a", "e", "i", "o", "u", "y"));
         twoVowelSounds = new HashSet<>(Arrays.asList("ae", "ee", "oa", "oo", "ou", "oi", "ow", "aw", "au"));
         chords = new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.array_musical_chords)));
-        String[] exceptionsArray = context.getResources().getStringArray(R.array.syllable_exceptions);
+        String[] exceptionsArray = context.getResources().getStringArray(R.array.array_syllable_exceptions);
         for (String i : exceptionsArray) {
             String[] parseArray = i.split(SPACE);
             int count = Integer.parseInt(parseArray[0]);
@@ -86,7 +86,7 @@ public class SyllableCounter {
         }
 
         final String lowerCase = word.toLowerCase();
-        if (exceptions.containsKey(lowerCase)) {
+        if (exceptions != null && exceptions.containsKey(lowerCase)) {
             return exceptions.get(lowerCase);
         }
 

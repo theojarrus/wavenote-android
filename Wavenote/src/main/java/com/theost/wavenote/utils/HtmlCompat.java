@@ -14,6 +14,7 @@ public class HtmlCompat {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public static String toHtml(Spannable source) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.toHtml(source, Html.FROM_HTML_MODE_LEGACY);

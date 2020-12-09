@@ -55,7 +55,7 @@ public class ThemeUtils {
 
         switch (PrefUtils.getIntPref(activity, PrefUtils.PREF_THEME, THEME_LIGHT)) {
             case THEME_AUTO:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_TIME);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
                 break;
             case THEME_DARK:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -88,12 +88,12 @@ public class ThemeUtils {
      * http://android-developers.blogspot.co.uk/2014/10/material-design-on-android-checklist.html
      * https://medium.com/sebs-top-tips/material-navigation-drawer-sizing-558aea1ad266
      */
-    public static int getOptimalDrawerWidth(Context context) {
-        Point displaySize = DisplayUtils.getDisplayPixelSize(context);
-        int appBarHeight = DisplayUtils.getActionBarHeight(context);
+    public static int getOptimalDrawerWidth(Activity activity) {
+        Point displaySize = DisplayUtils.getDisplayPixelSize(activity);
+        int appBarHeight = DisplayUtils.getActionBarHeight(activity);
         int drawerWidth = Math.min(displaySize.x, displaySize.y) - appBarHeight;
-        int maxDp = (DisplayUtils.isXLarge(context) ? 400 : 320);
-        int maxPx = DisplayUtils.dpToPx(context, maxDp);
+        int maxDp = (DisplayUtils.isXLarge(activity) ? 400 : 320);
+        int maxPx = DisplayUtils.dpToPx(activity, maxDp);
         return Math.min(drawerWidth, maxPx);
     }
 
@@ -114,11 +114,7 @@ public class ThemeUtils {
         TypedArray typedArray = context.obtainStyledAttributes(new int[]{attribute});
         int colorResId = typedArray.getResourceId(0, android.R.color.black);
         typedArray.recycle();
-        return context.getResources().getColor(colorResId);
-    }
-
-    public static int getColor(@NonNull Context context, int id) {
-        return context.getResources().getColor(id);
+        return ContextCompat.getColor(context, colorResId);
     }
 
     public static boolean isColorDark(int color) {

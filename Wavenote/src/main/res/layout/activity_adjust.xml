@@ -15,7 +15,7 @@
         android:layout_weight="1"
         android:background="?attr/colorAccent"
         android:scaleType="fitCenter"
-        android:src="@drawable/ma_rec_24dp"
+        android:src="@drawable/ic_rec_24dp"
         android:contentDescription="@string/adjust_record" />
 
     <LinearLayout

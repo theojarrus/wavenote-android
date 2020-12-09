@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -36,6 +37,7 @@ import com.theost.wavenote.models.Keyword;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.ThemeUtils;
@@ -84,7 +86,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Note.setIsNeedResourceUpdate(true);
+        Note.setNeedResourceUpdate(true);
 
         emptyView = findViewById(android.R.id.empty);
         ImageView mEmptyViewImage = emptyView.findViewById(R.id.image);
@@ -169,6 +171,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.items_list, menu);
+        DrawableUtils.tintMenuWithAttribute(this, menu, R.attr.toolbarIconColor);
         mRemoveItem = menu.findItem(R.id.menu_remove);
         MenuCompat.setGroupDividerEnabled(menu, true);
         updateData();
@@ -282,7 +285,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         new UpdateDataThread().start();
     }
 
-    private final Handler mUpdateHandler = new Handler(msg -> {
+    private final Handler mUpdateHandler = new Handler(Looper.getMainLooper(), msg -> {
         updateAdapter();
         return true;
     });
@@ -317,7 +320,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     private void insertKeyword(String keyword) {
         if (keyword.equals("") || mAddKeywordType.getCheckedRadioButtonId() == -1) return;
         if (mWordList.contains(keyword.toLowerCase())) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.exist_error));
+            DisplayUtils.showToast(this, getString(R.string.exist_error));
             return;
         }
         String type;
@@ -333,7 +336,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
         }
         boolean isInserted = localDatabase.insertDictionaryData(keyword, type);
         if (!isInserted) {
-            DisplayUtils.showToast(this, this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, this.getString(R.string.database_error));
         }
         updateData();
     }
@@ -341,7 +344,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
     public boolean renameKeyword(String id, String type) {
         boolean isRenamed = localDatabase.renameDictionaryData(id, type);
         if (!isRenamed) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
             return false;
         }
         return true;
@@ -363,7 +366,7 @@ public class DictionaryActivity extends ThemedAppCompatActivity {
                 mWordList.remove(keyword.toLowerCase());
         }
         if (!isRemoved) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
             return false;
         }
         return true;

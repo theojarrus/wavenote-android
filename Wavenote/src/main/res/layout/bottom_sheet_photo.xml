@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
-        android:drawableStart="@drawable/av_add_photo_link_24dp"
-        android:drawablePadding="@dimen/custom_space"
+        android:drawableStart="@drawable/av_link_24dp"
+        android:drawablePadding="@dimen/padding_medium"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/link" />
@@ -35,8 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
-        android:drawableStart="@drawable/av_add_photo_camera_24dp"
-        android:drawablePadding="@dimen/custom_space"
+        android:drawableStart="@drawable/av_camera_24dp"
+        android:drawablePadding="@dimen/padding_medium"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/add_photo_camera" />
@@ -49,8 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
-        android:drawableStart="@drawable/av_add_photo_gallery_24dp"
-        android:drawablePadding="@dimen/custom_space"
+        android:drawableStart="@drawable/av_gallery_24dp"
+        android:drawablePadding="@dimen/padding_medium"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/add_photo_gallery" />
@@ -63,16 +63,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="?attr/colorOnSurface"
-        android:drawableStart="@drawable/av_add_photo_storage_24dp"
-        android:drawablePadding="@dimen/custom_space"
+        android:drawableStart="@drawable/av_storage_24dp"
+        android:drawablePadding="@dimen/padding_medium"
         android:focusable="true"
         android:clickable="true"
         android:text="@string/add_photo_storage" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="-1dp"
-        android:background="?attr/dividerColor" />
 
 </LinearLayout>

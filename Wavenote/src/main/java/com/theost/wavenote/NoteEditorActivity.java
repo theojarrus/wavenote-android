@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.View;
@@ -210,18 +211,20 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mNoteEditorFragmentPagerAdapter.getCount() > 0 && mNoteEditorFragmentPagerAdapter.getItem(0).isAdded()) {
-            getSupportFragmentManager()
-                    .putFragment(outState, getString(R.string.tab_edit), mNoteEditorFragmentPagerAdapter.getItem(0));
+        if (mNoteEditorFragmentPagerAdapter != null) {
+            if (mNoteEditorFragmentPagerAdapter.getCount() > 0 && mNoteEditorFragmentPagerAdapter.getItem(0).isAdded()) {
+                getSupportFragmentManager()
+                        .putFragment(outState, getString(R.string.tab_edit), mNoteEditorFragmentPagerAdapter.getItem(0));
+            }
+            if (mNoteEditorFragmentPagerAdapter.getCount() > 1 && mNoteEditorFragmentPagerAdapter.getItem(1).isAdded()) {
+                getSupportFragmentManager()
+                        .putFragment(outState, getString(R.string.tab_preview), mNoteEditorFragmentPagerAdapter.getItem(1));
+            }
+            outState.putBoolean(NoteEditorFragment.ARG_MARKDOWN_ENABLED, isMarkdownEnabled);
+            outState.putBoolean(NoteEditorFragment.ARG_PREVIEW_ENABLED, isPreviewEnabled);
+            outState.putInt(STATE_MATCHES_INDEX, mSearchMatchIndex);
+            outState.putIntArray(STATE_MATCHES_LOCATIONS, mSearchMatchIndexes);
         }
-        if (mNoteEditorFragmentPagerAdapter.getCount() > 1 && mNoteEditorFragmentPagerAdapter.getItem(1).isAdded()) {
-            getSupportFragmentManager()
-                    .putFragment(outState, getString(R.string.tab_preview), mNoteEditorFragmentPagerAdapter.getItem(1));
-        }
-        outState.putBoolean(NoteEditorFragment.ARG_MARKDOWN_ENABLED, isMarkdownEnabled);
-        outState.putBoolean(NoteEditorFragment.ARG_PREVIEW_ENABLED, isPreviewEnabled);
-        outState.putInt(STATE_MATCHES_INDEX, mSearchMatchIndex);
-        outState.putIntArray(STATE_MATCHES_LOCATIONS, mSearchMatchIndexes);
         super.onSaveInstanceState(outState);
     }
 
@@ -406,9 +409,9 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
             if (mSearchMatchIndex > 0) {
                 mSearchMatchIndex--;
                 mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);
-                new Handler().postDelayed(
+                new Handler(Looper.getMainLooper()).postDelayed(
                         this::updateSearchMatchBarStatus,
-                    getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                        getResources().getInteger(android.R.integer.config_mediumAnimTime)
                 );
             }
         });
@@ -425,9 +428,9 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
             if (mSearchMatchIndex < mSearchMatchIndexes.length - 1) {
                 mSearchMatchIndex++;
                 mNoteEditorFragment.scrollToMatch(mSearchMatchIndexes[mSearchMatchIndex]);
-                new Handler().postDelayed(
+                new Handler(Looper.getMainLooper()).postDelayed(
                         this::updateSearchMatchBarStatus,
-                    getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                        getResources().getInteger(android.R.integer.config_mediumAnimTime)
                 );
             }
         });

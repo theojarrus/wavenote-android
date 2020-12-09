@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import androidx.core.content.ContextCompat;
+
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.Query;
@@ -42,7 +44,11 @@ public class NoteListWidgetDark extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null && intent.hasExtra(KEY_LIST_WIDGET_IDS_DARK)) {
             int[] ids = intent.getExtras().getIntArray(KEY_LIST_WIDGET_IDS_DARK);
-            this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+            if (ids != null) {
+                this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+            } else {
+                super.onReceive(context, intent);
+            }
         } else {
             super.onReceive(context, intent);
         }
@@ -101,8 +107,8 @@ public class NoteListWidgetDark extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_button, pendingIntentButton);
 
             views.setEmptyView(R.id.widget_list, R.id.widget_text);
-            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-            views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
+            views.setTextColor(R.id.widget_text, ContextCompat.getColor(context, R.color.text_title_dark));
+            views.setTextViewText(R.id.widget_text, context.getString(R.string.empty_notes_widget));
             views.setViewVisibility(R.id.widget_text, View.GONE);
             views.setViewVisibility(R.id.widget_list, View.VISIBLE);
         } else {
@@ -118,8 +124,8 @@ public class NoteListWidgetDark extends AppWidgetProvider {
             PendingIntent pendingIntentButton = PendingIntent.getActivity(context, appWidgetId, intentButton, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.widget_button, pendingIntentButton);
 
-            views.setTextColor(R.id.widget_text, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
-            views.setTextViewText(R.id.widget_text, context.getResources().getString(R.string.empty_notes_widget));
+            views.setTextColor(R.id.widget_text, ContextCompat.getColor(context, R.color.text_title_dark));
+            views.setTextViewText(R.id.widget_text, context.getString(R.string.empty_notes_widget));
             views.setViewVisibility(R.id.widget_text, View.VISIBLE);
             views.setViewVisibility(R.id.widget_list, View.GONE);
         }

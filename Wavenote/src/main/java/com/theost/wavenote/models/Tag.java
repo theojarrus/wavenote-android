@@ -70,12 +70,12 @@ public class Tag extends BucketObject {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void renameTo(String name, Bucket<Note> notesBucket)
             throws BucketObjectNameInvalid {
         String key = name.toLowerCase();
         if (!getSimperiumKey().equals(key)) {
             // create a new tag with the value as the key/name
-            //noinspection unchecked
             Tag newTag = ((Bucket<Tag>) getBucket()).newObject(key);
             newTag.setName(name);
             newTag.save();

@@ -77,9 +77,8 @@
                 android:minWidth="@dimen/minimum_target"
                 android:padding="@dimen/margin_default"
                 android:src="@drawable/ic_chevron_left_24dp"
-                android:tint="@color/toolbar_icon_alpha_40_selector"
-                android:tintMode="src_in">
-            </ImageButton>
+                app:tint="@color/toolbar_icon_alpha_40_selector"
+                app:tintMode="src_in" />
 
             <com.theost.wavenote.widgets.RobotoMediumTextView
                 android:id="@+id/text_of"
@@ -131,9 +130,8 @@
                 android:minWidth="@dimen/minimum_target"
                 android:padding="@dimen/margin_default"
                 android:src="@drawable/ic_chevron_right_24dp"
-                android:tint="@color/toolbar_icon_alpha_40_selector"
-                android:tintMode="src_in">
-            </ImageButton>
+                app:tint="@color/toolbar_icon_alpha_40_selector"
+                app:tintMode="src_in" />
 
             <View
                 android:background="?attr/dividerColor"

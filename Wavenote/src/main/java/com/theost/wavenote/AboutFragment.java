@@ -20,11 +20,11 @@ import java.util.Locale;
 
 public class AboutFragment extends Fragment {
 
-    private static final String DEVELOPER_INSTAGRAM_URL = "https://instagram.com/theo.jedi";
-    private static final String DEVELOPER_SUPPORT_URL = "https://patreon.com/theojedi";
-    private static final String DEVELOPER_WEBSITE_URL = "http://theost.tech";
     private static final String WAVENOTE_GITHUB_URL = "https://github.com/theo-jedi/wavenote-android";
-    private static final String PLAY_STORE_URI = "https://play.google.com/store/apps/details?id=com.theost.wavenote";
+    private static final String DEVELOPER_INSTAGRAM_URL = "https://instagram.com/theo.jedi";
+    private static final String DEVELOPER_WEBSITE_URL = "http://theost.tech";
+    public static final String DEVELOPER_SUPPORT_URL = "https://patreon.com/theojedi";
+    public static final String PLAY_STORE_URI = "https://play.google.com/store/apps/details?id=com.theost.wavenote";
 
     private TextView version;
     private TextView copyright;

@@ -28,6 +28,12 @@ public class PrefUtils {
     // integer, determines note sort order
     public static final String PREF_SORT_ORDER = "pref_key_sort_order";
 
+    // integer, determines count of launches
+    public static final String PREF_LAUNCH_COUNT = "pref_key_launch_count";
+
+    // long, determines time of first launch
+    public static final String PREF_LAUNCH_TIME = "pref_key_launch_time";
+
     // boolean, determines # of preview lines
     public static final String PREF_CONDENSED_LIST = "pref_key_condensed_note_list";
 
@@ -39,6 +45,9 @@ public class PrefUtils {
 
     // int, preferred font size
     public static final String PREF_FONT_SIZE = "pref_key_font_size";
+
+    // boolean, determines feedback dialog showing
+    public static final String PREF_SHOW_FEEDBACK = "pref_key_show_feedback";
 
     // boolean, determines keywords content in the editor
     public static final String PREF_DETECT_SYNTAX = "pref_key_detect_syntax";
@@ -138,6 +147,16 @@ public class PrefUtils {
         } catch (ClassCastException e) {
             return defaultValue;
         }
+    }
+
+    public static long getLongPref(Context context, String prefKey) {
+        return getLongPref(context, prefKey, 0);
+    }
+
+    public static long getLongPref(Context context, String prefKey, long defaultValue) {
+        // read as string preference, then convert to long
+        String strPref = getStringPref(context, prefKey, Long.toString(defaultValue));
+        return StrUtils.strToLong(strPref, defaultValue);
     }
 
     public static int getIntPref(Context context, String prefKey) {

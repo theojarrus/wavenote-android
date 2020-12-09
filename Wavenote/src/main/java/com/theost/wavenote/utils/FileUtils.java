@@ -225,8 +225,9 @@ public class FileUtils {
         bos.close();
     }
 
-    public static byte[][] getStereoBeatResource(Context context, String sound) throws IOException {
-        String beatId = BEAT_PREFIX + sound.toLowerCase() + "%s" + BEAT_STEREO;
+    public static byte[][] getStereoBeatResource(Context context, String sound, boolean isStereo) throws IOException {
+        String beatId = BEAT_PREFIX + sound.toLowerCase() + "%s";
+        if (isStereo) beatId += BEAT_STEREO;
         int strongBeatId = getResId(String.format(beatId, BEAT_STRONG), R.raw.class);
         int weakBeatId = getResId(String.format(beatId, BEAT_WEAK), R.raw.class);
         byte[][] beatSoundData = new byte[2][];
@@ -235,11 +236,11 @@ public class FileUtils {
         return beatSoundData;
     }
 
-    public static byte[][] getStereoBeatCustom(Context context, String sound) throws IOException {
-        InputStream inputStreamStrong = context.getContentResolver().openInputStream(Uri.fromFile(new File(context.getCacheDir()
-                + METRONOME_DIR + BEAT_PREFIX + sound.toLowerCase() + BEAT_STRONG + BEAT_STEREO + SAMPLE_FORMAT)));
-        InputStream inputStreamWeak = context.getContentResolver().openInputStream(Uri.fromFile(new File(context.getCacheDir()
-                + METRONOME_DIR + BEAT_PREFIX + sound.toLowerCase() + BEAT_WEAK + BEAT_STEREO + SAMPLE_FORMAT)));
+    public static byte[][] getStereoBeatCustom(Context context, String sound, boolean isStereo) throws IOException {
+        String beatId = context.getCacheDir() + METRONOME_DIR + BEAT_PREFIX + sound.toLowerCase() + "%s";
+        if (isStereo) beatId += BEAT_STEREO;
+        InputStream inputStreamStrong = context.getContentResolver().openInputStream(Uri.fromFile(new File(String.format(beatId + SAMPLE_FORMAT, BEAT_STRONG))));
+        InputStream inputStreamWeak = context.getContentResolver().openInputStream(Uri.fromFile(new File(String.format(beatId + SAMPLE_FORMAT, BEAT_WEAK))));
         byte[][] beatSoundData = new byte[2][];
         beatSoundData[0] = AudioUtils.readWavData(inputStreamStrong);
         beatSoundData[1] = AudioUtils.readWavData(inputStreamWeak);

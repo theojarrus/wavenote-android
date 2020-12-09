@@ -5,11 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.theost.wavenote.DictionaryActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Keyword;
@@ -70,7 +70,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         EditText mWordEditText;
         AutoCompleteTextView mTypeTextView;
-        ImageButton mTrashButton;
+        MaterialButton mTrashButton;
 
         ViewHolder(View itemView) {
             super(itemView);

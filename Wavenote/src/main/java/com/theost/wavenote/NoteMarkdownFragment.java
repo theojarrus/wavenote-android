@@ -1,5 +1,6 @@
 package com.theost.wavenote;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -18,14 +19,14 @@ import androidx.core.view.MenuCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.commonsware.cwac.anddown.AndDown;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.ContextUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.NoteUtils;
 import com.theost.wavenote.utils.ThemeUtils;
-import com.commonsware.cwac.anddown.AndDown;
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
 
 import java.lang.ref.SoftReference;
 
@@ -49,11 +50,11 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
             R.attr.toolbarIconColor
         );
 
-        final MenuItem colorItem = menu.findItem(R.id.menu_color);
+        final MenuItem colorItem = menu.findItem(R.id.menu_style);
         final ImageView colorItemView = (ImageView) colorItem.getActionView();
         colorItemView.setImageDrawable(colorItem.getIcon());
         TypedValue outValue = new TypedValue();
-        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+        requireContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
         colorItemView.setBackgroundResource(outValue.resourceId);
 
         int viewSize  = (int) (48 * getResources().getDisplayMetrics().density);
@@ -104,6 +105,7 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
         return layout;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -134,37 +136,53 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         // Disable share and delete actions until note is loaded.
-        if (mIsLoadingNote) {
-            menu.findItem(R.id.menu_trash).setEnabled(false);
-        } else {
-            menu.findItem(R.id.menu_trash).setEnabled(true);
-        }
+        menu.findItem(R.id.menu_trash).setEnabled(!mIsLoadingNote);
+
+        MenuItem styleItem = menu.findItem(R.id.menu_style);
+        MenuItem chordItem = menu.findItem(R.id.menu_chords);
+        MenuItem photoItem = menu.findItem(R.id.menu_photos);
+        MenuItem studioItem = menu.findItem(R.id.menu_studio);
+        MenuItem checklistItem = menu.findItem(R.id.menu_checklist);
 
         MenuItem pinItem = menu.findItem(R.id.menu_pin);
         MenuItem publishItem = menu.findItem(R.id.menu_publish);
-        MenuItem copyLinkItem = menu.findItem(R.id.menu_copy);
         MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
+        MenuItem infoMenuItem = menu.findItem(R.id.menu_info);
+        MenuItem shareItem = menu.findItem(R.id.menu_share);
+        MenuItem historyItem = menu.findItem(R.id.menu_history);
+        MenuItem syllableItem = menu.findItem(R.id.menu_syllable);
+        MenuItem lookupItem = menu.findItem(R.id.menu_lookup);
         MenuItem exportItem = menu.findItem(R.id.menu_export);
-        MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
-        MenuItem photoItem = menu.findItem(R.id.menu_photos);
-        MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
-        MenuItem colorItem = menu.findItem(R.id.menu_color);
+        MenuItem trashItem = menu.findItem(R.id.menu_trash);
+        MenuItem copyLinkItem = menu.findItem(R.id.menu_copy);
 
         if (mNote != null) {
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
             markdownItem.setChecked(mNote.isMarkdownEnabled());
+            syllableItem.setChecked(mNote.isSyllableEnabled());
         }
 
+        styleItem.setEnabled(false);
+        chordItem.setEnabled(false);
+        photoItem.setEnabled(false);
+        studioItem.setEnabled(false);
+        checklistItem.setEnabled(false);
         pinItem.setEnabled(false);
         publishItem.setEnabled(false);
-        copyLinkItem.setEnabled(false);
         markdownItem.setEnabled(false);
+        infoMenuItem.setEnabled(false);
+        shareItem.setEnabled(false);
+        historyItem.setEnabled(false);
+        syllableItem.setEnabled(false);
+        lookupItem.setEnabled(false);
         exportItem.setEnabled(false);
-        sheetItem.setEnabled(false);
-        photoItem.setEnabled(false);
-        audioItem.setEnabled(false);
-        colorItem.setEnabled(false);
+        copyLinkItem.setEnabled(false);
+        DrawableUtils.setMenuItemAlpha(styleItem, 0.3); // 0.3 is 30% opacity.
+        DrawableUtils.setMenuItemAlpha(chordItem, 0.3);
+        DrawableUtils.setMenuItemAlpha(photoItem, 0.3);
+        DrawableUtils.setMenuItemAlpha(studioItem, 0.3);
+        DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -231,7 +249,7 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
     }
 
     private static class LoadNoteTask extends AsyncTask<String, Void, Void> {
-        private SoftReference<NoteMarkdownFragment> mNoteMarkdownFragmentReference;
+        private final SoftReference<NoteMarkdownFragment> mNoteMarkdownFragmentReference;
 
         private LoadNoteTask(NoteMarkdownFragment context) {
             mNoteMarkdownFragmentReference = new SoftReference<>(context);

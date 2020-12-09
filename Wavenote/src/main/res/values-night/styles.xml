@@ -50,7 +50,6 @@
         <item name="settingsTextColor">@color/white</item>
         <item name="toolbarColor">@color/background_dark_4</item>
         <item name="toolbarIconColor">@color/gray_20</item>
-        <item name="toolbarPopupTheme">@style/ThemeOverlay.MaterialComponents.Dark</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 
@@ -101,10 +100,6 @@
 
     <style name="Theme.Wavestyle.BottomSheetDialogText" parent="Theme.Wavestyle.BottomSheetDialog">
         <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="ToolbarTheme.Popup" parent="ThemeOverlay.MaterialComponents">
-        <item name="android:backgroundTint">@color/background_dark_12</item>
     </style>
 
 </resources>

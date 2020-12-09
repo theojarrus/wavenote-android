@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Layout;
@@ -55,6 +56,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.ActionBarContextView;
 import androidx.core.app.ShareCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -178,10 +180,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private ActionMode mActionMode;
     private MenuItem mCopyMenuItem;
     private MenuItem mShareMenuItem;
-    private MenuItem mChecklistMenuItem;
-    private MenuItem mInformationMenuItem;
     private MenuItem mViewLinkMenuItem;
-    private MenuItem mSyllableItem;
     private Drawable mCallIcon;
     private Drawable mCopyIcon;
     private Drawable mEmailIcon;
@@ -198,10 +197,11 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private MaterialDialog loadingDialog;
     private MaterialDialog mResultDialog;
     private HistoryBottomSheetDialog mHistoryBottomSheet;
+    private LookupBottomSheetDialog mLookupBottomSheet;
     private MatchOffsetHighlighter mHighlighter;
     private MatchOffsetHighlighter.SpanFactory mMatchHighlighter;
 
-    private StyleBottomSheetDialog colorSheet;
+    private StyleBottomSheetDialog styleSheet;
 
     private DatabaseHelper localDatabase;
     private EditText mAddKeywordEditText;
@@ -247,7 +247,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
 
             int colorResId = ThemeUtils.isLightTheme(requireContext()) ? R.color.background_light : R.color.background_dark;
-            requireActivity().getWindow().setStatusBarColor(getResources().getColor(colorResId, requireActivity().getTheme()));
+            requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), colorResId));
             return true;
         }
 
@@ -298,8 +298,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
-            new Handler().postDelayed(
-                    () -> requireActivity().getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent, requireActivity().getTheme())),
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), android.R.color.transparent)),
                     requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
             );
         }
@@ -348,9 +348,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mCopyIcon = DrawableUtils.tintDrawableWithAttribute(getActivity(), R.drawable.ic_copy_24dp, R.attr.actionModeTextColor);
         mShareIcon = DrawableUtils.tintDrawableWithAttribute(getActivity(), R.drawable.ic_share_24dp, R.attr.actionModeTextColor);
 
-        mAutoSaveHandler = new Handler();
-        mPublishTimeoutHandler = new Handler();
-        mHistoryTimeoutHandler = new Handler();
+        mAutoSaveHandler = new Handler(Looper.getMainLooper());
+        mPublishTimeoutHandler = new Handler(Looper.getMainLooper());
+        mHistoryTimeoutHandler = new Handler(Looper.getMainLooper());
 
         mMatchHighlighter = new TextHighlighter(requireActivity(),
                 R.attr.editorSearchHighlightForegroundColor, R.attr.editorSearchHighlightBackgroundColor);
@@ -413,15 +413,57 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mHighlighter = new MatchOffsetHighlighter(mMatchHighlighter, mContentEditText);
         mPlaceholderView = mRootView.findViewById(R.id.placeholder);
 
-        keywordColors = ResUtils.getDialogColors(getContext());
-        keywordTypes = ResUtils.getKeywordTypes(getContext());
+        mContentEditText.setCustomSelectionActionModeCallback(new android.view.ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.selection, menu);
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+                    mode.setTitle("");
+                    menu.findItem(R.id.add_dictionary).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    menu.findItem(R.id.stylize).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    for (int i = 0; i < menu.size(); i++) {
+                        menu.getItem(i).setTitle("");
+                        menu.getItem(i).getIcon().setTint(requireContext().getResources().getColor(getActionColor()));
+                    }
+                }
+                return true;
+            }
 
-        colorSheet = new StyleBottomSheetDialog();
+            @Override
+            public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.add_dictionary:
+                        showKeywordDialog();
+                        return true;
+                    case R.id.stylize:
+                        changeTextStyle();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(android.view.ActionMode mode) {
+            }
+        });
+
+        keywordColors = ResUtils.getDialogColors(requireContext());
+        keywordTypes = ResUtils.getKeywordTypes(requireContext());
+
+        styleSheet = new StyleBottomSheetDialog();
 
         styleColors = getResources().getIntArray(R.array.colorsheet_colors);
         if (Note.getActiveStyleColor() == 0) Note.setActiveStyleColor(styleColors[0]);
 
-        SyllableCounter.updateSyllableResources(getContext());
+        SyllableCounter.updateSyllableResources(requireContext());
 
         if (DisplayUtils.isLargeScreenLandscape(getActivity()) && mNote == null) {
             mPlaceholderView.setVisibility(View.VISIBLE);
@@ -454,16 +496,19 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             }
         }
 
+        mLookupBottomSheet = new LookupBottomSheetDialog(getActivity());
+
         ViewTreeObserver viewTreeObserver = mContentEditText.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(() -> {
 
             if (mContentDefaultWidth == 0) {
                 mContentDefaultWidth = mContentEditText.getWidth();
-                updateSyllable(false);
+                updateSyllable();
             }
 
             if (orientationChanged) {
-                if (mNote.isSyllableEnabled()) updateSyllable(true);
+                mContentDefaultWidth = mContentEditText.getWidth();
+                countSyllableContent();
                 orientationChanged = false;
             }
 
@@ -539,7 +584,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void showSoftKeyboard() {
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (getActivity() == null) {
                 return;
             }
@@ -604,9 +649,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         inflater.inflate(R.menu.note_editor, menu);
-        MenuCompat.setGroupDividerEnabled(menu, true);
 
-        final MenuItem colorItem = menu.findItem(R.id.menu_color);
+        final MenuItem colorItem = menu.findItem(R.id.menu_style);
         final ImageView colorItemView = (ImageView) colorItem.getActionView();
         colorItemView.setImageDrawable(colorItem.getIcon());
         TypedValue outValue = new TypedValue();
@@ -619,8 +663,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         colorItemView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         colorItemView.setOnClickListener(v -> onOptionsItemSelected(colorItem));
 
+        MenuCompat.setGroupDividerEnabled(menu, true);
+
         colorItemView.setOnLongClickListener(v -> {
-            pickTextColor();
+            pickTextStyle();
             return true;
         });
 
@@ -634,14 +680,14 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             case R.id.menu_photos:
                 startPhotosActivity();
                 return true;
-            case R.id.menu_color:
+            case R.id.menu_style:
                 changeTextStyle();
                 return true;
-            case R.id.menu_sheet:
+            case R.id.menu_chords:
                 startChordsActivity();
                 return true;
-            case R.id.menu_audiotracks:
-                startAudioActivity();
+            case R.id.menu_studio:
+                startStudioActivity();
                 return true;
             case R.id.menu_checklist:
                 insertChecklist();
@@ -666,6 +712,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             case R.id.menu_syllable:
                 setSyllable(!item.isChecked());
                 return true;
+            case R.id.menu_lookup:
+                showLookupSheet();
+                return true;
             case R.id.menu_publish:
                 if (item.isChecked()) {
                     unpublishNote();
@@ -681,8 +730,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     if (!isExporting) {
                         showExportDialog();
                     } else {
-                        DisplayUtils.showToast(getContext(),
-                                getContext().getResources()
+                        DisplayUtils.showToast(requireContext(),
+                                requireContext().getResources()
                                         .getString(R.string.exporting_error));
                     }
                 }
@@ -707,84 +756,72 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (mNote != null) {
-            MenuItem infoItem = menu.findItem(R.id.menu_info);
+            MenuItem styleItem = menu.findItem(R.id.menu_style);
+            MenuItem chordItem = menu.findItem(R.id.menu_chords);
+            MenuItem photoItem = menu.findItem(R.id.menu_photos);
+            MenuItem studioItem = menu.findItem(R.id.menu_studio);
+            MenuItem checklistItem = menu.findItem(R.id.menu_checklist);
+
             MenuItem pinItem = menu.findItem(R.id.menu_pin);
+            MenuItem publishItem = menu.findItem(R.id.menu_publish);
+            MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
+            MenuItem infoMenuItem = menu.findItem(R.id.menu_info);
             MenuItem shareItem = menu.findItem(R.id.menu_share);
             MenuItem historyItem = menu.findItem(R.id.menu_history);
-            MenuItem publishItem = menu.findItem(R.id.menu_publish);
-            MenuItem copyLinkItem = menu.findItem(R.id.menu_copy);
-            MenuItem markdownItem = menu.findItem(R.id.menu_markdown);
-            MenuItem trashItem = menu.findItem(R.id.menu_trash);
-            MenuItem sheetItem = menu.findItem(R.id.menu_sheet);
-            MenuItem photoItem = menu.findItem(R.id.menu_photos);
-            MenuItem audioItem = menu.findItem(R.id.menu_audiotracks);
+            MenuItem syllableItem = menu.findItem(R.id.menu_syllable);
+            MenuItem lookupItem = menu.findItem(R.id.menu_lookup);
             MenuItem exportItem = menu.findItem(R.id.menu_export);
-            MenuItem colorItem = menu.findItem(R.id.menu_color);
-            ImageView colorItemView = (ImageView) colorItem.getActionView();
-
-            mSyllableItem = menu.findItem(R.id.menu_syllable);
-            mChecklistMenuItem = menu.findItem(R.id.menu_checklist);
-            mInformationMenuItem = menu.findItem(R.id.menu_info).setVisible(true);
-
-            mIsSyllableEnabled = mNote.isSyllableEnabled();
+            MenuItem trashItem = menu.findItem(R.id.menu_trash);
+            MenuItem copyLinkItem = menu.findItem(R.id.menu_copy);
 
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
             markdownItem.setChecked(mNote.isMarkdownEnabled());
-            mSyllableItem.setChecked(mIsSyllableEnabled);
+            syllableItem.setChecked(mNote.isSyllableEnabled());
 
             // Disable actions when note is in Trash or markdown view is shown on large device.
             if (mNote.isDeleted() || (mMarkdown != null && mMarkdown.getVisibility() == View.VISIBLE)) {
-                infoItem.setEnabled(false);
-                sheetItem.setEnabled(false);
+                styleItem.setEnabled(false);
+                chordItem.setEnabled(false);
                 photoItem.setEnabled(false);
-                audioItem.setEnabled(false);
-                sheetItem.setEnabled(false);
-                photoItem.setEnabled(false);
-                audioItem.setEnabled(false);
-                shareItem.setEnabled(false);
-                exportItem.setEnabled(false);
-                historyItem.setEnabled(false);
+                studioItem.setEnabled(false);
+                checklistItem.setEnabled(false);
+                pinItem.setEnabled(false);
                 publishItem.setEnabled(false);
+                markdownItem.setEnabled(false);
+                infoMenuItem.setEnabled(false);
+                shareItem.setEnabled(false);
+                historyItem.setEnabled(false);
+                syllableItem.setEnabled(false);
+                lookupItem.setEnabled(false);
+                exportItem.setEnabled(false);
                 copyLinkItem.setEnabled(false);
-                mChecklistMenuItem.setEnabled(false);
-                colorItemView.setEnabled(false);
-                colorItemView.setEnabled(false);
-                mSyllableItem.setEnabled(false);
-
-                DrawableUtils.setMenuItemAlpha(mChecklistMenuItem, 0.3);  // 0.3 is 30% opacity.
-                DrawableUtils.setMenuItemAlpha(colorItem, 0.3);
-                DrawableUtils.setMenuItemAlpha(sheetItem, 0.3);
+                DrawableUtils.setMenuItemAlpha(styleItem, 0.3); // 0.3 is 30% opacity.
+                DrawableUtils.setMenuItemAlpha(chordItem, 0.3);
                 DrawableUtils.setMenuItemAlpha(photoItem, 0.3);
-                DrawableUtils.setMenuItemAlpha(audioItem, 0.3);
-                mContentEditText.setFocusable(false); // Disable NoteEditor if in Trash
+                DrawableUtils.setMenuItemAlpha(studioItem, 0.3);
+                DrawableUtils.setMenuItemAlpha(checklistItem, 0.3);
             } else {
+                styleItem.setEnabled(true);
+                chordItem.setEnabled(true);
+                photoItem.setEnabled(true);
+                studioItem.setEnabled(true);
+                checklistItem.setEnabled(true);
                 pinItem.setEnabled(true);
-                infoItem.setEnabled(true);
-                sheetItem.setEnabled(true);
-                photoItem.setEnabled(true);
-                audioItem.setEnabled(true);
-                sheetItem.setEnabled(true);
-                photoItem.setEnabled(true);
-                audioItem.setEnabled(true);
-                shareItem.setEnabled(true);
-                exportItem.setEnabled(true);
-                historyItem.setEnabled(true);
                 publishItem.setEnabled(true);
                 markdownItem.setEnabled(true);
-                mChecklistMenuItem.setEnabled(true);
-                colorItemView.setEnabled(true);
-                colorItemView.setEnabled(true);
-                mSyllableItem.setEnabled(true);
-
-                DrawableUtils.setMenuItemAlpha(mChecklistMenuItem, 1.0);  // 1.0 is 100% opacity.
-                DrawableUtils.setMenuItemAlpha(colorItem, 1.0);
-                DrawableUtils.setMenuItemAlpha(sheetItem, 1.0);
-                DrawableUtils.setMenuItemAlpha(photoItem, 1.0);
-                DrawableUtils.setMenuItemAlpha(audioItem, 1.0);
-
+                infoMenuItem.setEnabled(true);
+                shareItem.setEnabled(true);
+                historyItem.setEnabled(true);
+                syllableItem.setEnabled(true);
+                lookupItem.setEnabled(true);
+                exportItem.setEnabled(true);
                 copyLinkItem.setEnabled(mNote.isPublished());
-                mContentEditText.setFocusable(true); // Enable NoteEditor if not in Trash
+                DrawableUtils.setMenuItemAlpha(styleItem, 1.0); // 1.0 is 100% opacity.
+                DrawableUtils.setMenuItemAlpha(chordItem, 1.0);
+                DrawableUtils.setMenuItemAlpha(photoItem, 1.0);
+                DrawableUtils.setMenuItemAlpha(studioItem, 1.0);
+                DrawableUtils.setMenuItemAlpha(checklistItem, 1.0);
             }
 
             if (mNote.isDeleted()) {
@@ -804,7 +841,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         orientationChanged = true;
     }
 
-    private final Handler mTransposeHandler = new Handler(msg -> {
+    private final Handler mTransposeHandler = new Handler(Looper.getMainLooper(), msg -> {
         saveAndSyncNote();
         if (loadingDialog != null) loadingDialog.dismiss();
         return true;
@@ -833,18 +870,20 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             contentStr = contentStr.substring(titleEnd).replaceAll("[\\t\\r\\n\\u202F\\u00A0]", Note.SPACE);
             for (String i : transposedChords.keySet()) {
                 String chord = transposedChords.get(i);
-                String splitter = SPACE + i + SPACE;
-                int index = 0;
-                while (index != -1) {
-                    index = contentStr.indexOf(splitter, index);
-                    if (index != -1) {
-                        String beginStr = contentStr.substring(0, index);
-                        String endStr = contentStr.substring(index + splitter.length());
-                        index += titleEnd;
-                        contentStr = beginStr + SPACE + StrUtils.repeat("-", chord.length()) + SPACE + endStr;
-                        content.delete(index + 1, index + splitter.length() - 1);
-                        content.insert(index + 1, chord);
-                        index = index - titleEnd + 1;
+                if (chord != null) {
+                    String splitter = SPACE + i + SPACE;
+                    int index = 0;
+                    while (index != -1) {
+                        index = contentStr.indexOf(splitter, index);
+                        if (index != -1) {
+                            String beginStr = contentStr.substring(0, index);
+                            String endStr = contentStr.substring(index + splitter.length());
+                            index += titleEnd;
+                            contentStr = beginStr + SPACE + StrUtils.repeat("-", chord.length()) + SPACE + endStr;
+                            content.delete(index + 1, index + splitter.length() - 1);
+                            content.insert(index + 1, chord);
+                            index = index - titleEnd + 1;
+                        }
                     }
                 }
             }
@@ -855,7 +894,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private int getActionColor() {
-        return ThemeUtils.getColorFromAttribute(getContext(), R.attr.actionModeTextColor);
+        return ThemeUtils.getColorFromAttribute(requireContext(), R.attr.actionModeTextColor);
     }
 
     private void showKeywordDialog() {
@@ -863,7 +902,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         String selectedText = mContentEditText.getSelectedString().trim();
         if (selectedText.length() > keywordMaxLength)
             selectedText = selectedText.substring(0, keywordMaxLength);
-        MaterialDialog keywordDialog = new MaterialDialog.Builder(getContext())
+        MaterialDialog keywordDialog = new MaterialDialog.Builder(requireContext())
                 .customView(R.layout.add_dialog, false)
                 .title(R.string.add_keyword)
                 .positiveText(R.string.import_text)
@@ -871,7 +910,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 .onPositive((dialog, which) -> insertKeyword(mAddKeywordEditText.getText().toString()))
                 .negativeText(R.string.cancel).build();
         MDButton addButton = keywordDialog.getActionButton(DialogAction.POSITIVE);
-        mAddKeywordType = keywordDialog.getCustomView().findViewById(R.id.keyword_type);
+        mAddKeywordType = Objects.requireNonNull(keywordDialog.getCustomView()).findViewById(R.id.keyword_type);
         mAddKeywordType.setVisibility(View.VISIBLE);
         mAddKeywordEditText = keywordDialog.getCustomView().findViewById(R.id.dialog_input);
         mAddKeywordEditText.setText(selectedText);
@@ -916,11 +955,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
         boolean isInserted = localDatabase.insertDictionaryData(keyword, type);
         if (isInserted) {
-            DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.created));
-            Note.setIsNeedResourceUpdate(true);
+            DisplayUtils.showToast(requireContext(), this.getString(R.string.created));
+            int endSelection = mContentEditText.getSelectionEnd() - mContentEditText.getSelectionStart();
+            Note.setNeedResourceUpdate(true);
             syntaxHighlightEditorContent();
+            mContentEditText.setSelection(mContentEditText.getSelectionEnd());
         } else {
-            DisplayUtils.showToast(getContext(), this.getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(requireContext(), this.getString(R.string.database_error));
         }
     }
 
@@ -935,28 +976,31 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void updateKeyDialogData() {
         if (localDatabase == null)
-            localDatabase = new DatabaseHelper(getContext());
+            localDatabase = new DatabaseHelper(requireContext());
         if (keywordTypes == null)
-            keywordTypes = ResUtils.getKeywordTypes(getContext());
+            keywordTypes = ResUtils.getKeywordTypes(requireContext());
         if (keywordColors == null)
-            keywordColors = ResUtils.getDialogColors(getContext());
+            keywordColors = ResUtils.getDialogColors(requireContext());
         if (keywordMaxLength == 0)
-            keywordMaxLength = ResUtils.getKeywordMaxLength(getContext());
+            keywordMaxLength = ResUtils.getKeywordMaxLength(requireContext());
     }
 
     private void showExportDialog() {
-        List<String> exportModes = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.array_export_modes)));
-        File photoDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.PHOTOS_DIR);
-        File audioDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.AUDIO_DIR);
-        File tracksDir = new File(getContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.TRACKS_DIR);
-        if (!photoDir.exists() || photoDir.list().length == 0)
-            exportModes.remove(getResources().getString(R.string.photo));
-        if (!audioDir.exists() || audioDir.list().length == 0)
-            exportModes.remove(getResources().getString(R.string.audio));
-        if (!tracksDir.exists() || tracksDir.list().length == 0)
-            exportModes.remove(getResources().getString(R.string.tracks));
+        List<String> exportModes = new ArrayList<>(Arrays.asList(requireContext().getResources().getStringArray(R.array.array_export_modes)));
+        File photoDir = new File(requireContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.PHOTOS_DIR);
+        File audioDir = new File(requireContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.AUDIO_DIR);
+        File tracksDir = new File(requireContext().getCacheDir() + FileUtils.NOTES_DIR + mNote.getSimperiumKey() + FileUtils.TRACKS_DIR);
+        String[] photoDirList = photoDir.list();
+        String[] audioDirDirList = audioDir.list();
+        String[] tracksDirDirList = tracksDir.list();
+        if (!photoDir.exists() || (photoDirList != null && photoDirList.length == 0))
+            exportModes.remove(getString(R.string.photo));
+        if (!audioDir.exists() || (audioDirDirList != null && audioDirDirList.length == 0))
+            exportModes.remove(getString(R.string.audio));
+        if (!tracksDir.exists() || (tracksDirDirList != null && tracksDirDirList.length == 0))
+            exportModes.remove(getString(R.string.tracks));
 
-        new MaterialDialog.Builder(getContext())
+        new MaterialDialog.Builder(requireContext())
                 .title(R.string.export)
                 .positiveText(R.string.export)
                 .negativeText(R.string.cancel)
@@ -964,7 +1008,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 .itemsCallbackMultiChoice(null, (dialog, which, modes) -> {
                     if (modes.length > 0) {
                         this.exportModes = modes;
-                        if (Arrays.toString(modes).contains(getContext().getResources().getString(R.string.zip))) {
+                        if (Arrays.toString(modes).contains(requireContext().getString(R.string.zip))) {
                             showPasswordDialog();
                         } else {
                             exportNote();
@@ -976,7 +1020,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private void showPasswordDialog() {
         exportPassword = "";
-        new MaterialDialog.Builder(getContext())
+        new MaterialDialog.Builder(requireContext())
                 .title(R.string.export)
                 .positiveText(R.string.export)
                 .negativeText(R.string.cancel)
@@ -994,18 +1038,18 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
             public void onFinish() {
                 if (isExporting)
-                    loadingDialog = DisplayUtils.showLoadingDialog(getContext(), title, content);
+                    loadingDialog = DisplayUtils.showLoadingDialog(requireContext(), title, content);
             }
         }.start();
     }
 
     private void showResultDialog() {
-        new MaterialDialog.Builder(getContext())
+        new MaterialDialog.Builder(requireContext())
                 .title(R.string.export)
                 .content(resultDialogMessage)
                 .positiveText(android.R.string.ok)
                 .show();
-        DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.path) + ": " + exportPath);
+        DisplayUtils.showToast(requireContext(), requireContext().getString(R.string.path) + ": " + exportPath);
     }
 
     private void exportNote() {
@@ -1013,7 +1057,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         new ExportThread().start();
     }
 
-    private final Handler mExportHandler = new Handler(msg -> {
+    private final Handler mExportHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         showResultDialog();
         return true;
@@ -1023,9 +1067,9 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         @Override
         public void run() {
             isExporting = true;
-            exportPath = PrefUtils.getStringPref(getContext(), PrefUtils.PREF_EXPORT_DIR);
-            HashMap<String, Boolean> resultMap = ExportUtils.exportNote(getContext(), mNote, exportPath, new ArrayList<>(Arrays.asList(exportModes)), exportPassword);
-            resultDialogMessage = ExportUtils.getResultMessage(getContext(), resultMap);
+            exportPath = PrefUtils.getStringPref(requireContext(), PrefUtils.PREF_EXPORT_DIR);
+            HashMap<String, Boolean> resultMap = ExportUtils.exportNote(requireContext(), mNote, exportPath, new ArrayList<>(Arrays.asList(exportModes)), exportPassword);
+            resultDialogMessage = ExportUtils.getResultMessage(requireContext(), resultMap);
             mExportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
             isExporting = false;
         }
@@ -1065,7 +1109,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         loadMarkdownData();
         mMarkdown.setVisibility(View.VISIBLE);
 
-        new Handler().postDelayed(
+        new Handler(Looper.getMainLooper()).postDelayed(
                 () -> requireActivity().invalidateOptionsMenu(),
                 getResources().getInteger(R.integer.time_animation)
         );
@@ -1074,7 +1118,10 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     public void shareNote() {
         if (mNote != null) {
             mContentEditText.clearFocus();
-            showShare(mContentEditText.getText().toString());
+            Spannable content = mContentEditText.getText();
+            if (content != null) {
+                showShare(mContentEditText.getText().toString());
+            }
         }
     }
 
@@ -1089,7 +1136,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         ArrayList<String> chordsList = new ArrayList<>();
         HashMap<Integer, String> wordsMap = new HashMap<>();
 
-        Map<ArrayList<String>, HashMap<Integer, String>> chordsData = HighlightUtils.getChordsData(getContext(), mContentEditText.getTextContent());
+        Map<ArrayList<String>, HashMap<Integer, String>> chordsData = HighlightUtils.getChordsData(requireContext(), mContentEditText.getTextContent());
         if (chordsData.entrySet().iterator().hasNext()) {
             Map.Entry<ArrayList<String>, HashMap<Integer, String>> chordsDataEntry = chordsData.entrySet().iterator().next();
             chordsList = chordsDataEntry.getKey();
@@ -1102,20 +1149,20 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         startActivityForResult(intent, TRANSPOSE_CODE);
     }
 
-    private void startAudioActivity() {
+    private void startStudioActivity() {
         Intent intent = new Intent(getActivity(), StudioActivity.class);
         intent.putExtra(PhotosActivity.ARG_NOTE_ID, mNote.getSimperiumKey());
         startActivity(intent);
     }
 
     public void showHistory() {
-        //if (mNote != null && mNote.getVersion() > 1) {
-        mContentEditText.clearFocus();
-        mHistoryTimeoutHandler.postDelayed(mHistoryTimeoutRunnable, HISTORY_TIMEOUT);
-        showHistorySheet();
-        //} else {
-        //    Toast.makeText(getActivity(), R.string.error_history, Toast.LENGTH_LONG).show();
-        //}
+        if (mNote != null && mNote.getVersion() > 1) {
+            mContentEditText.clearFocus();
+            mHistoryTimeoutHandler.postDelayed(mHistoryTimeoutRunnable, HISTORY_TIMEOUT);
+            showHistorySheet();
+        } else {
+            Toast.makeText(getActivity(), R.string.error_history, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void showInfo() {
@@ -1130,13 +1177,22 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private void setSyllable(boolean isChecked) {
         mIsSyllableEnabled = isChecked;
         saveNote();
-        updateSyllable(true);
+        updateSyllable();
+        countSyllableContent();
 
-        // Set preference so that next new note will have markdown enabled.
+        // Set preference so that next new note will have syllable enabled.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(PrefUtils.PREF_SYLLABLE_ENABLED, isChecked);
         editor.apply();
+    }
+
+    private void updateSyllable() {
+        if (mIsSyllableEnabled) {
+            mSyllableEditText.setVisibility(View.VISIBLE);
+        } else {
+            mSyllableEditText.setVisibility(View.GONE);
+        }
     }
 
     private void setMarkdown(boolean isChecked) {
@@ -1227,6 +1283,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 // Update markdown and preview flags from updated note.
                 mIsMarkdownEnabled = mNote.isMarkdownEnabled();
                 mIsPreviewEnabled = mNote.isPreviewEnabled();
+                mIsSyllableEnabled = mNote.isSyllableEnabled();
 
                 // Show/Hide tabs based on markdown flag.
                 showMarkdownActionOrTabs();
@@ -1335,7 +1392,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             int end = start + count;
             String content = charSequence.toString();
             if (end > start && content.startsWith(NEW_LINE, end - 1)) {
-                if (end - 2 < 0 || !content.substring(end - 2, end - 1).equals(" ")) {
+                if (end - 2 < 0 || content.charAt(end - 2) != SPACE) {
                     int offsetSelection = mContentEditText.getSelectionEnd() + 1;
                     if (mContentEditText.length() != 0 && offsetSelection > mContentEditText.length()) {
                         mContentEditText.getText().insert(mContentEditText.length() - 1, " ");
@@ -1692,28 +1749,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         setPublishedNote(false);
     }
 
-    private void updateSyllable(boolean update) {
-        if (mNote != null) {
-            if (mNote.isSyllableEnabled()) {
-                if (update) countSyllableContent();
-                mSyllableEditText.setVisibility(View.VISIBLE);
-            } else {
-                mSyllableEditText.setVisibility(View.GONE);
-            }
-        }
-    }
-
     private void updateSyllableLineSpace(Editable editable) {
-
-        int fieldWidth;
-        if (mSyllableEditText.getVisibility() == View.VISIBLE) {
-            fieldWidth = mContentEditText.getWidth();
-            if (fieldWidth != mContentDefaultWidth) {
-                mContentDefaultWidth = fieldWidth;
-            }
-        } else {
-            fieldWidth = mContentDefaultWidth;
-        }
 
         Spannable content = mContentEditText.getText();
         if ((editable == null) || (content == null)) return;
@@ -1741,7 +1777,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             CharSequence line = content.subSequence(newlineIndexes.get(i) + 1, endIndex);
             float lineWidth = mContentEditText.getTextLineWidth(line);
 
-            while (lineWidth > fieldWidth) {
+            while (lineWidth > mContentDefaultWidth) {
                 String lineStr = line.toString();
                 int spaceIndex = -1;
                 if (lineStr.indexOf(SPACE) != -1) {
@@ -1749,7 +1785,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                     while (index != -1) {
                         index = lineStr.indexOf(SPACE, index);
                         if (index != -1) {
-                            if (mContentEditText.getTextLineWidth(line.subSequence(0, index)) < fieldWidth) {
+                            if (mContentEditText.getTextLineWidth(line.subSequence(0, index)) < mContentDefaultWidth) {
                                 spaceIndex = index;
                                 index += 1;
                             } else {
@@ -1762,7 +1798,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 int breakIndex;
                 if (spaceIndex == -1) {
                     breakIndex = 0;
-                    while (mContentEditText.getTextLineWidth(line.subSequence(0, breakIndex + 1)) < fieldWidth)
+                    while (mContentEditText.getTextLineWidth(line.subSequence(0, breakIndex + 1)) < mContentDefaultWidth)
                         breakIndex++;
                 } else {
                     breakIndex = spaceIndex + 1;
@@ -1781,13 +1817,24 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mContentEditText.fixLineHeight();
     }
 
-    private void pickTextColor() {
-        colorSheet.colorPicker(this, styleColors, Note.getActiveStyleColor(), true);
-        colorSheet.show(getParentFragmentManager());
+    private void pickTextStyle() {
+        styleSheet.stylePicker(this, styleColors, Note.getActiveStyleColor(), true);
+        styleSheet.show(getParentFragmentManager());
     }
 
-    public void updateTextColor(int color) {
+    public void updateTextStyle(int color) {
         Note.setActiveStyleColor(color);
+    }
+
+    private void showLookupSheet() {
+        Spannable content = mContentEditText.getText();
+        if (content != null) {
+            String selectedWord = content.toString().substring(mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd()).trim();
+            selectedWord = selectedWord.replaceAll("\\p{Punct}", "");
+            if (selectedWord.length() > 30) selectedWord = selectedWord.substring(0, 30);
+            if (!mLookupBottomSheet.isAdded())
+                mLookupBottomSheet.show(requireActivity().getSupportFragmentManager(), selectedWord);
+        }
     }
 
     private void copyToClipboard(String text) {
@@ -1912,6 +1959,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 if (fragment.mNote != null) {
                     fragment.mIsMarkdownEnabled = fragment.mNote.isMarkdownEnabled();
                     fragment.mIsPreviewEnabled = fragment.mNote.isPreviewEnabled();
+                    fragment.mIsSyllableEnabled = fragment.mNote.isSyllableEnabled();
                 }
             } catch (BucketObjectMissingException e) {
                 // See if the note is in the object store
@@ -1951,7 +1999,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 // Show soft keyboard
                 fragment.mContentEditText.requestFocus();
 
-                new Handler().postDelayed(() -> {
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     if (fragment.getActivity() == null) {
                         return;
                     }
@@ -2011,7 +2059,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void countSyllableContent() {
-        if (getActivity() == null || getActivity().isFinishing() || !mNote.isSyllableEnabled()) {
+        if (getActivity() == null || getActivity().isFinishing() || !mIsSyllableEnabled) {
             return;
         }
 
@@ -2034,7 +2082,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         }
 
         if (PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX)) {
-            HighlightUtils.updateSyntaxHighlight(getContext(), mContentEditText, Note.getActiveColor(), PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX));
+            HighlightUtils.updateSyntaxHighlight(requireContext(), mContentEditText, Note.getActiveColor(), PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX));
         }
     }
 

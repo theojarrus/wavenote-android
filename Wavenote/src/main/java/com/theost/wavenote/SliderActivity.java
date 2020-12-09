@@ -215,10 +215,10 @@ public class SliderActivity extends ThemedAppCompatActivity {
     }
 
     private void updatePageData() {
-        setTitle(currentPosition + 1 + " " + getResources().getString(R.string.of) + " " + adapter.getCount());
+        setTitle(currentPosition + 1 + " " + getString(R.string.of) + " " + adapter.getCount());
         String photoName = mPhotoList.get(currentPosition).getName();
         if (photoName.equals(""))
-            photoName = getResources().getString(R.string.photo);
+            photoName = getString(R.string.photo);
         mNameTextView.setText(photoName);
         mDateTextView.setText(mPhotoList.get(currentPosition).getDate());
     }
@@ -244,7 +244,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
             startActivityForResult(Intent.createChooser(shareIntent, getResources().getText(R.string.share)), FILE_REQUEST);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+            DisplayUtils.showToast(this, getString(R.string.file_error));
         }
     }
 
@@ -261,12 +261,11 @@ public class SliderActivity extends ThemedAppCompatActivity {
             FileUtils.createPhotoFile(bitmap, file);
             isModified = true;
             currentPosition = viewPager.getCurrentItem();
-            adapter.clearUriCache(Uri.fromFile(file));
-            viewPager.setAdapter(adapter);
+            adapter.updateBitmap(Uri.fromFile(file), viewPager, currentPosition);
             updatePage();
         } catch (IOException e) {
             e.printStackTrace();
-            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+            DisplayUtils.showToast(this, getString(R.string.file_error));
         }
     }
 

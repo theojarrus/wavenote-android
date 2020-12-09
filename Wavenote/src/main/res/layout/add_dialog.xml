@@ -20,10 +20,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
-            android:hint="@string/text"
+            android:hint="@string/word"
             android:inputType="text"
             android:maxLength="@integer/dialog_input_max" />
 

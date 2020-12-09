@@ -205,7 +205,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         if (!isBeatSetting) mTuneTextView.setVisibility(View.GONE);
 
         localDatabase = new DatabaseHelper(this);
-        resourceSounds = Arrays.asList(getResources().getStringArray(R.array.metronome_sounds));
+        resourceSounds = Arrays.asList(getResources().getStringArray(R.array.array_metronome_sounds));
 
         updateSoundData();
 
@@ -320,7 +320,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     }
 
     private void updateOrientation() {
-        int padding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.custom_space));
+        int padding = DisplayUtils.dpToPx(this, getResources().getInteger(R.integer.padding_medium));
         if (DisplayUtils.isLandscape(this)) {
             mPlayLayout.setPadding(padding, 0, 0, 0);
             mActionsLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -383,7 +383,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     void onBeatClick(View v) {
         new MaterialDialog.Builder(this)
                 .title(R.string.select_beat)
-                .items(R.array.beats_array)
+                .items(R.array.array_metronome_beats)
                 .itemsCallback((dialog, view, which, text) -> refreshBeat(text.toString())).show();
     }
 
@@ -493,9 +493,9 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 try {
                     byte[][] beatsData;
                     if (resourceSounds.contains(metronomeSound)) {
-                        beatsData = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound);
+                        beatsData = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound, true);
                     } else {
-                        beatsData = FileUtils.getStereoBeatCustom(getApplicationContext(), metronomeSound);
+                        beatsData = FileUtils.getStereoBeatCustom(getApplicationContext(), metronomeSound, true);
                     }
                     beatStrongBytes = beatsData[0];
                     beetWeakBytes = beatsData[1];
@@ -541,10 +541,10 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 if (checkFilesAvailable(name)) {
                     customSounds.put(name, Integer.parseInt(id));
                 } else {
-                    DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+                    DisplayUtils.showToast(this, getString(R.string.file_error));
                     boolean isRemoved = localDatabase.removeMetronomeData(id);
                     if (!isRemoved) {
-                        DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+                        DisplayUtils.showToast(this, getString(R.string.database_error));
                     }
                 }
             }
@@ -567,11 +567,11 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private void insertSound() {
         boolean isInserted = localDatabase.insertMetronomeData(soundName);
         if (isInserted) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.imported) + ": " + soundName);
+            DisplayUtils.showToast(this, getString(R.string.imported) + ": " + soundName);
             soundName = "";
             updateSoundData();
         } else {
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
             clearImport();
         }
     }
@@ -589,7 +589,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             removeLocalFiles(i);
         }
         if (isRemoved.contains(false))
-            DisplayUtils.showToast(this, getResources().getString(R.string.database_error));
+            DisplayUtils.showToast(this, getString(R.string.database_error));
         updateSoundData();
     }
 
@@ -634,7 +634,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private final Handler mExportHandler = new Handler(msg -> {
+    private final Handler mExportHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         showResultDialog();
         return true;
@@ -662,7 +662,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
         }
     }
 
-    private final Handler mImportHandler = new Handler(msg -> {
+    private final Handler mImportHandler = new Handler(Looper.getMainLooper(), msg -> {
         boolean isCreated = false;
         if (msg.what == ImportUtils.RESULT_OK) {
             isCreated = true;
@@ -671,9 +671,9 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                     .getString(R.string.sample_error) + " " + AudioConfig.AUDIO_SAMPLE_RATE));
             return false;
         } else if (msg.what == ImportUtils.FILE_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+            DisplayUtils.showToast(this, getString(R.string.file_error));
         } else if (msg.what == ImportUtils.EXIST_ERROR) {
-            DisplayUtils.showToast(this, getResources().getString(R.string.exist_error));
+            DisplayUtils.showToast(this, getString(R.string.exist_error));
         }
         creationResult(isCreated);
         return true;
@@ -766,7 +766,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                     importSound(wavInput);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    DisplayUtils.showToast(this, getResources().getString(R.string.file_error));
+                    DisplayUtils.showToast(this, getString(R.string.file_error));
                     if (soundType.equals(BEAT_WEAK)) clearImport();
                 }
             }
@@ -784,11 +784,11 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private void showBeatDialog() {
         String beat = "";
         if (soundType.equals(BEAT_STRONG)) {
-            beat = getResources().getString(R.string.strong).toLowerCase();
+            beat = getString(R.string.strong).toLowerCase();
         } else if (soundType.equals(BEAT_WEAK)) {
-            beat = getResources().getString(R.string.weak).toLowerCase();
+            beat = getString(R.string.weak).toLowerCase();
         }
-        String message = String.format(getResources().getString(R.string.choose_beat), beat);
+        String message = String.format(getString(R.string.choose_beat), beat);
         new MaterialDialog.Builder(this)
                 .title(R.string.import_text)
                 .content(message)
@@ -807,7 +807,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                 .content(resultDialogMessage)
                 .positiveText(android.R.string.ok)
                 .show();
-        DisplayUtils.showToast(this, getResources().getString(R.string.path) + ": " + exportPath);
+        DisplayUtils.showToast(this, getString(R.string.path) + ": " + exportPath);
     }
 
     private void createDialog(int mode) {
@@ -819,7 +819,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
             exportPassword = null;
             List<String> listItems = new ArrayList<>(customSounds.keySet());
             if (mode == MODE_EXPORT)
-                listItems.add(getResources().getString(R.string.zip));
+                listItems.add(getString(R.string.zip));
             new MaterialDialog.Builder(this)
                     .title(R.string.choose_samples)
                     .positiveText(R.string.choose)
@@ -831,7 +831,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
                             String item = i.toString();
                             Object key = customSounds.get(item);
                             if (key == null) {
-                                String zipMode = getResources().getString(R.string.zip);
+                                String zipMode = getString(R.string.zip);
                                 if (i.equals(zipMode)) {
                                     createZip = true;
                                 }

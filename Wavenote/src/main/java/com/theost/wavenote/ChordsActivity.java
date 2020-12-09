@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -77,9 +78,12 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private List<String> mChordStaticSet;
     private List<String> mChordSet;
     private List<String> mSearchSet;
-    private String[] mColumnList;
+    private List<String> mColumnList;
+    private String[] mColumnArray;
     private String prevRequest;
     private String prevChord;
+
+    private int[] mTextSizeArray;
 
     private DisplayMetrics displayMetrics;
 
@@ -142,7 +146,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         LinearLayout emptyView = findViewById(android.R.id.empty);
         ImageView mEmptyViewImage = emptyView.findViewById(R.id.image);
         TextView mEmptyViewText = emptyView.findViewById(R.id.text);
-        mEmptyViewImage.setImageResource(R.drawable.m_audiotrack_black_24dp);
+        mEmptyViewImage.setImageResource(R.drawable.av_chords_24dp);
         mEmptyViewText.setText(R.string.empty_chords);
 
         isAllChords = getIntent().getBooleanExtra(ARG_ALL_CHORDS, false);
@@ -167,7 +171,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mInstrumentIntArray = new int[]{R.string.guitar, R.string.piano, R.string.ukulele};
         mInstrumentStringArray = getResources().getStringArray(R.array.array_musical_instruments);
         mInstrumentStringList = Arrays.asList(mInstrumentStringArray);
-        mColumnList = getResources().getStringArray(R.array.array_musical_columns);
+        mColumnArray = getResources().getStringArray(R.array.array_musical_columns);
+        mColumnList = Arrays.asList(mColumnArray);
 
         int savedInstrument = Note.getNoteActiveInstrument();
         if (savedInstrument == 0) {
@@ -183,15 +188,13 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
         mNotesList = Arrays.asList(getResources().getStringArray(R.array.array_musical_notes_order));
         mNotesHalftonesList = Arrays.asList(getResources().getStringArray(R.array.array_musical_notes_halftones));
+        mTextSizeArray = getResources().getIntArray(R.array.array_musical_textsize);
 
         mDrawableLayout = findViewById(R.id.chords_view_layout);
 
         mChordsRecyclerView = findViewById(R.id.chord_view);
         mChordsRecyclerView.setHasFixedSize(false);
         mChordsRecyclerView.setNestedScrollingEnabled(false);
-        mChordsRecyclerView.setDrawingCacheEnabled(true);
-        mChordsRecyclerView.setItemViewCacheSize(20);
-        mChordsRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         mChordsButtonsRecyclerView.setHasFixedSize(false);
         mChordsButtonsRecyclerView.setNestedScrollingEnabled(false);
@@ -209,7 +212,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mColumnsInputView = findViewById(R.id.columns);
         mColumnsInputView.setText("00%");
         ViewUtils.disbaleInput(mColumnsInputView);
-        ViewUtils.updateDropdown(this, mColumnsInputView, mColumnList);
+        ViewUtils.updateDropdown(this, mColumnsInputView, mColumnArray);
         ViewUtils.removeFocus(mColumnsInputView);
         mColumnsInputView.clearFocus();
 
@@ -294,7 +297,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         int colorButtonBack = ThemeUtils.getColorFromAttribute(this, R.attr.buttonBackgroundColor);
         int[] colors = {colorText, colorBackText, colorButton, colorButtonBack};
 
-        chordButtonAdapter = new ChordButtonAdapter(this, itemWidth, wordsWidth, colors);
+        chordButtonAdapter = new ChordButtonAdapter(this, itemWidth, wordsWidth, 0, colors, isAllChords);
         mChordsButtonsRecyclerView.setAdapter(chordButtonAdapter);
 
         ViewTreeObserver viewTreeObserver = mChordsButtonsLayout.getViewTreeObserver();
@@ -313,6 +316,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         if (mChordsList.size() == 0) return false;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.chords_list, menu);
+        DrawableUtils.tintMenuWithAttribute(this, menu, R.attr.toolbarIconColor);
         mSearchMenuItem = menu.findItem(R.id.search);
         mGridMenuItem = menu.findItem(R.id.grid);
         mTransposeUpMenuItem = menu.findItem(R.id.menu_transposeup);
@@ -382,7 +386,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
                 chordSearchGridEnabled = false;
             }
             AniUtils.fadeIn(mSearchLayout);
-            mSearchMenuItem.setIcon(R.drawable.av_close);
+            mSearchMenuItem.setIcon(R.drawable.ic_close_24dp);
             mSearchInputView.requestFocus();
             mSearchInputView.dismissDropDown();
             mTransposeUpMenuItem.setEnabled(false);
@@ -399,7 +403,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             updateGrid(chordSearchGridEnabled);
             chordSearchGridEnabled = false;
             if (!(mSearchSet.equals(mChordSet) && (!chordGridEnabled))) updateChordData();
-            mSearchMenuItem.setIcon(R.drawable.av_search_24dp);
+            mSearchMenuItem.setIcon(R.drawable.ic_search_24dp);
             mSearchLayout.setVisibility(View.GONE);
             mTransposeUpMenuItem.setEnabled(true);
             mTransposeDownMenuItem.setEnabled(true);
@@ -408,6 +412,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
             DrawableUtils.setMenuItemAlpha(mTransposeDownMenuItem, 1);
             DrawableUtils.setMenuItemAlpha(mGridMenuItem, 1);
         }
+        DrawableUtils.tintMenuItemWithAttribute(this, mSearchMenuItem, R.attr.toolbarIconColor);
     }
 
     @SuppressLint("SetTextI18n")
@@ -430,7 +435,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         updateItemSize();
     }
 
-    private final Handler mUpdateChordsHandler = new Handler(msg -> {
+    private final Handler mUpdateChordsHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (msg.what == ImportUtils.RESULT_OK) updateAdapter();
         return true;
     });
@@ -450,6 +455,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void loadChords() {
         if (isAllChords) {
             mChordsList = HighlightUtils.getAllChords(this);
@@ -467,11 +473,12 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private void updateGridIcon() {
         int icon;
         if (chordGridEnabled) {
-            icon = R.drawable.av_grid_on_24;
+            icon = R.drawable.ic_grid_on_24dp;
         } else {
-            icon = R.drawable.av_grid_off_24;
+            icon = R.drawable.ic_grid_off_24dp;
         }
         mGridMenuItem.setIcon(icon);
+        DrawableUtils.tintMenuItemWithAttribute(this, mGridMenuItem, R.attr.toolbarIconColor);
     }
 
     private void updateSearch(String request) {
@@ -524,6 +531,10 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         mChordsButtonsRecyclerView.setLayoutManager(layoutManager);
     }
 
+    private int getTextSize() {
+        return mTextSizeArray[mColumnList.indexOf(mColumnsInputView.getText().toString())];
+    }
+
     private void updateItemSize() {
         updateDisplayMetrics();
         int imageCount = 4;
@@ -531,7 +542,8 @@ public class ChordsActivity extends ThemedAppCompatActivity {
         itemWidth = (displayMetrics.widthPixels - itemPadding * (itemsInline + 1)) / itemsInline;
         wordsWidth = displayMetrics.widthPixels - itemPadding * 2;
         chordWidth = displayMetrics.widthPixels / imageCount;
-        if (chordButtonAdapter != null) chordButtonAdapter.updateItemSize(itemWidth, wordsWidth);
+        if (chordButtonAdapter != null)
+            chordButtonAdapter.updateItemSize(itemWidth, wordsWidth, getTextSize());
         if (chordAdapter != null) chordAdapter.updateItemSize(chordWidth);
         updateLayout();
     }

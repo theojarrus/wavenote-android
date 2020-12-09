@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
@@ -122,7 +123,10 @@ public class WavenoteEditText extends AppCompatEditText {
         TextPaint paint = new TextPaint();
         float textSize = getTextSize();
         paint.setTextSize(textSize);
-        StaticLayout tempLayout = new StaticLayout(line, paint, 10000, android.text.Layout.Alignment.ALIGN_NORMAL, 0f, 0f, false);
+        StaticLayout.Builder sb = StaticLayout.Builder.obtain(line, 0, line.length(), paint, 10000)
+                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                .setIncludePad(false);
+        StaticLayout tempLayout = sb.build();
         float lineWidth = 0;
         for (int i = 0; i < tempLayout.getLineCount(); i++) lineWidth += tempLayout.getLineWidth(i);
         return lineWidth;
@@ -132,7 +136,10 @@ public class WavenoteEditText extends AppCompatEditText {
         TextPaint paint = new TextPaint();
         float textSize = getTextSize();
         paint.setTextSize(textSize);
-        StaticLayout tempLayout = new StaticLayout(line, paint, 10000, android.text.Layout.Alignment.ALIGN_NORMAL, 0f, 0f, false);
+        StaticLayout.Builder sb = StaticLayout.Builder.obtain(line, 0, line.length(), paint, 10000)
+                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                .setIncludePad(false);
+        StaticLayout tempLayout = sb.build();
         Rect rect = new Rect();
         tempLayout.getLineBounds(0, rect);
         return rect.height();
@@ -161,7 +168,7 @@ public class WavenoteEditText extends AppCompatEditText {
             int iconSize = DisplayUtils.getChecklistIconSize(getContext());
             iconDrawable.setBounds(0, 0, iconSize, iconSize);
             final CenteredImageSpan newImageSpan = new CenteredImageSpan(getContext(), iconDrawable);
-            new Handler().post(() -> {
+            new Handler(Looper.getMainLooper()).post(() -> {
                 editable.setSpan(newImageSpan, checkboxStart, checkboxEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 editable.removeSpan(imageSpans[0]);
                 fixLineSpacing();
@@ -216,11 +223,12 @@ public class WavenoteEditText extends AppCompatEditText {
             end = getLayout().getLineEnd(lineNumber);
         }
 
-        SpannableStringBuilder workingString = new SpannableStringBuilder(Objects.requireNonNull(getText()).subSequence(start, end));
         Editable editable = getText();
-        if (editable.length() < start || editable.length() < end) {
+        if (editable.length() < start || editable.length() < end || start < 0) {
             return;
         }
+
+        SpannableStringBuilder workingString = new SpannableStringBuilder(Objects.requireNonNull(getText()).subSequence(start, end));
 
         int previousSelection = getSelectionStart();
         CheckableSpan[] checkableSpans = workingString.getSpans(0, workingString.length(), CheckableSpan.class);
@@ -264,17 +272,19 @@ public class WavenoteEditText extends AppCompatEditText {
     public void fixLineHeight() {
         setTag(DISABLE_TEXTWATCHER);
         Editable editable = getText();
-        ArrayList<Integer> newlineIndexes = getNewlineIndexes();
-        boolean isChanged = false;
-        int offset = 0;
-        for (Integer i : newlineIndexes) {
-            if ((i == 0) || (!editable.subSequence(i + offset - 1, i + offset).toString().equals(SPACE))) {
-                editable.insert(i + offset, SPACE);
-                isChanged = true;
-                offset++;
+        if (editable != null) {
+            ArrayList<Integer> newlineIndexes = getNewlineIndexes();
+            boolean isChanged = false;
+            int offset = 0;
+            for (Integer i : newlineIndexes) {
+                if ((i == 0) || (!editable.subSequence(i + offset - 1, i + offset).toString().equals(SPACE))) {
+                    editable.insert(i + offset, SPACE);
+                    isChanged = true;
+                    offset++;
+                }
             }
+            if (isChanged) setSelection(Math.max(getSelectionStart() - 1, 0));
         }
-        if (isChanged) setSelection(Math.max(getSelectionStart() - 1, 0));
         setTag(null);
     }
 

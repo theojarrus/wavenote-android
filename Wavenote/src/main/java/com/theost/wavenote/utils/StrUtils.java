@@ -12,7 +12,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-@SuppressWarnings("unused")
+import static com.theost.wavenote.models.Note.SPACE;
+
 public class StrUtils {
     // suppress default constructor for non-instantiability
     private StrUtils() {
@@ -151,6 +152,18 @@ public class StrUtils {
 
     public static String getFileExtention(String name) {
         return name.substring(name.lastIndexOf("."));
+    }
+
+    public static String convertToRequestFormat(String words, String summer) {
+        return words.trim().toLowerCase().replaceAll("\\s+", SPACE).replaceAll(SPACE, summer);
+    }
+
+    public static String firstToUppercase(String text) {
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
+
+    public static boolean isStringEnglish(String text) {
+        return text.matches("[a-zA-Z]+");
     }
 
 }

@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.theost.wavenote.SliderActivity;
 import com.theost.wavenote.models.Photo;
@@ -46,6 +48,11 @@ public class SliderAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup viewGroup, int position) {
@@ -77,10 +84,13 @@ public class SliderAdapter extends PagerAdapter {
         return photoDraweeView;
     }
 
-    public void clearUriCache(Uri uri) {
+    public void updateBitmap(Uri uri, ViewGroup viewGroup, int position) {
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         imagePipeline.evictFromCache(uri);
         imagePipeline.clearCaches();
+        ImagePipelineFactory imagePipelineFactory = Fresco.getImagePipelineFactory();
+        imagePipelineFactory.getSmallImageFileCache().remove(new SimpleCacheKey(uri.toString()));
+        notifyDataSetChanged();
     }
 
 }

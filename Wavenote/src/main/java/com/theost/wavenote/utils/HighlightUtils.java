@@ -56,20 +56,20 @@ public class HighlightUtils {
     public static void updateSyntaxHighlight(Context context, WavenoteEditText mContentEditText, String foregroundColor, boolean detectChords) {
         mContentEditText.setTag(DISABLE_TEXTWATCHER);
 
-        if (Note.isIsNeedResourceUpdate()) updateResources(context);
+        if (Note.isNeedResourceUpdate()) updateResources(context);
 
         Spannable noteContent = mContentEditText.getText();
         frontTextColor = Color.parseColor(foregroundColor);
 
         backTextColor = ContextCompat.getColor(context, R.color.syntax_title);
-        noteContent = addSyntaxHighlight(keyTitles, noteContent, true, false);
+        addSyntaxHighlight(keyTitles, noteContent, true, false);
         frontTextColor = ContextCompat.getColor(context, R.color.syntax_word);
-        noteContent = addSyntaxHighlight(keyWords, noteContent, false, true);
+        addSyntaxHighlight(keyWords, noteContent, false, true);
 
         if (detectChords) {
             frontTextColor = ContextCompat.getColor(context, R.color.syntax_chord);
             List<String> keyChords = Arrays.asList(context.getResources().getStringArray(R.array.array_musical_chords));
-            noteContent = addSyntaxHighlight(keyChords, noteContent, false, true);
+            addSyntaxHighlight(keyChords, noteContent, false, true);
         }
 
         if (isHighlightChanged) {
@@ -82,7 +82,7 @@ public class HighlightUtils {
         mContentEditText.setTag(null);
     }
 
-    public static Spannable addSyntaxHighlight(List<String> words, Spannable contentSpan, boolean isTitle, boolean isForeground) {
+    public static void addSyntaxHighlight(List<String> words, Spannable contentSpan, boolean isTitle, boolean isForeground) {
         int titleEnd = getTitleEnd(contentSpan);
         String contentStr = contentSpan.toString().replaceAll("[\\t\\r\\n\\u202F\\u00A0]", SPACE);
         if (!isForeground) contentStr = contentStr.toLowerCase();
@@ -118,7 +118,6 @@ public class HighlightUtils {
                 }
             }
         }
-        return contentSpan;
     }
 
     public static int getTitleEnd(Spannable content) {
@@ -240,7 +239,7 @@ public class HighlightUtils {
         // Getting resources and checking selection
         int[] cursorPositions = mContentEditText.getSelectionIndexes();
         if (cursorPositions[0] == cursorPositions[1]) return;
-        int titleEnd = getTitleEnd(mContentEditText.getText());
+        int titleEnd = mContentEditText.getTitleEnd();
         if (cursorPositions[0] < titleEnd) {
             if (cursorPositions[1] > titleEnd) {
                 cursorPositions[0] = titleEnd;
@@ -254,6 +253,7 @@ public class HighlightUtils {
         // Clear selected text style
 
         Editable noteContent = mContentEditText.getText();
+        if (noteContent == null) return;
         ParcelableSpan[] spans = noteContent.getSpans(cursorPositions[0], cursorPositions[1], ParcelableSpan.class);
         if (spans.length > 0) {
             ArrayList<Integer> startIndexes = new ArrayList<>();
@@ -358,7 +358,7 @@ public class HighlightUtils {
             keyWords.add(words.getString(0));
         }
 
-        Note.setIsNeedResourceUpdate(false);
+        Note.setNeedResourceUpdate(false);
         localDatabase.close();
     }
 

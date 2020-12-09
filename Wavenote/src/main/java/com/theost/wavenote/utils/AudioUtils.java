@@ -1,7 +1,7 @@
 package com.theost.wavenote.utils;
 
+import android.media.AudioAttributes;
 import android.media.AudioFormat;
-import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaExtractor;
@@ -65,12 +65,21 @@ public class AudioUtils {
         }
 
         int bufferSizeInBytes = AudioTrack.getMinBufferSize(AUDIO_SAMPLE_RATE, channelConfig, AUDIO_ENCODING);
-        return new AudioTrack(AudioManager.STREAM_MUSIC,
-                AUDIO_SAMPLE_RATE,
-                channelConfig,
-                AUDIO_ENCODING,
+
+        return new AudioTrack(
+                new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                        .build(),
+                new AudioFormat.Builder()
+                        .setEncoding(AUDIO_ENCODING)
+                        .setSampleRate(AUDIO_SAMPLE_RATE)
+                        .setChannelMask(channelConfig)
+                        .build(),
                 bufferSizeInBytes,
-                AudioTrack.MODE_STREAM);
+                AudioTrack.MODE_STREAM,
+                1
+        );
     }
 
     public static AudioRecord createAudioRecord() {

@@ -59,17 +59,22 @@ public class Note extends BucketObject {
     protected String mContentPreview = null;
     protected String mTitle = null;
 
-    private static boolean isTextStyleBold = false;
-    private static boolean isTextStyleItalic = false;
-    private static boolean isTextStyleStroke = false;
-    private static boolean isTextStyleUpper = false;
-    private static boolean isTextStyleUnderline = false;
-    private static boolean isTextStyleStrikethrough = false;
+    private static boolean isTextStyleBold;
+    private static boolean isTextStyleItalic;
+    private static boolean isTextStyleStroke;
+    private static boolean isTextStyleUpper;
+    private static boolean isTextStyleUnderline;
+    private static boolean isTextStyleStrikethrough;
+
+    private static boolean isAdvancedSearch;
+    private static int searchType;
+    private static int searchCutType;
+    private static String searchPrevWord;
 
     private static boolean isNeedResourceUpdate = true;
 
-    private static boolean photoSortDirRev = false;
-    private static boolean dictionarySortDirRev = false;
+    private static boolean photoSortDirRev;
+    private static boolean dictionarySortDirRev;
 
     private static boolean chordGridEnabled = true;
 
@@ -150,13 +155,13 @@ public class Note extends BucketObject {
         diff.setTimeInMillis(0); // starting time
         time = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
         if ((year == diff.get(Calendar.YEAR)) && (month == diff.get(Calendar.MONTH)) && (day == diff.get(Calendar.DAY_OF_MONTH))) {
-            date = context.getResources().getString(R.string.today);
+            date = context.getString(R.string.today);
             if (useShortFormat)
                 retVal = time;
             else
                 retVal = date + ", " + time;
         } else if ((year == diff.get(Calendar.YEAR)) && (month == diff.get(Calendar.MONTH)) && (day == 1)) {
-            date = context.getResources().getString(R.string.yesterday);
+            date = context.getString(R.string.yesterday);
             if (useShortFormat)
                 retVal = date;
             else
@@ -270,11 +275,43 @@ public class Note extends BucketObject {
         Note.activeMetronomeSpeed = activeMetronomeSpeed;
     }
 
-    public static boolean isIsNeedResourceUpdate() {
+    public static boolean isAdvancedSearch() {
+        return isAdvancedSearch;
+    }
+
+    public static void setAdvancedSearch(boolean isEnabled) {
+        isAdvancedSearch = isEnabled;
+    }
+
+    public static int getSearchType() {
+        return searchType;
+    }
+
+    public static void setSearchType(int type) {
+        searchType = type;
+    }
+
+    public static int getSearchCutType() {
+        return searchCutType;
+    }
+
+    public static void setSearchCutType(int type) {
+        searchCutType = type;
+    }
+
+    public static String getPreviousSearchWord() {
+        return searchPrevWord;
+    }
+
+    public static void setPreviousSearchWord(String word) {
+        searchPrevWord = word;
+    }
+
+    public static boolean isNeedResourceUpdate() {
         return isNeedResourceUpdate;
     }
 
-    public static void setIsNeedResourceUpdate(boolean update) {
+    public static void setNeedResourceUpdate(boolean update) {
         isNeedResourceUpdate = update;
     }
 

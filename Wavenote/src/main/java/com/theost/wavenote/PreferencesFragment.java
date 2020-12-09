@@ -1,7 +1,6 @@
 package com.theost.wavenote;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -9,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 
 import androidx.preference.ListPreference;
@@ -45,9 +45,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PreferencesFragment extends PreferenceFragmentCompat implements User.StatusChangeListener,
         Simperium.OnUserCreatedListener {
 
@@ -335,7 +332,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             title = R.string.import_notes;
         } else if (request == EXPORT_REQUEST) {
             title = R.string.export_notes;
-            DisplayUtils.showToast(getContext(), getContext().getResources().getString(R.string.path) + ": " + exportPath);
+            DisplayUtils.showToast(getContext(), getContext().getString(R.string.path) + ": " + exportPath);
         }
         new MaterialDialog.Builder(getContext())
                 .title(title)
@@ -359,18 +356,18 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
     private void showChoiceDialog() {
         int choiceItems;
         if (importMode == null) {
-            choiceItems = R.array.import_types;
+            choiceItems = R.array.array_import_types;
         } else {
-            choiceItems = R.array.import_modes;
+            choiceItems = R.array.array_import_modes;
         }
         new MaterialDialog.Builder(getContext())
                 .title(R.string.import_notes)
                 .items(choiceItems)
                 .itemsCallback((dialog, view, which, text) -> {
                     String selected = text.toString();
-                    if (selected.equals(getResources().getString(R.string.import_plaintext))) {
+                    if (selected.equals(getString(R.string.import_plaintext))) {
                         importMode = selected;
-                        importQuantity = getResources().getString(R.string.import_single);
+                        importQuantity = getString(R.string.import_single);
                         importExtensions[1] = FileUtils.TEXT_FORMAT;
                     }
                     if (importMode == null) {
@@ -409,13 +406,13 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         showLoadingDialog(R.string.import_text, R.string.extracting);
     }
 
-    private Handler mExtractHandler = new Handler(msg -> {
+    private Handler mExtractHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         if (msg.what == ImportUtils.RESULT_OK) {
             importNotes();
         } else {
             if (msg.what == ImportUtils.FILE_ERROR) {
-                DisplayUtils.showToast(getContext(), getResources().getString(R.string.file_error));
+                DisplayUtils.showToast(getContext(), getString(R.string.file_error));
             } else if (msg.what == ImportUtils.PASSWORD_ERROR) {
                 showPasswordDialog(IMPORT_REQUEST);
             }
@@ -463,12 +460,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         showLoadingDialog(R.string.import_notes, R.string.wait_a_bit);
     }
 
-    private Handler mImportHandler = new Handler(msg -> {
+    private Handler mImportHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         if (msg.what == ImportUtils.RESULT_OK) {
-            resultDialogMessage = String.format(getResources().getString(R.string.import_succesful), importCount);
+            resultDialogMessage = String.format(getString(R.string.import_succesful), importCount);
         } else {
-            resultDialogMessage = String.format(getResources().getString(R.string.import_failure), importCount);
+            resultDialogMessage = String.format(getString(R.string.import_failure), importCount);
         }
         showResultDialog(IMPORT_REQUEST);
         return true;
@@ -481,9 +478,9 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
 
             int[] importResult = {ImportUtils.FILE_ERROR, 0};
 
-            if (importMode.equals(getResources().getString(R.string.import_plaintext))) {
+            if (importMode.equals(getString(R.string.import_plaintext))) {
                 importResult = ImportUtils.importPlaintext(getContext(), mNotesBucket, importFile);
-            } else if (importMode.equals(getResources().getString(R.string.import_json))) {
+            } else if (importMode.equals(getString(R.string.import_json))) {
                 importResult = ImportUtils.importJson(getContext(), mNotesBucket, importFile, importQuantity);
             }
 
@@ -513,7 +510,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
                     .itemsCallbackMultiChoice(null, (dialog, which, modes) -> {
                         if (modes.length != 0) {
                             this.exportModes = modes;
-                            if (Arrays.toString(modes).contains(getContext().getResources().getString(R.string.zip))) {
+                            if (Arrays.toString(modes).contains(getContext().getString(R.string.zip))) {
                                 showPasswordDialog(EXPORT_REQUEST);
                             } else {
                                 exportNotes();
@@ -522,7 +519,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
                         return true;
                     }).show();
         } else {
-            DisplayUtils.showToast(getContext(), getResources().getString(R.string.notes_not_found));
+            DisplayUtils.showToast(getContext(), getString(R.string.notes_not_found));
         }
     }
 
@@ -536,12 +533,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
             importPassword = "";
             title = R.string.encrypted;
             positiveText = R.string.import_text;
-            inputText = getResources().getString(R.string.simperium_hint_password);
+            inputText = getString(R.string.simperium_hint_password);
         } else if (requestCode == EXPORT_REQUEST) {
             exportPassword = "";
             title = R.string.export_notes;
             positiveText = R.string.export;
-            inputText = getResources().getString(R.string.hint_password);
+            inputText = getString(R.string.hint_password);
         }
         new MaterialDialog.Builder(getContext())
                 .title(title)
@@ -564,12 +561,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
         new ExportThread().start();
     }
 
-    private Handler mExportHandler = new Handler(msg -> {
+    private Handler mExportHandler = new Handler(Looper.getMainLooper(), msg -> {
         if (loadingDialog != null) loadingDialog.dismiss();
         if (msg.what == ImportUtils.RESULT_OK) {
-            resultDialogMessage = getResources().getString(R.string.export_succesful);
+            resultDialogMessage = getString(R.string.export_succesful);
         } else {
-            resultDialogMessage = getResources().getString(R.string.export_failure);
+            resultDialogMessage = getString(R.string.export_failure);
         }
         showResultDialog(EXPORT_REQUEST);
         return true;

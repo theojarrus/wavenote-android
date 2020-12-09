@@ -7,7 +7,7 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion '29.0.3'
+    buildToolsVersion '30.0.2'
     compileSdkVersion 30
 
     buildTypes {
@@ -22,8 +22,8 @@ android {
         applicationId "com.theost.wavenote"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 202
-        versionName "2.2"
+        versionCode 300
+        versionName "3.0"
     }
 }
 

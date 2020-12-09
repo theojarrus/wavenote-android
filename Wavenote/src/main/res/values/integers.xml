@@ -15,7 +15,6 @@
     <integer name="time_animation_third">133</integer>
     <integer name="time_animation_third_double">266</integer>
 
-    <integer name="custom_space">15</integer> <!-- value of custom_space dimen -->
     <integer name="padding_large">16</integer>
     <integer name="dialog_input_max">20</integer>
     <integer name="padding_medium">14</integer>

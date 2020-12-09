@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/custom_space"
+            android:layout_marginBottom="@dimen/padding_medium"
             android:orientation="vertical">
 
             <LinearLayout
@@ -32,7 +32,7 @@
                     android:id="@+id/metronome_tune"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/custom_space"
+                    android:layout_marginEnd="@dimen/padding_medium"
                     android:textSize="40sp"
                     android:textStyle="bold"
                     tools:text="C" />
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/custom_space"
+                android:layout_marginTop="@dimen/padding_medium"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -63,7 +63,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/tap"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_remove_circle_outline_36dp" />
+                    android:src="@drawable/av_remove_circle_36dp" />
 
                 <com.theost.wavenote.widgets.RobotoRegularTextView
                     android:id="@+id/beat_speed"
@@ -84,7 +84,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/tap"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_circle_outline_36dp" />
+                    android:src="@drawable/av_add_circle_36dp" />
 
             </LinearLayout>
 
@@ -106,8 +106,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_extra_extra_large"
                 android:orientation="vertical"
-                android:paddingStart="@dimen/custom_space"
-                android:paddingEnd="@dimen/custom_space">
+                android:paddingStart="@dimen/padding_medium"
+                android:paddingEnd="@dimen/padding_medium">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -118,7 +118,7 @@
                         android:id="@+id/sounds_layout"
                         style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
                         android:layout_width="120dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="55dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
@@ -140,8 +140,8 @@
                         android:id="@+id/metronome_tap"
                         style="@style/Wavestyle.Button.Outlined"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/custom_space"
+                        android:layout_height="55dp"
+                        android:layout_marginStart="@dimen/padding_medium"
                         android:insetLeft="0dp"
                         android:insetTop="0dp"
                         android:insetRight="0dp"
@@ -155,13 +155,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingTop="@dimen/custom_space">
+                    android:paddingTop="@dimen/padding_medium">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/metronome_play"
                         style="@style/Wavestyle.Button.Outlined"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="55dp"
                         android:insetLeft="0dp"
                         android:insetTop="0dp"
                         android:insetRight="0dp"

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.theost.wavenote.StyleBottomSheetDialog"
+    tools:ignore="MissingDefaultResource"
+    android:id="@+id/search_root_layout">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_title_size"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        android:orientation="horizontal">
+
+        <com.theost.wavenote.widgets.RobotoMediumTextView
+            android:id="@+id/sheetTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_extra_extra_large"
+            android:paddingEnd="@dimen/padding_extra_extra_large"
+            android:text="@string/words"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="@dimen/bottom_sheet_title_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="-1dp"
+        android:background="?attr/dividerColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/peek_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_medium"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:baselineAligned="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingTop="14dp"
+                android:paddingRight="@dimen/padding_medium">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lookup_type_layout"
+                    style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/lookup_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:singleLine="true"
+                        android:text="@string/definitions"
+                        tools:ignore="LabelFor" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Wavestyle.InputLayoutStyle.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="@dimen/padding_medium"
+                    android:layout_weight="1"
+                    android:hint="@string/word">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lookup_word"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="text"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lookup_button"
+                    style="@style/Wavestyle.Button.Outlined"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="@dimen/padding_medium"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    app:icon="@drawable/ic_search_24dp"
+                    app:iconTint="?attr/colorAccent"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding_medium"
+                android:paddingEnd="0dp">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/lookup_advanced"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/advanced_search" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lookup_layout_advanced"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_medium"
+            android:paddingRight="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_extra_extra_large">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Wavestyle.BasicAutocompleteLayout.Outlined"
+                    android:id="@+id/lookup_cut_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/lookup_cut_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:singleLine="true"
+                        tools:ignore="LabelFor" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Wavestyle.InputLayoutStyle.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="@dimen/padding_medium"
+                    android:layout_weight="2"
+                    android:hint="@string/letters">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lookup_cut"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="text"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_medium"
+                android:baselineAligned="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Wavestyle.InputLayoutStyle.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:hint="@string/means_like">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lookup_means"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="text"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Wavestyle.InputLayoutStyle.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:hint="@string/sounds_like"
+                    android:paddingStart="@dimen/padding_medium"
+                    android:paddingEnd="0dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lookup_sounds"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="text"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lookup_result_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_extra_extra_large"
+            android:paddingEnd="@dimen/padding_extra_extra_large"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.theost.wavenote.widgets.RobotoRegularTextView
+                android:id="@+id/lookup_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:paddingBottom="@dimen/padding_extra_extra_large"
+                android:text="@string/network_error_message" />
+
+            <ProgressBar
+                android:id="@+id/search_progress_bar"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:indeterminate="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

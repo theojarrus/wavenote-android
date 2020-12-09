@@ -82,7 +82,7 @@ public class ExportUtils {
         Spannable content = note.getContent();
         String noteName = StrUtils.formatFilename(note.getTitle());
         if (noteName.equals(""))
-            noteName = context.getResources().getString(R.string.note) + " - " + note.getSimperiumKey();
+            noteName = context.getString(R.string.note) + " - " + note.getSimperiumKey();
 
         File directorySource = new File(context.getCacheDir() + FileUtils.NOTES_DIR + note.getSimperiumKey());
         File directoryExport = new File(path, noteName);
@@ -138,10 +138,10 @@ public class ExportUtils {
     }
 
     public static boolean exportNotes(Activity context, String path, List<CharSequence> modes, String password) {
-        String photoMode = context.getResources().getString(R.string.photo); // some notes may be without photos
+        String photoMode = context.getString(R.string.photo); // some notes may be without photos
         String audioMode = context.getString(R.string.audio); // some notes may be without audio
         String tracksMode = context.getString(R.string.tracks); // some notes may be without tracks
-        String zipMode = context.getResources().getString(R.string.zip);
+        String zipMode = context.getString(R.string.zip);
         boolean isExported = true; // error flag
         boolean isZip = modes.contains(zipMode);
         if (isZip) modes.remove(zipMode);
@@ -163,7 +163,7 @@ public class ExportUtils {
         }
 
         String notesJson = ExportUtils.getNotesJson(context, notesList);
-        String jsonName = context.getResources().getString(R.string.notes);
+        String jsonName = context.getString(R.string.notes);
 
         boolean isCreatedJson = ExportUtils.exportText(directoryExport, jsonName, notesJson, FileUtils.JSON_FORMAT);
         if (!isCreatedJson) isExported = false; // be careful to not clear previous error
@@ -263,7 +263,7 @@ public class ExportUtils {
         Iterator<String> iterator = resultMap.keySet().iterator();
 
         if (resultMap.containsValue(false)) {
-            resultMessage.append(context.getResources().getString(R.string.export_failure)).append(": ");
+            resultMessage.append(context.getString(R.string.export_failure)).append(": ");
             while (iterator.hasNext()) {
                 String mode = iterator.next();
                 if (!resultMap.get(mode)) {
@@ -280,7 +280,7 @@ public class ExportUtils {
         }
 
         if (resultMap.containsValue(true)) {
-            resultMessage.append(context.getResources().getString(R.string.export_succesful)).append(": ");
+            resultMessage.append(context.getString(R.string.export_succesful)).append(": ");
             while (iterator.hasNext()) {
                 String mode = iterator.next();
                 resultMessage.append(mode.toLowerCase());

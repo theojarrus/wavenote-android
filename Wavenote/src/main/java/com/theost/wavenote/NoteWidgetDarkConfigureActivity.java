@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.simperium.Simperium;
@@ -177,9 +178,9 @@ public class NoteWidgetDarkConfigureActivity extends AppCompatActivity {
                 // Set widget content
                 mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
                 mRemoteViews.setTextViewText(R.id.widget_text, title1);
-                mRemoteViews.setTextColor(R.id.widget_text, getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                mRemoteViews.setTextColor(R.id.widget_text, ContextCompat.getColor(context, R.color.text_title_dark));
                 mRemoteViews.setTextViewText(R.id.widget_text_title, title1);
-                mRemoteViews.setTextColor(R.id.widget_text_title, context.getResources().getColor(R.color.text_title_dark, context.getTheme()));
+                mRemoteViews.setTextColor(R.id.widget_text_title, ContextCompat.getColor(context, R.color.text_title_dark));
                 SpannableStringBuilder contentSpan = new SpannableStringBuilder(content);
                 contentSpan = (SpannableStringBuilder) ChecklistUtils.addChecklistUnicodeSpansForRegex(
                         contentSpan,

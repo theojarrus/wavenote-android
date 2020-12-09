@@ -2,7 +2,7 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="search">Поиск заметок или меток</string>
+    <string name="search_notes">Поиск заметок или меток</string>
     <string name="empty_tags_search">Метки не найдены</string>
     <string name="empty_notes_widget">Нет заметок</string>
     <string name="loading_notes">Загрузка заметок…</string>
@@ -49,8 +49,8 @@
     <string name="sort_search_modified">Изменено</string>
     <string name="sort_search_created">Создано</string>
     <string name="sort_search_alphabetically">По алфавиту</string>
-    <string name="welcome_note"><![CDATA[Добро пожаловать в Wavenote!<br>Откройте эту заметку для получения инструкций.<br><br><b>Заметки</b><br><br>Чтобы создать новую заметку, нажмите фиолетовую кнопку \"Новая заметка\" со значком плюса.<br><br>Для поиска в заметках нажмите кнопку \"Поиск\" со значком увеличительного стекла и введите любой текст. Wavenote сначала покажет вам недавние поисковые запросы и предложит варианты поиска при вводе текста. Заметки, соответствующие введенному тексту, будут показаны после отправки запроса.<br><br>Получили действительно важную заметку? Закрепите её в верхней части списка заметок. Вы можете закрепить заметку двумя способами. Удерживайте заметку в списке и нажмите кнопку \"Закрепить вверху\" со значком булавки.<br><br>Используйте теги, чтобы упорядочить заметки. Создайте тег в поле \"Добавить тег\" внизу заметки. Вы также можете добавить адрес электронной почты в качестве тега, чтобы поделиться с кем-нибудь заметкой.<br><br>Удаленные заметки отправляются в корзину. Вы можете восстановить их, если хотите, или очистить корзину, чтобы навсегда избавиться от них.<br><br><b>Редактор</b><br><br>Создайте свой стиль заметки. Выберите режим стилизации текста, удерживая кнопку \"Палитра\" в редакторе, затем выберите текст и коснитесь его еще раз. Если вам это не нравится, вы всегда можете очистить стиль, выбрав первый цвет и повторив попытку.<br><br>В меню редактора вы также можете включить режим подсчета слогов.<br><br>Автоматизируйте форматирование текста с помощью интеллектуального выделения ключевых слов и аккордов. Перейдите в настройки, чтобы изменить словарь ключевых слов.<br><br><b>Аккорды</b><br><br>Введите аккорд вручную или скопируйте и вставьте текст песни, а затем на кнопку \"Аккорды\" в верхней панели. Взгляните по-новому с этой функцией. Нажмите на аккорд, чтобы увидеть аппликатуры. Не можете найти? Воспользуйтесь поиском по аккордам. Чтобы скрыть текст песни, нажмите кнопку \"Сетка\".<br><br>Нужно транспонировать? Сделайте это в один клик.<br><br><b>Фотографии</b><br><br>Сохраняйте фотографии в заметки. Задайте имена и отсортируйте их по дате или алфавиту. Смотрите их в ленте или переходите в полноэкранный режим, чтобы преобразовать или повернуть.<br><br><b>Студия</b><br><br>Создайте многоканальную запись. Если вам нужна идеальная точность, настройте задержку воспроизведения, нажав кнопку \"Откалибровать запись\".<br><br><b>Метроном</b><br><br>Используйте умную кнопку \"Tap\", чтобы определить темп музыки. Загрузите свои звуковые сэмплы в этот метроном в два клика, он автоматически преобразует и откалибрует их.<br><br><b>Поделиться</b><br><br>Легко делитесь заметками с другими приложениями Android, нажав кнопку \"Поделиться\" в меню заметок. Вы также можете экспортировать и импортировать все свои данные из заметок в файлы (текст, фото, аудио и т. д.). Поддерживаются zip-архивы с шифрованием.<br><br>Вы можете получить доступ к своим заметкам на других устройствах с помощью синхронизации учетной записи, но эта функция находится в стадии бета-тестирования и может работать нестабильно.<br><br>Мы рекомендуем использовать функцию \"Экспорт и импорт\" для отправки файлов на другие устройства. В этом случае также будут добавлены ваши медиафайлы и настройки. Для резервного копирования и передачи всех ваших заметок найдите раздел \"Экспорт и импорт\" в настройках.<br><br><b>Конфиденциальность</b><br><br>Все ваши данные, кроме текстов заметок, если вы используете учетную запись, хранятся только на устройстве. Мы не собираем никаких метаданных или аналитики, кроме журналов сбоев. Ваша конфиденциальность - наш главный приоритет.<br><br>Надеемся, вам понравится пользоваться Wavenote!<br><br>Исходный код доступен на github.com]]></string>
-    <string name="welcome_song"><![CDATA[<p dir="ltr"><span style="font-size:1.30em;"><b>Simple song </b></span><br> <br> <span style="background-color:#BEC1EE;"><span style="color:#FAFAFA;">&#160;&#160;&#160;&#160;&#160;&#160;&#160; [Verse]&#160;&#160;&#160;&#160;&#160;&#160;&#160; </span></span> <br> <br> <span style="color:#A9AEE9;">D</span> <span style="color:#A9AEE9;">A</span> <span style="color:#A9AEE9;">D</span> <span style="color:#A9AEE9;">A</span>&nbsp; <br> <span style="background-color:#A9AEE9;"><span style="color:#FAFAFA;">Well</span></span> <span style="background-color:#E7C8DD;"><span style="color:#FAFAFA;">this</span></span> <span style="background-color:#F2DC5D;"><span style="color:#FAFAFA;">is</span></span> <span style="background-color:#FC814A;"><span style="color:#FAFAFA;">just</span></span> <span style="background-color:#ED6A5A;"><span style="color:#FAFAFA;">a</span></span> <span style="background-color:#5CAD77;"><span style="color:#FAFAFA;">simple</span></span> <span style="background-color:#64B0CE;"><span style="color:#FAFAFA;">song</span></span>&nbsp;&nbsp; <br> <br> <span style="color:#A9AEE9;">D</span> <span style="color:#A9AEE9;">A</span> <span style="color:#A9AEE9;">D</span> <span style="color:#A9AEE9;">A</span> <br> <font face="serif">To</font><b> </b><font face="Roboto-Regular.ttf"><span style="text-decoration:line-through;">show</span></font> <b><i>what</i></b> <font face="Roboto-Regular.ttf"><u>app\'ve</u></font> <font face="cursive">done</font>&nbsp; <br> &nbsp; <br>Если подсветка не работает, зайдите в настройки, а затем вернитесь в заметку</p>]]></string>
+    <string name="welcome_note"><![CDATA[Добро пожаловать в Wavenote!<br>Откройте эту заметку для получения инструкций.<br><br><b>Заметки</b><br><br>Чтобы создать новую заметку, нажмите фиолетовую кнопку \"новая заметка\" со значком плюса.<br><br>Для поиска в заметках нажмите кнопку \"поиск\" со значком увеличительного стекла и введите любой текст. Wavenote сначала покажет вам недавние поисковые запросы и предложит варианты поиска при вводе текста. Заметки, соответствующие введенному тексту, будут показаны после отправки запроса.<br><br>Получили действительно важную заметку? Закрепите её в верхней части списка заметок. Вы можете закрепить заметку двумя способами. Удерживайте заметку в списке и нажмите кнопку \"закрепить вверху\" со значком булавки.<br><br>Используйте теги, чтобы упорядочить заметки. Создайте тег в поле \"добавить тег\" внизу заметки. Вы также можете добавить адрес электронной почты в качестве тега, чтобы поделиться с кем-нибудь заметкой.<br><br>Удаленные заметки отправляются в корзину. Вы можете восстановить их, если хотите, или очистить корзину, чтобы навсегда избавиться от них.<br><br><b>Редактор</b><br><br>Создайте свой стиль заметки. Выберите режим стилизации текста, удерживая кнопку \"палитра\" в редакторе, затем выберите текст и коснитесь его еще раз. Если вам не понравится, вы всегда можете очистить стиль, выбрав первый цвет и повторив попытку.<br><br>В меню редактора вы также можете включить режим подсчета слогов.<br><br>Автоматизируйте форматирование текста с помощью интеллектуального выделения ключевых слов и аккордов. Добавляйте слова прямо из редактора, или перейдите в настройки, чтобы изменить словарь ключевых слов.<br><br><b>Поиск</b><br><br>Находите определения слов, рифмы, синонимы и многое другое с помощью этой функции. Чтобы открыть окно поиска нажмите кнопку \"слова\" в меню редактора. Вы можете вводить как слова, так и фразы, однако поддерживается только английский язык.<br><br><b>Аккорды</b><br><br>Введите аккорд вручную или скопируйте и вставьте текст песни, а затем на кнопку \"аккорды\" в верхней панели. Взгляните по-новому с этой функцией. Нажмите на аккорд, чтобы увидеть аппликатуры. Не можете найти? Воспользуйтесь поиском по аккордам. Чтобы скрыть текст песни, нажмите кнопку \"сетка\".<br><br>Нужно транспонировать? Сделайте это в один клик.<br><br><b>Фотографии</b><br><br>Сохраняйте фотографии в заметки. Задайте имена и отсортируйте их по дате или алфавиту. Смотрите их в ленте или переходите в полноэкранный режим, чтобы преобразовать или повернуть.<br><br><b>Студия</b><br><br>Создайте многоканальную запись. Если вам нужна идеальная точность, настройте задержку воспроизведения, нажав кнопку \"откалибровать запись\".<br><br><b>Метроном</b><br><br>Используйте кнопку \"tap\", чтобы определить темп музыки. Загрузите свои звуковые сэмплы в этот метроном в два клика, он автоматически преобразует и откалибрует их.<br><br><b>Поделиться</b><br><br>Легко делитесь заметками с другими приложениями Android, нажав кнопку \"поделиться\" в меню заметок. Вы также можете экспортировать и импортировать все свои данные из заметок в файлы (текст, фото, аудио и т. д.). Поддерживаются zip-архивы с шифрованием.<br><br>Вы можете получить доступ к своим заметкам на других устройствах с помощью синхронизации учетной записи, но эта функция находится в стадии бета-тестирования и может работать нестабильно.<br><br>Мы рекомендуем использовать функцию \"экспорт и импорт\" для отправки файлов на другие устройства. В этом случае также будут добавлены ваши медиафайлы и настройки. Для резервного копирования и передачи всех ваших заметок найдите раздел \"экспорт и импорт\" в настройках.<br><br><b>Конфиденциальность</b><br><br>Все ваши данные, кроме текстов заметок, если вы используете учетную запись, хранятся только на устройстве. Мы не собираем никаких метаданных или аналитики, кроме журналов сбоев. Ваша конфиденциальность - наш главный приоритет.<br><br><b>Обратная связь</b><br><br>Есть мысли, как улучшить приложение? Свяжитесь с нами через форму обратной связи в настройках.<br><br>Надеемся, вам понравится пользоваться Wavenote!<br><br>Исходный код доступен на github.com]]></string>
+    <string name="welcome_song"><![CDATA[<p dir="ltr"><span style="font-size:1.30em;"><b>Simple song</b></span><br> <br>[Verse] <br> <br>D A D A <br><span style="background-color:#A9AEE9;"><span style="color:#FAFAFA;">Well</span></span> <span style="background-color:#E7C8DD;"><span style="color:#FAFAFA;">this</span></span> <span style="background-color:#F2DC5D;"><span style="color:#FAFAFA;">is</span></span> <span style="background-color:#FC814A;"><span style="color:#FAFAFA;">just</span></span> <span style="background-color:#ED6A5A;"><span style="color:#FAFAFA;">a</span></span> <span style="background-color:#5CAD77;"><span style="color:#FAFAFA;">simple</span></span> <span style="background-color:#64B0CE;"><span style="color:#FAFAFA;">song</span></span> <br> <br>D A D A <br><font face="serif">To</font><b> </b><font face="Roboto-Regular.ttf"><span style="text-decoration:line-through;">show</span></font> <b><i>what</i></b> <font face="Roboto-Regular.ttf"><u>app\'ve</u></font> <font face="cursive">done</font> </p>]]></string>
     <string name="search_hint">Поиск заметок или меток</string>
     <string name="log_out">Выйти</string>
     <string name="log_in">Войти</string>
@@ -108,7 +108,7 @@
     <string name="wordpress_post_draft">Изменить статус на \"Черновик\"</string>
     <string name="send_post">Опубликовать</string>
     <string name="wordpress_post">Запись WordPress</string>
-    <string name="theme_auto">Темная только ночью</string>
+    <string name="theme_auto">Автоматически</string>
     <string name="notes">Заметки</string>
     <string name="editor">Редактор</string>
     <string name="logo">Логотип</string>
@@ -208,8 +208,8 @@
     <string name="tag_hint">Добавить метку…</string>
     <string name="detect_chords">Найти аккорды</string>
     <string name="detect_keywords">Найти ключевые слова</string>
-    <string name="about_somewords">Приложение Wavenote создано с любовью Theo и разработчиками Automattic. Исходный код доступен на GitHub</string>
-    <string name="donate_developer">Купить разработчику кофе</string>
+    <string name="about_somewords">Приложение Wavenote создано с любовью Theo и разработчиками Automattic</string>
+    <string name="donate_developer">Поддержать разработчика</string>
     <string name="theory">Теория</string>
     <string name="empty_photos">Добавьте ваше первое фото</string>
     <string name="empty_dictionary">Добавьте ваше первое ключевое слово</string>
@@ -273,8 +273,8 @@
     <string name="weak">Слабый</string>
     <string name="convert_error">Ошибка конвертирования</string>
     <string name="wait_a_bit">Подождите немного…</string>
-    <string name="exporting">Экспорт… Это может занять некоторе время</string>
-    <string name="importing">Импорт… Это может занять некоторе время</string>
+    <string name="exporting">Экспорт… Это может занять некоторе время.</string>
+    <string name="importing">Импорт… Это может занять некоторе время.</string>
     <string name="error_network_required">Необходимо интернет подключение. Пожалуйста, проверьте соединение и попробуйте снова</string>
     <string name="stylize">Стилизовать</string>
     <string name="add_to_dictionary">Добавить в словарь</string>
@@ -288,7 +288,7 @@
     <string name="confirm_delete_all">Вы действительно хотите удалить все записи?</string>
     <string name="link_error">Некорректная ссылка</string>
     <string name="get">Получить</string>
-    <string name="editing">Редактирование… Это может занять некоторе время</string>
+    <string name="editing">Редактирование… Это может занять некоторе время.</string>
     <string name="text">Текст</string>
     <string name="json">Json (для импорта)</string>
     <string name="zip">Zip-архив</string>
@@ -298,7 +298,7 @@
     <string name="data">Данные</string>
     <string name="import_notes">Импорт заметок</string>
     <string name="export_notes">Экспорт заметок</string>
-    <string name="import_notification">Для корректного импорта zip-архивов и медиа-файлов не меняйте структуру файлов после экспорта</string>
+    <string name="import_notification">Для корректного импорта zip-архивов и медиа-файлов не меняйте структуру файлов после экспорта.</string>
     <string name="import_single">Одна</string>
     <string name="import_multiple">Несколько</string>
     <string name="encrypted">Зашифровано</string>
@@ -315,17 +315,17 @@
     <string name="toast_waiting_data_loading">Данные загружаются, подождите</string>
     <string name="track_name">Имя трека</string>
     <string name="adjust_success">Калибровка завершена!</string>
-    <string name="adjust_success_tip">Успешно! Можете возвращаться к записи</string>
+    <string name="adjust_success_tip">Успешно! Можете возвращаться к записи.</string>
     <string name="adjust_delay_record_time_tip">Наденьте наушники, нажмите на кнопку, затем постучите, следуя метроному</string>
     <string name="adjust_record_reason">В синхронизации записи звука и проигрывания гарнитуры существует задержка во времени, поэтому требуется дополнительная настройка. Заметьте, что всякий раз, когда вы меняете новую гарнитуру, рекомендуется выполнить повторную калибровку</string>
     <string name="adjust_failed">Повторите снова!</string>
-    <string name="adjust_failed_tip">Ошибка! Продолжайте калибровать</string>
+    <string name="adjust_failed_tip">Ошибка! Продолжайте калибровать.</string>
     <string name="error_permission">Требуется разрешение</string>
     <string name="manage">Управление</string>
     <string name="render">Микс</string>
-    <string name="rendering">Микширование… Это может занять некоторе время</string>
-    <string name="mix_failure">Возникли проблемы с микшированием</string>
-    <string name="mix_succesful">Успешно смикшировано. Вы можете экспортировать аудио файлы через меню редактора заметки</string>
+    <string name="rendering">Микширование… Это может занять некоторе время.</string>
+    <string name="mix_failure">Возникли проблемы с микшированием.</string>
+    <string name="mix_succesful">Успешно смикшировано. Вы можете экспортировать аудио файлы через меню редактора заметки.</string>
     <string name="tracks">Треки</string>
     <string name="mix">Микс</string>
     <string name="audio">Аудио</string>
@@ -357,5 +357,35 @@
     <string name="grid">Сетка</string>
     <string name="syllable">Слоги</string>
     <string name="feedback">Обратная связь</string>
+    <string name="feedback_name">Как вас зовут?</string>
+    <string name="feedback_message">Сообщение</string>
+    <string name="send">Отправить</string>
+    <string name="feedback_error_name">Некорректное имя</string>
+    <string name="feedback_error_message">Ммм, сообщение слишком короткое!</string>
+    <string name="feedback_successful">Отправлено! Спасибо!</string>
+    <string name="search">Поиск</string>
+    <string name="advanced_search">Расширенный поиск</string>
+    <string name="letters">Буквы</string>
+    <string name="means_like">Означает</string>
+    <string name="sounds_like">Звучит</string>
+    <string name="starts_with">Начинается</string>
+    <string name="ends_with">Заканчивается</string>
+    <string name="definitions">Определения</string>
+    <string name="exact_rhymes">Точные рифмы</string>
+    <string name="near_rhymes">Близкие рифмы</string>
+    <string name="synonyms">Синонимы</string>
+    <string name="antonyms">Антонимы</string>
+    <string name="associations">Ассоциации</string>
+    <string name="adjectives">Прилагательные</string>
+    <string name="nouns">Существительные</string>
+    <string name="homophones">Омофоны</string>
+    <string name="hypernyms">Гипернимы</string>
+    <string name="hyponyms">Гипонимы</string>
+    <string name="holonyms">Холонимы</string>
+    <string name="meronyms">Меронимы</string>
+    <string name="consonant_match">Совпадение согласных</string>
+    <string name="search_results_error">Результатов не найдено</string>
+    <string name="searching_error">Подождите немного, уже в поиске</string>
+    <string name="search_language_error">Поддерживается только английский язык</string>
 
 </resources>

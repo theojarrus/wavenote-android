@@ -1,26 +1,25 @@
 package com.theost.wavenote.adapters;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ablanco.zoomy.Zoomy;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.Target;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.theost.wavenote.PhotosActivity;
 import com.theost.wavenote.R;
 import com.theost.wavenote.models.Photo;
 import com.theost.wavenote.utils.DisplayUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,10 +49,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         holder.mNameEditText.setText(mData.get(position).getName());
         holder.mDateTextView.setText(mData.get(position).getDate());
 
-        Glide.with(mActivity).load(mData.get(position).getBitmap(mActivity))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(Target.SIZE_ORIGINAL)
-                .into(holder.mPhotoView);
+        holder.mPhotoView.setImageURI(Uri.fromFile(new File(mData.get(position).getUri())));
 
         holder.mNameEditText.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
@@ -116,7 +112,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         EditText mNameEditText;
-        ImageView mPhotoView;
+        SimpleDraweeView mPhotoView;
         TextView mDateTextView;
         ImageButton mSaveButton;
         ImageButton mCancelButton;
