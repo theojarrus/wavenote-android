@@ -22,8 +22,8 @@ android {
         applicationId "com.theost.wavenote"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 300
-        versionName "3.0"
+        versionCode 301
+        versionName "3.1"
     }
 }
 
