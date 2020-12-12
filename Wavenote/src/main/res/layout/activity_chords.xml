@@ -70,7 +70,7 @@
                     android:focusableInTouchMode="true"
                     android:paddingTop="@dimen/padding_medium"
                     android:paddingEnd="0dp"
-                    android:paddingBottom="@dimen/padding_medium">
+                    android:paddingBottom="@dimen/padding_large">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/instrument_layout"

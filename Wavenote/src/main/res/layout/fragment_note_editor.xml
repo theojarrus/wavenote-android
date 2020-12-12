@@ -146,7 +146,7 @@
                 android:layout_width="@dimen/logo_empty"
                 android:layout_height="@dimen/logo_empty"
                 android:contentDescription="@string/logo"
-                android:src="@drawable/logo_login"
+                android:src="@drawable/bg_splash"
                 app:tint="?attr/emptyImageColor" />
 
         </LinearLayout>

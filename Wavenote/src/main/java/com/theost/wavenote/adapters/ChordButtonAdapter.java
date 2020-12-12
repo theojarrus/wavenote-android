@@ -1,6 +1,7 @@
 package com.theost.wavenote.adapters;
 
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,30 +52,34 @@ public class ChordButtonAdapter extends RecyclerView.Adapter<ChordButtonAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ChordButtonAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mChordButton.setAlpha(0.0f);
-        holder.mChordButton.setText(mData.get(position));
-        holder.mChordButton.animate().alpha(1.0f).setDuration(500);
         if (!isAllChords && mWordsData.containsKey(position) && Note.isChordGridEnabled()) {
             holder.mChordButton.setTextColor(mColors[2]);
-            holder.mChordButton.setStrokeColor(ColorStateList.valueOf(mColors[3]));
             holder.mChordButton.setEnabled(false);
+            holder.mChordButton.setStrokeColor(ColorStateList.valueOf(mColors[3]));
             holder.mChordButton.setLayoutParams(new LinearLayout.LayoutParams(mWordsSize, LinearLayout.LayoutParams.WRAP_CONTENT));
             holder.mChordButton.setOnClickListener(null);
             holder.mChordButton.setBackgroundColor(mColors[3]);
         } else {
             holder.mChordButton.setTextColor(mColors[0]);
-            holder.mChordButton.setStrokeColor(ColorStateList.valueOf(mColors[1]));
             holder.mChordButton.setEnabled(true);
+            holder.mChordButton.setStrokeColor(ColorStateList.valueOf(mColors[1]));
             holder.mChordButton.setLayoutParams(new LinearLayout.LayoutParams(mItemSize, mItemSize));
             holder.mChordButton.setOnClickListener(v -> mActivity.showChords(mData.get(position)));
             if (!isAllChords) {
                 holder.mChordButton.setBackgroundColor(mColors[1]);
             } else {
                 holder.mChordButton.setTextColor(mColors[1]);
+                holder.mChordButton.setBackgroundColor(mColors[0]);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    holder.mChordButton.setForeground(null);
+                }
             }
         }
         holder.mChordButton.setTextSize(mTextSize);
+        holder.mChordButton.setText(mData.get(position));
+        holder.mChordButton.animate().alpha(1.0f).setDuration(300);
     }
 
     @Override

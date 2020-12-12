@@ -64,8 +64,8 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/cancel"
                         android:src="@drawable/ic_close_24dp"
-                        android:backgroundTint="?attr/hintTextColor"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"
+                        app:tint="?attr/hintTextColor" />
 
                 </LinearLayout>
 
