@@ -54,7 +54,6 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
     private int playStatus;
     private int readRecordBytesLen;
-    private int beatFirstSoundBytePos;
     private int errorRangeByteLen;
 
     private boolean isFirstRecordWrite;
@@ -157,8 +156,6 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                 try {
                     beatStrongBytes = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound, true)[0];
 
-                    beatFirstSoundBytePos = getMaxSamplePos(beatStrongBytes);
-
                     playBeatBytes = pcmAudioFile.generateBeatBytes(beatStrongBytes, null, "1/4", 72);
                     readRecordBytesLen = playBeatBytes.length * ANALYZE_BEAT_LEN;
                     errorRangeByteLen = (int) (pcmAudioFile.bytesPerSecond() / 1000.0 * 10);
@@ -171,7 +168,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
     }
 
     private int getMaxSamplePos(byte[] audioBytes) {
-        //audioBytes
+
         ByteBuffer beatBuffer = ByteBuffer.wrap(audioBytes);
         beatBuffer.order(ByteOrder.LITTLE_ENDIAN);
         int sampleValue;
@@ -280,14 +277,12 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                         }
                     }
 
+                    stopPlay = true;
                     if (isValid) {
-                        stopPlay = true;
-                        if (readSize == readRecordBytesLen) {
-                            Message doneMsg = Message.obtain();
-                            doneMsg.what = R.integer.ADJUST_RECORD_DISTANCE_DONE;
-                            doneMsg.obj = averSampleValue;
-                            mAdjustHandler.sendMessage(doneMsg);
-                        }
+                        Message doneMsg = Message.obtain();
+                        doneMsg.what = R.integer.ADJUST_RECORD_DISTANCE_DONE;
+                        doneMsg.obj = averSampleValue;
+                        mAdjustHandler.sendMessage(doneMsg);
                     } else {
                         mAdjustHandler.sendEmptyMessage(R.integer.ADJUST_RECORD_DISTANCE_FAIL);
                     }
@@ -295,4 +290,5 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
             }
         }
     }
+
 }
