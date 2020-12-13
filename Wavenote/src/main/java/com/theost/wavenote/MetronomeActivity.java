@@ -76,7 +76,7 @@ public class MetronomeActivity extends ThemedAppCompatActivity {
     private static final int STATUS_PLAYING = 2;
     private static final int FILE_REQUEST = 0;
 
-    public static final int DEFAULT_SOUND = 1;
+    public static final int DEFAULT_SOUND = 0;
 
     private static final int MODE_EXPORT = 1;
     private static final int MODE_REMOVE = -1;

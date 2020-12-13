@@ -129,12 +129,16 @@ public class PCMAnalyser {
         }
     }
 
+    public int getBytesPerBeat(int currentSpeed, byte beatNote) {
+        double beatPerMilSecond = (60.0 * 1000 / currentSpeed) / (beatNote / 4.0);
+        return (int) (beatPerMilSecond * (bytesPerSecond() / 1000.0));
+    }
+
     public byte[] generateBeatBytes(byte[] beatStrongBytes, byte[] beetWeakBytes, String currentBeat, int currentSpeed) {
         String[] beatStr = currentBeat.split("/");
         byte beatNum = Byte.parseByte(beatStr[0]);
         byte beetNote = Byte.parseByte(beatStr[1]);
-        double beatPerMilSecond = (60.0 * 1000 / currentSpeed) / (beetNote / 4.0);
-        int bytesPerBeat = (int) (beatPerMilSecond * (bytesPerSecond() / 1000.0));
+        int bytesPerBeat = getBytesPerBeat(currentSpeed, beetNote);
 
         if (bytesPerBeat % 2 != 0) {
             bytesPerBeat++;

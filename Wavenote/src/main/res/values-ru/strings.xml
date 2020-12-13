@@ -310,7 +310,7 @@
     <string name="studio">Студия</string>
     <string name="first_record_adjust_tip">Пожалуйста, откалибруйте запись!</string>
     <string name="confirm_delete_track">Вы действительно хотите удалить трек?</string>
-    <string name="exceed_max_support_track_count">Поддерживается только 7 каналов</string>
+    <string name="exceed_max_support_track_count">Поддерживается только 6 каналов</string>
     <string name="toast_no_record_track">Пожалуйста, добавьте новый трек перед записью</string>
     <string name="toast_waiting_data_loading">Данные загружаются, подождите</string>
     <string name="track_name">Имя трека</string>

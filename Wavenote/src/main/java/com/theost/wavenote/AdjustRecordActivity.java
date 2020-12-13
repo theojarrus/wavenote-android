@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.theost.wavenote.configs.AudioConfig;
+import com.theost.wavenote.configs.BundleKeys;
 import com.theost.wavenote.configs.SpConfig;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AudioUtils;
@@ -41,12 +42,16 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
     private static final int ANALYZE_BEAT_LEN = 8;
 
-    TextView mResultTextView;
-    ImageButton mPlayButton;
+    private TextView mResultTextView;
+    private ImageButton mPlayButton;
+
+    private short currentSpeed;
 
     private AudioTrack audioTrack;
     private AudioRecord audioRecord;
     private byte[] playBeatBytes;
+
+    private int beatFirstSoundBytePos;
 
     private PCMAnalyser pcmAudioFile;
     private BeatPlayHandler beatPlayHandler;
@@ -75,6 +80,8 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
 
         setTitle(R.string.adjust_record);
         setResult(RESULT_CANCELED);
+
+        currentSpeed = getIntent().getShortExtra(BundleKeys.RESULT_SPEED, Note.getActiveMetronomeSpeed());
 
         mResultTextView = findViewById(R.id.adjust_result);
         mPlayButton = findViewById(R.id.play_beat);
@@ -156,7 +163,8 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                 try {
                     beatStrongBytes = FileUtils.getStereoBeatResource(getApplicationContext(), metronomeSound, true)[0];
 
-                    playBeatBytes = pcmAudioFile.generateBeatBytes(beatStrongBytes, null, "1/4", 72);
+                    beatFirstSoundBytePos = pcmAudioFile.getBytesPerBeat(currentSpeed, (byte) 4);
+                    playBeatBytes = pcmAudioFile.generateBeatBytes(beatStrongBytes, null, "1/4", currentSpeed);
                     readRecordBytesLen = playBeatBytes.length * ANALYZE_BEAT_LEN;
                     errorRangeByteLen = (int) (pcmAudioFile.bytesPerSecond() / 1000.0 * 10);
                     playStatus = STATUS_PLAY_PREPARE;
@@ -278,10 +286,10 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                     }
 
                     stopPlay = true;
-                    if (isValid) {
+                    if (isValid && readSize == readRecordBytesLen) {
                         Message doneMsg = Message.obtain();
                         doneMsg.what = R.integer.ADJUST_RECORD_DISTANCE_DONE;
-                        doneMsg.obj = averSampleValue;
+                        doneMsg.obj = averSampleValue - beatFirstSoundBytePos / 2;
                         mAdjustHandler.sendMessage(doneMsg);
                     } else {
                         mAdjustHandler.sendEmptyMessage(R.integer.ADJUST_RECORD_DISTANCE_FAIL);

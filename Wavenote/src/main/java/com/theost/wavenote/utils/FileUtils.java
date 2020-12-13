@@ -126,6 +126,7 @@ public class FileUtils {
         if (!sourceFile.exists()) return false;
         if (!directory.exists()) directory.mkdirs();
         File fileNew = new File(directory, fileName);
+        if (fileNew.exists()) fileNew.delete();
         if (sourceFile.isDirectory())
             sourceFile = new File(sourceFile, fileName);
         writeFile(sourceFile, fileNew);

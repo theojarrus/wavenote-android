@@ -466,6 +466,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
 
     private void onAdjustClick() {
         Intent intent = new Intent();
+        intent.putExtra(BundleKeys.RESULT_SPEED, currentSpeed);
         intent.setClass(this, AdjustRecordActivity.class);
         startActivityForResult(intent, REQ_CODE_ADJUST_RECORD);
     }
@@ -759,7 +760,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
 
     private void onPlayDone() {
         if (recordStatus != STATUS_RECORD_RECORDING) {
-            enableViews(mAddButton, mRecordButton);
+            enableViews(mAddButton, mRecordButton, mRecordButton, mAddButton, mSaveButton);
             resetPlay();
             playStatus = STATUS_PLAY_PREPARE;
             if (isLoopPlay) {
@@ -1044,7 +1045,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
                         streamIndex++;
                     }
 
-                } catch (IOException ex) {
+                } catch (IOException | NullPointerException ex) {
                     ex.printStackTrace();
                 }
 

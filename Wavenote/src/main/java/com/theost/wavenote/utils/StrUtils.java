@@ -143,7 +143,7 @@ public class StrUtils {
     }
 
     public static String formatFilename(String name) {
-        return name.replaceAll("[\\\\/:*?\"<>|]", "_");
+        return name.replaceAll("\\s+", "_").replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
     public static String getFileName(String name) {
