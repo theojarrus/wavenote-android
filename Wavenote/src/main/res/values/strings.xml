@@ -490,4 +490,7 @@
     <string name="dont_ask_again">Don\'t ask again</string>
     <string name="share_thoughts">Share thoughts</string>
 
+    <string name="web_syllables">Web syllables</string>
+    <string name="web_syllables_description">Works slower than the built-in algorithm, but provides high accuracy</string>
+
 </resources>

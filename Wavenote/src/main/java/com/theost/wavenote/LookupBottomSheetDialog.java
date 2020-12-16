@@ -56,10 +56,11 @@ public class LookupBottomSheetDialog extends BottomSheetDialogBase {
 
     private static final String TAG = LookupBottomSheetDialog.class.getSimpleName();
 
-    private static final String API_URL = "http://api.datamuse.com/words?";
+    public static final String API_URL = "http://api.datamuse.com/words?";
 
     private static final String API_REQ_WORD = "rel_%s=%s"; // (code, word)
     private static final String API_REQ_DEFINITION = "sp=%s&md=d";
+    public static final String API_REQ_SYLLABLE = "sp=%s&md=s";
     private static final String API_REQ_CUT = "&sp=%s";
     private static final String API_REQ_SOUNDS = "&sl=%s";
     private static final String API_REQ_MEANS = "&ml=%s";
@@ -84,7 +85,6 @@ public class LookupBottomSheetDialog extends BottomSheetDialogBase {
     private static final String DISPLAY_STRING_LIST = "— ";
     private static final String DISPLAY_STRING_DOT = ".";
     private static final String DISPLAY_STRING_COMMA = ",";
-    private static final String RESOURCES_SUMMER = "_";
 
     private static final String API_FIELD_DEFINITIONS = "defs";
     private static final String API_FIELD_WORD = "word";
@@ -108,9 +108,6 @@ public class LookupBottomSheetDialog extends BottomSheetDialogBase {
     private LinearLayout mTypeLayout;
     private LinearLayout mCutTypeLayout;
     private LinearLayout mResultLayout;
-    private LinearLayout mCutLayout;
-    private LinearLayout mMeansLayout;
-    private LinearLayout mSoundsLayout;
 
     private EditText mLookupWordEditText;
     private EditText mCutEditText;
@@ -133,7 +130,6 @@ public class LookupBottomSheetDialog extends BottomSheetDialogBase {
 
     private String mSelectedWord;
     private String mSearchedWord;
-    private String mLockedMode;
 
     private View mLookupView;
 
@@ -228,7 +224,6 @@ public class LookupBottomSheetDialog extends BottomSheetDialogBase {
             @Override
             public void afterTextChanged(Editable arg0) {
                 Note.setSearchType(mSearchTypesList.indexOf(mTypeTextView.getText().toString()));
-                int prevStatus = mAdvancedViewStatus;
                 updateAdvancedStatus();
                 updateAdvancedViews();
                 mTypeTextView.clearFocus();

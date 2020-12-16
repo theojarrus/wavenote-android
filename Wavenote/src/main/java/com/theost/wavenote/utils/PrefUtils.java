@@ -50,6 +50,9 @@ public class PrefUtils {
     public static final String PREF_SHOW_FEEDBACK = "pref_key_show_feedback";
 
     // boolean, determines keywords content in the editor
+    public static final String PREF_WEB_SYLLABLE = "pref_key_web_syllable";
+
+    // boolean, determines keywords content in the editor
     public static final String PREF_DETECT_SYNTAX = "pref_key_detect_syntax";
 
     // boolean, determines chords content in the editor

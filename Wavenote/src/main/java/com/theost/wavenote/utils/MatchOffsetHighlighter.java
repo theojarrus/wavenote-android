@@ -42,9 +42,14 @@ public class MatchOffsetHighlighter implements Runnable {
             Handler handler = mTextView.getHandler();
             if (handler == null) return;
 
-            handler.post(() -> {
-                if (mStopped) return;
-                sListener.onMatch(factory, text, start, end);
+            handler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (mStopped) return;
+                    sListener.onMatch(factory, text, start, end);
+                }
+
             });
         }
 
@@ -100,6 +105,25 @@ public class MatchOffsetHighlighter implements Runnable {
                 end -= matchCount * ChecklistUtils.CHECKLIST_OFFSET;
             }
 
+            if (end > plainTextContent.length()) end = plainTextContent.length() - 1;
+
+            int newlinesOffset = plainTextContent.substring(0, start).split("\n \n").length;
+            if (newlinesOffset > 0) {
+                start -= 1;
+                end -= 1;
+                String checkString = plainTextContent.substring(0, end);
+                int lastNewline = checkString.lastIndexOf("\n");
+                if (lastNewline > 2) {
+                    if (checkString.substring(lastNewline - 2, lastNewline - 1).equals("\n")
+                            && checkString.startsWith(" ", lastNewline - 1)) {
+                        start += 1;
+                        end += 1;
+                    }
+                }
+                start += newlinesOffset;
+                end += newlinesOffset;
+            }
+
             int span_start = start + getByteOffset(content, 0, start);
             int span_end = span_start + length + getByteOffset(content, start, end);
 
@@ -121,7 +145,7 @@ public class MatchOffsetHighlighter implements Runnable {
         String[] values = matches.split("\\s+", 4);
         if (values.length > MATCH_INDEX_START) {
             try {
-                int location = Integer.parseInt(values[MATCH_INDEX_START]);
+                int location = Integer.valueOf(values[MATCH_INDEX_START]);
 
                 return location + getByteOffset(content, 0, location);
             } catch (NumberFormatException exception) {
@@ -147,7 +171,7 @@ public class MatchOffsetHighlighter implements Runnable {
             start = 0;
         }
 
-        if (start > length - 1) {
+        if (start > length - 1 || start > end) {
             // if start is past the end of string
             return 0;
         } else if (end > length - 1) {
@@ -190,7 +214,7 @@ public class MatchOffsetHighlighter implements Runnable {
             mSpannable = mTextView.getEditableText();
             mMatches = matches;
             mIndex = columnIndex;
-            mPlainText = mTextView.getPlainTextContent().toString();
+            mPlainText = mTextView.getPlainTextContent();
             start();
         }
     }
@@ -221,7 +245,7 @@ public class MatchOffsetHighlighter implements Runnable {
             Object[] spans = factory.buildSpans();
 
             for (Object span : spans) {
-                if (start >= 0 && end > start && end <= content.length()) {
+                if (start >= 0 && end >= start && end <= content.length()) {
                     content.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mMatchedSpans.add(span);
                 }

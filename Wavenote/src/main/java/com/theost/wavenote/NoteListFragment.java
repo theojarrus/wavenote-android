@@ -81,6 +81,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.theost.wavenote.NoteEditorFragment.ARG_MATCH_OFFSETS;
+import static com.theost.wavenote.models.Note.NEW_LINE;
 import static com.theost.wavenote.models.Note.SPACE;
 import static com.theost.wavenote.models.Note.TAGS_PROPERTY;
 import static com.theost.wavenote.models.Preferences.MAX_RECENT_SEARCHES;
@@ -684,7 +686,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
         if (!TextUtils.isEmpty(searchString)) {
             query.where(new Query.FullTextMatch(new SearchTokenizer(searchString)));
-            query.include(new Query.FullTextOffsets("match_offsets"));
+            query.include(new Query.FullTextOffsets(ARG_MATCH_OFFSETS));
             query.include(new Query.FullTextSnippet(Note.MATCHED_TITLE_INDEX_NAME, Note.TITLE_INDEX_NAME));
             query.include(new Query.FullTextSnippet(Note.MATCHED_CONTENT_INDEX_NAME, Note.CONTENT_PROPERTY));
         }
@@ -709,7 +711,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
 
         if (!TextUtils.isEmpty(searchString)) {
             query.where(new Query.FullTextMatch(new SearchTokenizer(searchString)));
-            query.include(new Query.FullTextOffsets("match_offsets"));
+            query.include(new Query.FullTextOffsets(ARG_MATCH_OFFSETS));
             query.include(new Query.FullTextSnippet(Note.MATCHED_TITLE_INDEX_NAME, Note.TITLE_INDEX_NAME));
             query.include(new Query.FullTextSnippet(Note.MATCHED_CONTENT_INDEX_NAME, Note.CONTENT_PROPERTY));
         }
@@ -1044,16 +1046,20 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             }
 
             holder.mMatchOffsets = null;
-            int matchOffsetsIndex = mCursor.getColumnIndex("match_offsets");
+            int matchOffsetsIndex = mCursor.getColumnIndex(ARG_MATCH_OFFSETS);
 
             if (hasSearchQuery() && matchOffsetsIndex != -1) {
                 title = mCursor.getString(mCursor.getColumnIndex(Note.MATCHED_TITLE_INDEX_NAME));
-                String snippet = mCursor.getString(mCursor.getColumnIndex(Note.MATCHED_CONTENT_INDEX_NAME)).replaceAll("\\s+", SPACE);
-                int titleEnd = snippet.indexOf(SPACE);
+                String snippet = mCursor.getString(mCursor.getColumnIndex(Note.MATCHED_CONTENT_INDEX_NAME));
+                int titleEnd = snippet.indexOf(NEW_LINE);
                 if (titleEnd == -1) {
                     snippet = "";
                 } else {
-                    snippet = snippet.substring(titleEnd + 1);
+                    if (titleEnd == 0) {
+                        title = getString(R.string.new_note);
+                        titleEnd += 1;
+                    }
+                    snippet = snippet.replaceAll("\\s+", SPACE).substring(titleEnd);
                 }
                 holder.mMatchOffsets = mCursor.getString(matchOffsetsIndex);
 

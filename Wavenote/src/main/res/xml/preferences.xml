@@ -46,6 +46,11 @@
             android:summary="@string/dictionary_summary"
             android:title="@string/dictionary" />
         <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_key_web_syllable"
+            android:title="@string/web_syllables"
+            android:summary="@string/web_syllables_description" />
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_key_detect_syntax"
             android:title="@string/detect_keywords" />

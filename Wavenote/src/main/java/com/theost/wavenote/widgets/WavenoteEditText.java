@@ -312,9 +312,9 @@ public class WavenoteEditText extends AppCompatEditText {
     }
 
     // Replaces any CheckableSpans with their markdown counterpart (e.g. '- [ ]')
-    public Spannable getPlainTextContent() {
+    public String getPlainTextContent() {
         if (getText() == null) {
-            return new SpannableString("");
+            return "";
         }
 
         SpannableStringBuilder content = new SpannableStringBuilder(getText());
@@ -329,7 +329,7 @@ public class WavenoteEditText extends AppCompatEditText {
                     span.isChecked() ? ChecklistUtils.CHECKED_MARKDOWN : ChecklistUtils.UNCHECKED_MARKDOWN);
         }
 
-        return content;
+        return content.toString();
     }
 
     // Replaces any CheckableSpans with their markdown preview counterpart (e.g. '- [\u2A2F]')

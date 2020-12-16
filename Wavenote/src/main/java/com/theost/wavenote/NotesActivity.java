@@ -646,10 +646,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
         Query<Note> query = Note.allDeleted(mNotesBucket);
 
         if (query.count() == 0) {
-            mEmptyTrashMenuItem.setIcon(R.drawable.ic_trash_disabled_24dp);
+            DrawableUtils.setMenuItemAlpha(mEmptyTrashMenuItem, 0.5f);
             mEmptyTrashMenuItem.setEnabled(false);
         } else {
-            mEmptyTrashMenuItem.setIcon(R.drawable.ic_trash_empty_24dp);
+            DrawableUtils.setMenuItemAlpha(mEmptyTrashMenuItem, 1.0f);
             mEmptyTrashMenuItem.setEnabled(true);
         }
     }
@@ -742,6 +742,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             );
         }
 
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -892,6 +893,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
                         .negativeText(R.string.no)
                         .onPositive((dialog, which) -> {
                             new EmptyTrashTask(NotesActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            DrawableUtils.startAnimatedVectorDrawable(item.getIcon());
                             setIconAfterAnimation(item, R.drawable.ic_trash_disabled_24dp, R.string.empty_trash);
                         }).show();
                 return true;

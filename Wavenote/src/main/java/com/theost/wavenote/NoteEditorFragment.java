@@ -91,7 +91,7 @@ import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.ResUtils;
 import com.theost.wavenote.utils.SpaceTokenizer;
 import com.theost.wavenote.utils.StrUtils;
-import com.theost.wavenote.utils.SyllableCounter;
+import com.theost.wavenote.widgets.SyllableCounter;
 import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView;
 import com.theost.wavenote.utils.TagsMultiAutoCompleteTextView.OnTagAddedListener;
 import com.theost.wavenote.utils.TextHighlighter;
@@ -112,6 +112,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.theost.wavenote.models.Note.NEW_LINE;
+import static com.theost.wavenote.utils.ImportUtils.RESULT_OK;
 import static com.theost.wavenote.utils.SearchTokenizer.SPACE;
 import static com.theost.wavenote.widgets.WavenoteEditText.DISABLE_TEXTWATCHER;
 
@@ -156,6 +157,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private boolean mIsPaused;
     private boolean mIsFromWidget;
     private boolean orientationChanged;
+    private boolean isSyllableCounting;
 
     private CursorAdapter mAutocompleteAdapter;
     private String resultDialogMessage;
@@ -164,11 +166,13 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private String mMatchOffsets;
     private String mLinkText;
     private String mLinkUrl;
+    private String mSyllableContent;
 
     private Note mNote;
     private Bucket<Note> mNotesBucket;
 
-    private ArrayList<String> mSyllable;
+    private SyllableCounter mSyllableCounter;
+    private SyllableCountThread syllableThread;
 
     private TagsMultiAutoCompleteTextView mTagInput;
     private WavenoteEditText mContentEditText;
@@ -192,10 +196,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private Handler mPublishTimeoutHandler;
     private Handler mHistoryTimeoutHandler;
 
-    private MaterialDialog mExportDialog;
-    private MaterialDialog mPasswordDialog;
     private MaterialDialog loadingDialog;
-    private MaterialDialog mResultDialog;
     private HistoryBottomSheetDialog mHistoryBottomSheet;
     private LookupBottomSheetDialog mLookupBottomSheet;
     private MatchOffsetHighlighter mHighlighter;
@@ -463,7 +464,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         styleColors = getResources().getIntArray(R.array.colorsheet_colors);
         if (Note.getActiveStyleColor() == 0) Note.setActiveStyleColor(styleColors[0]);
 
-        SyllableCounter.updateSyllableResources(requireContext());
+        mSyllableCounter = new SyllableCounter(requireContext(), PrefUtils.getBoolPref(getContext(), PrefUtils.PREF_WEB_SYLLABLE, false));
 
         if (DisplayUtils.isLargeScreenLandscape(getActivity()) && mNote == null) {
             mPlaceholderView.setVisibility(View.VISIBLE);
@@ -956,7 +957,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         boolean isInserted = localDatabase.insertDictionaryData(keyword, type);
         if (isInserted) {
             DisplayUtils.showToast(requireContext(), this.getString(R.string.created));
-            int endSelection = mContentEditText.getSelectionEnd() - mContentEditText.getSelectionStart();
             Note.setNeedResourceUpdate(true);
             syntaxHighlightEditorContent();
             mContentEditText.setSelection(mContentEditText.getSelectionEnd());
@@ -1070,7 +1070,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             exportPath = PrefUtils.getStringPref(requireContext(), PrefUtils.PREF_EXPORT_DIR);
             HashMap<String, Boolean> resultMap = ExportUtils.exportNote(requireContext(), mNote, exportPath, new ArrayList<>(Arrays.asList(exportModes)), exportPassword);
             resultDialogMessage = ExportUtils.getResultMessage(requireContext(), resultMap);
-            mExportHandler.sendEmptyMessage(ImportUtils.RESULT_OK);
+            mExportHandler.sendEmptyMessage(RESULT_OK);
             isExporting = false;
         }
     }
@@ -1178,7 +1178,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         mIsSyllableEnabled = isChecked;
         saveNote();
         updateSyllable();
-        countSyllableContent();
+        updateSyllableContent();
 
         // Set preference so that next new note will have syllable enabled.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
@@ -1227,7 +1227,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 if (mNoteMarkdownFragment == null) {
                     // Get markdown fragment and update content
                     mNoteMarkdownFragment = editorActivity.getNoteMarkdownFragment();
-                    mNoteMarkdownFragment.updateMarkdown(mContentEditText.getPlainTextContent().toString());
+                    mNoteMarkdownFragment.updateMarkdown(mContentEditText.getPlainTextContent());
                 }
             } else {
                 editorActivity.hideTabs();
@@ -1243,7 +1243,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     private void loadMarkdownData() {
         String formattedContent = NoteMarkdownFragment.getMarkdownFormattedContent(
                 mCss,
-                mContentEditText.getPlainTextContent().toString()
+                mContentEditText.getPlainTextContent()
         );
 
         mMarkdown.loadDataWithBaseURL(null, formattedContent, "text/html", "utf-8", null);
@@ -1565,7 +1565,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
             removeMatches();
 
-            Spannable content = mContentEditText.getPlainTextContent();
+            Spannable content = mContentEditText.getText();
             String tagString = getNoteTagsString();
 
             if (mNote.hasChanges(content, tagString.trim(), mNote.isPinned(), mIsMarkdownEnabled, mIsPreviewEnabled)) {
@@ -1914,7 +1914,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (openNote == null || !openNote.getSimperiumKey().equals(note.getSimperiumKey()))
             return;
 
-        note.setContent(mContentEditText.getPlainTextContent());
+        note.setContent(mContentEditText.getText());
     }
 
     private static class LoadNoteTask extends AsyncTask<String, Void, Void> {
@@ -2020,7 +2020,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             fragment.linkifyEditorContent();
             fragment.syntaxHighlightEditorContent();
             if (fragment.mNote != null && fragment.mNote.isSyllableEnabled())
-                fragment.countSyllableContent();
+                fragment.updateSyllableContent();
             fragment.mIsLoadingNote = false;
         }
     }
@@ -2052,10 +2052,34 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 fragment.linkifyEditorContent();
                 fragment.syntaxHighlightEditorContent();
                 fragment.updateMarkdownView();
-                fragment.countSyllableContent();
+                fragment.updateSyllableContent();
             }
         }
 
+    }
+
+    private final Handler mSyllableHandler = new Handler(Looper.getMainLooper(), msg -> {
+        countSyllableContent();
+        return true;
+    });
+
+    private class SyllableCountThread extends Thread {
+        @Override
+        public void run() {
+            isSyllableCounting = true;
+            String sylContent = "";
+            if (!isInterrupted()) sylContent = mSyllableCounter.getSyllableContent(this, mContentEditText.getTextContent());
+            if (!isInterrupted()) mSyllableContent = sylContent;
+            if (!isInterrupted()) mSyllableHandler.sendEmptyMessage(RESULT_OK);
+            isSyllableCounting = false;
+        }
+    }
+
+    private void updateSyllableContent() {
+        if (isSyllableCounting && syllableThread != null)
+            syllableThread.interrupt();
+        syllableThread = new SyllableCountThread();
+        syllableThread.start();
     }
 
     private void countSyllableContent() {
@@ -2063,9 +2087,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             return;
         }
 
-        String syllable = SyllableCounter.getSyllableContent(mContentEditText.getTextContent());
         int[] selectionIndexes = mContentEditText.getSelectionIndexes();
-        mSyllableEditText.setText(syllable);
+        mSyllableEditText.setText(mSyllableContent);
         Editable editable = mSyllableEditText.getText();
         if (editable != null) {
             editable.setSpan(new RelativeSizeSpan(1.3f), 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -2114,7 +2137,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 ((NoteEditorActivity) requireActivity()).showTabs();
             }
             // Load markdown in the sibling NoteMarkdownFragment's WebView.
-            mNoteMarkdownFragment.updateMarkdown(mContentEditText.getPlainTextContent().toString());
+            mNoteMarkdownFragment.updateMarkdown(mContentEditText.getPlainTextContent());
         }
     }
 
