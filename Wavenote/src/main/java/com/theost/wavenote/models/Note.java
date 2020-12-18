@@ -2,8 +2,10 @@ package com.theost.wavenote.models;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import com.simperium.client.Bucket;
@@ -22,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,7 +73,6 @@ public class Note extends BucketObject {
     private static boolean isAdvancedSearch;
     private static int searchType;
     private static int searchCutType;
-    private static String searchPrevWord;
 
     private static boolean isNeedResourceUpdate = true;
 
@@ -78,6 +80,8 @@ public class Note extends BucketObject {
     private static boolean dictionarySortDirRev;
 
     private static boolean chordGridEnabled = true;
+
+    private static HashMap<String, String> notesTempSyllables;
 
     private static List<Integer> textFontToggles;
     private static String activeTextFont = "";
@@ -212,6 +216,22 @@ public class Note extends BucketObject {
         }
     }
 
+    public static String getSyllablesFromTemp(String note) {
+        if (notesTempSyllables != null) {
+            if (notesTempSyllables.containsKey(note))
+                return notesTempSyllables.get(note);
+        } else {
+            notesTempSyllables = new HashMap<>();
+        }
+        return null;
+    }
+
+    public static void setSyllablesToTemp(String note, String syllables) {
+        if (notesTempSyllables == null) notesTempSyllables = new HashMap<>();
+        notesTempSyllables.remove(note);
+        notesTempSyllables.put(note, syllables);
+    }
+
     public static String getFeedbackName() {
         return feedbackName;
     }
@@ -298,14 +318,6 @@ public class Note extends BucketObject {
 
     public static void setSearchCutType(int type) {
         searchCutType = type;
-    }
-
-    public static String getPreviousSearchWord() {
-        return searchPrevWord;
-    }
-
-    public static void setPreviousSearchWord(String word) {
-        searchPrevWord = word;
     }
 
     public static boolean isNeedResourceUpdate() {

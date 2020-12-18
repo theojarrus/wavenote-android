@@ -387,5 +387,12 @@
     <string name="search_results_error">Результатов не найдено</string>
     <string name="searching_error">Подождите немного, уже в поиске</string>
     <string name="search_language_error">Поддерживается только английский язык</string>
+    <string name="feedback_like_question">Пожалуйста, ответьте на пару вопросов, чтобы помочь нам сделать wavenote лучше!\\n\\nВам понравилось приложение?</string>
+    <string name="feedback_dislike">Очень жаль! Поделитесь с нами, почему вам не понравилось приложение wavenote? И мы его улучшим!</string>
+    <string name="feedback_like">Очень приятно, спасибо! Помогите нам сделать wavenote еще лучше!</string>
+    <string name="dont_ask_again">Больше не спрашивать</string>
+    <string name="share_thoughts">Поделиться идеями</string>
+    <string name="web_syllables">Веб-счётчик слогов</string>
+    <string name="web_syllables_description">Работает медленнее, чем встроенный алгоритм, но обеспечивает высокую точность</string>
 
 </resources>

@@ -108,24 +108,26 @@ public class MatchOffsetHighlighter implements Runnable {
             if (end > plainTextContent.length()) end = plainTextContent.length() - 1;
 
             int newlinesOffset = plainTextContent.substring(0, start).split("\n \n").length;
+            int extraNewlinesOffset = plainTextContent.substring(0, start).split("\n \n \n").length - 1;
+            if (extraNewlinesOffset > 1) newlinesOffset += extraNewlinesOffset;
             if (newlinesOffset > 0) {
-                start -= 1;
-                end -= 1;
-                String checkString = plainTextContent.substring(0, end);
-                int lastNewline = checkString.lastIndexOf("\n");
-                if (lastNewline > 2) {
-                    if (checkString.substring(lastNewline - 2, lastNewline - 1).equals("\n")
-                            && checkString.startsWith(" ", lastNewline - 1)) {
-                        start += 1;
-                        end += 1;
-                    }
-                }
                 start += newlinesOffset;
                 end += newlinesOffset;
+                if (!plainTextContent.substring(start - 4, start - 1).equals("\n \n")) {
+                    start -= 1;
+                    end -= 1;
+                }
             }
 
             int span_start = start + getByteOffset(content, 0, start);
             int span_end = span_start + length + getByteOffset(content, start, end);
+
+            if (span_start > 1 && span_start < content.toString().length()) {
+                if (!content.toString().substring(span_start - 1, span_start).equals(" ") && !content.toString().substring(span_start - 1, span_start).equals("\n")) {
+                    span_start += 1;
+                    span_end += 1;
+                }
+            }
 
             if (Thread.interrupted()) return;
 

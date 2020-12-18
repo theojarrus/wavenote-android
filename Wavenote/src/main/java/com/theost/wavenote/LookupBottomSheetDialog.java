@@ -60,7 +60,7 @@ public class LookupBottomSheetDialog extends BottomSheetDialogBase {
 
     private static final String API_REQ_WORD = "rel_%s=%s"; // (code, word)
     private static final String API_REQ_DEFINITION = "sp=%s&md=d";
-    public static final String API_REQ_SYLLABLE = "sp=%s&md=s";
+    public static final String API_REQ_SYLLABLE = "sp=%s&md=s&max=1";
     private static final String API_REQ_CUT = "&sp=%s";
     private static final String API_REQ_SOUNDS = "&sl=%s";
     private static final String API_REQ_MEANS = "&ml=%s";

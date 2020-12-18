@@ -35,6 +35,7 @@
 
     <PreferenceCategory android:title="@string/editor">
         <ListPreference
+            android:layout_width="wrap_content"
             android:defaultValue="@integer/default_font_size"
             android:entries="@array/array_font_size"
             android:entryValues="@array/array_font_size_values"

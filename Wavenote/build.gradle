@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.sentry.android.gradle'
 
 android {
     buildToolsVersion '30.0.2'
@@ -16,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ndk {
                 debugSymbolLevel 'FULL'
+            }
+            sentry {
+                autoUpload true
+                uploadNativeSymbols true
+                includeNativeSources true
             }
         }
     }
@@ -63,6 +69,10 @@ android {
 }
 
 buildscript {
+    dependencies {
+        classpath 'io.sentry:sentry-android-gradle-plugin:1.7.36'
+    }
+
     repositories {
         google()
         jcenter()

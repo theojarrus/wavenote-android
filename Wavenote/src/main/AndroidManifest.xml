@@ -79,7 +79,8 @@
         <activity
             android:name="com.theost.wavenote.NoteEditorActivity"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName="com.theost.wavenote.NotesActivity">
         </activity>
 
         <activity

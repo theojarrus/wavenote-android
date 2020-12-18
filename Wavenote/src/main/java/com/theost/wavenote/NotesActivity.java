@@ -176,16 +176,14 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
 
         ThemeUtils.updateTextTheme(this);
 
-        if (savedInstanceState != null) {
-            mHasTappedNoteListWidgetButton = savedInstanceState.getBoolean(STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED);
-            mNoteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(TAG_NOTE_LIST);
-        }
-
-        if ((mNoteListFragment == null) || (!mNoteListFragment.isAdded())) {
+        if (savedInstanceState == null) {
             mNoteListFragment = new NoteListFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.note_fragment_container, mNoteListFragment, TAG_NOTE_LIST);
             fragmentTransaction.commit();
+        } else {
+            mHasTappedNoteListWidgetButton = savedInstanceState.getBoolean(STATE_NOTE_LIST_WIDGET_BUTTON_TAPPED);
+            mNoteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentByTag(TAG_NOTE_LIST);
         }
 
         mIsTabletFullscreen = mNoteListFragment.isHidden();
@@ -507,6 +505,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             editor.putString(PrefUtils.PREF_LAUNCH_TIME, String.valueOf(System.currentTimeMillis()));
             editor.putString(PrefUtils.PREF_LAUNCH_COUNT, String.valueOf(0));
             editor.putBoolean(PrefUtils.PREF_SHOW_FEEDBACK, true);
+            editor.putBoolean(PrefUtils.PREF_WEB_SYLLABLE, true);
             editor.putBoolean(PrefUtils.PREF_DETECT_SYNTAX, true);
             editor.putBoolean(PrefUtils.PREF_DETECT_CHORDS, true);
             editor.putBoolean(PrefUtils.PREF_DETECT_LINKS, true);

@@ -484,13 +484,13 @@
     <string name="search_language_error">Only English is supported</string>
     <string name="search_results_error">No results found</string>
 
-    <string name="feedback_like_question">Wait, answer a couple of questions, if not difficult, so you will help us make the application better!\n\nDo you like the wavenote?</string>
+    <string name="feedback_like_question">Please, answer a couple of questions to help us make the wavenote better!\n\nDo you like the app?</string>
     <string name="feedback_dislike">It\'s a pity! Share with us why you didn\'t like wavenote? And we will improve it!</string>
     <string name="feedback_like">Very nice, thank you! Help us make the wavenote even better!</string>
     <string name="dont_ask_again">Don\'t ask again</string>
-    <string name="share_thoughts">Share thoughts</string>
+    <string name="share_thoughts">Share ideas</string>
 
-    <string name="web_syllables">Web syllables</string>
+    <string name="web_syllables">Web syllable counter</string>
     <string name="web_syllables_description">Works slower than the built-in algorithm, but provides high accuracy</string>
 
 </resources>

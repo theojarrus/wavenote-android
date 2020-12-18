@@ -79,9 +79,9 @@
             android:layout_marginStart="@dimen/margin_default_quarter"
             android:layout_marginTop="@dimen/margin_default_quarter"
             android:layout_marginBottom="@dimen/margin_default"
+            android:paddingBottom="@dimen/padding_extra_extra_large"
             android:layout_width="match_parent"
             android:hint="@string/feedback_message"
-            app:errorEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText

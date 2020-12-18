@@ -150,7 +150,6 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
 
         mMessageLayout.getEditText().setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
-                checkMessageInput();
                 DisplayUtils.hideKeyboard(view);
             } else {
                 mMessageLayout.setError("");
@@ -262,14 +261,6 @@ public class FeedbackActivity extends ThemedAppCompatActivity {
             mEmailLayout.setError(getString(R.string.simperium_error_email));
         } else {
             mEmailLayout.setError("");
-        }
-    }
-
-    private void checkMessageInput() {
-        if (!isMessageValid) {
-            mMessageLayout.setError(getString(R.string.feedback_error_message));
-        } else {
-            mMessageLayout.setError("");
         }
     }
 

@@ -24,6 +24,8 @@ import com.theost.wavenote.utils.PrefUtils;
 
 import org.wordpress.passcodelock.AppLockManager;
 
+import io.sentry.Sentry;
+
 public class Wavenote extends Application {
 
     private static final int TEN_SECONDS_MILLIS = 10000;
@@ -44,6 +46,8 @@ public class Wavenote extends Application {
 
     public void onCreate() {
         super.onCreate();
+
+        Sentry.captureMessage("Debug runned");
 
         Fresco.initialize(this);
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);

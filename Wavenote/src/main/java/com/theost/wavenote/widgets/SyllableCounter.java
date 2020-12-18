@@ -6,7 +6,6 @@ import com.theost.wavenote.R;
 import com.theost.wavenote.utils.NetworkUtils;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,15 +28,16 @@ public class SyllableCounter {
     private static final String CYRILLIC_ALPHABET = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
     private static final String CYRILLIC_SYLLABLE = "абеёиоуыэюя";
 
-    private String API_SYLLABLE_DIVIDER_START = "\"numSyllables\":";
-    private String API_SYLLABLE_DIVIDER_END = "}";
+    private final String API_SYLLABLE_DIVIDER_START = "\"numSyllables\":";
+    private final String API_SYLLABLE_DIVIDER_END = "}";
 
     private Map<String, Integer> exceptions;
     private Set<String> twoVowelSounds;
     private Set<String> vowels;
     private Set<String> chords;
+    private ArrayList<String> tempLinesList;
+    private ArrayList<String> tempIndexesList;
     private Context context;
-    private Thread thread;
 
     private boolean isWebEnabled;
 
@@ -55,15 +55,36 @@ public class SyllableCounter {
             String word = parseArray[1];
             this.exceptions.put(word, count);
         }
+        tempLinesList = new ArrayList<>();
+        tempIndexesList = new ArrayList<>();
     }
 
-    public String getSyllableContent(Thread thread, String content) {
-        this.thread = thread;
+    public String getSyllableContent(String content) {
         StringBuilder syllableBuilder = new StringBuilder();
         content = content.replaceAll("\\p{Punct}", "").replaceAll("\\u00a0", SPACE).replaceAll("[ ]{2,}", SPACE);
         String[] linesArray = content.split(NEW_LINE);
-        for (String s : linesArray) {
-            syllableBuilder.append(getSyllableLine(s)).append(NEW_LINE);
+        for (int i = 0; i < linesArray.length; i++) {
+            String line = linesArray[i].trim();
+            String syllableLine;
+            if (i < tempLinesList.size() && tempLinesList.get(i).equals(line)) {
+                syllableLine = tempIndexesList.get(i);
+            } else {
+                syllableLine = getSyllableLine(line);
+                if (i < tempLinesList.size()) {
+                    tempLinesList.remove(i);
+                    tempIndexesList.remove(i);
+                    tempLinesList.add(i, line);
+                    tempIndexesList.add(i, syllableLine);
+                } else {
+                    tempLinesList.add(line);
+                    tempIndexesList.add(syllableLine);
+                }
+            }
+            syllableBuilder.append(syllableLine).append(NEW_LINE);
+        }
+        if (tempLinesList.size() > linesArray.length) {
+            tempLinesList.subList(linesArray.length, tempLinesList.size()).clear();
+            tempIndexesList.subList(linesArray.length, tempIndexesList.size()).clear();
         }
         return SPACE + syllableBuilder.toString();
     }
@@ -72,7 +93,6 @@ public class SyllableCounter {
         String[] words = line.split(SPACE);
         int count = 0;
         for (String w : words) {
-            if (thread.isInterrupted()) return "";
             if (!w.equals("") && !chords.contains(w)) {
                 w = w.toLowerCase().trim();
                 if (CYRILLIC_ALPHABET.indexOf(w.toCharArray()[0]) == -1) {

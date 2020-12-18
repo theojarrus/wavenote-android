@@ -163,6 +163,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     private int mPreviewFontSize;
     private boolean mIsSortDown;
     private boolean mIsSortReverse;
+    private Context mContext;
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
@@ -196,8 +197,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         inflater.inflate(R.menu.bulk_edit, menu);
         DrawableUtils.tintMenuWithAttribute(getActivity(), menu, R.attr.actionModeTextColor);
         mActionMode = actionMode;
-        int colorResId = ThemeUtils.isLightTheme(requireContext()) ? R.color.background_light : R.color.background_dark;
-        requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), colorResId));
+        int colorResId = ThemeUtils.isLightTheme(mContext) ? R.color.background_light : R.color.background_dark;
+        requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(mContext, colorResId));
         return true;
     }
 
@@ -234,9 +235,9 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                         setActivateOnItemClick(DisplayUtils.isLargeScreenLandscape(notesActivity));
                         notesActivity.showDetailPlaceholder();
                     }
-                    requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(requireContext(), android.R.color.transparent));
+                    requireActivity().getWindow().setStatusBarColor(ContextCompat.getColor(mContext, android.R.color.transparent));
                 },
-                requireContext().getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                mContext.getResources().getInteger(android.R.integer.config_mediumAnimTime)
         );
     }
 
@@ -257,7 +258,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     protected void getPrefs() {
-        mPreferenceSortOrder = PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER);
+        mPreferenceSortOrder = PrefUtils.getIntPref(mContext, PrefUtils.PREF_SORT_ORDER);
         mIsCondensedNoteList = PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_CONDENSED_LIST, false);
         mTitleFontSize = PrefUtils.getFontSize(getActivity());
         mPreviewFontSize = mTitleFontSize - 2;
@@ -281,7 +282,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             createNewNote("new_note_shortcut");
         }
 
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         mRootView = view.findViewById(R.id.list_root);
 
         LinearLayout emptyView = view.findViewById(android.R.id.empty);
@@ -304,7 +305,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
 
-            Toast.makeText(getContext(), requireContext().getString(R.string.new_note), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), mContext.getString(R.string.new_note), Toast.LENGTH_SHORT).show();
             return true;
         });
 
@@ -312,7 +313,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         mSuggestionList = view.findViewById(R.id.suggestion_list);
         mSuggestionAdapter = new SuggestionAdapter(new ArrayList<>());
         mSuggestionList.setAdapter(mSuggestionAdapter);
-        mSuggestionList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mSuggestionList.setLayoutManager(new LinearLayoutManager(mContext));
         @SuppressLint("InflateParams")
         LinearLayout sortLayoutContainer = (LinearLayout) getLayoutInflater().inflate(R.layout.search_sort, null, false);
         mSortLayoutContent = sortLayoutContainer.findViewById(R.id.sort_content);
@@ -413,7 +414,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
 
-            Toast.makeText(requireContext(), requireContext().getString(R.string.sort_search_reverse_order), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.sort_search_reverse_order), Toast.LENGTH_SHORT).show();
             return true;
         });
     }
@@ -430,7 +431,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     private @StringRes
     int getSortOrderText() {
         if (this.isAdded()) {
-            switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
+            switch (PrefUtils.getIntPref(mContext, PrefUtils.PREF_SORT_ORDER)) {
                 case ALPHABETICAL_ASCENDING:
                 case ALPHABETICAL_DESCENDING:
                     return R.string.sort_search_alphabetically;
@@ -452,7 +453,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
             mIsSortReverse = false;
         }
 
-        switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
+        switch (PrefUtils.getIntPref(mContext, PrefUtils.PREF_SORT_ORDER)) {
             case ALPHABETICAL_ASCENDING:
             case DATE_CREATED_ASCENDING:
             case DATE_MODIFIED_ASCENDING:
@@ -479,7 +480,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private void switchSortDirection() {
-        switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
+        switch (PrefUtils.getIntPref(mContext, PrefUtils.PREF_SORT_ORDER)) {
             case DATE_MODIFIED_DESCENDING:
                 mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(DATE_MODIFIED_ASCENDING)).apply();
                 break;
@@ -509,6 +510,8 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onAttach(@NonNull Context activity) {
         super.onAttach(activity);
+
+        mContext = activity;
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {
@@ -547,6 +550,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onDetach() {
         super.onDetach();
+        mContext = null;
         // Restore sort order from Settings.
         mPreferences.edit().putString(PrefUtils.PREF_SORT_ORDER, String.valueOf(mPreferenceSortOrder)).apply();
         // Reset the active callbacks interface to the dummy implementation.
@@ -646,9 +650,11 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     public void refreshList() {
-        mSortOrder.setText(getSortOrderText());
-        setSortDirection();
-        refreshList(false);
+        if (isAdded()) {
+            mSortOrder.setText(getSortOrderText());
+            setSortDirection();
+            refreshList(false);
+        }
     }
 
     public void refreshList(boolean fromNav) {
@@ -693,7 +699,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
 
         query.include(Note.PINNED_INDEX_NAME);
-        PrefUtils.sortNoteQuery(query, requireContext(), true);
+        PrefUtils.sortNoteQuery(query, mContext, true);
         return query.execute();
     }
 
@@ -717,7 +723,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         }
         query.include(Note.TITLE_INDEX_NAME, Note.CONTENT_PREVIEW_INDEX_NAME);
 
-        PrefUtils.sortNoteQuery(query, requireContext(), false);
+        PrefUtils.sortNoteQuery(query, mContext, false);
         return query.execute();
     }
 
@@ -1202,7 +1208,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
                     v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 }
 
-                Toast.makeText(getContext(), requireContext().getString(R.string.description_delete_item), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), mContext.getString(R.string.description_delete_item), Toast.LENGTH_SHORT).show();
                 return true;
             });
 
@@ -1212,7 +1218,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(requireContext()).inflate(R.layout.search_suggestion, parent, false), viewType);
+            return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.search_suggestion, parent, false), viewType);
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {
@@ -1275,7 +1281,7 @@ public class NoteListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private Calendar getDateByPreference(Note note) {
-        switch (PrefUtils.getIntPref(requireContext(), PrefUtils.PREF_SORT_ORDER)) {
+        switch (PrefUtils.getIntPref(mContext, PrefUtils.PREF_SORT_ORDER)) {
             case DATE_CREATED_ASCENDING:
             case DATE_CREATED_DESCENDING:
                 return note.getCreationDate();

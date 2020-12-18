@@ -98,6 +98,7 @@ public class MusicRecorder {
 
                     while (status == STATUS_RECORDING) {
                         buffer.clear();
+                        if (audioRecord == null) return;
                         readSize = audioRecord.read(buffer, bufferSize);
                         if (readSize > 0) {
                             if (onRecordListener != null) {
