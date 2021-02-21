@@ -1,26 +1,54 @@
 package com.theost.wavenote.utils;
 
-import android.content.Context;
-
-import com.theost.wavenote.R;
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.TreeMap;
 
 public class ChordUtils {
 
-    public static String replaceChord(Context context, String originChord) {
-        String chord = originChord;
-        if ((originChord.length() > 1) && ((originChord.substring(1, 2).equals("#")) || (originChord.substring(1, 2).equals("b")))) {
-            List<String> chordsReplacement = Arrays.asList(context.getResources().getStringArray(R.array.array_musical_chords_replace));
-            String key = originChord.substring(0, 2);
-            String end = "";
-            if (chordsReplacement.indexOf(key) % 2 == 0) {
-                if (chord.length() > 2) end = chord.substring(2);
-                chord = chordsReplacement.get(chordsReplacement.indexOf(key) + 1) + end;
+    public static TreeMap<Integer, ArrayList<Integer>> convertArrayTreeMap(ArrayList<String> list) {
+        TreeMap<Integer, ArrayList<Integer>> copy = new TreeMap<>();
+        int element;
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                element = Integer.parseInt(list.get(i));
+            } catch (Exception e) {
+                element = -1;
+            }
+            ArrayList<Integer> values = new ArrayList<>();
+            if (copy.containsKey(element)) values.addAll(Objects.requireNonNull(copy.get(element)));
+            values.add(i);
+            copy.put(element, values);
+        }
+        return copy;
+    }
+
+    public static ArrayList<Integer> convertArrayDigit(ArrayList<String> list) {
+        ArrayList<Integer> copy = new ArrayList<>();
+        for (String s : list) {
+            try {
+                copy.add(Integer.parseInt(s));
+            } catch (Exception ignored) {
+                // skip non-digit strings
             }
         }
-        return chord;
+        return copy;
+    }
+
+    public static int getMin(ArrayList<String> shape) {
+        ArrayList<Integer> copy = convertArrayDigit(shape);
+        for (Integer i : copy) if (i < 0) copy.remove(i);
+        return Collections.min(copy);
+    }
+
+    public static int getMax(ArrayList<String> shape) {
+        ArrayList<Integer> copy = convertArrayDigit(shape);
+        return Collections.max(copy);
+    }
+
+    public static String removeSpace(String line) {
+        return line.replaceAll("\\s+", "");
     }
 
 }

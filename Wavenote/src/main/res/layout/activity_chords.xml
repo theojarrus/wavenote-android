@@ -27,15 +27,25 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chord_view"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="?attr/mainBackgroundColor"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/chord_item" />
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/chords_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/chords_height"
+                    android:paddingTop="@dimen/padding_small"
+                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_small"
+                    android:paddingStart="0dp"
+                    android:animateLayoutChanges="true"
+                    android:background="?attr/mainBackgroundColor"
+                    android:orientation="horizontal"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            </HorizontalScrollView>
 
             <View
                 android:layout_width="match_parent"
@@ -63,11 +73,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/padding_medium"
                     android:clickable="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/padding_medium"
                     android:paddingTop="@dimen/padding_medium"
                     android:paddingEnd="0dp"
                     android:paddingBottom="@dimen/padding_large">

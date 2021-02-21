@@ -19,6 +19,7 @@
     <integer name="dialog_input_max">20</integer>
     <integer name="padding_medium">14</integer>
     <integer name="track_header">56</integer>
+    <integer name="chords_margin">40</integer>
 
     <integer name="RECEIVE_RECORDING_DATA">0x1</integer>
     <integer name="LOAD_DATA_SUCCESS">0x2</integer>

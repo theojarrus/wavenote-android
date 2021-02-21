@@ -388,4 +388,17 @@
         <item>F</item>
     </string-array>
 
+    <string-array name="array_chord_shapes">
+        <item tools:ignore="TypographyDashes">M</item>
+        <item tools:ignore="TypographyDashes">root-fret | 3</item>
+        <item tools:ignore="TypographyDashes">guitar    | 3-2-0-0-0-3 | 3-5-5-4-3-3 | x-x-5-7-8-7 | x-10-9-7-8-7 | x-10-12-12-12-10</item>
+        <item tools:ignore="TypographyDashes">ukulele   | 1-3-4-3     | 9-9-9-7     | 7-7-7-10    | 12-9-10-9    | 12-11-10-10</item>
+        <item tools:ignore="TypographyDashes">piano     | 1-5-8</item>
+        <item tools:ignore="TypographyDashes">m</item>
+        <item tools:ignore="TypographyDashes">root-fret | 3</item>
+        <item tools:ignore="TypographyDashes">guitar    | 3-1-0-0-3-x | 3-5-5-3-3-3 | x-x-5-7-8-6 | x-10-8-7-8-x | x-10-12-12-11-10</item>
+        <item tools:ignore="TypographyDashes">ukulele   | 1-3-4-2     | 3-2-3-5     | 7-7-6-5     | 7-10-10-10   | 12-10-10-10</item>
+        <item tools:ignore="TypographyDashes">piano     | 1-4-8</item>
+    </string-array>
+
 </resources>

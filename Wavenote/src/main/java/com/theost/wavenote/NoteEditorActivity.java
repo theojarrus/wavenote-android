@@ -212,11 +212,11 @@ public class NoteEditorActivity extends ThemedAppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         if (mNoteEditorFragmentPagerAdapter != null) {
-            if (mNoteEditorFragmentPagerAdapter.getCount() > 0 && mNoteEditorFragmentPagerAdapter.getItem(0).isAdded()) {
+            if (mNoteEditorFragmentPagerAdapter.getCount() > 0 && mNoteEditorFragmentPagerAdapter.getItem(0) != null && mNoteEditorFragmentPagerAdapter.getItem(0).isAdded()) {
                 getSupportFragmentManager()
                         .putFragment(outState, getString(R.string.tab_edit), mNoteEditorFragmentPagerAdapter.getItem(0));
             }
-            if (mNoteEditorFragmentPagerAdapter.getCount() > 1 && mNoteEditorFragmentPagerAdapter.getItem(1).isAdded()) {
+            if (mNoteEditorFragmentPagerAdapter.getCount() > 1 && mNoteEditorFragmentPagerAdapter.getItem(1) != null && mNoteEditorFragmentPagerAdapter.getItem(1).isAdded()) {
                 getSupportFragmentManager()
                         .putFragment(outState, getString(R.string.tab_preview), mNoteEditorFragmentPagerAdapter.getItem(1));
             }

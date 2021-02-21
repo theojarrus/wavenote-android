@@ -66,7 +66,7 @@ public class ChordButtonAdapter extends RecyclerView.Adapter<ChordButtonAdapter.
             holder.mChordButton.setEnabled(true);
             holder.mChordButton.setStrokeColor(ColorStateList.valueOf(mColors[1]));
             holder.mChordButton.setLayoutParams(new LinearLayout.LayoutParams(mItemSize, mItemSize));
-            holder.mChordButton.setOnClickListener(v -> mActivity.showChords(mData.get(position)));
+            holder.mChordButton.setOnClickListener(v -> mActivity.showChords(mData.get(position), false));
             if (!isAllChords) {
                 holder.mChordButton.setBackgroundColor(mColors[1]);
             } else {
@@ -109,11 +109,6 @@ public class ChordButtonAdapter extends RecyclerView.Adapter<ChordButtonAdapter.
         mItemSize = itemSize;
         mWordsSize = wordSize;
         mTextSize = textSize;
-        notifyDataSetChanged();
-    }
-
-    public void updateItemDrawable(List<String> data) {
-        mData = new ArrayList<>(data);
         notifyDataSetChanged();
     }
 
