@@ -290,6 +290,7 @@ public class AdjustRecordActivity extends ThemedAppCompatActivity {
                         Message doneMsg = Message.obtain();
                         doneMsg.what = R.integer.ADJUST_RECORD_DISTANCE_DONE;
                         doneMsg.obj = averSampleValue - beatFirstSoundBytePos / 2;
+                        if ((int) doneMsg.obj < 0) doneMsg.obj = averSampleValue;
                         mAdjustHandler.sendMessage(doneMsg);
                     } else {
                         mAdjustHandler.sendEmptyMessage(R.integer.ADJUST_RECORD_DISTANCE_FAIL);

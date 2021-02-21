@@ -93,7 +93,7 @@ public class SliderActivity extends ThemedAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mPhotoList = new ArrayList<>(Objects.requireNonNull(getIntent().getParcelableArrayListExtra(ARG_PHOTOS)));
+        mPhotoList = new ArrayList<>(getIntent().getParcelableArrayListExtra(ARG_PHOTOS));
         currentPosition = getIntent().getIntExtra(ARG_POSITION, 0);
         noteId = getIntent().getStringExtra(PhotosActivity.ARG_NOTE_ID);
 

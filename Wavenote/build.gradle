@@ -15,9 +15,7 @@ android {
             shrinkResources false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
+
             sentry {
                 autoUpload true
                 uploadNativeSymbols true
@@ -85,7 +83,7 @@ configurations {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
     testImplementation 'org.mockito:mockito-core:2.8.47'
     androidTestImplementation 'androidx.test:core:1.3.0'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
@@ -93,9 +91,12 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+
     // Automattic and WordPress dependencies
-    implementation 'com.github.theo-jedi:simperium-android:v0.8.3'
+    implementation 'com.simperium.android:simperium:0.10.0'
     implementation 'org.wordpress:passcodelock:2.0.2'
+    implementation 'androidx.work:work-runtime:2.5.0'
+    implementation 'androidx.concurrent:concurrent-futures:1.1.0'
 
     // Zip4j
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.5.2'
@@ -111,16 +112,18 @@ dependencies {
 
     // Google Support
     implementation 'androidx.core:core:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
-    implementation 'com.google.android.material:material:1.3.0-alpha04'
+    implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0-alpha1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0-alpha2'
+
     // Google Play Services
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+
     // Third Party
     implementation 'io.sentry:sentry-android:4.0.0-alpha.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'

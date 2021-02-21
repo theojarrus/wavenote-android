@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -29,6 +30,7 @@ import com.theost.wavenote.utils.NoteUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 
 import java.lang.ref.SoftReference;
+import java.util.Set;
 
 public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<Note> {
     public static final String ARG_ITEM_ID = "item_id";
@@ -197,6 +199,10 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
     @Override
     public void onResume() {
         super.onResume();
+        // First inflation of the webview may invalidate the value of uiMode,
+        // so we re-apply it to make sure that the webview has the right css files
+        // Check https://issuetracker.google.com/issues/37124582 for more details
+        ((AppCompatActivity) requireActivity()).getDelegate().applyDayNight();
         mNotesBucket.start();
         mNotesBucket.addListener(this);
     }
@@ -246,6 +252,16 @@ public class NoteMarkdownFragment extends Fragment implements Bucket.Listener<No
 
         return header + "<div class=\"note-detail-markdown\">" + parsedMarkdown +
                 "</div></body></html>";
+    }
+
+    @Override
+    public void onLocalQueueChange(Bucket<Note> bucket, Set<String> queuedObjects) {
+
+    }
+
+    @Override
+    public void onSyncObject(Bucket<Note> bucket, String key) {
+
     }
 
     private static class LoadNoteTask extends AsyncTask<String, Void, Void> {

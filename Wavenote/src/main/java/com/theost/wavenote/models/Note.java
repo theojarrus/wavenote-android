@@ -2,10 +2,8 @@ package com.theost.wavenote.models;
 
 import android.content.Context;
 import android.os.Build;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import com.simperium.client.Bucket;
@@ -160,13 +158,13 @@ public class Note extends BucketObject {
         diff.setTimeInMillis(0); // starting time
         time = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
         if ((year == diff.get(Calendar.YEAR)) && (month == diff.get(Calendar.MONTH)) && (day == diff.get(Calendar.DAY_OF_MONTH))) {
-            date = context.getString(R.string.today);
+            date = context.getResources().getString(R.string.today);
             if (useShortFormat)
                 retVal = time;
             else
                 retVal = date + ", " + time;
         } else if ((year == diff.get(Calendar.YEAR)) && (month == diff.get(Calendar.MONTH)) && (day == 1)) {
-            date = context.getString(R.string.yesterday);
+            date = context.getResources().getString(R.string.yesterday);
             if (useShortFormat)
                 retVal = date;
             else

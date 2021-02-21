@@ -110,6 +110,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.theost.wavenote.models.Note.NEW_LINE;
 import static com.theost.wavenote.utils.ImportUtils.RESULT_OK;
@@ -784,7 +785,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
             markdownItem.setChecked(mNote.isMarkdownEnabled());
-            syllableItem.setChecked(mNote.isSyllableEnabled());
+            if (syllableItem != null) syllableItem.setChecked(mNote.isSyllableEnabled());
 
             // Disable actions when note is in Trash or markdown view is shown on large device.
             if (mNote.isDeleted() || (mMarkdown != null && mMarkdown.getVisibility() == View.VISIBLE)) {
@@ -820,9 +821,6 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 infoMenuItem.setEnabled(true);
                 shareItem.setEnabled(true);
                 historyItem.setEnabled(true);
-                syllableItem.setEnabled(true);
-                lookupItem.setEnabled(true);
-                exportItem.setEnabled(true);
                 copyLinkItem.setEnabled(mNote.isPublished());
                 DrawableUtils.setMenuItemAlpha(styleItem, 1.0); // 1.0 is 100% opacity.
                 DrawableUtils.setMenuItemAlpha(chordItem, 1.0);
@@ -853,6 +851,16 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (loadingDialog != null) loadingDialog.dismiss();
         return true;
     });
+
+    @Override
+    public void onLocalQueueChange(Bucket<Note> bucket, Set<String> queuedObjects) {
+
+    }
+
+    @Override
+    public void onSyncObject(Bucket<Note> bucket, String key) {
+
+    }
 
     private class TransposeThread extends Thread {
         Intent mData;

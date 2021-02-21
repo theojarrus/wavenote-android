@@ -25,6 +25,7 @@ import com.simperium.client.Bucket;
 import com.simperium.client.User;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Preferences;
+import com.theost.wavenote.utils.AuthUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.ExportUtils;
 import com.theost.wavenote.utils.FileUtils;
@@ -215,30 +216,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Use
     }
 
     private void logOut() {
-        Wavenote application = (Wavenote) getActivity().getApplication();
-        application.getSimperium().deauthorizeUser();
-
-        application.getNotesBucket().reset();
-        application.getTagsBucket().reset();
-        application.getPreferencesBucket().reset();
-
-        application.getNotesBucket().stop();
-        application.getTagsBucket().stop();
-        application.getPreferencesBucket().stop();
-
-        // Remove wp.com token
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-        editor.remove(PrefUtils.PREF_WP_TOKEN);
-
-        // Remove WordPress sites
-        editor.remove(PrefUtils.PREF_WORDPRESS_SITES);
-        editor.apply();
-
-        // Remove Passcode Lock password
-        AppLockManager.getInstance().getAppLock().setPassword("");
-
-        WidgetUtils.updateNoteWidgets(requireActivity().getApplicationContext());
-
+        AuthUtils.logOut((Wavenote) requireActivity().getApplication());
         getActivity().finish();
     }
 

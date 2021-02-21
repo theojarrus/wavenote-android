@@ -40,6 +40,7 @@ import com.simperium.client.Query;
 
 import java.lang.ref.SoftReference;
 import java.util.List;
+import java.util.Set;
 
 import static com.theost.wavenote.models.Tag.NAME_PROPERTY;
 
@@ -293,6 +294,16 @@ public class TagsListFragment extends Fragment implements Bucket.Listener<Tag> {
     @Override
     public void onBeforeUpdateObject(Bucket<Tag> bucket, Tag object) {
         // noop
+    }
+
+    @Override
+    public void onLocalQueueChange(Bucket<Tag> bucket, Set<String> queuedObjects) {
+
+    }
+
+    @Override
+    public void onSyncObject(Bucket<Tag> bucket, String key) {
+
     }
 
     private static class RemoveTagFromNotesTask extends AsyncTask<Tag, Void, Void> {

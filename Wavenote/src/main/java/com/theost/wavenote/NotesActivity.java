@@ -48,6 +48,7 @@ import com.simperium.client.User;
 import com.theost.wavenote.adapters.TagsAdapter;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
+import com.theost.wavenote.utils.AuthUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
@@ -69,6 +70,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.theost.wavenote.NoteListFragment.TAG_PREFIX;
 import static com.theost.wavenote.adapters.TagsAdapter.ALL_NOTES_ID;
@@ -127,6 +129,16 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     private TagsAdapter.TagMenuItem mSelectedTag;
     // Tags bucket listener
     private final Bucket.Listener<Tag> mTagsMenuUpdater = new Bucket.Listener<Tag>() {
+        @Override
+        public void onSyncObject(Bucket<Tag> bucket, String key) {
+
+        }
+
+        @Override
+        public void onLocalQueueChange(Bucket<Tag> bucket, Set<String> queuedObjects) {
+
+        }
+
         void updateNavigationDrawer() {
             runOnUiThread(() -> updateNavigationDrawerItems());
         }
@@ -1126,14 +1138,8 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     }
 
     public void startLoginActivity() {
-        // Clear some account-specific prefs
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.remove(PrefUtils.PREF_WP_TOKEN);
-        editor.remove(PrefUtils.PREF_WORDPRESS_SITES);
-        editor.apply();
-
-        // Remove Passcode Lock password
-        AppLockManager.getInstance().getAppLock().setPassword("");
+        // Clear account-specific data
+        AuthUtils.logOut((Wavenote) getApplication());
 
         Intent intent = new Intent(NotesActivity.this, WavenoteAuthenticationActivity.class);
         startActivityForResult(intent, Simperium.SIGNUP_SIGNIN_REQUEST);
@@ -1536,6 +1542,16 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
     @Override
     public void onBeforeUpdateObject(Bucket<Note> bucket, Note note) {
         // noop, NoteEditorFragment will handle this
+    }
+
+    @Override
+    public void onLocalQueueChange(Bucket<Note> bucket, Set<String> queuedObjects) {
+
+    }
+
+    @Override
+    public void onSyncObject(Bucket<Note> bucket, String key) {
+
     }
 
     private static class EmptyTrashTask extends AsyncTask<Void, Void, Void> {
