@@ -83,7 +83,7 @@
     <dimen name="text_about_subtitle">14sp</dimen>
     <dimen name="minimum_height_about">72dp</dimen>
 
-    <dimen name="chords_height">110dp</dimen>
+    <dimen name="chords_height">108dp</dimen>
 
     <!-- Audio -->
     <dimen name="track_height">@dimen/custom_textview_size</dimen>

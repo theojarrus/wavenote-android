@@ -633,9 +633,6 @@ public class ChordGenerator {
     private int getPianoDarkCountOffset(int count) {
         count = count / 2 + count % 2;
         if (count > 6) {
-            if (count > 8) {
-                count += 1;
-            }
             count += 1;
         }
         return count;

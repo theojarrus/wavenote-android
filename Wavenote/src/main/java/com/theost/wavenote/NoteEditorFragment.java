@@ -76,13 +76,14 @@ import com.theost.wavenote.models.Note;
 import com.theost.wavenote.models.Tag;
 import com.theost.wavenote.utils.AniUtils;
 import com.theost.wavenote.utils.AutoBullet;
+import com.theost.wavenote.utils.ChordUtils;
 import com.theost.wavenote.utils.ContextUtils;
 import com.theost.wavenote.utils.DatabaseHelper;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
 import com.theost.wavenote.utils.ExportUtils;
 import com.theost.wavenote.utils.FileUtils;
-import com.theost.wavenote.utils.HighlightUtils;
+import com.theost.wavenote.widgets.SyntaxHighlighter;
 import com.theost.wavenote.utils.MatchOffsetHighlighter;
 import com.theost.wavenote.utils.NetworkUtils;
 import com.theost.wavenote.utils.NoteUtils;
@@ -174,6 +175,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
 
     private Note mNote;
     private Bucket<Note> mNotesBucket;
+
+    private SyntaxHighlighter mSyntaxHighlighter;
 
     private SyllableCounter mSyllableCounter;
     private SyllableCountThread syllableThread;
@@ -470,6 +473,8 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         if (Note.getActiveStyleColor() == 0) Note.setActiveStyleColor(styleColors[0]);
 
         mSyllableCounter = new SyllableCounter(requireContext(), PrefUtils.getBoolPref(getContext(), PrefUtils.PREF_WEB_SYLLABLE, false));
+
+        mSyntaxHighlighter = new SyntaxHighlighter(getActivity(), mContentEditText);
 
         if (DisplayUtils.isLargeScreenLandscape(getActivity()) && mNote == null) {
             mPlaceholderView.setVisibility(View.VISIBLE);
@@ -1150,7 +1155,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
         ArrayList<String> chordsList = new ArrayList<>();
         HashMap<Integer, String> wordsMap = new HashMap<>();
 
-        Map<ArrayList<String>, HashMap<Integer, String>> chordsData = HighlightUtils.getChordsData(requireContext(), mContentEditText.getTextContent());
+        Map<ArrayList<String>, HashMap<Integer, String>> chordsData = ChordUtils.getChordsData(requireContext(), mContentEditText.getTextContent());
         if (chordsData.entrySet().iterator().hasNext()) {
             Map.Entry<ArrayList<String>, HashMap<Integer, String>> chordsDataEntry = chordsData.entrySet().iterator().next();
             chordsList = chordsDataEntry.getKey();
@@ -1835,7 +1840,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
     }
 
     private void changeTextStyle() {
-        HighlightUtils.changeTextStyle(mContentEditText, Note.getActiveStyleColor(), Note.getActiveColor());
+        mSyntaxHighlighter.changeTextStyle(Note.getActiveStyleColor(), Note.getActiveColor());
         mContentEditText.fixLineHeight();
     }
 
@@ -2159,9 +2164,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             return;
         }
 
-        if (PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX)) {
-            HighlightUtils.updateSyntaxHighlight(requireContext(), mContentEditText, Note.getActiveColor(), PrefUtils.getBoolPref(getActivity(), PrefUtils.PREF_DETECT_SYNTAX));
-        }
+        mSyntaxHighlighter.updateSyntaxHighlight(Note.getActiveColor());
     }
 
     private void linkifyEditorContent() {

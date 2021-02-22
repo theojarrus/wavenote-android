@@ -31,9 +31,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.theost.wavenote.adapters.ChordButtonAdapter;
 import com.theost.wavenote.models.Note;
 import com.theost.wavenote.utils.AniUtils;
+import com.theost.wavenote.utils.ChordUtils;
 import com.theost.wavenote.utils.DisplayUtils;
 import com.theost.wavenote.utils.DrawableUtils;
-import com.theost.wavenote.utils.HighlightUtils;
 import com.theost.wavenote.utils.ImportUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.utils.ViewUtils;
@@ -52,8 +52,6 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     public static final String ARG_TRANSPOSED = "transposed";
     public static final String ARG_CHORDS = "chords";
     public static final String ARG_WORDS = "words";
-
-    private final int DEFAULT_COLUMN = 4;
 
     public static final String SHARP = "#";
     public static final String BEMOL = "b";
@@ -89,6 +87,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     private List<String> mInstrumentStringList;
 
     private final int DEFAULT_INSTRUMENT = 0;
+    private final int DEFAULT_COLUMN = 4;
 
     private final int TRANSPOSE_UP = 1;
     private final int TRANSPOSE_DOWN = -1;
@@ -401,8 +400,6 @@ public class ChordsActivity extends ThemedAppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void updateAdapter() {
-        if ((mChordsList.size() < itemsInline) && (mChordsList.size() != 0))
-            itemsInline = mChordsList.size();
         mColumnsInputView.setText(100 / itemsInline + "%");
         if (!isAllChords) {
             chordButtonAdapter.updateWordsData(mWordsMap);
@@ -442,7 +439,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     @SuppressWarnings("unchecked")
     private void loadChords() {
         if (isAllChords) {
-            mChordsList = HighlightUtils.getAllChords(this);
+            mChordsList = ChordUtils.getAllChords(this);
             chordGridEnabled = false;
         } else {
             mChordsList = new ArrayList<>(mNoteChordsList);
@@ -478,7 +475,7 @@ public class ChordsActivity extends ThemedAppCompatActivity {
     }
 
     private void updateChordSet() {
-        mChordSet = HighlightUtils.getChordsSet(mChordsList);
+        mChordSet = ChordUtils.getChordsSet(mChordsList);
     }
 
     private void updateGrid(boolean isEnabled) {

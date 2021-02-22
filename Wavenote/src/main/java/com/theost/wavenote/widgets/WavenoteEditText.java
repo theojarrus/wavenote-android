@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.Layout;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.StaticLayout;
@@ -211,7 +209,11 @@ public class WavenoteEditText extends AppCompatEditText {
     }
 
     public void restoreSelection(int[] indexes) {
-        setSelection(indexes[0], indexes[1]);
+        if (indexes[0] != indexes[1]) {
+            setSelection(indexes[0], indexes[1]);
+        } else {
+            setSelection(indexes[1]);
+        }
     }
 
     public int[] getSelectionIndexes() {

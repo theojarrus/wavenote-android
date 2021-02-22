@@ -53,7 +53,7 @@
             android:summary="@string/web_syllables_description" />
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:key="pref_key_detect_syntax"
+            android:key="pref_key_detect_keywords"
             android:title="@string/detect_keywords" />
         <SwitchPreferenceCompat
             android:defaultValue="true"

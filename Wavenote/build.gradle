@@ -15,7 +15,6 @@ android {
             shrinkResources false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
             sentry {
                 autoUpload true
                 uploadNativeSymbols true

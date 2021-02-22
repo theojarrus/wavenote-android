@@ -518,7 +518,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             editor.putString(PrefUtils.PREF_LAUNCH_COUNT, String.valueOf(0));
             editor.putBoolean(PrefUtils.PREF_SHOW_FEEDBACK, true);
             editor.putBoolean(PrefUtils.PREF_WEB_SYLLABLE, true);
-            editor.putBoolean(PrefUtils.PREF_DETECT_SYNTAX, true);
+            editor.putBoolean(PrefUtils.PREF_DETECT_KEYWORDS, true);
             editor.putBoolean(PrefUtils.PREF_DETECT_CHORDS, true);
             editor.putBoolean(PrefUtils.PREF_DETECT_LINKS, true);
             editor.putBoolean(PrefUtils.PREF_FIRST_LAUNCH, false);
