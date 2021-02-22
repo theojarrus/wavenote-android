@@ -223,10 +223,15 @@
     <!-- MUSIC -->
 
     <string name="theory">Theory</string>
+    <string name="quiz">Quiz</string>
     <string name="empty_photos">Add your first photo</string>
     <string name="empty_dictionary">Add your first keyword</string>
     <string name="empty_audio">Add your first audio</string>
     <string name="empty_chords">No chords found</string>
+
+    <string name="whats_chord">What\'s this chord?</string>
+    <string name="chord_quiz">Chord Quiz</string>
+    <string name="score_quiz">Score:</string>
 
     <!-- PASSCODE -->
     <string name="passcode_change_passcode">Change passcode</string>

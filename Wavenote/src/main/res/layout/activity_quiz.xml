@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            tools:ignore="UselessParent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/main_quiz_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <com.theost.wavenote.widgets.RobotoMediumTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/whats_chord"
+                            android:textSize="@dimen/text_about_title" />
+
+                        <com.theost.wavenote.widgets.RobotoRegularTextView
+                            android:id="@+id/quiz_score"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:paddingBottom="@dimen/padding_large"
+                            android:text="@string/score_quiz"
+                            android:textSize="@dimen/text_about_title" />
+
+                        <LinearLayout
+                            android:id="@+id/quiz_chord_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/chords_quiz_height"
+                            android:layout_marginEnd="@dimen/padding_medium"
+                            android:layout_marginBottom="@dimen/padding_medium"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <GridLayout
+                            android:id="@+id/quiz_buttons_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:clipToPadding="false"
+                            android:paddingStart="@dimen/padding_medium"
+                            android:paddingTop="@dimen/padding_large"
+                            android:paddingEnd="@dimen/padding_medium"
+                            android:paddingBottom="@dimen/padding_large"
+                            android:useDefaultMargins="true" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/quiz_next"
+                            style="@style/Wavestyle.Button.Outlined"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/padding_medium"
+                            android:paddingBottom="@dimen/padding_medium"
+                            android:text="@string/next" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

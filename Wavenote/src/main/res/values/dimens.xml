@@ -84,6 +84,7 @@
     <dimen name="minimum_height_about">72dp</dimen>
 
     <dimen name="chords_height">108dp</dimen>
+    <dimen name="chords_quiz_height">150dp</dimen>
 
     <!-- Audio -->
     <dimen name="track_height">@dimen/custom_textview_size</dimen>

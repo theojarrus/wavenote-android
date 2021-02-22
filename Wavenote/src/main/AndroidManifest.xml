@@ -63,6 +63,12 @@
             android:parentActivityName="com.theost.wavenote.PhotosActivity" />
 
         <activity
+            android:name="com.theost.wavenote.QuizActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Quiz"
+            android:parentActivityName="com.theost.wavenote.PhotosActivity"/>
+
+        <activity
             android:name="com.theost.wavenote.ChordsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Chords"

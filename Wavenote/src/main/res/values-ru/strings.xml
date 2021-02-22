@@ -394,5 +394,6 @@
     <string name="share_thoughts">Поделиться идеями</string>
     <string name="web_syllables">Веб-счётчик слогов</string>
     <string name="web_syllables_description">Работает медленнее, чем встроенный алгоритм, но обеспечивает высокую точность</string>
+    <string name="quiz">Тренировка</string>
 
 </resources>

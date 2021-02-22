@@ -111,11 +111,14 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         if (noteId == null) noteId = getIntent().getStringExtra(ARG_NOTE_ID);
         if ((noteId != null) && (noteId.equals(THEORY_PREFIX))) {
             setTitle(R.string.theory);
-            findViewById(R.id.chords_block).setVisibility(View.VISIBLE);
+            findViewById(R.id.theory_block).setVisibility(View.VISIBLE);
         } else {
             setTitle(R.string.photo);
             mMaterialTitle.setVisibility(View.GONE);
         }
+
+        findViewById(R.id.see_chords).setOnClickListener(v -> startChordsActivity());
+        findViewById(R.id.play_quiz_image).setOnClickListener(v -> startQuizActivity());
 
         mPhotoBottomSheet = new PhotoBottomSheetDialog(this);
 
@@ -406,9 +409,14 @@ public class PhotosActivity extends ThemedAppCompatActivity {
         }
     }
 
-    public void startChordsActivity(View view) {
+    public void startChordsActivity() {
         Intent intent = new Intent(this, ChordsActivity.class);
         intent.putExtra(ChordsActivity.ARG_ALL_CHORDS, true);
+        startActivity(intent);
+    }
+
+    public void startQuizActivity() {
+        Intent intent = new Intent(this, QuizActivity.class);
         startActivity(intent);
     }
 
