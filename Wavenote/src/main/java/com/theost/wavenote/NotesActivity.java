@@ -848,8 +848,13 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             menu.findItem(R.id.menu_sidebar).setVisible(false);
             trashItem.setVisible(false);
             menu.findItem(R.id.menu_empty_trash).setVisible(false);
-            menu.setGroupVisible(R.id.group_list_organize, false);
-            menu.setGroupVisible(R.id.group_list_publish, false);
+            menu.setGroupVisible(R.id.group_organize_features, false);
+            menu.setGroupVisible(R.id.group_publish_features, false);
+            menu.setGroupVisible(R.id.group_ext_features, false);
+            menu.setGroupVisible(R.id.group_info_features, false);
+            menu.setGroupVisible(R.id.group_note_features, false);
+            menu.setGroupVisible(R.id.group_share_features, false);
+            menu.setGroupVisible(R.id.group_def_actions, false);
         }
 
         if (mSelectedTag != null && mSelectedTag.id == TRASH_ID) {
@@ -996,16 +1001,26 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             menu.findItem(R.id.menu_sidebar).setVisible(true);
             menu.findItem(R.id.menu_info).setVisible(true);
 
-            menu.setGroupVisible(R.id.group_list_organize, true);
-            menu.setGroupVisible(R.id.group_list_publish, true);
+            menu.setGroupVisible(R.id.group_organize_features, true);
+            menu.setGroupVisible(R.id.group_publish_features, true);
+            menu.setGroupVisible(R.id.group_ext_features, true);
+            menu.setGroupVisible(R.id.group_info_features, true);
+            menu.setGroupVisible(R.id.group_note_features, true);
+            menu.setGroupVisible(R.id.group_share_features, true);
+            menu.setGroupVisible(R.id.group_def_actions, true);
         } else {
             menu.findItem(R.id.menu_checklist).setVisible(false);
             menu.findItem(R.id.menu_markdown_preview).setVisible(false);
             menu.findItem(R.id.menu_sidebar).setVisible(false);
             menu.findItem(R.id.menu_info).setVisible(false);
 
-            menu.setGroupVisible(R.id.group_list_organize, false);
-            menu.setGroupVisible(R.id.group_list_publish, false);
+            menu.setGroupVisible(R.id.group_organize_features, false);
+            menu.setGroupVisible(R.id.group_publish_features, false);
+            menu.setGroupVisible(R.id.group_ext_features, false);
+            menu.setGroupVisible(R.id.group_info_features, false);
+            menu.setGroupVisible(R.id.group_note_features, false);
+            menu.setGroupVisible(R.id.group_share_features, false);
+            menu.setGroupVisible(R.id.group_def_actions, false);
         }
 
         menu.findItem(R.id.menu_empty_trash).setVisible(mSelectedTag != null && mSelectedTag.id == TRASH_ID);

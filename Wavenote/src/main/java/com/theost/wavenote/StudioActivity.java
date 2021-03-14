@@ -431,6 +431,13 @@ public class StudioActivity extends ThemedAppCompatActivity {
         }
     }
 
+    private void onStopClick() {
+        if (STATUS_RECORD_RECORDING == recordStatus) {
+            onRecordClick();
+        } else if (playStatus == STATUS_PLAYING) {
+            onPlayClick();
+        }
+    }
 
     private void onResetClick() {
         if (playStatus == STATUS_PLAY_PREPARE) {
@@ -445,13 +452,12 @@ public class StudioActivity extends ThemedAppCompatActivity {
         }
     }
 
-
     private void onRepeatClick() {
         isLoopPlay = mLoopToggle.isChecked();
     }
 
-
     private void onBeatSettingClick() {
+        onStopClick();
         Intent intent = new Intent(this, MetronomeActivity.class);
         intent.putExtra(MetronomeActivity.BEAT_SETTING_ARG, true);
         intent.putExtra(BundleKeys.RESULT_BEAT, currentBeat);
@@ -465,6 +471,7 @@ public class StudioActivity extends ThemedAppCompatActivity {
     }
 
     private void onAdjustClick() {
+        onStopClick();
         Intent intent = new Intent();
         intent.putExtra(BundleKeys.RESULT_SPEED, currentSpeed);
         intent.setClass(this, AdjustRecordActivity.class);

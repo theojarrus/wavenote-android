@@ -790,7 +790,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             pinItem.setChecked(mNote.isPinned());
             publishItem.setChecked(mNote.isPublished());
             markdownItem.setChecked(mNote.isMarkdownEnabled());
-            if (syllableItem != null) syllableItem.setChecked(mNote.isSyllableEnabled());
+            syllableItem.setChecked(mNote.isSyllableEnabled());
 
             // Disable actions when note is in Trash or markdown view is shown on large device.
             if (mNote.isDeleted() || (mMarkdown != null && mMarkdown.getVisibility() == View.VISIBLE)) {
