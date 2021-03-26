@@ -44,6 +44,14 @@
                             android:textSize="@dimen/text_about_title" />
 
                         <com.theost.wavenote.widgets.RobotoRegularTextView
+                            android:id="@+id/quiz_record"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/record_quiz"
+                            android:textSize="@dimen/text_about_title" />
+
+                        <com.theost.wavenote.widgets.RobotoRegularTextView
                             android:id="@+id/quiz_score"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

@@ -10,14 +10,7 @@
         android:icon="@drawable/ic_search_24dp"
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView"></item>
-
-    <item
-        android:id="@+id/menu_sidebar"
-        android:icon="@drawable/ic_list_hide_show_24dp"
-        android:title="@string/list_hide"
-        android:visible="false"
-        app:showAsAction="always"></item>
+        app:showAsAction="always|collapseActionView" />
 
     <item
         android:id="@+id/menu_markdown_preview"
@@ -65,6 +58,13 @@
         android:id="@+id/menu_checklist"
         android:icon="@drawable/ic_checklist_24dp"
         android:title="@string/toggle_checklist"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_sidebar"
+        android:icon="@drawable/ic_list_hide_show_24dp"
+        android:title="@string/list_hide"
+        android:visible="false"
         app:showAsAction="never" />
 
     <group android:id="@+id/group_organize_features">
@@ -108,7 +108,7 @@
         <item
             android:id="@+id/menu_history"
             android:title="@string/history"
-            app:showAsAction="never"></item>
+            app:showAsAction="never" />
 
     </group>
 
@@ -140,7 +140,7 @@
             android:id="@+id/menu_copy"
             android:title="@string/copy_link"
             android:visible="false"
-            app:showAsAction="never"></item>
+            app:showAsAction="never" />
 
     </group>
 

@@ -118,6 +118,9 @@ public class PrefUtils {
     // button for feedback activity
     public static final String PREF_FEEDBACK = "pref_key_feedback";
 
+    // int, record score in quiz
+    public static final String PREF_QUIZ_RECORD = "pref_key_quiz_record";
+
     public static final int ALPHABETICAL_ASCENDING = 4;
     public static final int ALPHABETICAL_DESCENDING = 5;
     public static final int DATE_CREATED_ASCENDING = 3;

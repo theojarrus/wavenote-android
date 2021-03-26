@@ -1,6 +1,7 @@
 package com.theost.wavenote;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.theost.wavenote.utils.DisplayUtils;
+import com.theost.wavenote.utils.PrefUtils;
 import com.theost.wavenote.utils.ThemeUtils;
 import com.theost.wavenote.widgets.ChordGenerator;
 
@@ -24,11 +27,15 @@ import java.util.Random;
 
 public class QuizActivity extends ThemedAppCompatActivity  {
 
+
+    SharedPreferences sharedPreferences;
+
     private GridLayout chordButtonLayout;
     private LinearLayout chordImageLayout;
     private LinearLayout mainQuizLayout;
     private ChordGenerator chordGenerator;
 
+    private TextView recordTextView;
     private TextView scoreTextView;
 
     private MaterialButton nextButton;
@@ -39,6 +46,7 @@ public class QuizActivity extends ThemedAppCompatActivity  {
 
     private int currentInstrument;
     private int currentScore;
+    private int recordScore;
 
     private int correctColor;
     private int wrongColor;
@@ -66,6 +74,10 @@ public class QuizActivity extends ThemedAppCompatActivity  {
         wrongColor = ContextCompat.getColor(this, R.color.red_20);
 
         scoreTextView = findViewById(R.id.quiz_score);
+        recordTextView = findViewById(R.id.quiz_record);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        recordScore = PrefUtils.getIntPref(this, PrefUtils.PREF_QUIZ_RECORD, 0);
 
         nextButton = findViewById(R.id.quiz_next);
         nextButton.setOnClickListener(v -> nextChord());
@@ -82,6 +94,7 @@ public class QuizActivity extends ThemedAppCompatActivity  {
 
         updateOrientation();
         updateScore(0);
+        updateRecord();
         nextChord();
     }
 
@@ -168,6 +181,23 @@ public class QuizActivity extends ThemedAppCompatActivity  {
     private void updateScore(int points) {
         currentScore += points;
         scoreTextView.setText(getString(R.string.score_quiz) + " " + currentScore);
+
+        changeRecord();
+    }
+
+    private void changeRecord() {
+        if (currentScore > recordScore) {
+            recordScore = currentScore;
+            updateRecord();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(PrefUtils.PREF_QUIZ_RECORD, String.valueOf(recordScore));
+            editor.apply();
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateRecord() {
+        recordTextView.setText(getString(R.string.record_quiz) + " " + recordScore);
     }
 
     private String getRandomItem(String[] array) {

@@ -231,6 +231,7 @@
 
     <string name="whats_chord">What\'s this chord?</string>
     <string name="chord_quiz">Chord Quiz</string>
+    <string name="record_quiz">Record:</string>
     <string name="score_quiz">Score:</string>
 
     <!-- PASSCODE -->

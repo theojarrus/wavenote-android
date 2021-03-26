@@ -1,12 +1,13 @@
 package com.theost.wavenote.widgets;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,17 +85,22 @@ public class ChordGenerator {
     private static final int PIANO_LIGHT_KEY_Y = 211;
     private static final int PIANO_DARK_KEY_Y = 138;
 
-    private final Context context;
+    private final Activity activity;
     private ViewGroup viewGroup;
     private int maxPositionsCount;
+    private final float density;
     private ArrayList<LayeredImageView> imageViews;
     private boolean isGenerating;
     private generateChordsThread currentThread;
 
-    public ChordGenerator(Context context, ViewGroup viewGroup) {
-        this.context = context;
+    public ChordGenerator(Activity activity, ViewGroup viewGroup) {
+        this.activity = activity;
         this.viewGroup = viewGroup;
         this.maxPositionsCount = 100;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        this.density = displayMetrics.density;
     }
 
     public void setView(ViewGroup viewGroup) {
@@ -156,10 +162,10 @@ public class ChordGenerator {
             LinkedHashMap<Integer, Integer> coordinates = overlayData.get(resource);
             Iterator<Integer> iteratorX = Objects.requireNonNull(coordinates).keySet().iterator();
             Iterator<Integer> iteratorY = coordinates.values().iterator();
-            Bitmap resourceBitmap = ResUtils.getBitmap(context, ResUtils.getResId(resource, R.mipmap.class));
+            Bitmap resourceBitmap = ResUtils.getBitmap(activity, ResUtils.getResId(resource, R.mipmap.class));
             while (iteratorX.hasNext() && iteratorY.hasNext()) {
                 Matrix matrix = new Matrix();
-                matrix.setScale(3.5f, 3.5f);
+                matrix.setScale(density, density);
                 matrix.preTranslate(iteratorX.next(), iteratorY.next());
                 imageView.addLayer(resourceBitmap, matrix);
             }
@@ -169,7 +175,7 @@ public class ChordGenerator {
 
     @SuppressLint("NonConstantResourceId")
     private LayeredImageView createImageView(int instrument) {
-        LayeredImageView imageView = new LayeredImageView(context);
+        LayeredImageView imageView = new LayeredImageView(activity);
         int templateId = 0;
         switch (instrument) {
             case R.string.guitar:
@@ -184,7 +190,7 @@ public class ChordGenerator {
         }
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(context.getResources().getInteger(R.integer.chords_margin), 0, 0, 0);
+        layoutParams.setMargins(activity.getResources().getInteger(R.integer.chords_margin), 0, 0, 0);
         imageView.setLayoutParams(layoutParams);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setAdjustViewBounds(true);
@@ -261,7 +267,7 @@ public class ChordGenerator {
                 if (number.equals("1")) {
                     coordinates = new LinkedHashMap<>();
                     coordinates.put(NECK_OVERLAY_X, NECK_OVERLAY_Y);
-                    overlayData.put(String.format(FRET_OVERLAY, ResUtils.getStringLocale(context, Locale.US, instrument).toLowerCase()), coordinates);
+                    overlayData.put(String.format(FRET_OVERLAY, ResUtils.getStringLocale(activity, Locale.US, instrument).toLowerCase()), coordinates);
                 }
                 for (int i = 0; i < 3; i++) requestData.remove(fretIndex);
             }
@@ -366,13 +372,13 @@ public class ChordGenerator {
     }
 
     private ArrayList<ArrayList<String>> getChordShapes(String[] chordData, int instrument) {
-        List<String> shapes = Arrays.asList(context.getResources().getStringArray(R.array.array_chord_shapes));
+        List<String> shapes = Arrays.asList(activity.getResources().getStringArray(R.array.array_chord_shapes));
         int start = shapes.indexOf(chordData[2]);
         String shapesLine = "";
         String rootLine = "";
         for (int i = 1; i <= RESOURCE_INSTRUMENT_COUNT + 1; i++) {
             String line = shapes.get(start + i);
-            if (line.contains(ResUtils.getStringLocale(context, Locale.US, instrument).toLowerCase())) {
+            if (line.contains(ResUtils.getStringLocale(activity, Locale.US, instrument).toLowerCase())) {
                 shapesLine = ChordUtils.removeSpace(line);
             } else if (line.contains(RESOURCE_ROOT_NAME)) {
                 rootLine = ChordUtils.removeSpace(line);

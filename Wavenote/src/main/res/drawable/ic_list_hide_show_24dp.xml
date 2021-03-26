@@ -9,12 +9,12 @@
 
     <path
         android:name="bar"
-        android:fillColor="@color/white"
+        android:fillColor="?attr/toolbarIconColor"
         android:pathData="M 2 6 L 4 6 L 4 18 L 2 18 L 2 6 Z" />
 
     <path
         android:name="outline"
-        android:fillColor="@color/white"
+        android:fillColor="?attr/toolbarIconColor"
         android:pathData="M 20 4 L 4 4 C 2.9 4 2 4.9 2 6 L 2 18 C 2 19.1 2.9 20 4 20 L 20 20 C 21.1 20 22 19.1 22 18 L 22 6 C 22 4.9 21.1 4 20 4 Z M 20 18 L 9 18 L 7 18 L 4 18 L 4 6 L 7 6 L 9 6 L 20 6 L 20 18 Z" />
 
 </vector>
