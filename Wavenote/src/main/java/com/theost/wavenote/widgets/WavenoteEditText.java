@@ -208,11 +208,15 @@ public class WavenoteEditText extends AppCompatEditText {
         return 0;
     }
 
-    public void restoreSelection(int[] indexes) {
-        if (indexes[0] != indexes[1]) {
-            setSelection(indexes[0], indexes[1]);
+    public void restoreSelection(int[] indexes, int length) {
+        if (indexes[0] <= length && indexes[1] <= length) {
+            if (indexes[0] != indexes[1]) {
+                setSelection(indexes[0], indexes[1]);
+            } else {
+                setSelection(indexes[1]);
+            }
         } else {
-            setSelection(indexes[1]);
+            setSelection(length);
         }
     }
 

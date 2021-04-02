@@ -2147,7 +2147,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
             mSyllableEditText.setText(editable);
             AniUtils.fadeIn(mSyllableEditText);
             fixSyllableTitle();
-            mContentEditText.restoreSelection(selectionIndexes);
+            mContentEditText.restoreSelection(selectionIndexes, mContentEditText.getText().length());
             Note.setSyllablesToTemp(mNote.getSimperiumKey(), editable.toString());
         }
     }

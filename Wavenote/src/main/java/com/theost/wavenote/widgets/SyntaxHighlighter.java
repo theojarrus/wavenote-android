@@ -145,7 +145,7 @@ public class SyntaxHighlighter {
                             if (isTitle) contentSpan.setSpan(new BackgroundColorSpan(backTextColor), index, lastIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             contentSpan.setSpan(new ForegroundColorSpan(frontTextColor), index, lastIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
-                        mContentEditText.restoreSelection(selectionIndexes);
+                        mContentEditText.restoreSelection(selectionIndexes, mContentEditText.getText().length());
                         index++;
                     }
                 }
