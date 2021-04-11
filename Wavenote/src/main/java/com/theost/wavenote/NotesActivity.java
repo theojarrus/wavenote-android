@@ -523,7 +523,7 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             editor.putBoolean(PrefUtils.PREF_DETECT_LINKS, true);
             editor.putBoolean(PrefUtils.PREF_FIRST_LAUNCH, false);
             editor.putBoolean(PrefUtils.PREF_ACCOUNT_REQUIRED, true);
-            editor.putString(PrefUtils.PREF_EXPORT_DIR, FileUtils.getDefaultDir(this));
+            editor.putString(PrefUtils.PREF_EXPORT_DIR, FileUtils.getDefaultDir());
             editor.apply();
         }
     }

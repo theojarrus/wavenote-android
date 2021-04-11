@@ -70,7 +70,7 @@ public class SyllableCounter {
                 syllableLine = tempIndexesList.get(i);
             } else {
                 syllableLine = getSyllableLine(line);
-                if (i < tempLinesList.size()) {
+                if (i < tempLinesList.size() && i < tempIndexesList.size()) {
                     tempLinesList.remove(i);
                     tempIndexesList.remove(i);
                     tempLinesList.add(i, line);
@@ -234,7 +234,7 @@ public class SyllableCounter {
 
         // Fourth rule
         index = word.lastIndexOf("es");
-        if (index != -1) {
+        if (index > 1) {
             if (index == word.length() - 2) {
                 for (int i = index - 1; i > index - 4; i--) {
                     if (vowels.contains(word.substring(i, i + 1))) offset++;

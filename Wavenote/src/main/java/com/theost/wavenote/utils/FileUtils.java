@@ -3,6 +3,7 @@ package com.theost.wavenote.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 
 import com.facebook.common.internal.ByteStreams;
 import com.theost.wavenote.R;
@@ -187,15 +188,15 @@ public class FileUtils {
         }
     }
 
-    public static String getDefaultDir(Context context) {
-        File dir = new File(getStorageDir(context), DEFAULT_EXPORT_DIR);
+    public static String getDefaultDir() {
+        File dir = new File(getStorageDir(), DEFAULT_EXPORT_DIR);
         if (!dir.exists())
             dir.mkdir();
         return dir.getAbsolutePath();
     }
 
-    public static File getStorageDir(Context context) {
-        return context.getExternalFilesDir("").getParentFile().getParentFile().getParentFile().getParentFile();
+    public static File getStorageDir() {
+        return Environment.getExternalStorageDirectory();
     }
 
     public static File[] getAllSampleFiles(Context context, String name) {

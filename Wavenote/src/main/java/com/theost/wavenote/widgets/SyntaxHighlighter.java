@@ -138,19 +138,17 @@ public class SyntaxHighlighter {
                             contentBuffer.insert(lastIndex, extraSpace);
                             contentBuffer.insert(index, extraSpace);
                             lastIndex += extraSpace.length() * 2;
-                            selectionIndexes[0] += word.length() + extraSpace.length();
-                            selectionIndexes[1] += word.length() + extraSpace.length();
                         }
                         if (index < lastIndex) {
                             if (isTitle) contentSpan.setSpan(new BackgroundColorSpan(backTextColor), index, lastIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             contentSpan.setSpan(new ForegroundColorSpan(frontTextColor), index, lastIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
-                        mContentEditText.restoreSelection(selectionIndexes, mContentEditText.getText().length());
                         index++;
                     }
                 }
             }
         }
+        mContentEditText.restoreSelection(selectionIndexes, mContentEditText.getText().length());
     }
 
     private int getTitleEnd(Spannable content) {
