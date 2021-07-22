@@ -1832,7 +1832,7 @@ public class NoteEditorFragment extends Fragment implements Bucket.Listener<Note
                 }
                 line = line.subSequence(breakIndex, line.length());
                 lineWidth = mContentEditText.getTextLineWidth(line);
-                editable.insert(syllableOffset.length(), NEW_LINE);
+                editable.insert(Math.min(syllableOffset.length(), editable.length()), NEW_LINE);
                 syllableOffset.append(NEW_LINE);
             }
         }

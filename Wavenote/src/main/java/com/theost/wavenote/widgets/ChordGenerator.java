@@ -529,11 +529,12 @@ public class ChordGenerator {
         ArrayList<Integer> nullFretStrings = shapeTreeMap.get(0);
         ArrayList<Integer> firstFretStrings = shapeTreeMap.get(1);
         while (shapeFrets.size() > 0 && shapeFrets.get(0) <= 1) shapeFrets.remove(0);
+        if (shapeFrets.size() == 0) return false;
         if (nullFretStrings != null && firstFretStrings != null) {
             return !(firstFretStrings.get(0) < nullFretStrings.get(nullFretStrings.size() - 1)
                     && firstFretStrings.get(firstFretStrings.size() - 1) > nullFretStrings.get(0));
         } else {
-            return shapeFrets.size() > 0;
+            return true;
         }
     }
 

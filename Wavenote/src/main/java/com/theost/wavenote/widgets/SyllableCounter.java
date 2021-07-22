@@ -237,7 +237,7 @@ public class SyllableCounter {
         if (index > 1) {
             if (index == word.length() - 2) {
                 for (int i = index - 1; i > index - 4; i--) {
-                    if (vowels.contains(word.substring(i, i + 1))) offset++;
+                    if (i != -1 && vowels.contains(word.substring(i, i + 1))) offset++;
                 }
             }
         }
