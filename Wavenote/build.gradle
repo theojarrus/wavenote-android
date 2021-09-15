@@ -107,7 +107,7 @@ dependencies {
     implementation 'com.asksira.android:photoview:1.0.3'
     implementation 'com.facebook.fresco:fresco:2.3.0'
     implementation 'me.relex:photodraweeview:2.0.0'
-    implementation 'com.github.theo-jedi:zoomy:1.1.0'
+    implementation 'com.ablanco.zoomy:zoomy:1.1.0'
 
     // Google Support
     implementation 'androidx.core:core:1.3.2'

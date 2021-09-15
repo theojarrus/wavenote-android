@@ -26,7 +26,8 @@
         android:theme="@style/Theme.Wavestyle.Splash"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        tools:targetApi="q">
+        tools:targetApi="q"
+        tools:replace="android:allowBackup">
 
         <meta-data
             android:name="io.sentry.dsn"
