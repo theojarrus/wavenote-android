@@ -3,7 +3,7 @@ apply plugin: 'io.sentry.android.gradle'
 
 android {
     buildToolsVersion '30.0.2'
-    compileSdkVersion 30
+    compileSdkVersion 32
 
     buildTypes {
         debug {
@@ -34,11 +34,11 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "3.8"
+            versionName "3.9"
         }
-        versionCode 308
+        versionCode 309
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
 
         vectorDrawables.useSupportLibrary = true
 
