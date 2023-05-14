@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.theost.wavenote"
     android:installLocation="auto">
 
-    <uses-sdk android:minSdkVersion="21" tools:overrideLibrary="com.simperium"/>
+    <uses-sdk
+        android:minSdkVersion="21"
+        tools:overrideLibrary="com.simperium" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +15,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name="com.theost.wavenote.Wavenote"
@@ -22,28 +23,33 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Wavestyle.Splash"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        tools:targetApi="q"
-        tools:replace="android:allowBackup">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Wavestyle.Splash"
+        tools:replace="android:allowBackup"
+        tools:targetApi="q">
 
         <meta-data
             android:name="io.sentry.dsn"
             android:value="@string/SENTRY_DSN" />
 
         <activity
+            android:name="com.theost.wavenote.NewsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.Wavestyle.News" />
+
+        <activity
             android:name="com.theost.wavenote.AboutActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Wavestyle.About"
-            android:parentActivityName="com.theost.wavenote.PreferencesActivity" />
+            android:parentActivityName="com.theost.wavenote.PreferencesActivity"
+            android:theme="@style/Theme.Wavestyle.About" />
 
         <activity
             android:name="com.theost.wavenote.FeedbackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Wavestyle.About"
-            android:parentActivityName="com.theost.wavenote.PreferencesActivity" />
+            android:parentActivityName="com.theost.wavenote.PreferencesActivity"
+            android:theme="@style/Theme.Wavestyle.About" />
 
         <activity
             android:name="com.theost.wavenote.DictionaryActivity"
@@ -67,34 +73,36 @@
             android:name="com.theost.wavenote.QuizActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Quiz"
-            android:parentActivityName="com.theost.wavenote.PhotosActivity"/>
+            android:parentActivityName="com.theost.wavenote.PhotosActivity" />
 
         <activity
             android:name="com.theost.wavenote.ChordsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Chords"
-            android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
+            android:parentActivityName="com.theost.wavenote.NoteEditorActivity" />
 
-        <activity android:name="com.theost.wavenote.StudioActivity"
+        <activity
+            android:name="com.theost.wavenote.StudioActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Studio"
-            android:parentActivityName="com.theost.wavenote.NoteEditorActivity"/>
+            android:parentActivityName="com.theost.wavenote.NoteEditorActivity" />
 
-        <activity android:name="com.theost.wavenote.AdjustRecordActivity"
+        <activity
+            android:name="com.theost.wavenote.AdjustRecordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Adjust"
-            android:parentActivityName="com.theost.wavenote.StudioActivity"/>
+            android:parentActivityName="com.theost.wavenote.StudioActivity" />
 
         <activity
             android:name="com.theost.wavenote.NoteEditorActivity"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName="com.theost.wavenote.NotesActivity">
-        </activity>
+            android:parentActivityName="com.theost.wavenote.NotesActivity"
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="com.theost.wavenote.NotesActivity"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
+            android:exported="true"
             android:label="@string/app_launcher_name"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustResize|stateHidden"
@@ -122,8 +130,7 @@
 
             </intent-filter>
 
-            <intent-filter
-                android:autoVerify="true">
+            <intent-filter android:autoVerify="true">
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -133,8 +140,7 @@
                 <data
                     android:host="app.simplenote.com"
                     android:pathPattern="/account/.*/reset?redirect=simplenote://launch"
-                    android:scheme="https">
-                </data>
+                    android:scheme="https"></data>
 
             </intent-filter>
 
@@ -142,6 +148,7 @@
 
         <activity
             android:name="com.theost.wavenote.NoteWidgetDarkConfigureActivity"
+            android:exported="true"
             android:theme="@style/Theme.Transparent">
 
             <intent-filter>
@@ -154,6 +161,7 @@
 
         <activity
             android:name="com.theost.wavenote.NoteWidgetLightConfigureActivity"
+            android:exported="true"
             android:theme="@style/Theme.Transparent">
 
             <intent-filter>
@@ -168,8 +176,7 @@
             android:name="com.theost.wavenote.PreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Preferences"
-            android:parentActivityName="com.theost.wavenote.NotesActivity">
-        </activity>
+            android:parentActivityName="com.theost.wavenote.NotesActivity"></activity>
 
         <activity
             android:name="com.theost.wavenote.MetronomeActivity"
@@ -177,21 +184,17 @@
             android:label="Metronome"
             android:parentActivityName="com.theost.wavenote.NotesActivity" />
 
-        <activity
-            android:name="com.theost.wavenote.WavenoteAuthenticationActivity">
-        </activity>
+        <activity android:name="com.theost.wavenote.WavenoteAuthenticationActivity"></activity>
 
-        <activity
-            android:name="com.theost.wavenote.WavenoteCredentialsActivity">
-        </activity>
+        <activity android:name="com.theost.wavenote.WavenoteCredentialsActivity"></activity>
 
         <activity
             android:name="com.theost.wavenote.TagsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
-        </activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
 
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true"
             tools:node="replace">
 
             <intent-filter>
@@ -211,29 +214,26 @@
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/Theme.Wavestyle.Passcode"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
 
         <!--suppress AndroidDomInspection -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/Theme.Wavestyle.Passcode"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
 
         <!-- Google Play Services -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version">
-        </meta-data>
+            android:value="@integer/google_play_services_version"></meta-data>
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"
-            android:value="true">
-        </meta-data>
+            android:value="true"></meta-data>
 
         <receiver
             android:name="com.theost.wavenote.NoteListWidgetDark"
+            android:exported="true"
             android:label="@string/note_list_widget_dark">
 
             <intent-filter>
@@ -244,13 +244,13 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_list_widget_info_dark">
-            </meta-data>
+                android:resource="@xml/note_list_widget_info_dark"></meta-data>
 
         </receiver>
 
         <receiver
             android:name="com.theost.wavenote.NoteListWidgetLight"
+            android:exported="true"
             android:label="@string/note_list_widget_light">
 
             <intent-filter>
@@ -261,13 +261,13 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_list_widget_info_light">
-            </meta-data>
+                android:resource="@xml/note_list_widget_info_light"></meta-data>
 
         </receiver>
 
         <receiver
             android:name="com.theost.wavenote.NoteWidgetDark"
+            android:exported="true"
             android:label="@string/note_widget_dark">
 
             <intent-filter>
@@ -278,13 +278,13 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_widget_info_dark">
-            </meta-data>
+                android:resource="@xml/note_widget_info_dark"></meta-data>
 
         </receiver>
 
         <receiver
             android:name="com.theost.wavenote.NoteWidgetLight"
+            android:exported="true"
             android:label="@string/note_widget_light">
 
             <intent-filter>
@@ -295,24 +295,22 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/note_widget_info_light">
-            </meta-data>
+                android:resource="@xml/note_widget_info_light"></meta-data>
 
         </receiver>
 
         <service
             android:name="com.theost.wavenote.NoteListWidgetDarkService"
-            android:permission="android.permission.BIND_REMOTEVIEWS">
-        </service>
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
 
         <service
             android:name="com.theost.wavenote.NoteListWidgetLightService"
-            android:permission="android.permission.BIND_REMOTEVIEWS">
-        </service>
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
 
         <!-- Android Wear -->
         <service
-            android:name="com.theost.wavenote.utils.WavenoteWearListenerService">
+            android:name="com.theost.wavenote.utils.WavenoteWearListenerService"
+            android:exported="true">
 
             <intent-filter>
 
@@ -325,13 +323,11 @@
         <!-- Samsung Multi-Window Support -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
-            android:required="false">
-        </uses-library>
+            android:required="false"></uses-library>
 
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false">
-        </uses-library>
+            android:required="false"></uses-library>
 
     </application>
 

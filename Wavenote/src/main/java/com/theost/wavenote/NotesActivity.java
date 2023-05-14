@@ -1,5 +1,20 @@
 package com.theost.wavenote;
 
+import static com.theost.wavenote.NoteListFragment.TAG_PREFIX;
+import static com.theost.wavenote.adapters.TagsAdapter.ALL_NOTES_ID;
+import static com.theost.wavenote.adapters.TagsAdapter.DEFAULT_ITEM_POSITION;
+import static com.theost.wavenote.adapters.TagsAdapter.METRONOME_ID;
+import static com.theost.wavenote.adapters.TagsAdapter.SETTINGS_ID;
+import static com.theost.wavenote.adapters.TagsAdapter.TAGS_ID;
+import static com.theost.wavenote.adapters.TagsAdapter.THEORY_ID;
+import static com.theost.wavenote.adapters.TagsAdapter.TRASH_ID;
+import static com.theost.wavenote.adapters.TagsAdapter.UNTAGGED_NOTES_ID;
+import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
+import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
+import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
+import static com.theost.wavenote.widgets.FeedbackDialog.DAYS_UNTIL_PROMPT;
+import static com.theost.wavenote.widgets.FeedbackDialog.LAUNCHES_UNTIL_PROMPT;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -71,21 +86,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.theost.wavenote.NoteListFragment.TAG_PREFIX;
-import static com.theost.wavenote.adapters.TagsAdapter.ALL_NOTES_ID;
-import static com.theost.wavenote.adapters.TagsAdapter.DEFAULT_ITEM_POSITION;
-import static com.theost.wavenote.adapters.TagsAdapter.METRONOME_ID;
-import static com.theost.wavenote.adapters.TagsAdapter.SETTINGS_ID;
-import static com.theost.wavenote.adapters.TagsAdapter.TAGS_ID;
-import static com.theost.wavenote.adapters.TagsAdapter.THEORY_ID;
-import static com.theost.wavenote.adapters.TagsAdapter.TRASH_ID;
-import static com.theost.wavenote.adapters.TagsAdapter.UNTAGGED_NOTES_ID;
-import static com.theost.wavenote.utils.DisplayUtils.disableScreenshotsIfLocked;
-import static com.theost.wavenote.utils.FileUtils.NOTES_DIR;
-import static com.theost.wavenote.utils.WidgetUtils.KEY_LIST_WIDGET_CLICK;
-import static com.theost.wavenote.widgets.FeedbackDialog.DAYS_UNTIL_PROMPT;
-import static com.theost.wavenote.widgets.FeedbackDialog.LAUNCHES_UNTIL_PROMPT;
 
 public class NotesActivity extends ThemedAppCompatActivity implements NoteListFragment.Callbacks,
         User.StatusChangeListener, Simperium.OnUserCreatedListener, UndoBarController.UndoListener,
@@ -297,6 +297,10 @@ public class NotesActivity extends ThemedAppCompatActivity implements NoteListFr
             ft.show(mNoteListFragment);
         }
         ft.commitNow();
+
+        if (!PrefUtils.getBoolPref(this, PrefUtils.PREF_NEWS)) {
+            startActivity(new Intent(this, NewsActivity.class));
+        }
     }
 
     @Override

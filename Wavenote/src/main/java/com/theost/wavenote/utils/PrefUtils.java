@@ -5,6 +5,9 @@ package com.theost.wavenote.utils;
  *  added 01-Apr-2013 by Nick Bradbury
  */
 
+import static com.theost.wavenote.models.Note.PINNED_INDEX_NAME;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -17,9 +20,6 @@ import com.theost.wavenote.R;
 import com.theost.wavenote.models.Note;
 
 import java.lang.annotation.Retention;
-
-import static com.theost.wavenote.models.Note.PINNED_INDEX_NAME;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class PrefUtils {
 
@@ -120,6 +120,9 @@ public class PrefUtils {
 
     // int, record score in quiz
     public static final String PREF_QUIZ_RECORD = "pref_key_quiz_record";
+
+    // boolean, determines if news was showed
+    public static final String PREF_NEWS = "pref_news";
 
     public static final int ALPHABETICAL_ASCENDING = 4;
     public static final int ALPHABETICAL_DESCENDING = 5;

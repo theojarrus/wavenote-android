@@ -195,6 +195,7 @@
     <string name="post_to_wordpress">Post to WordPress</string>
     <string name="select_site">Select a site to post to.</string>
     <string name="network_error_message">A network error was encountered. Please try again.</string>
+    <string name="network_error">A network error was encountered. Please try again later.</string>
     <string name="reconnect_to_wordpress">Please reconnect to WordPress.com.</string>
     <string name="wordpress_post_link">Share WordPress Post</string>
     <string name="could_not_access_site_data">Could not access site data.</string>
@@ -499,4 +500,11 @@
     <string name="web_syllables">Web syllable counter</string>
     <string name="web_syllables_description">Works slower than the built-in algorithm, but provides high accuracy</string>
 
+
+    <string name="news_title">What a news!</string>
+    <string name="news_description">Hey! My name is Theo, I\'m the developer who made the Wavenote and I have something to talk about. Initially the Wavenote was a small project that I created for myself and my friends. For a long time, only 100 people used it, but recently the activity has increased greatly, and the application now has about 500 active users. It\'s still not much, but I\'m very glad that Wavenote helps you in life, that was the goal, so thanks. But I also know there are problems with it, some features may not work as expected and in the console every week I see crashes. For the most part, this is due to the fact that the application was based on Simplenote, so I ran into numerous restrictions on the choice and use of technologies.\n\nNow on to the news!\n\nDue to this I decided to make a new wavenote app with the latest technology, modern interface, stability and scalability, new features, like cloud synchronization. I want to apply all my experience that I got while working as a mobile developer in one of the leading IT companies. But it will cost me a lot of time and effort and I need to know if you really need it, so please take the survey below.\n\nStay in touch, Theo 🧡</string>
+    <string name="news_answer_positive">It will be amazing, waiting for a new app</string>
+    <string name="news_answer_neutral">I don\'t really need it, but I\'ll use the new app if it\'s better</string>
+    <string name="news_answer_negative">I\'m not interested in</string>
+    <string name="news_confirm">Confirm</string>
 </resources>
